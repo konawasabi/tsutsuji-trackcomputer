@@ -21,7 +21,8 @@ for i in conf.track_keys:
     track[i]['data'] = track[i]['interp'].load_files(conf.track_data[i]['file'])
     #print(i)
     #print(track[i]['data'].own_track.data)
-    track[i]['data'].cp_arbdistribution = None
+    #track[i]['data'].cp_arbdistribution = None
+    track[i]['data'].cp_arbdistribution = [ min(track[i]['data'].controlpoints.list_cp),conf.track_data[i]['endpoint'],conf.general['resolution']]
     track[i]['tgen'] = trackgenerator.TrackGenerator(track[i]['data'],\
                                                     x0 = conf.track_data[i]['x'],\
                                                     y0 = conf.track_data[i]['y'],\
