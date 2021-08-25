@@ -23,14 +23,17 @@ for i in conf.track_keys:
                                             conf.track_data[i]['endpoint'],\
                                             conf.general['resolution']]
     track[i]['tgen'] = trackgenerator.TrackGenerator(track[i]['data'],\
-                                                    x0 = conf.track_data[i]['x'],\
-                                                    y0 = conf.track_data[i]['y'],\
-                                                    z0 = conf.track_data[i]['z'],\
+                                                    x0 = conf.track_data[i]['z'],\
+                                                    y0 = conf.track_data[i]['x'],\
+                                                    z0 = conf.track_data[i]['y'],\
                                                     theta0 = conf.track_data[i]['angle'])
     track[i]['result'] = track[i]['tgen'].generate_owntrack()
 
+fig = plt.figure()
+ax = fig.add_subplot()
 for i in conf.track_keys:
     tmp = track[i]['result']
-    plt.plot(tmp[:,1],tmp[:,2],label=i)
-    plt.legend()
+    ax.plot(tmp[:,1],tmp[:,2],label=i)
+ax.legend()
+ax.invert_yaxis()
 plt.show()
