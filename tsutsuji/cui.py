@@ -52,9 +52,10 @@ for tr in [i for i in conf.track_keys if i != conf.owntrack]:
     rel_track[tr] = []
     for pos in src:
         tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
-        tgt_xy_trans = np.dot(rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) )
-        min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0])))
-        rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]])
+        tgt_xy_trans = np.dot(rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
+        min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+        rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+        
     rel_track[tr]=np.array(rel_track[tr])
     print(rel_track[tr])
     ax2.plot(rel_track[tr][:,0],rel_track[tr][:,2],label=tr)
