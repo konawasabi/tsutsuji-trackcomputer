@@ -38,8 +38,9 @@ for i in conf.track_keys:
     track[i]['result'] = track[i]['tgen'].generate_owntrack()
 
 fig = plt.figure()
-ax = fig.add_subplot(211)
-ax2 = fig.add_subplot(212)
+ax = fig.add_subplot(311)
+ax2 = fig.add_subplot(312)
+ax3 = fig.add_subplot(313)
 for i in conf.track_keys:
     tmp = track[i]['result']
     ax.plot(tmp[:,1],tmp[:,2],label=i)
@@ -57,7 +58,9 @@ for tr in [i for i in conf.track_keys if i != conf.owntrack]:
     rel_track[tr]=np.array(rel_track[tr])
     print(rel_track[tr])
     ax2.plot(rel_track[tr][:,0],rel_track[tr][:,2],label=tr)
+    ax3.plot(rel_track[tr][:,0],rel_track[tr][:,1],label=tr)
 ax.legend()
 ax2.legend()
+ax3.legend()
 ax.invert_yaxis()
 plt.show()
