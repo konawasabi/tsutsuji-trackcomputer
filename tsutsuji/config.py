@@ -35,4 +35,6 @@ class Config():
                     self.track_data[tk][k] = True if cp[tk][k].lower() == 'true' else False
                 else:
                     self.track_data[tk][k] = cp[tk][k]
+            if self.track_data[tk]['isowntrack']:
+                self.owntrack = tk
                     
