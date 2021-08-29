@@ -29,7 +29,7 @@ for i in conf.track_keys:
     track[i]['data'] = track[i]['interp'].load_files(conf.track_data[i]['file'])
     track[i]['data'].cp_arbdistribution = [min(track[i]['data'].controlpoints.list_cp),\
                                             conf.track_data[i]['endpoint'],\
-                                            conf.general['resolution']]
+                                            conf.general['unit_length']]
     track[i]['tgen'] = trackgenerator.TrackGenerator(track[i]['data'],\
                                                     x0 = conf.track_data[i]['z'],\
                                                     y0 = conf.track_data[i]['x'],\
@@ -46,10 +46,12 @@ for i in conf.track_keys:
     ax.plot(tmp[:,1],tmp[:,2],label=i)
     
 rel_track = {}
+rel_track_radius = {}
 for tr in [i for i in conf.track_keys if i != conf.owntrack]:
     tgt = track[tr]['result']
     src = track[conf.owntrack]['result']
     rel_track[tr] = []
+    rel_track_radius[tr] = []
     len_tr = len(tgt)
     for pos in src:
         tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
@@ -68,13 +70,30 @@ for tr in [i for i in conf.track_keys if i != conf.owntrack]:
                 rel_track[tr].append([pos[0], 0,y0])
         else:
             rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+    
+    
+    for ix in range(0,len(rel_track[tr])-2):
+        pos = []
+        pos.append(rel_track[tr][ix])
+        pos.append(rel_track[tr][ix+1])
+        pos.append(rel_track[tr][ix+2])
+        
+        ds = np.sqrt((pos[1][0]-pos[0][0])**2 + (pos[1][2]-pos[0][2])**2)
+        dalpha = np.arctan((pos[2][2]-pos[1][2])/(pos[2][0]-pos[1][0])) - np.arctan((pos[1][2]-pos[0][2])/(pos[1][0]-pos[0][0]))
+        
+        rel_track_radius[tr].append([pos[0][0],dalpha/ds])
         
     rel_track[tr]=np.array(rel_track[tr])
+    rel_track_radius[tr]=np.array(rel_track_radius[tr])
     print(rel_track[tr])
     ax2.plot(rel_track[tr][:,0],rel_track[tr][:,2],label=tr)
-    ax3.plot(rel_track[tr][:,0],rel_track[tr][:,1],label=tr)
+    ax3.plot(rel_track_radius[tr][:,0],rel_track_radius[tr][:,1],label=tr)
 ax.legend()
 ax2.legend()
 ax3.legend()
+
+ax.set_ylabel('abs. pos. [m]')
+ax2.set_ylabel('rel. x pos. [m]')
+ax3.set_ylabel('curvature [m$^{-1}$]')
 ax.invert_yaxis()
 plt.show()
