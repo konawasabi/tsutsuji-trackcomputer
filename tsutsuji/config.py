@@ -9,7 +9,7 @@ class Config():
         sections = cp.sections()
         self.track_keys = [i for i in sections if i != '@GENERAL']
         
-        self.general = {'origin_distance':0, 'offset_variable':'offset', 'resolution':1}
+        self.general = {'origin_distance':0, 'offset_variable':'offset', 'unit_length':1}
         if '@GENERAL' in sections:
             for k in cp.options('@GENERAL'):
                 self.general[k] = cp['@GENERAL'][k] if k not in ['origin_distance', 'unit_length'] else float(cp['@GENERAL'][k])
