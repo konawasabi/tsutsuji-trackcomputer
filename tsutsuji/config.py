@@ -12,7 +12,7 @@ class Config():
         self.general = {'origin_distance':0, 'offset_variable':'offset', 'resolution':1}
         if '@GENERAL' in sections:
             for k in cp.options('@GENERAL'):
-                self.general[k] = cp['@GENERAL'][k] if k not in ['origin_distance', 'resolution'] else float(cp['@GENERAL'][k])
+                self.general[k] = cp['@GENERAL'][k] if k not in ['origin_distance', 'unit_length'] else float(cp['@GENERAL'][k])
             
         self.track_data = {}
         for tk in self.track_keys:
