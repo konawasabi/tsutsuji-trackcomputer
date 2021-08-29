@@ -50,11 +50,24 @@ for tr in [i for i in conf.track_keys if i != conf.owntrack]:
     tgt = track[tr]['result']
     src = track[conf.owntrack]['result']
     rel_track[tr] = []
+    len_tr = len(tgt)
     for pos in src:
         tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
         tgt_xy_trans = np.dot(rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
         min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-        rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+        min_ix_val = min_ix[0][0]
+        
+        if min_ix_val > 0 and min_ix_val < len_tr-1:
+            aroundzero = np.vstack((tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],tgt_xy_trans[1][min_ix_val-1:min_ix_val+2]))
+            signx = np.sign(aroundzero[0])
+            if signx[0] != signx[1]:
+                y0 = (aroundzero[1][1]-aroundzero[1][0])/(aroundzero[0][1]-aroundzero[0][0])*(-aroundzero[0][0])+aroundzero[1][0]
+                rel_track[tr].append([pos[0], 0,y0])
+            elif signx[1] != signx[2]:
+                y0 = (aroundzero[1][2]-aroundzero[1][1])/(aroundzero[0][2]-aroundzero[0][1])*(-aroundzero[0][1])+aroundzero[1][1]
+                rel_track[tr].append([pos[0], 0,y0])
+        else:
+            rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
         
     rel_track[tr]=np.array(rel_track[tr])
     print(rel_track[tr])
