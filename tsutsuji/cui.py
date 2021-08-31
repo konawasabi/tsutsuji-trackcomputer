@@ -38,9 +38,10 @@ for i in conf.track_keys:
     track[i]['result'] = track[i]['tgen'].generate_owntrack()
 
 fig = plt.figure()
-ax = fig.add_subplot(311)
-ax2 = fig.add_subplot(312)
-ax3 = fig.add_subplot(313)
+ax = fig.add_subplot(411)
+ax2 = fig.add_subplot(412)
+ax3 = fig.add_subplot(413)
+ax4 = fig.add_subplot(414)
 for i in conf.track_keys:
     tmp = track[i]['result']
     ax.plot(tmp[:,1],tmp[:,2],label=i)
@@ -71,7 +72,7 @@ for tr in [i for i in conf.track_keys if i != conf.owntrack]:
         else:
             rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
     
-    
+    # 曲率半径の算出
     for ix in range(0,len(rel_track[tr])-2):
         pos = []
         pos.append(rel_track[tr][ix])
@@ -80,20 +81,23 @@ for tr in [i for i in conf.track_keys if i != conf.owntrack]:
         
         ds = np.sqrt((pos[1][0]-pos[0][0])**2 + (pos[1][2]-pos[0][2])**2)
         dalpha = np.arctan((pos[2][2]-pos[1][2])/(pos[2][0]-pos[1][0])) - np.arctan((pos[1][2]-pos[0][2])/(pos[1][0]-pos[0][0]))
-        
-        rel_track_radius[tr].append([pos[0][0],dalpha/ds])
+        curvature = dalpha/ds
+        rel_track_radius[tr].append([pos[0][0],curvature,1/curvature if np.abs(1/curvature) < 1e4 else 0])
         
     rel_track[tr]=np.array(rel_track[tr])
     rel_track_radius[tr]=np.array(rel_track_radius[tr])
-    print(rel_track[tr])
+    #print(rel_track[tr])
     ax2.plot(rel_track[tr][:,0],rel_track[tr][:,2],label=tr)
     ax3.plot(rel_track_radius[tr][:,0],rel_track_radius[tr][:,1],label=tr)
+    ax4.plot(rel_track_radius[tr][:,0],rel_track_radius[tr][:,2],label=tr)
 ax.legend()
 ax2.legend()
 ax3.legend()
+ax4.legend()
 
 ax.set_ylabel('abs. pos. [m]')
 ax2.set_ylabel('rel. x pos. [m]')
 ax3.set_ylabel('curvature [m$^{-1}$]')
+ax4.set_ylabel('radius [m]')
 ax.invert_yaxis()
 plt.show()

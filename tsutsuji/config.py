@@ -7,12 +7,12 @@ class Config():
         cp.read(path)
         self.path_parent = pathlib.Path(path).resolve().parent
         sections = cp.sections()
-        self.track_keys = [i for i in sections if i != 'TSUTSUJI_GENERAL']
+        self.track_keys = [i for i in sections if i != '@TSUTSUJI_GENERAL']
         
         self.general = {'origin_distance':0, 'offset_variable':'offset', 'unit_length':1}
-        if 'TSUTSUJI_GENERAL' in sections:
-            for k in cp.options('TSUTSUJI_GENERAL'):
-                self.general[k] = cp['TSUTSUJI_GENERAL'][k] if k not in ['origin_distance', 'unit_length'] else float(cp['TSUTSUJI_GENERAL'][k])
+        if '@TSUTSUJI_GENERAL' in sections:
+            for k in cp.options('@TSUTSUJI_GENERAL'):
+                self.general[k] = cp['@TSUTSUJI_GENERAL'][k] if k not in ['origin_distance', 'unit_length'] else float(cp['@TSUTSUJI_GENERAL'][k])
             
         self.track_data = {}
         for tk in self.track_keys:
