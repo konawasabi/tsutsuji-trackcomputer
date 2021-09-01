@@ -33,6 +33,8 @@ import matplotlib.gridspec
 rcParams['font.family'] = 'sans-serif'
 rcParams['font.sans-serif'] = ['Hiragino Sans', 'Yu Gothic', 'Meirio', 'Takao', 'IPAexGothic', 'IPAPGothic', 'VL PGothic', 'Noto Sans CJK JP']
 
+from . import track_control
+
 class Catcher: # tkinter内で起きた例外をキャッチする
     def __init__(self, func, subst, widget):
         self.func = func
@@ -63,6 +65,7 @@ class mainwindow(ttk.Frame):
         
         self.create_widgets()
         self.create_menubar()
+        self.trackcontrol = track_control.TrackControl()
     def create_widgets(self):
         font_title = font.Font(weight='bold',size=10)
         
@@ -112,7 +115,7 @@ class mainwindow(ttk.Frame):
         #self.menubar.add_cascade(menu=self.menu_option, label='オプション')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
-        self.menu_file.add_command(label='開く...', command=None, accelerator='Control+O')
+        self.menu_file.add_command(label='開く...', command=self.opencfg, accelerator='Control+O')
         self.menu_file.add_separator()
         self.menu_file.add_command(label='終了', command=self.ask_quit, accelerator='Alt+F4')
         
@@ -126,7 +129,14 @@ class mainwindow(ttk.Frame):
                 self.quit()
         else:
             self.quit()
-
+    def opencfg(self, event=None):
+        inputdir = filedialog.askopenfilename()
+        self.trackcontrol.loadcfg(inputdir)
+        self.trackcontrol.loadmap()
+        self.draw2dplot()
+    def draw2dplot(self):
+        self.trackcontrol.plot2d(self.ax_plane)
+        self.fig_canvas.draw()
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
