@@ -95,13 +95,13 @@ class mainwindow(ttk.Frame):
         self.fig_canvas.get_tk_widget().grid(row=0, column=0, sticky='news')
         
         self.canvas_frame.columnconfigure(0, weight=1)
-        self.canvas_frame.columnconfigure(1, weight=1)
+        #self.canvas_frame.columnconfigure(1, weight=1)
         self.canvas_frame.rowconfigure(0, weight=1)
-        self.canvas_frame.rowconfigure(1, weight=1)
+        #self.canvas_frame.rowconfigure(1, weight=1)
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=0)
+        self.rowconfigure(0, weight=1)
     def create_menubar(self):
         self.master.option_add('*tearOff', False)
         
