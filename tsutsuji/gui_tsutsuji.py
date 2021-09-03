@@ -93,14 +93,24 @@ class mainwindow(ttk.Frame):
         self.fig_canvas = FigureCanvasTkAgg(self.fig_plane, master=self.fig_frame)
         self.fig_canvas.draw()
         self.fig_canvas.get_tk_widget().grid(row=0, column=0, sticky='news')
+        #self.fig_canvas.mpl_connect('button_press_event',self.click_test)
+        #self.fig_canvas.mpl_connect('motion_notify_event',self.motion_test)
         
         self.canvas_frame.columnconfigure(0, weight=1)
         #self.canvas_frame.columnconfigure(1, weight=1)
         self.canvas_frame.rowconfigure(0, weight=1)
         #self.canvas_frame.rowconfigure(1, weight=1)
         
+        #ボタンフレーム
+        self.button_frame = ttk.Frame(self, padding='3 3 3 3')
+        self.button_frame.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+        
+        self.direction_test_btn = ttk.Button(self.button_frame, text="DIRECTION", command = self.direction_test)
+        self.direction_test_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
+        
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
+        #self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
     def create_menubar(self):
         self.master.option_add('*tearOff', False)
@@ -135,8 +145,32 @@ class mainwindow(ttk.Frame):
         self.trackcontrol.loadmap()
         self.draw2dplot()
     def draw2dplot(self):
+        self.ax_plane.cla()
         self.trackcontrol.plot2d(self.ax_plane)
         self.fig_canvas.draw()
+    def click_test(self, event):
+        if(event.xdata != None and event.ydata != None):
+            print(str(event.button)+' Clicked!','canvas pos: ('+str(event.x)+','+str(event.y)+'), data pos: ({:.2f},{:.2f})'.format(event.xdata,event.ydata))
+        else:
+            print(str(event.button)+' Clicked!','canvas pos: ('+str(event.x)+','+str(event.y)+'), data pos: (None)')
+    def motion_test(self,event):
+        print(event)
+    def direction_test(self):
+        def isfloat(val):
+            return type(val) == type(float())
+        def motion(event):
+            print(event)
+            if(event.xdata != None and event.ydata != None):
+                pointerpos.set_data(event.xdata,event.ydata)
+                self.fig_canvas.draw()
+        def click(event):
+            print('Done')
+            self.draw2dplot()
+            self.fig_canvas.mpl_disconnect(press_id)
+            self.fig_canvas.mpl_disconnect(notify_id)
+        pointerpos, = self.ax_plane.plot([],[],'ro')
+        press_id = self.fig_canvas.mpl_connect('button_press_event',click)
+        notify_id = self.fig_canvas.mpl_connect('motion_notify_event',motion)
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
