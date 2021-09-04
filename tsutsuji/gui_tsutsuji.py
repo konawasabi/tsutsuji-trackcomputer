@@ -29,12 +29,15 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib import rcParams
 import matplotlib.gridspec
+from PIL import Image
 import numpy as np
+
 
 rcParams['font.family'] = 'sans-serif'
 rcParams['font.sans-serif'] = ['Hiragino Sans', 'Yu Gothic', 'Meirio', 'Takao', 'IPAexGothic', 'IPAPGothic', 'VL PGothic', 'Noto Sans CJK JP']
 
 from . import track_control
+from . import drawcursor
 
 class Catcher: # tkinter内で起きた例外をキャッチする
     def __init__(self, func, subst, widget):
@@ -108,6 +111,9 @@ class mainwindow(ttk.Frame):
         
         self.direction_test_btn = ttk.Button(self.button_frame, text="DIRECTION", command = self.point_and_dir)
         self.direction_test_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
+        
+        self.image_btn = ttk.Button(self.button_frame, text="Image", command = self.img_test)
+        self.image_btn.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
@@ -206,6 +212,13 @@ class mainwindow(ttk.Frame):
         press2nd_id = None
         motion_id = None
         pointed_pos = None
+    def img_test(self):
+        inputdir = filedialog.askopenfilename()
+        img = np.array(Image.open(inputdir))
+        self.draw2dplot()
+        self.ax_plane.imshow(img,alpha=0.5,extent=[-img.shape[1]/2,img.shape[1]/2,img.shape[0]/2,-img.shape[0]/2])
+        self.fig_canvas.draw()
+        
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
