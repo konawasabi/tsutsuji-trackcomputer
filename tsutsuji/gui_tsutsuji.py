@@ -29,6 +29,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib import rcParams
 import matplotlib.gridspec
+import numpy as np
 
 rcParams['font.family'] = 'sans-serif'
 rcParams['font.sans-serif'] = ['Hiragino Sans', 'Yu Gothic', 'Meirio', 'Takao', 'IPAexGothic', 'IPAPGothic', 'VL PGothic', 'Noto Sans CJK JP']
@@ -105,7 +106,7 @@ class mainwindow(ttk.Frame):
         self.button_frame = ttk.Frame(self, padding='3 3 3 3')
         self.button_frame.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         
-        self.direction_test_btn = ttk.Button(self.button_frame, text="DIRECTION", command = self.direction_test)
+        self.direction_test_btn = ttk.Button(self.button_frame, text="DIRECTION", command = self.point_and_dir)
         self.direction_test_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
@@ -165,12 +166,46 @@ class mainwindow(ttk.Frame):
                 self.fig_canvas.draw()
         def click(event):
             print('Done')
-            self.draw2dplot()
             self.fig_canvas.mpl_disconnect(press_id)
             self.fig_canvas.mpl_disconnect(notify_id)
-        pointerpos, = self.ax_plane.plot([],[],'ro')
+            self.draw2dplot()
+        pointerpos, = self.ax_plane.plot([],[],'rx')
         press_id = self.fig_canvas.mpl_connect('button_press_event',click)
         notify_id = self.fig_canvas.mpl_connect('motion_notify_event',motion)
+        print('DIRECTION')
+    def point_and_dir(self):
+        def click_1st(event):
+            nonlocal pointed_pos,press2nd_id,motion_id
+            pointerpos.set_data(event.xdata,event.ydata)
+            pointed_pos = np.array([event.xdata,event.ydata])
+            self.fig_canvas.draw()
+            self.fig_canvas.mpl_disconnect(press1st_id)
+            press2nd_id = self.fig_canvas.mpl_connect('button_press_event',click_2nd)
+            motion_id = self.fig_canvas.mpl_connect('motion_notify_event',motion)
+        def motion(event):
+            nonlocal pointed_pos,press2nd_id,motion_id,pointerdir
+            position = np.array([event.xdata,event.ydata])
+            vector = (position - pointed_pos)
+            vector = vector/np.sqrt(np.dot(vector,vector))
+            if pointerdir == None:
+                pointerdir = self.ax_plane.quiver(event.xdata,event.ydata,vector[0],vector[1],angles='xy',scale=2,scale_units='inches',width=0.0025)
+            else:
+                #pointerdir.set_data(event.xdata,event.ydata,vector[0],vector[1])
+                pointerdir.set_UVC(vector[0],vector[1])
+            self.fig_canvas.draw()
+        def click_2nd(event):
+            nonlocal press2nd_id,motion_id
+            #print(press2nd_id,motion_id)
+            self.fig_canvas.mpl_disconnect(press2nd_id)
+            self.fig_canvas.mpl_disconnect(motion_id)
+            self.draw2dplot()
+            print('Done')
+        pointerpos, = self.ax_plane.plot([],[],'rx')
+        pointerdir = None
+        press1st_id = self.fig_canvas.mpl_connect('button_press_event',click_1st)
+        press2nd_id = None
+        motion_id = None
+        pointed_pos = None
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa

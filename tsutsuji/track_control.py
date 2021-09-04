@@ -87,11 +87,12 @@ class TrackControl():
             self.rel_track[tr]=np.array(rel_track[tr])
             self.rel_track_radius[tr]=np.array(rel_track_radius[tr])
     def plot2d(self, ax):
-        for i in self.conf.track_keys:
-            tmp = self.track[i]['result']
-            ax.plot(tmp[:,1],tmp[:,2],label=i)
-        ax.invert_yaxis()
-        ax.set_aspect('equal')
+        if len(self.track) > 0:
+            for i in self.conf.track_keys:
+                tmp = self.track[i]['result']
+                ax.plot(tmp[:,1],tmp[:,2],label=i)
+            ax.invert_yaxis()
+            #ax.set_aspect('equal')
     def rotate(tau1):
         '''２次元回転行列を返す。
         tau1: 回転角度 [rad]
