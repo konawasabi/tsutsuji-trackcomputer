@@ -38,6 +38,7 @@ rcParams['font.sans-serif'] = ['Hiragino Sans', 'Yu Gothic', 'Meirio', 'Takao', 
 
 from . import track_control
 from . import drawcursor
+from . import backimg
 
 class Catcher: # tkinter内で起きた例外をキャッチする
     def __init__(self, func, subst, widget):
@@ -67,8 +68,11 @@ class mainwindow(ttk.Frame):
 
         master.protocol('WM_DELETE_WINDOW', self.ask_quit)
         
+        self.backimgctrl = backimg.BackImgControl(self)
+        
         self.create_widgets()
         self.create_menubar()
+        
         self.trackcontrol = track_control.TrackControl()
     def create_widgets(self):
         font_title = font.Font(weight='bold',size=10)
@@ -125,16 +129,20 @@ class mainwindow(ttk.Frame):
         self.menubar = tk.Menu(self.master)
         
         self.menu_file = tk.Menu(self.menubar)
-        #self.menu_option = tk.Menu(self.menubar)
+        self.menu_backimg = tk.Menu(self.menubar)
         self.menu_help = tk.Menu(self.menubar)
         
         self.menubar.add_cascade(menu=self.menu_file, label='ファイル')
-        #self.menubar.add_cascade(menu=self.menu_option, label='オプション')
+        self.menubar.add_cascade(menu=self.menu_backimg, label='背景画像')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
         self.menu_file.add_command(label='開く...', command=self.opencfg, accelerator='Control+O')
         self.menu_file.add_separator()
         self.menu_file.add_command(label='終了', command=self.ask_quit, accelerator='Alt+F4')
+        
+        #self.menu_backimg.add_command(label='Load...', command=self.backimg_new)
+        #self.menu_backimg.add_command(label='Rotate...', command=self.backimg_rotate)
+        self.menu_backimg.add_command(label='Window...', command=self.backimgctrl.create_window)
         
         self.menu_help.add_command(label='ヘルプ...', command=None)
         self.menu_help.add_command(label='Tsutsujiについて...', command=None)
@@ -217,8 +225,16 @@ class mainwindow(ttk.Frame):
         img = np.array(Image.open(inputdir))
         self.draw2dplot()
         self.ax_plane.imshow(img,alpha=0.5,extent=[-img.shape[1]/2,img.shape[1]/2,img.shape[0]/2,-img.shape[0]/2])
+        self.ax_plane.set_xlim(-img.shape[1]/2-100,img.shape[1]/2+100)
+        self.ax_plane.set_ylim(-img.shape[0]/2-100,img.shape[0]/2+100)
         self.fig_canvas.draw()
-        
+    def backimg_new(self):
+        self.backimgctrl.newimg()
+        self.fig_canvas.draw()
+    def backimg_rotate(self):
+        self.draw2dplot()
+        self.backimgctrl.rotate()
+        self.fig_canvas.draw()
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
