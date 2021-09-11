@@ -116,8 +116,11 @@ class mainwindow(ttk.Frame):
         self.direction_test_btn = ttk.Button(self.button_frame, text="DIRECTION", command = self.point_and_dir)
         self.direction_test_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
         
-        self.image_btn = ttk.Button(self.button_frame, text="Image", command = self.img_test)
-        self.image_btn.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E))
+        #self.image_btn = ttk.Button(self.button_frame, text="Image", command = self.img_test)
+        #self.image_btn.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E))
+        
+        self.replot_btn = ttk.Button(self.button_frame, text="Replot", command = self.drawall)
+        self.replot_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
@@ -158,10 +161,18 @@ class mainwindow(ttk.Frame):
         inputdir = filedialog.askopenfilename()
         self.trackcontrol.loadcfg(inputdir)
         self.trackcontrol.loadmap()
-        self.draw2dplot()
+        self.drawall()
     def draw2dplot(self):
         self.ax_plane.cla()
         self.trackcontrol.plot2d(self.ax_plane)
+        self.fig_canvas.draw()
+    def drawall(self):
+        self.ax_plane.cla()
+        self.trackcontrol.plot2d(self.ax_plane)
+        
+        for i in self.backimgctrl.imgs.keys():
+            self.backimgctrl.imgs[i].show(self.ax_plane)
+        
         self.fig_canvas.draw()
     def click_test(self, event):
         if(event.xdata != None and event.ydata != None):
