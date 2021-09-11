@@ -127,15 +127,18 @@ class BackImgControl():
             self.imglist_sb.selection_set(inputdir)
             self.mainwindow.drawall()
     def rotate(self):
-        angle = simpledialog.askfloat('rotate','rotate angle [rad]')
+        #angle = simpledialog.askfloat('rotate','rotate angle [rad]')
         self.imgs.rotate(angle)
-        self.imgs.show(self.ax)
+        #self.imgs.show(self.ax)
     def showimg(self):
         selected = str(self.imglist_sb.selection()[0])
         for i in [0,1,2,3]:
             self.imgs[selected].extent[i] = self.extent[i].get()
         self.imgs[selected].alpha = self.alpha_v.get()
         self.imgs[selected].toshow = self.toshow_v.get()
+        if self.rot_v.get() != self.imgs[selected].rotrad:
+            self.imgs[selected].rotrad = self.rot_v.get()
+            self.imgs[selected].rotate(self.imgs[selected].rotrad)
         self.mainwindow.drawall()
     def clickimglist(self,event):
         selected = str(self.imglist_sb.selection()[0])
