@@ -122,6 +122,31 @@ class mainwindow(ttk.Frame):
         self.replot_btn = ttk.Button(self.button_frame, text="Replot", command = self.drawall)
         self.replot_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
         
+        self.plotarea_frame = ttk.Frame(self.button_frame, padding='3 3 3 3')
+        self.plotarea_frame.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E, tk.S))
+        
+        self.plotarea_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+        
+        self.xmin_pa_l = ttk.Label(self.plotarea_frame, text='xmin')
+        self.xmax_pa_l = ttk.Label(self.plotarea_frame, text='xmax')
+        self.ymin_pa_l = ttk.Label(self.plotarea_frame, text='ymin')
+        self.ymax_pa_l = ttk.Label(self.plotarea_frame, text='ymax')
+        
+        self.xmin_pa_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
+        self.xmax_pa_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
+        self.ymin_pa_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
+        self.ymax_pa_l.grid(column=2, row=1, sticky=(tk.E,tk.W))
+        
+        self.xmin_pa_e = ttk.Entry(self.plotarea_frame, textvariable=self.plotarea_v[0],width=5)
+        self.xmax_pa_e = ttk.Entry(self.plotarea_frame, textvariable=self.plotarea_v[1],width=5)
+        self.ymin_pa_e = ttk.Entry(self.plotarea_frame, textvariable=self.plotarea_v[2],width=5)
+        self.ymax_pa_e = ttk.Entry(self.plotarea_frame, textvariable=self.plotarea_v[3],width=5)
+        
+        self.xmin_pa_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
+        self.xmax_pa_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
+        self.ymin_pa_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
+        self.ymax_pa_e.grid(column=3, row=1, sticky=(tk.E,tk.W))
+        
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
         #self.columnconfigure(1, weight=1)
@@ -172,6 +197,14 @@ class mainwindow(ttk.Frame):
         
         for i in self.backimgctrl.imgs.keys():
             self.backimgctrl.imgs[i].show(self.ax_plane)
+        
+        plotarea = []
+        for i in self.plotarea_v:
+            plotarea.append(i.get())
+        if  plotarea[0] != plotarea[1]:
+            self.ax_plane.set_xlim(plotarea[0],plotarea[1])
+        if plotarea[2] != plotarea[3]:
+            self.ax_plane.set_ylim(plotarea[2],plotarea[3])
         
         self.fig_canvas.draw()
     def click_test(self, event):
