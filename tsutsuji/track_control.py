@@ -93,7 +93,7 @@ class TrackControl():
                 ax.plot(tmp[:,1],tmp[:,2],label=i)
             ax.invert_yaxis()
             #ax.set_aspect('equal')
-    def rotate(tau1):
+    def rotate(self, tau1):
         '''２次元回転行列を返す。
         tau1: 回転角度 [rad]
         '''
