@@ -37,8 +37,25 @@ class BackImgControl():
             height = self.output_data.shape[0]
             self.extent = [0,width,0,-height]
         def rotate(self,rad):
+            def rotmatrix(tau1):
+                '''２次元回転行列を返す。
+                tau1: 回転角度 [rad]
+                '''
+                return np.array([[np.cos(tau1), -np.sin(tau1)], [np.sin(tau1),  np.cos(tau1)]])
             self.rotrad = rad
             self.output_data = np.array(self.img.rotate(np.rad2deg(rad),expand=True))
+            
+            width  = np.array(self.img).shape[1]
+            height = np.array(self.img).shape[0]
+            
+            shape_orig = np.vstack((0,0))
+            shape_orig = np.hstack((shape_orig,np.vstack((width,0))))
+            shape_orig = np.hstack((shape_orig,np.vstack((width,height))))
+            shape_orig = np.hstack((shape_orig,np.vstack((0,height))))
+            
+            shape_rot = np.dot(rotmatrix(rad),shape_orig)
+            
+            self.extent = [min(shape_rot[0]),max(shape_rot[0]),min(shape_rot[1]),max(shape_rot[1])]
         def show(self,ax):
             if self.toshow:
                 width  = self.output_data.shape[1]
@@ -90,12 +107,12 @@ class BackImgControl():
         self.alpha_v = tk.DoubleVar(value=0)
         self.toshow_v = tk.BooleanVar(value=False)
         
-        self.xmin_e = ttk.Entry(self.input_frame, textvariable=self.extent[0])
-        self.xmax_e = ttk.Entry(self.input_frame, textvariable=self.extent[1])
-        self.ymin_e = ttk.Entry(self.input_frame, textvariable=self.extent[2])
-        self.ymax_e = ttk.Entry(self.input_frame, textvariable=self.extent[3])
-        self.rot_e = ttk.Entry(self.input_frame, textvariable=self.rot_v)
-        self.alpha_e = ttk.Entry(self.input_frame, textvariable=self.alpha_v)
+        self.xmin_e = ttk.Entry(self.input_frame, textvariable=self.extent[0],width=5)
+        self.xmax_e = ttk.Entry(self.input_frame, textvariable=self.extent[1],width=5)
+        self.ymin_e = ttk.Entry(self.input_frame, textvariable=self.extent[2],width=5)
+        self.ymax_e = ttk.Entry(self.input_frame, textvariable=self.extent[3],width=5)
+        self.rot_e = ttk.Entry(self.input_frame, textvariable=self.rot_v,width=5)
+        self.alpha_e = ttk.Entry(self.input_frame, textvariable=self.alpha_v,width=5)
         self.show_chk = ttk.Checkbutton(self.input_frame, text='Show', variable=self.toshow_v)
         
         self.xmin_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
@@ -126,10 +143,6 @@ class BackImgControl():
             self.imglist_sb.insert('',tk.END, inputdir, text=inputdir)
             self.imglist_sb.selection_set(inputdir)
             self.mainwindow.drawall()
-    def rotate(self):
-        #angle = simpledialog.askfloat('rotate','rotate angle [rad]')
-        self.imgs.rotate(angle)
-        #self.imgs.show(self.ax)
     def showimg(self):
         selected = str(self.imglist_sb.selection()[0])
         for i in [0,1,2,3]:
