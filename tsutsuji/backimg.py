@@ -31,6 +31,7 @@ class BackImgControl():
             self.output_data = np.array(self.img)
             self.toshow = True
             self.origin = [0,0]
+            self.shift = [0,0]
             self.rotrad = 0
             self.alpha = 0.5
             width  = self.output_data.shape[1]
@@ -54,6 +55,7 @@ class BackImgControl():
             shape_orig = np.hstack((shape_orig,np.vstack((0,height))))
             
             shape_rot = np.dot(rotmatrix(np.deg2rad(rad)),shape_orig - np.vstack((self.origin[0],self.origin[1])))
+            shape_rot = shape_rot + np.vstack((self.shift[0],self.shift[1]))
             
             self.extent = [min(shape_rot[0]),max(shape_rot[0]),min(shape_rot[1]),max(shape_rot[1])]
         def show(self,ax):
@@ -97,6 +99,8 @@ class BackImgControl():
         self.alpha_l = ttk.Label(self.input_frame, text='alpha')
         self.xo_l = ttk.Label(self.input_frame, text='x0')
         self.yo_l = ttk.Label(self.input_frame, text='y0')
+        self.xsh_l = ttk.Label(self.input_frame, text='xshift')
+        self.ysh_l = ttk.Label(self.input_frame, text='yshift')
         
         self.xmin_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
         self.xmax_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
@@ -106,12 +110,15 @@ class BackImgControl():
         self.alpha_l.grid(column=2, row=2, sticky=(tk.E,tk.W))
         self.xo_l.grid(column=0, row=4, sticky=(tk.E,tk.W))
         self.yo_l.grid(column=2, row=4, sticky=(tk.E,tk.W))
+        self.xsh_l.grid(column=0, row=5, sticky=(tk.E,tk.W))
+        self.ysh_l.grid(column=2, row=5, sticky=(tk.E,tk.W))
         
         self.extent = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.rot_v = tk.DoubleVar(value=0)
         self.alpha_v = tk.DoubleVar(value=0)
         self.toshow_v = tk.BooleanVar(value=False)
         self.origin = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+        self.shift = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         
         self.xmin_e = ttk.Entry(self.input_frame, textvariable=self.extent[0],width=5)
         self.xmax_e = ttk.Entry(self.input_frame, textvariable=self.extent[1],width=5)
@@ -122,6 +129,8 @@ class BackImgControl():
         self.show_chk = ttk.Checkbutton(self.input_frame, text='Show', variable=self.toshow_v)
         self.xo_e = ttk.Entry(self.input_frame, textvariable=self.origin[0],width=5)
         self.yo_e = ttk.Entry(self.input_frame, textvariable=self.origin[1],width=5)
+        self.xsh_e = ttk.Entry(self.input_frame, textvariable=self.shift[0],width=5)
+        self.ysh_e = ttk.Entry(self.input_frame, textvariable=self.shift[1],width=5)
         
         self.xmin_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
         self.xmax_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
@@ -132,6 +141,8 @@ class BackImgControl():
         self.show_chk.grid(column=1, row=3, sticky=(tk.E,tk.W))
         self.xo_e.grid(column=1, row=4, sticky=(tk.E,tk.W))
         self.yo_e.grid(column=3, row=4, sticky=(tk.E,tk.W))
+        self.xsh_e.grid(column=1, row=5, sticky=(tk.E,tk.W))
+        self.ysh_e.grid(column=3, row=5, sticky=(tk.E,tk.W))
         
         self.button_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.button_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
@@ -161,6 +172,7 @@ class BackImgControl():
         self.imgs[selected].toshow = self.toshow_v.get()
         for i in [0,1]:
             self.imgs[selected].origin[i] = self.origin[i].get()
+            self.imgs[selected].shift[i] = self.shift[i].get()
             
         if self.rot_v.get() != self.imgs[selected].rotrad:
             self.imgs[selected].rotrad = self.rot_v.get()
@@ -176,3 +188,4 @@ class BackImgControl():
         self.toshow_v.set(self.imgs[selected].toshow)
         for i in [0,1]:
             self.origin[i].set(self.imgs[selected].origin[i])
+            self.shift[i].set(self.imgs[selected].shift[i])
