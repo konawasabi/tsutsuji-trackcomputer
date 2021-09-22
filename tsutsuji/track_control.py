@@ -91,10 +91,21 @@ class TrackControl():
             for i in self.conf.track_keys:
                 tmp = self.track[i]['result']
                 ax.plot(tmp[:,1],tmp[:,2],label=i)
-            ax.invert_yaxis()
+            #ax.invert_yaxis()
             #ax.set_aspect('equal')
     def rotate(self, tau1):
         '''２次元回転行列を返す。
         tau1: 回転角度 [rad]
         '''
         return np.array([[np.cos(tau1), -np.sin(tau1)], [np.sin(tau1),  np.cos(tau1)]])
+    def drawarea(self, extent_input = None):
+        extent = [0,0,0,0] if extent_input == None else extent_input
+        if len(self.track) > 0:
+            for i in self.conf.track_keys:
+                tmp_src = self.track[i]['result']
+                tmp_result = [min(tmp_src[:,1]),max(tmp_src[:,1]),min(tmp_src[:,2]),max(tmp_src[:,2])]
+                extent[0] = tmp_result[0] if tmp_result[0] < extent[0] else extent[0]
+                extent[1] = tmp_result[1] if tmp_result[1] > extent[1] else extent[1]
+                extent[2] = tmp_result[2] if tmp_result[2] < extent[2] else extent[2]
+                extent[3] = tmp_result[3] if tmp_result[3] > extent[3] else extent[3]
+        return extent

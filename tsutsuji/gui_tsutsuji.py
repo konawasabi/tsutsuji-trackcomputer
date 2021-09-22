@@ -205,7 +205,14 @@ class mainwindow(ttk.Frame):
             self.ax_plane.set_xlim(plotarea[0],plotarea[1])
         if plotarea[2] != plotarea[3]:
             self.ax_plane.set_ylim(plotarea[2],plotarea[3])
-        
+            
+        if True:
+            imgarea = self.backimgctrl.imgsarea()
+            imgarea = self.trackcontrol.drawarea(imgarea)
+            
+            self.ax_plane.set_xlim(imgarea[0],imgarea[1])
+            self.ax_plane.set_ylim(imgarea[2],imgarea[3])
+        self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
     def click_test(self, event):
         if(event.xdata != None and event.ydata != None):

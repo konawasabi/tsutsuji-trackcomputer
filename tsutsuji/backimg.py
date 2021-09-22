@@ -189,3 +189,12 @@ class BackImgControl():
         for i in [0,1]:
             self.origin[i].set(self.imgs[selected].origin[i])
             self.shift[i].set(self.imgs[selected].shift[i])
+    def imgsarea(self, extent_input = None):
+        extent = [0,0,0,0] if extent_input == None else extent_input
+        for key in list(self.imgs.keys()):
+            img = self.imgs[key]
+            extent[0] = img.extent[0] if img.extent[0] < extent[0] else extent[0]
+            extent[1] = img.extent[1] if img.extent[1] > extent[1] else extent[1]
+            extent[2] = img.extent[2] if img.extent[2] < extent[2] else extent[2]
+            extent[3] = img.extent[3] if img.extent[3] > extent[3] else extent[3]
+        return extent
