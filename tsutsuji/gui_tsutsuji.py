@@ -209,6 +209,8 @@ class mainwindow(ttk.Frame):
         if True:
             imgarea = self.backimgctrl.imgsarea()
             imgarea = self.trackcontrol.drawarea(imgarea)
+            #imgarea = self.trackcontrol.drawarea([imgarea[0],imgarea[1],imgarea[3],imgarea[2]])
+            #imgarea = self.trackcontrol.drawarea([imgarea[0],imgarea[1],-imgarea[2],-imgarea[3]])
             
             self.ax_plane.set_xlim(imgarea[0],imgarea[1])
             self.ax_plane.set_ylim(imgarea[2],imgarea[3])

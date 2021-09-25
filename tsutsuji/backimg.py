@@ -30,12 +30,12 @@ class BackImgControl():
             self.img = Image.open(path)
             self.output_data = np.array(self.img)
             self.toshow = True
+            width  = self.output_data.shape[1]
+            height = self.output_data.shape[0]
             self.origin = [0,0]
             self.shift = [0,0]
             self.rotrad = 0
             self.alpha = 0.5
-            width  = self.output_data.shape[1]
-            height = self.output_data.shape[0]
             self.extent = [0,width,0,-height]
         def rotate(self,rad):
             def rotmatrix(tau1):
@@ -44,7 +44,7 @@ class BackImgControl():
                 '''
                 return np.array([[np.cos(tau1), -np.sin(tau1)], [np.sin(tau1),  np.cos(tau1)]])
             self.rotrad = rad
-            self.output_data = np.array(self.img.rotate(rad,expand=True))
+            self.output_data = np.array(self.img.rotate(-rad,expand=True))
             
             width  = np.array(self.img).shape[1]
             height = np.array(self.img).shape[0]
@@ -64,7 +64,8 @@ class BackImgControl():
                 #width  = self.output_data.shape[1]
                 #height = self.output_data.shape[0]
                 #print(width,height)
-                ax.imshow(self.output_data,alpha=self.alpha,extent=self.extent)
+                #ax.imshow(self.output_data,alpha=self.alpha,extent=self.extent)
+                ax.imshow(self.output_data,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]])
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
         self.imgs = {}
