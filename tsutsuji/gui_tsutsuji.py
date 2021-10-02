@@ -119,6 +119,9 @@ class mainwindow(ttk.Frame):
         #self.image_btn = ttk.Button(self.button_frame, text="Image", command = self.img_test)
         #self.image_btn.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E))
         
+        self.dist_btn = ttk.Button(self.button_frame, text="distance", command = self.distance2pos)
+        self.dist_btn.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E))
+        
         self.replot_btn = ttk.Button(self.button_frame, text="Replot", command = self.drawall)
         self.replot_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
         
@@ -273,6 +276,30 @@ class mainwindow(ttk.Frame):
         press2nd_id = None
         motion_id = None
         pointed_pos = None
+    def distance2pos(self):
+        def click_1st(event):
+            nonlocal pointerpos1,pointerpos2,pointed_pos,press1st_id,click_num
+            if click_num == 0:
+                pointerpos1.set_data(event.xdata,event.ydata)
+                pointed_pos = np.array([event.xdata,event.ydata])
+                self.fig_canvas.draw()
+                print('data pos: ({:.2f},{:.2f})'.format(event.xdata,event.ydata))
+                click_num +=1
+            elif click_num == 1:
+                pointerpos2.set_data(event.xdata,event.ydata)
+                self.fig_canvas.draw()
+                print('data pos: ({:.2f},{:.2f})'.format(event.xdata,event.ydata))
+                print(np.sqrt((pointed_pos[0]-event.xdata)**2+(pointed_pos[1]-event.ydata)**2))
+                click_num +=1
+            else:
+                self.fig_canvas.mpl_disconnect(press1st_id)
+                self.drawall()
+                print('Done')
+        pointerpos1, = self.ax_plane.plot([],[],'rx')
+        pointerpos2, = self.ax_plane.plot([],[],'bx')
+        press1st_id = self.fig_canvas.mpl_connect('button_press_event',click_1st)
+        pointed_pos = None
+        click_num = 0
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
