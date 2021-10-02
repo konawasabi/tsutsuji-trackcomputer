@@ -69,6 +69,7 @@ class mainwindow(ttk.Frame):
         master.protocol('WM_DELETE_WINDOW', self.ask_quit)
         
         self.backimgctrl = backimg.BackImgControl(self)
+        self.cursor = drawcursor.cursor(self)
         
         self.create_widgets()
         self.create_menubar()
@@ -101,8 +102,6 @@ class mainwindow(ttk.Frame):
         self.fig_canvas = FigureCanvasTkAgg(self.fig_plane, master=self.fig_frame)
         self.fig_canvas.draw()
         self.fig_canvas.get_tk_widget().grid(row=0, column=0, sticky='news')
-        #self.fig_canvas.mpl_connect('button_press_event',self.click_test)
-        #self.fig_canvas.mpl_connect('motion_notify_event',self.motion_test)
         
         self.canvas_frame.columnconfigure(0, weight=1)
         #self.canvas_frame.columnconfigure(1, weight=1)
@@ -113,13 +112,10 @@ class mainwindow(ttk.Frame):
         self.button_frame = ttk.Frame(self, padding='3 3 3 3')
         self.button_frame.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         
-        self.direction_test_btn = ttk.Button(self.button_frame, text="DIRECTION", command = self.point_and_dir)
+        self.direction_test_btn = ttk.Button(self.button_frame, text="DIRECTION", command = self.cursor.point_and_dir)
         self.direction_test_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
         
-        #self.image_btn = ttk.Button(self.button_frame, text="Image", command = self.img_test)
-        #self.image_btn.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E))
-        
-        self.dist_btn = ttk.Button(self.button_frame, text="distance", command = self.distance2pos)
+        self.dist_btn = ttk.Button(self.button_frame, text="distance", command = self.cursor.distance2pos)
         self.dist_btn.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E))
         
         self.replot_btn = ttk.Button(self.button_frame, text="Replot", command = self.drawall)
@@ -212,94 +208,12 @@ class mainwindow(ttk.Frame):
         if True:
             imgarea = self.backimgctrl.imgsarea()
             imgarea = self.trackcontrol.drawarea(imgarea)
-            #imgarea = self.trackcontrol.drawarea([imgarea[0],imgarea[1],imgarea[3],imgarea[2]])
-            #imgarea = self.trackcontrol.drawarea([imgarea[0],imgarea[1],-imgarea[2],-imgarea[3]])
             
             self.ax_plane.set_xlim(imgarea[0],imgarea[1])
             self.ax_plane.set_ylim(imgarea[2],imgarea[3])
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
-    def click_test(self, event):
-        if(event.xdata != None and event.ydata != None):
-            print(str(event.button)+' Clicked!','canvas pos: ('+str(event.x)+','+str(event.y)+'), data pos: ({:.2f},{:.2f})'.format(event.xdata,event.ydata))
-        else:
-            print(str(event.button)+' Clicked!','canvas pos: ('+str(event.x)+','+str(event.y)+'), data pos: (None)')
-    def motion_test(self,event):
-        print(event)
-    def direction_test(self):
-        def isfloat(val):
-            return type(val) == type(float())
-        def motion(event):
-            print(event)
-            if(event.xdata != None and event.ydata != None):
-                pointerpos.set_data(event.xdata,event.ydata)
-                self.fig_canvas.draw()
-        def click(event):
-            print('Done')
-            self.fig_canvas.mpl_disconnect(press_id)
-            self.fig_canvas.mpl_disconnect(notify_id)
-            self.draw2dplot()
-        pointerpos, = self.ax_plane.plot([],[],'rx')
-        press_id = self.fig_canvas.mpl_connect('button_press_event',click)
-        notify_id = self.fig_canvas.mpl_connect('motion_notify_event',motion)
-        print('DIRECTION')
-    def point_and_dir(self):
-        def click_1st(event):
-            nonlocal pointed_pos,press2nd_id,motion_id
-            pointerpos.set_data(event.xdata,event.ydata)
-            pointed_pos = np.array([event.xdata,event.ydata])
-            self.fig_canvas.draw()
-            self.fig_canvas.mpl_disconnect(press1st_id)
-            press2nd_id = self.fig_canvas.mpl_connect('button_press_event',click_2nd)
-            motion_id = self.fig_canvas.mpl_connect('motion_notify_event',motion)
-        def motion(event):
-            nonlocal pointed_pos,press2nd_id,motion_id,pointerdir
-            position = np.array([event.xdata,event.ydata])
-            vector = (position - pointed_pos)
-            vector = vector/np.sqrt(np.dot(vector,vector))
-            if pointerdir == None:
-                pointerdir = self.ax_plane.quiver(event.xdata,event.ydata,vector[0],vector[1],angles='xy',scale=2,scale_units='inches',width=0.0025)
-            else:
-                #pointerdir.set_data(event.xdata,event.ydata,vector[0],vector[1])
-                pointerdir.set_UVC(vector[0],vector[1])
-            self.fig_canvas.draw()
-        def click_2nd(event):
-            nonlocal press2nd_id,motion_id
-            #print(press2nd_id,motion_id)
-            self.fig_canvas.mpl_disconnect(press2nd_id)
-            self.fig_canvas.mpl_disconnect(motion_id)
-            self.drawall()
-            print('Done')
-        pointerpos, = self.ax_plane.plot([],[],'rx')
-        pointerdir = None
-        press1st_id = self.fig_canvas.mpl_connect('button_press_event',click_1st)
-        press2nd_id = None
-        motion_id = None
-        pointed_pos = None
-    def distance2pos(self):
-        def click_1st(event):
-            nonlocal pointerpos1,pointerpos2,pointed_pos,press1st_id,click_num
-            if click_num == 0:
-                pointerpos1.set_data(event.xdata,event.ydata)
-                pointed_pos = np.array([event.xdata,event.ydata])
-                self.fig_canvas.draw()
-                print('data pos: ({:.2f},{:.2f})'.format(event.xdata,event.ydata))
-                click_num +=1
-            elif click_num == 1:
-                pointerpos2.set_data(event.xdata,event.ydata)
-                self.fig_canvas.draw()
-                print('data pos: ({:.2f},{:.2f})'.format(event.xdata,event.ydata))
-                print(np.sqrt((pointed_pos[0]-event.xdata)**2+(pointed_pos[1]-event.ydata)**2))
-                click_num +=1
-            else:
-                self.fig_canvas.mpl_disconnect(press1st_id)
-                self.drawall()
-                print('Done')
-        pointerpos1, = self.ax_plane.plot([],[],'rx')
-        pointerpos2, = self.ax_plane.plot([],[],'bx')
-        press1st_id = self.fig_canvas.mpl_connect('button_press_event',click_1st)
-        pointed_pos = None
-        click_num = 0
+    
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
