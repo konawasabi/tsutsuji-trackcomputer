@@ -265,7 +265,7 @@ class mainwindow(ttk.Frame):
             #print(press2nd_id,motion_id)
             self.fig_canvas.mpl_disconnect(press2nd_id)
             self.fig_canvas.mpl_disconnect(motion_id)
-            self.draw2dplot()
+            self.drawall()
             print('Done')
         pointerpos, = self.ax_plane.plot([],[],'rx')
         pointerdir = None
@@ -273,21 +273,6 @@ class mainwindow(ttk.Frame):
         press2nd_id = None
         motion_id = None
         pointed_pos = None
-    def img_test(self):
-        inputdir = filedialog.askopenfilename()
-        img = np.array(Image.open(inputdir))
-        self.draw2dplot()
-        self.ax_plane.imshow(img,alpha=0.5,extent=[-img.shape[1]/2,img.shape[1]/2,img.shape[0]/2,-img.shape[0]/2])
-        self.ax_plane.set_xlim(-img.shape[1]/2-100,img.shape[1]/2+100)
-        self.ax_plane.set_ylim(-img.shape[0]/2-100,img.shape[0]/2+100)
-        self.fig_canvas.draw()
-    def backimg_new(self):
-        self.backimgctrl.newimg()
-        self.fig_canvas.draw()
-    def backimg_rotate(self):
-        self.draw2dplot()
-        self.backimgctrl.rotate()
-        self.fig_canvas.draw()
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
