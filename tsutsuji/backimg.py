@@ -37,6 +37,7 @@ class BackImgControl():
             self.rotrad = 0
             self.alpha = 0.5
             self.extent = [0,width,0,-height]
+            self.scale = 1
         def rotate(self,rad):
             def rotmatrix(tau1):
                 '''２次元回転行列を返す。
@@ -54,7 +55,7 @@ class BackImgControl():
             shape_orig = np.hstack((shape_orig,np.vstack((width,height))))
             shape_orig = np.hstack((shape_orig,np.vstack((0,height))))
             
-            shape_rot = np.dot(rotmatrix(np.deg2rad(rad)),shape_orig - np.vstack((self.origin[0],self.origin[1])))
+            shape_rot = np.dot(rotmatrix(np.deg2rad(rad)),shape_orig*self.scale - np.vstack((self.origin[0],self.origin[1])))
             shape_rot = shape_rot + np.vstack((self.shift[0],self.shift[1]))
             
             self.extent = [min(shape_rot[0]),max(shape_rot[0]),min(shape_rot[1]),max(shape_rot[1])]
@@ -102,6 +103,7 @@ class BackImgControl():
         self.yo_l = ttk.Label(self.input_frame, text='y0')
         self.xsh_l = ttk.Label(self.input_frame, text='xshift')
         self.ysh_l = ttk.Label(self.input_frame, text='yshift')
+        self.scale_l = ttk.Label(self.input_frame, text='scale')
         
         self.xmin_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
         self.xmax_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
@@ -113,6 +115,7 @@ class BackImgControl():
         self.yo_l.grid(column=2, row=4, sticky=(tk.E,tk.W))
         self.xsh_l.grid(column=0, row=5, sticky=(tk.E,tk.W))
         self.ysh_l.grid(column=2, row=5, sticky=(tk.E,tk.W))
+        self.scale_l.grid(column=0, row=6, sticky=(tk.E,tk.W))
         
         self.extent = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.rot_v = tk.DoubleVar(value=0)
@@ -120,6 +123,7 @@ class BackImgControl():
         self.toshow_v = tk.BooleanVar(value=False)
         self.origin = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.shift = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+        self.scale_v = tk.DoubleVar(value=1)
         
         self.xmin_e = ttk.Entry(self.input_frame, textvariable=self.extent[0],width=5)
         self.xmax_e = ttk.Entry(self.input_frame, textvariable=self.extent[1],width=5)
@@ -132,6 +136,7 @@ class BackImgControl():
         self.yo_e = ttk.Entry(self.input_frame, textvariable=self.origin[1],width=5)
         self.xsh_e = ttk.Entry(self.input_frame, textvariable=self.shift[0],width=5)
         self.ysh_e = ttk.Entry(self.input_frame, textvariable=self.shift[1],width=5)
+        self.scale_e = ttk.Entry(self.input_frame, textvariable=self.scale_v,width=5)
         
         self.xmin_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
         self.xmax_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
@@ -144,6 +149,7 @@ class BackImgControl():
         self.yo_e.grid(column=3, row=4, sticky=(tk.E,tk.W))
         self.xsh_e.grid(column=1, row=5, sticky=(tk.E,tk.W))
         self.ysh_e.grid(column=3, row=5, sticky=(tk.E,tk.W))
+        self.scale_e.grid(column=1, row=6, sticky=(tk.E,tk.W))
         
         self.button_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.button_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
@@ -171,6 +177,7 @@ class BackImgControl():
             self.imgs[selected].extent[i] = self.extent[i].get()
         self.imgs[selected].alpha = self.alpha_v.get()
         self.imgs[selected].toshow = self.toshow_v.get()
+        self.imgs[selected].scale = self.scale_v.get()
         for i in [0,1]:
             self.imgs[selected].origin[i] = self.origin[i].get()
             self.imgs[selected].shift[i] = self.shift[i].get()
