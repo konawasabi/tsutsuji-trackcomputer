@@ -127,7 +127,7 @@ class mainwindow(ttk.Frame):
         self.viewpos_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.viewp_scale_v = tk.DoubleVar(value=1000)
         self.view_whole_v = tk.StringVar()
-        self.view_whole_v.set('True')
+        self.view_whole_v.set('False')
         
         self.viewp_x_l = ttk.Label(self.plotarea_frame, text='x')
         self.viewp_y_l = ttk.Label(self.plotarea_frame, text='y')
@@ -207,13 +207,13 @@ class mainwindow(ttk.Frame):
             self.ax_plane.set_ylim(imgarea[2],imgarea[3])
         else:
             center = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
-            scale = self.viewp_scale_v.get()
-            windowratio = self.ax_plane.bbox.height/self.ax_plane.bbox.width # 平面図のアスペクト比を取得
+            #windowratio = self.ax_plane.bbox.height/self.ax_plane.bbox.width # 平面図のアスペクト比を取得
+            windowratio = 7/9
+            scalex = self.viewp_scale_v.get()
+            scaley = windowratio * scalex
             
-            self.ax_plane.set_xlim(center[0]-scale/2, center[0]+scale/2)
-            
-            scale = windowratio * scale
-            self.ax_plane.set_ylim(center[1]-scale/2, center[1]+scale/2)
+            self.ax_plane.set_xlim(center[0]-scalex/2, center[0]+scalex/2)
+            self.ax_plane.set_ylim(center[1]-scaley/2, center[1]+scaley/2)
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
     
