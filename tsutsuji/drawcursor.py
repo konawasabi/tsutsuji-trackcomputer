@@ -99,3 +99,29 @@ class marker():
         self.setpos(event.xdata,event.ydata)
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
+
+class arrow():
+    def __init__(self,parent):
+        self.p = parent
+        self.ax = self.p.parentwindow.ax_plane
+        self.canvas = self.p.parentwindow.fig_canvas
+        
+        self.pointerdir = None
+    def start(self):
+        self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
+        self.pointerdir = None
+        self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
+        self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
+    def move(self,event):
+        position = np.array([event.xdata,event.ydata])
+        vector = (position - self.pointed_pos)
+        vector = vector/np.sqrt(np.dot(vector,vector))
+        if self.pointerdir == None:
+            self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],vector[0],vector[1],angles='xy',scale=2,scale_units='inches',width=0.0025)
+        else:
+            #pointerdir.set_data(event.xdata,event.ydata,vector[0],vector[1])
+            self.pointerdir.set_UVC(vector[0],vector[1])
+        self.canvas.draw()
+    def press(self,event):
+        self.canvas.mpl_disconnect(self.press_id)
+        self.canvas.mpl_disconnect(self.move_id)

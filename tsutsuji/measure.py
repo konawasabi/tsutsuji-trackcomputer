@@ -33,6 +33,7 @@ class interface():
             self.parent = parent
             self.name = name
             self.marker = drawcursor.marker(self,color=color)
+            self.arrow = drawcursor.arrow(self)
             
             self.create_widgets(row)
         def create_widgets(self,row):
@@ -46,7 +47,7 @@ class interface():
             self.track_e = ttk.Entry(self.pframe, textvariable=self.values[3],width=5)
             
             self.setcursor_b = ttk.Button(self.pframe, text="Set", command=self.marker.start, width=2)
-            self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir", command=None, width=2)
+            self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir", command=self.arrow.start, width=2)
             
             self.cursormode_v = tk.StringVar(value='absolute')
             self.cursormode_b_abs = ttk.Radiobutton(self.pframe,text='', variable=self.cursormode_v, value='absolute',command=self.printmode)
