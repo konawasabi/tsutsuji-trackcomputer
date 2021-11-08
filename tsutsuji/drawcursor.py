@@ -80,8 +80,8 @@ class cursor():
 class marker():
     def __init__(self,parent,color):
         self.p = parent
-        self.ax = self.p.ax_plane
-        self.canvas = self.p.fig_canvas
+        self.ax = self.p.parentwindow.ax_plane
+        self.canvas = self.p.parentwindow.fig_canvas
         
         self.markerpos, = self.ax.plot([],[],color+'x')
     def start(self):
@@ -89,6 +89,8 @@ class marker():
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
     def setpos(self,x,y):
         self.markerpos.set_data(x,y)
+        self.p.values[0].set(x)
+        self.p.values[1].set(y)
         self.canvas.draw()
     def move(self,event):
         self.setpos(event.xdata,event.ydata)

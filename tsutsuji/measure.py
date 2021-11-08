@@ -31,7 +31,7 @@ class interface():
             self.pframe = frame
             self.parentwindow = parentwindow
             self.name = name
-            self.marker = drawcursor.marker(self.parentwindow,color=color)
+            self.marker = drawcursor.marker(self,color=color)
             
             self.create_widgets(row)
         def create_widgets(self,row):
