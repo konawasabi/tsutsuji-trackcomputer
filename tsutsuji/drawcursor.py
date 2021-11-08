@@ -76,3 +76,23 @@ class cursor():
         press1st_id = self.p.fig_canvas.mpl_connect('button_press_event',click_1st)
         pointed_pos = None
         click_num = 0
+
+class marker():
+    def __init__(self,parent,color):
+        self.p = parent
+        self.ax = self.p.ax_plane
+        self.canvas = self.p.fig_canvas
+        
+        self.markerpos, = self.ax.plot([],[],color+'x')
+    def start(self):
+        self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
+        self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
+    def setpos(self,x,y):
+        self.markerpos.set_data(x,y)
+        self.canvas.draw()
+    def move(self,event):
+        self.setpos(event.xdata,event.ydata)
+    def press(self,event):
+        self.setpos(event.xdata,event.ydata)
+        self.canvas.mpl_disconnect(self.press_id)
+        self.canvas.mpl_disconnect(self.move_id)
