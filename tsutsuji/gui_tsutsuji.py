@@ -39,6 +39,7 @@ rcParams['font.sans-serif'] = ['Hiragino Sans', 'Yu Gothic', 'Meirio', 'Takao', 
 from . import track_control
 from . import drawcursor
 from . import backimg
+from . import measure
 
 class Catcher: # tkinter内で起きた例外をキャッチする
     def __init__(self, func, subst, widget):
@@ -147,6 +148,9 @@ class mainwindow(ttk.Frame):
         self.viewp_sc_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
         self.view_whole_e.grid(column=0, row=2, sticky=(tk.E,tk.W))
         
+        self.measure_btn = ttk.Button(self.button_frame, text="measure", command = self.measure)
+        self.measure_btn.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E))
+        
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
         #self.columnconfigure(1, weight=1)
@@ -216,6 +220,8 @@ class mainwindow(ttk.Frame):
             self.ax_plane.set_ylim(center[1]-scaley/2, center[1]+scaley/2)
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
+    def measure(self):
+        obj = measure.interface(self)
     
 def main():
     if not __debug__:
