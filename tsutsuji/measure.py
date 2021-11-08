@@ -27,9 +27,10 @@ class measure():
 
 class interface():
     class unit():
-        def __init__(self,name,parentwindow,frame,row,color):
+        def __init__(self,name,parentwindow,frame,parent,row,color):
             self.pframe = frame
             self.parentwindow = parentwindow
+            self.parent = parent
             self.name = name
             self.marker = drawcursor.marker(self,color=color)
             
@@ -83,8 +84,8 @@ class interface():
             self.position_label[i] = ttk.Label(self.position_f, text=i)
             self.position_label[i].grid(column=pos, row=0, sticky=(tk.E,tk.W))
             pos+=1
-        self.cursor_A = self.unit('A',self.mainwindow,self.position_f,1,'r')
-        self.cursor_B = self.unit('B',self.mainwindow,self.position_f,2,'b')
+        self.cursor_A = self.unit('A',self.mainwindow,self.position_f,self,1,'r')
+        self.cursor_B = self.unit('B',self.mainwindow,self.position_f,self,2,'b')
         
         self.result_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.result_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -101,3 +102,5 @@ class interface():
             self.result_e[i] = ttk.Entry(self.result_f, textvariable=self.result_v[i],width=8)
             self.result_e[i].grid(column=1, row=pos, sticky=(tk.E,tk.W))
             pos+=1
+    def setdistance(self):
+        self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2+(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))

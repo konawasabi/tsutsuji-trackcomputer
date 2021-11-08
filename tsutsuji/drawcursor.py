@@ -91,6 +91,7 @@ class marker():
         self.markerpos.set_data(x,y)
         self.p.values[0].set(x)
         self.p.values[1].set(y)
+        self.p.parent.setdistance()
         self.canvas.draw()
     def move(self,event):
         self.setpos(event.xdata,event.ydata)
