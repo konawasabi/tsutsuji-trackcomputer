@@ -108,8 +108,10 @@ class arrow():
         
         self.pointerdir = None
     def start(self):
+        if self.pointerdir != None:
+            self.pointerdir.remove()
+            self.pointerdir = None
         self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
-        self.pointerdir = None
         self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
     def move(self,event):
