@@ -124,6 +124,8 @@ class arrow():
             #pointerdir.set_data(event.xdata,event.ydata,vector[0],vector[1])
             self.pointerdir.set_UVC(vector[0],vector[1])
         self.canvas.draw()
+        
+        self.p.values[2].set(np.rad2deg(np.arctan(vector[1]/vector[0])))
     def press(self,event):
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
