@@ -117,15 +117,18 @@ class arrow():
     def move(self,event):
         position = np.array([event.xdata,event.ydata])
         vector = (position - self.pointed_pos)
-        vector = vector/np.sqrt(np.dot(vector,vector))
+        element = vector/np.sqrt(vector[0]**2+vector[1]**2)
         if self.pointerdir == None:
-            self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],vector[0],vector[1],angles='xy',scale=2,scale_units='inches',width=0.0025)
+            self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],angles='xy',scale=2,scale_units='inches',width=0.0025)
         else:
-            #pointerdir.set_data(event.xdata,event.ydata,vector[0],vector[1])
-            self.pointerdir.set_UVC(vector[0],vector[1])
+            self.pointerdir.set_UVC(element[0],element[1])
         self.canvas.draw()
         
-        self.p.values[2].set(np.rad2deg(np.arctan(vector[1]/vector[0])))
+        sin = vector[1]/np.sqrt(vector[0]**2+vector[1]**2)
+        cos = vector[0]/np.sqrt(vector[0]**2+vector[1]**2)
+        theta = np.arccos(cos) if sin > 0 else 2*np.pi - np.arccos(cos)
+        self.p.values[2].set(np.rad2deg(theta))
+        self.p.parent.setdistance()
     def press(self,event):
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)

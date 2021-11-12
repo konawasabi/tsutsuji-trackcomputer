@@ -105,3 +105,4 @@ class interface():
             pos+=1
     def setdistance(self):
         self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2+(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))
+        self.result_v['direction'].set(self.cursor_B.values[2].get()-self.cursor_A.values[2].get())
