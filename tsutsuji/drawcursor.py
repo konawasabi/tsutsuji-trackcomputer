@@ -126,7 +126,7 @@ class arrow():
         
         sin = vector[1]/np.sqrt(vector[0]**2+vector[1]**2)
         cos = vector[0]/np.sqrt(vector[0]**2+vector[1]**2)
-        theta = np.arccos(cos) if sin > 0 else 2*np.pi - np.arccos(cos)
+        theta = np.arccos(cos) if sin > 0 else -np.arccos(cos)
         self.p.values[2].set(np.rad2deg(theta))
         self.p.parent.setdistance()
     def press(self,event):

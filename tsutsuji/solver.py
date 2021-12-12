@@ -21,7 +21,7 @@ class solver():
     def __init__(self):
         self.ci = tc.curve_intermediate()
     
-    def curvetrack_relocation (A,phiA,B,phiB,lenTC1,lenTC2,tranfunc,R,dx=0.1,error=0.01):
+    def curvetrack_relocation (self,A,phiA,B,phiB,lenTC1,lenTC2,tranfunc,R,dx=0.1,error=0.01):
         ''' A,Bを通る直線を結ぶ曲線軌道の始点を返す
         A:        始点座標
         phiA:     始点での軌道方位
@@ -89,7 +89,7 @@ class solver():
             x = x - f1[1]/df
             num +=1
         return (x,f1,num)
-    def curvetrack_fit (A,phiA,B,phiB,lenTC1,lenTC2,tranfunc,Rtmp=1000,dr=0.1,error=0.01):
+    def curvetrack_fit (self,A,phiA,B,phiB,lenTC1,lenTC2,tranfunc,Rtmp=1000,dr=0.1,error=0.01):
         ''' AB間を結ぶ曲線軌道の半径を返す
         A:        始点座標
         phiA:     始点での軌道方位
