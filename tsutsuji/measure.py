@@ -119,7 +119,7 @@ class interface():
         self.curvetrack_e = {}
         self.curvetrack_v = {}
         pos = 0
-        for i in ['TC length']:
+        for i in ['TC length 1','TC length 2']:
             self.curvetrack_l[i] = ttk.Label(self.curvetrack_value_f, text=i)
             self.curvetrack_l[i].grid(column=0, row=pos, sticky=(tk.E,tk.W))
             
@@ -139,12 +139,15 @@ class interface():
         B = np.array([self.cursor_B.values[0].get(),self.cursor_B.values[1].get()])
         phiA = np.deg2rad(self.cursor_A.values[2].get())
         phiB = np.deg2rad(self.cursor_B.values[2].get())
-        lenTC1 = self.curvetrack_v['TC length'].get()
-        lenTC2 = lenTC1
+        lenTC1 = self.curvetrack_v['TC length 1'].get()
+        lenTC2 = self.curvetrack_v['TC length 2'].get()
         tranfunc = 'line'
         
         result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
-        print(result)
+        
+        if not __debug__:
+            print(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
+            print(result)
 class curvetrack():
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
