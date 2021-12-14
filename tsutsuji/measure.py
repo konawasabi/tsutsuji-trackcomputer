@@ -193,6 +193,10 @@ class interface():
         trackp = trackplot()
         trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
         print(trackp.result)
+        
+        ax = self.mainwindow.ax_plane
+        ax.plot(trackp.result[:,0],trackp.result[:,1])
+        self.mainwindow.fig_canvas.draw()
             
 class curvetrack():
     def __init__(self,mainwindow):
