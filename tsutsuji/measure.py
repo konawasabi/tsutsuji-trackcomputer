@@ -19,6 +19,8 @@ import numpy as np
 import tkinter as tk
 from tkinter import ttk
 
+from kobushi import trackcoordinate
+
 from . import drawcursor
 from . import solver
 
@@ -26,6 +28,45 @@ from . import solver
 class measure():
     def __init__(self):
         pass
+        
+class trackplot():
+    def __init__(self):
+        self.curvegen = trackcoordinate.curve()
+        self.result=np.array([0,0])
+    def generate(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
+        delta_phi = phiB - phiA #曲線前後での方位変化
+        
+        if(lenTC1>0):
+            tc1_tmp = self.curvegen.transition_curve(lenTC1,\
+                                          0,\
+                                          Radius,\
+                                          phiA,\
+                                          tranfunc) # 入口側の緩和曲線
+        else:
+            tc1_tmp=(np.array([0,0]),0,0)
+            
+        if(lenTC2>0):
+            tc2_tmp = self.curvegen.transition_curve(lenTC2,\
+                                          Radius,\
+                                          0,\
+                                          0,\
+                                          tranfunc) # 出口側の緩和曲線
+        else:
+            tc2_tmp=(np.array([0,0]),0,0)
+
+        phi_circular = delta_phi - tc1_tmp[1] - tc2_tmp[1] # 円軌道での方位角変化
+        
+        cc_tmp = self.curvegen.circular_curve(Radius*phi_circular,\
+                                   Radius,\
+                                   tc1_tmp[1]) # 円軌道
+
+        phi_tc2 = phiA + tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
+        
+        self.result = np.vstack((self.result,self.result[-1] + np.dot(self.curvegen.rotate(phiA             ), tc1_tmp[0].T).T))
+        self.result = np.vstack((self.result,self.result[-1] + np.dot(self.curvegen.rotate(phiA + tc1_tmp[1]), cc_tmp[0].T ).T))
+        self.result = np.vstack((self.result,self.result[-1] + np.dot(self.curvegen.rotate(phiA + phi_tc2   ), tc2_tmp[0].T).T))
+        self.result += A
+
 
 class interface():
     class unit():
@@ -148,7 +189,12 @@ class interface():
         if not __debug__:
             print(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
             print(result)
+            
+        trackp = trackplot()
+        trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
+        print(trackp.result)
+            
 class curvetrack():
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
-    
+
