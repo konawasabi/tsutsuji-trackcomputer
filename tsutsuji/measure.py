@@ -40,7 +40,7 @@ class trackplot():
             tc1_tmp = self.curvegen.transition_curve(lenTC1,\
                                           0,\
                                           Radius,\
-                                          phiA,\
+                                          0,\
                                           tranfunc) # 入口側の緩和曲線
         else:
             tc1_tmp=(np.array([[0,0]]),0,0)
@@ -58,13 +58,16 @@ class trackplot():
         
         cc_tmp = self.curvegen.circular_curve(Radius*phi_circular,\
                                    Radius,\
-                                   phiA + tc1_tmp[1]) # 円軌道
+                                   tc1_tmp[1]) # 円軌道
 
-        phi_tc2 = phiA + tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
+        phi_tc2 = tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
         
-        self.result = np.vstack((self.result,self.result[-1] + tc1_tmp[0]))
+        # A!=(0,0)が反映されない。必ずA=(0,0)として計算される。いろいろおかしいので要検証
+        self.result = tc1_tmp[0]
         self.result = np.vstack((self.result,self.result[-1] + cc_tmp[0]))
         self.result = np.vstack((self.result,self.result[-1] + np.dot(self.curvegen.rotate(phi_tc2), tc2_tmp[0].T).T))
+        
+        self.result = np.dot(self.curvegen.rotate(phiA), self.result.T).T
         self.result += A
 
 
@@ -196,6 +199,7 @@ class interface():
         
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])
+        ax.scatter(result[1][0][0],result[1][0][1])
         self.mainwindow.fig_canvas.draw()
             
 class curvetrack():
