@@ -62,7 +62,7 @@ class solver():
             
             cc_tmp = self.ci.circular_curve(Rtmp*phi_circular,\
                                        Rtmp,\
-                                       tc1_tmp[1],\
+                                       tc1_tmp[1]+phiA,\
                                        Rtmp*phi_circular) # 円軌道
 
             phi_tc2 = phiA + tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
@@ -130,7 +130,7 @@ class solver():
             
             cc_tmp = self.ci.circular_curve(Rtmp*phi_circular,\
                                        Rtmp,\
-                                       tc1_tmp[1],\
+                                       tc1_tmp[1]+phiA,\
                                        Rtmp*phi_circular) # 円軌道
 
             phi_tc2 = phiA + tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
