@@ -84,6 +84,7 @@ class marker():
         self.canvas = self.p.parentwindow.fig_canvas
         
         self.markerpos, = self.ax.plot([],[],color+'x')
+        self.prev_trackpos = None
     def start(self):
         self.mode = self.p.cursormode_v.get()
         self.track_key = self.p.values[3].get()
@@ -91,6 +92,7 @@ class marker():
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:,1:3]
         else:
             self.track_data = None
+
         self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
     def setpos(self,x,y):
@@ -105,42 +107,54 @@ class marker():
         if self.mode == 'absolute':
             self.setpos(xpos,ypos)
         else:
-            xr,yr = self.nearestpoint(xpos,ypos)
-            self.setpos(xr,yr)
+            result = self.nearestpoint(xpos,ypos)
+            self.setpos(result[1],result[2])
     def press(self,event):
         xpos = event.xdata
         ypos = event.ydata
         if self.mode == 'absolute':
             self.setpos(xpos,ypos)
         else:
-            xr,yr = self.nearestpoint(xpos,ypos)
-            self.setpos(xr,yr)
+            result = self.nearestpoint(xpos,ypos)
+            self.setpos(result[1],result[2])
+            self.prev_trackpos = result
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
     def nearestpoint(self,x,y):
         inputpos = np.array([x,y])
-        #min_dist_ix = np.argmin(np.sqrt((self.track_data - inputpos)**2))
         distance = (self.track_data - inputpos)**2
         min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
-        return self.track_data[min_dist_ix][0], self.track_data[min_dist_ix][1]
+        return self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][min_dist_ix]
 class arrow():
-    def __init__(self,parent):
+    def __init__(self,parent,marker):
         self.p = parent
         self.ax = self.p.parentwindow.ax_plane
         self.canvas = self.p.parentwindow.fig_canvas
+        self.marker = marker
         
         self.pointerdir = None
     def start(self):
         if self.pointerdir != None:
             self.pointerdir.remove()
             self.pointerdir = None
+        self.mode = self.p.cursormode_v.get()
         self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
         self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
     def move(self,event):
         position = np.array([event.xdata,event.ydata])
-        vector = (position - self.pointed_pos)
-        element = vector/np.sqrt(vector[0]**2+vector[1]**2)
+        if self.mode == 'absolute':
+            vector = (position - self.pointed_pos)
+            element = vector/np.sqrt(vector[0]**2+vector[1]**2)
+        else:
+            v_marker = (position - self.pointed_pos)
+            v_track = np.array([np.cos(self.marker.prev_trackpos[4]),np.sin(self.marker.prev_trackpos[4])])
+            if np.dot(v_marker, v_track) > 0:
+                vector = v_track
+                element = vector
+            else:
+                vector = np.array([np.cos(self.marker.prev_trackpos[4]-np.pi),np.sin(self.marker.prev_trackpos[4]-np.pi)])
+                element = vector
         if self.pointerdir == None:
             self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],angles='xy',scale=2,scale_units='inches',width=0.0025)
         else:

@@ -62,7 +62,6 @@ class trackplot():
 
         phi_tc2 = tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
         
-        # A!=(0,0)が反映されない。必ずA=(0,0)として計算される。いろいろおかしいので要検証
         self.result = tc1_tmp[0]
         self.result = np.vstack((self.result,self.result[-1] + cc_tmp[0]))
         self.result = np.vstack((self.result,self.result[-1] + np.dot(self.curvegen.rotate(phi_tc2), tc2_tmp[0].T).T))
@@ -79,7 +78,7 @@ class interface():
             self.parent = parent
             self.name = name
             self.marker = drawcursor.marker(self,color=color)
-            self.arrow = drawcursor.arrow(self)
+            self.arrow = drawcursor.arrow(self,self.marker)
             
             self.create_widgets(row)
         def create_widgets(self,row):
