@@ -90,7 +90,9 @@ class interface():
             self.x_e = ttk.Entry(self.pframe, textvariable=self.values[0],width=5)
             self.y_e = ttk.Entry(self.pframe, textvariable=self.values[1],width=5)
             self.theta_e = ttk.Entry(self.pframe, textvariable=self.values[2],width=5)
-            self.track_e = ttk.Entry(self.pframe, textvariable=self.values[3],width=5)
+            self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=5)
+            
+            self.track_e['values'] = tuple(self.parent.mainwindow.trackcontrol.track.keys())
             
             self.setcursor_b = ttk.Button(self.pframe, text="Set", command=self.marker.start, width=2)
             self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir", command=self.arrow.start, width=2)
@@ -108,7 +110,7 @@ class interface():
             self.cursormode_b_abs.grid(column=7, row=row, sticky=(tk.E,tk.W))
             self.cursormode_b_tr.grid(column=8, row=row, sticky=(tk.E,tk.W))
         def printmode(self):
-            print(self.name,self.cursormode_v.get())
+            print(self.name,self.cursormode_v.get(), self.values[3].get() if self.cursormode_v.get() == 'track' else '')
             
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
