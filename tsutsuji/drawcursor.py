@@ -86,9 +86,8 @@ class marker():
         self.markerpos, = self.ax.plot([],[],color+'x')
         self.prev_trackpos = None
     def start(self):
-        self.mode = self.p.cursormode_v.get()
         self.track_key = self.p.values[3].get()
-        if self.track_key != '':
+        if self.track_key != '@absolute':
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:,1:3]
         else:
             self.track_data = None
@@ -104,7 +103,7 @@ class marker():
     def move(self,event):
         xpos = event.xdata
         ypos = event.ydata
-        if self.mode == 'absolute':
+        if self.track_key == '@absolute':
             self.setpos(xpos,ypos)
         else:
             result = self.nearestpoint(xpos,ypos)
@@ -112,7 +111,7 @@ class marker():
     def press(self,event):
         xpos = event.xdata
         ypos = event.ydata
-        if self.mode == 'absolute':
+        if self.track_key == '@absolute':
             self.setpos(xpos,ypos)
         else:
             result = self.nearestpoint(xpos,ypos)
@@ -137,13 +136,13 @@ class arrow():
         if self.pointerdir != None:
             self.pointerdir.remove()
             self.pointerdir = None
-        self.mode = self.p.cursormode_v.get()
+        self.track_key = self.p.values[3].get()
         self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
         self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
     def move(self,event):
         position = np.array([event.xdata,event.ydata])
-        if self.mode == 'absolute':
+        if self.track_key == '@absolute':
             vector = (position - self.pointed_pos)
             element = vector/np.sqrt(vector[0]**2+vector[1]**2)
         else:

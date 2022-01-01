@@ -91,7 +91,8 @@ class interface():
             self.theta_e = ttk.Entry(self.pframe, textvariable=self.values[2],width=5)
             self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=5)
             
-            self.track_e['values'] = tuple(self.parent.mainwindow.trackcontrol.track.keys())
+            self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
+            self.values[3].set('@absolute')
             
             self.setcursor_b = ttk.Button(self.pframe, text="Set", command=self.marker.start, width=2)
             self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir", command=self.arrow.start, width=2)
