@@ -215,10 +215,14 @@ class interface():
         track_pos = track[:,1:3]
         distance = (track_pos - inputpos)**2
         min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
-        print(track[min_dist_ix])
+
+        min_dist = np.sqrt(distance[min_dist_ix][0]+distance[min_dist_ix][1])
+        v2track = (np.array([track[min_dist_ix][1],track[min_dist_ix][2]])-inputpos)/min_dist
+        print(min_dist, np.rad2deg(np.arccos(np.dot(v2track,np.array([np.cos(track[min_dist_ix][4]),np.sin(track[min_dist_ix][4])])))) )
 
         ax = self.mainwindow.ax_plane
         ax.scatter(track[min_dist_ix][1],track[min_dist_ix][2])
+        ax.plot([inputpos[0],track[min_dist_ix][1]],[inputpos[1],track[min_dist_ix][2]])
         self.mainwindow.fig_canvas.draw()
 class curvetrack():
     def __init__(self,mainwindow):
