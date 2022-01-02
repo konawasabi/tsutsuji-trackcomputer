@@ -89,26 +89,20 @@ class interface():
             self.x_e = ttk.Entry(self.pframe, textvariable=self.values[0],width=5)
             self.y_e = ttk.Entry(self.pframe, textvariable=self.values[1],width=5)
             self.theta_e = ttk.Entry(self.pframe, textvariable=self.values[2],width=5)
-            self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=5)
+            self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=8)
             
             self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
             self.values[3].set('@absolute')
             
             self.setcursor_b = ttk.Button(self.pframe, text="Set", command=self.marker.start, width=2)
             self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir", command=self.arrow.start, width=2)
-            
-            self.cursormode_v = tk.StringVar(value='absolute')
-            self.cursormode_b_abs = ttk.Radiobutton(self.pframe,text='', variable=self.cursormode_v, value='absolute',command=self.printmode)
-            self.cursormode_b_tr  = ttk.Radiobutton(self.pframe,text='' , variable=self.cursormode_v, value='track',command=self.printmode)
-            
+
             self.x_e.grid(column=1, row=row, sticky=(tk.E,tk.W))
             self.y_e.grid(column=2, row=row, sticky=(tk.E,tk.W))
             self.theta_e.grid(column=3, row=row, sticky=(tk.E,tk.W))
             self.track_e.grid(column=4, row=row, sticky=(tk.E,tk.W))
             self.setcursor_b.grid(column=5, row=row, sticky=(tk.E,tk.W))
             self.setcursor_dir_b.grid(column=6, row=row, sticky=(tk.E,tk.W))
-            self.cursormode_b_abs.grid(column=7, row=row, sticky=(tk.E,tk.W))
-            self.cursormode_b_tr.grid(column=8, row=row, sticky=(tk.E,tk.W))
         def printmode(self):
             print(self.name,self.cursormode_v.get(), self.values[3].get() if self.cursormode_v.get() == 'track' else '')
             
@@ -131,7 +125,7 @@ class interface():
         
         self.position_label = {}
         pos = 1
-        for i in ['x','y','dir','track',' ',' ','abs','trk']:
+        for i in ['x','y','dir','track',' ',' ']:
             self.position_label[i] = ttk.Label(self.position_f, text=i)
             self.position_label[i].grid(column=pos, row=0, sticky=(tk.E,tk.W))
             pos+=1
@@ -175,6 +169,18 @@ class interface():
             pos+=1
         self.calc_b = ttk.Button(self.curvetrack_f, text="CurveTrack", command=self.ctfit)
         self.calc_b.grid(column=1, row=0, sticky=(tk.E,tk.W))
+
+        # 直交軌道探索フレーム
+        self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.nearesttrack_f.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+        self.nearesttrack_sel_v = tk.StringVar(value='')
+        self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
+        self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())
+        self.nearesttrack_sel_e.grid(column=0, row=0, sticky=(tk.E,tk.W))
+
+        self.nearesttrack_doit_btn = ttk.Button(self.nearesttrack_f, text="NearestTrack", command=self.nearesttrack)
+        self.nearesttrack_doit_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
         
     def setdistance(self):
         self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2+(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))
@@ -203,7 +209,17 @@ class interface():
         ax.plot(trackp.result[:,0],trackp.result[:,1])
         ax.scatter(result[1][0][0],result[1][0][1])
         self.mainwindow.fig_canvas.draw()
-            
+    def nearesttrack(self):
+        inputpos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
+        track = self.mainwindow.trackcontrol.track[self.nearesttrack_sel_v.get()]['result']
+        track_pos = track[:,1:3]
+        distance = (track_pos - inputpos)**2
+        min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+        print(track[min_dist_ix])
+
+        ax = self.mainwindow.ax_plane
+        ax.scatter(track[min_dist_ix][1],track[min_dist_ix][2])
+        self.mainwindow.fig_canvas.draw()
 class curvetrack():
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
