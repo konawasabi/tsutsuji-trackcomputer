@@ -69,6 +69,28 @@ class trackplot():
         self.result = np.dot(self.curvegen.rotate(phiA), self.result.T).T
         self.result += A
 
+class marker():
+    def __init__(self,parent,ax,canvas,color):
+        self.parent = parent
+        self.ax = ax
+        self.canvas = canvas
+        self.markerpos, = self.ax.plot([],[],color+'x')
+    def start(self,posfunc,pressfunc):
+        self.posfunc = posfunc
+        self.pressfunc = pressfunc
+        self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
+        self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
+    def move(self,event):
+        self.setpos(event.xdata,event.ydata)
+    def press(self,event):
+        self.setpos(event.xdata,event.ydata)
+        self.pressfunc(self)
+        self.canvas.mpl_disconnect(self.press_id)
+        self.canvas.mpl_disconnect(self.move_id)
+    def setpos(self,x,y):
+        self.xout, self.yout = self.posfunc(x,y)
+        self.markerpos.set_data(self.xout,self.yout)
+        self.canvas.draw()
 
 class interface():
     class unit():
@@ -181,7 +203,16 @@ class interface():
 
         self.nearesttrack_doit_btn = ttk.Button(self.nearesttrack_f, text="NearestTrack", command=self.nearesttrack)
         self.nearesttrack_doit_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
-        
+
+        # カーソル延長線上の距離測定フレーム
+        self.alongcursor_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.alongcursor_f.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+        self.alongcursor_btn = ttk.Button(self.alongcursor_f, text='AlongCursor', command=self.distalongcursor)
+        self.alongcursor_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
+
+        self.alongcursor_marker = marker(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g')
+
     def setdistance(self):
         self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2+(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))
         self.result_v['direction'].set(self.cursor_B.values[2].get()-self.cursor_A.values[2].get())
@@ -224,7 +255,17 @@ class interface():
         ax.scatter(track[min_dist_ix][1],track[min_dist_ix][2])
         ax.plot([inputpos[0],track[min_dist_ix][1]],[inputpos[1],track[min_dist_ix][2]])
         self.mainwindow.fig_canvas.draw()
+    def distalongcursor(self):
+        sourcepos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
+        sourcedir = np.deg2rad(self.cursor_A.values[2].get())
+        def alongf(x,y,spos,sdir):
+            if np.abs(sdir) != np.pi:
+                return (x, np.tan(sdir)*(x-spos[0]) + spos[1])
+            else:
+                return (spos[0],y)
+        def printpos(self,spos):
+            print(self.xout,self.yout, np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2))
+        self.alongcursor_marker.start(lambda x,y: alongf(x,y,sourcepos,sourcedir),lambda self: printpos(self,sourcepos))
 class curvetrack():
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
-
