@@ -241,6 +241,8 @@ class interface():
         ax.scatter(result[1][0][0],result[1][0][1])
         self.mainwindow.fig_canvas.draw()
     def nearesttrack(self):
+        '''指定した軌道上のカーソルAに最も近い点を求める
+        '''
         inputpos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
         track = self.mainwindow.trackcontrol.track[self.nearesttrack_sel_v.get()]['result']
         track_pos = track[:,1:3]
@@ -256,6 +258,8 @@ class interface():
         ax.plot([inputpos[0],track[min_dist_ix][1]],[inputpos[1],track[min_dist_ix][2]])
         self.mainwindow.fig_canvas.draw()
     def distalongcursor(self):
+        '''カーソルAの延長線上の任意の点との距離を求める
+        '''
         sourcepos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
         sourcedir = np.deg2rad(self.cursor_A.values[2].get())
         def alongf(x,y,spos,sdir):
