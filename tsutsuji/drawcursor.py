@@ -179,3 +179,27 @@ class arrow():
                                              angles='xy',scale=2,scale_units='inches',width=0.0025)
         else:
             self.pointerdir.set_UVC(element[0],element[1])
+
+
+class marker_simple():
+    def __init__(self,parent,ax,canvas,color):
+        self.parent = parent
+        self.ax = ax
+        self.canvas = canvas
+        self.markerpos, = self.ax.plot([],[],color+'x')
+    def start(self,posfunc,pressfunc):
+        self.posfunc = posfunc
+        self.pressfunc = pressfunc
+        self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
+        self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
+    def move(self,event):
+        self.setpos(event.xdata,event.ydata)
+    def press(self,event):
+        self.setpos(event.xdata,event.ydata)
+        self.pressfunc(self)
+        self.canvas.mpl_disconnect(self.press_id)
+        self.canvas.mpl_disconnect(self.move_id)
+    def setpos(self,x,y):
+        self.xout, self.yout = self.posfunc(x,y)
+        self.markerpos.set_data(self.xout,self.yout)
+        self.canvas.draw()

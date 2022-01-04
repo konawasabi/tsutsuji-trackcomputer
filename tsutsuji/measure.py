@@ -64,29 +64,6 @@ class trackplot():
         self.result = np.dot(self.curvegen.rotate(phiA), self.result.T).T
         self.result += A
 
-class marker():
-    def __init__(self,parent,ax,canvas,color):
-        self.parent = parent
-        self.ax = ax
-        self.canvas = canvas
-        self.markerpos, = self.ax.plot([],[],color+'x')
-    def start(self,posfunc,pressfunc):
-        self.posfunc = posfunc
-        self.pressfunc = pressfunc
-        self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
-        self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
-    def move(self,event):
-        self.setpos(event.xdata,event.ydata)
-    def press(self,event):
-        self.setpos(event.xdata,event.ydata)
-        self.pressfunc(self)
-        self.canvas.mpl_disconnect(self.press_id)
-        self.canvas.mpl_disconnect(self.move_id)
-    def setpos(self,x,y):
-        self.xout, self.yout = self.posfunc(x,y)
-        self.markerpos.set_data(self.xout,self.yout)
-        self.canvas.draw()
-
 class interface():
     class unit():
         def __init__(self,name,parentwindow,frame,parent,row,color):
@@ -209,7 +186,7 @@ class interface():
             self.alongcursor_btn = ttk.Button(self.alongcursor_f, text='AlongCursor', command=self.distalongcursor)
             self.alongcursor_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
 
-            self.alongcursor_marker = marker(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g')
+            self.alongcursor_marker = drawcursor.marker_simple(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g')
         else:
             print('Already open')
     def closewindow(self):
@@ -223,7 +200,8 @@ class interface():
             self.cursor_A.arrow.setobj(None,reset=True)
             self.cursor_B.arrow.setobj(None,reset=True)
     def setdistance(self):
-        self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2+(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))
+        self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2\
+                                              +(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))
         self.result_v['direction'].set(self.cursor_B.values[2].get()-self.cursor_A.values[2].get())
     def ctfit(self):
         sv = solver.solver()
