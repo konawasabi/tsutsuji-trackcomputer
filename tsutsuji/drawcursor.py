@@ -174,6 +174,7 @@ class arrow():
         if self.pointerdir == None or reset:
             if reset:
                 self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
+                element = (np.cos(np.deg2rad(self.p.values[2].get())),np.sin(np.deg2rad(self.p.values[2].get())))
             self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],\
                                              angles='xy',scale=2,scale_units='inches',width=0.0025)
         else:

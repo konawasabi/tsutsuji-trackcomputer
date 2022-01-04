@@ -24,11 +24,6 @@ from kobushi import trackcoordinate
 from . import drawcursor
 from . import solver
 
-
-class measure():
-    def __init__(self):
-        pass
-        
 class trackplot():
     def __init__(self):
         self.curvegen = trackcoordinate.curve()
@@ -225,10 +220,8 @@ class interface():
             self.cursor_A.marker.setmarkerobj(pos=True)
             self.cursor_B.marker.setmarkerobj(pos=True)
             
-            self.cursor_A.arrow.setobj((np.cos(np.deg2rad(self.cursor_A.values[2].get())),\
-                                        np.sin(np.deg2rad(self.cursor_A.values[2].get()))),reset=True)
-            self.cursor_B.arrow.setobj((np.cos(np.deg2rad(self.cursor_B.values[2].get())),\
-                                        np.sin(np.deg2rad(self.cursor_B.values[2].get()))),reset=True)
+            self.cursor_A.arrow.setobj(None,reset=True)
+            self.cursor_B.arrow.setobj(None,reset=True)
     def setdistance(self):
         self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2+(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))
         self.result_v['direction'].set(self.cursor_B.values[2].get()-self.cursor_A.values[2].get())
@@ -267,7 +260,8 @@ class interface():
 
         min_dist = np.sqrt(distance[min_dist_ix][0]+distance[min_dist_ix][1])
         v2track = (np.array([track[min_dist_ix][1],track[min_dist_ix][2]])-inputpos)/min_dist
-        print(min_dist, np.rad2deg(np.arccos(np.dot(v2track,np.array([np.cos(track[min_dist_ix][4]),np.sin(track[min_dist_ix][4])])))) )
+        print(min_dist, np.rad2deg(np.arccos(np.dot(v2track,np.array([np.cos(track[min_dist_ix][4]),\
+                                                                      np.sin(track[min_dist_ix][4])])))) )
 
         ax = self.mainwindow.ax_plane
         ax.scatter(track[min_dist_ix][1],track[min_dist_ix][2])
@@ -286,6 +280,3 @@ class interface():
         def printpos(self,spos):
             print(self.xout,self.yout, np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2))
         self.alongcursor_marker.start(lambda x,y: alongf(x,y,sourcepos,sourcedir),lambda self: printpos(self,sourcepos))
-class curvetrack():
-    def __init__(self,mainwindow):
-        self.mainwindow = mainwindow
