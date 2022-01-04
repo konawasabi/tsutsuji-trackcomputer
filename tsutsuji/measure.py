@@ -199,6 +199,8 @@ class interface():
             
             self.cursor_A.arrow.setobj(None,reset=True)
             self.cursor_B.arrow.setobj(None,reset=True)
+
+            self.alongcursor_marker.setobj()
     def setdistance(self):
         self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2\
                                               +(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))

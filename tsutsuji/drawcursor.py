@@ -186,7 +186,9 @@ class marker_simple():
         self.parent = parent
         self.ax = ax
         self.canvas = canvas
-        self.markerpos, = self.ax.plot([],[],color+'x')
+        self.color = color
+
+        self.setobj()
     def start(self,posfunc,pressfunc):
         self.posfunc = posfunc
         self.pressfunc = pressfunc
@@ -203,3 +205,5 @@ class marker_simple():
         self.xout, self.yout = self.posfunc(x,y)
         self.markerpos.set_data(self.xout,self.yout)
         self.canvas.draw()
+    def setobj(self):
+        self.markerpos, = self.ax.plot([],[],self.color+'x')

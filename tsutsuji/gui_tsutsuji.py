@@ -114,17 +114,11 @@ class mainwindow(ttk.Frame):
         self.button_frame = ttk.Frame(self, padding='3 3 3 3')
         self.button_frame.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         
-        self.direction_test_btn = ttk.Button(self.button_frame, text="DIRECTION", command = self.cursor.point_and_dir)
-        self.direction_test_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
-        
-        self.dist_btn = ttk.Button(self.button_frame, text="distance", command = self.cursor.distance2pos)
-        self.dist_btn.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E))
-        
         self.replot_btn = ttk.Button(self.button_frame, text="Replot", command = self.drawall)
-        self.replot_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
+        self.replot_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
         
         self.plotarea_frame = ttk.Frame(self.button_frame, padding='3 3 3 3')
-        self.plotarea_frame.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E, tk.S))
+        self.plotarea_frame.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
         
         self.viewpos_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.viewp_scale_v = tk.DoubleVar(value=1000)
@@ -150,7 +144,7 @@ class mainwindow(ttk.Frame):
         self.view_whole_e.grid(column=0, row=2, sticky=(tk.E,tk.W))
         
         self.measure_btn = ttk.Button(self.button_frame, text="measure", command = self.measure)
-        self.measure_btn.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E))
+        self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
