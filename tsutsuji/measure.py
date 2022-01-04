@@ -130,89 +130,105 @@ class interface():
             
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
-        self.create_widgets()
+        self.master = None
     def create_widgets(self):
-        # マスターウィンドウ作成
-        self.master = tk.Toplevel(self.mainwindow)
-        self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
-        self.mainframe.columnconfigure(0, weight=1)
-        self.mainframe.rowconfigure(0, weight=1)
-        self.mainframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
-        
-        self.master.title('Measure')
+        if self.master == None:
+            # マスターウィンドウ作成
+            self.master = tk.Toplevel(self.mainwindow)
+            self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
+            self.mainframe.columnconfigure(0, weight=1)
+            self.mainframe.rowconfigure(0, weight=1)
+            self.mainframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
 
-        # カーソル座標フレーム
-        self.position_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.position_f.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
-        
-        self.position_label = {}
-        pos = 1
-        for i in ['x','y','dir','track',' ',' ']:
-            self.position_label[i] = ttk.Label(self.position_f, text=i)
-            self.position_label[i].grid(column=pos, row=0, sticky=(tk.E,tk.W))
-            pos+=1
-        self.cursor_A = self.unit('A',self.mainwindow,self.position_f,self,1,'r')
-        self.cursor_B = self.unit('B',self.mainwindow,self.position_f,self,2,'b')
-        
-        # 測定結果フレーム
-        self.result_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.result_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
-        
-        self.result_l = {}
-        self.result_e = {}
-        self.result_v = {}
-        pos = 0
-        for i in ['distance','direction']:
-            self.result_l[i] = ttk.Label(self.result_f, text=i)
-            self.result_l[i].grid(column=0, row=pos, sticky=(tk.E,tk.W))
+            self.master.title('Measure')
+
+            self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
+
+            # カーソル座標フレーム
+            self.position_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.position_f.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.position_label = {}
+            pos = 1
+            for i in ['x','y','dir','track',' ',' ']:
+                self.position_label[i] = ttk.Label(self.position_f, text=i)
+                self.position_label[i].grid(column=pos, row=0, sticky=(tk.E,tk.W))
+                pos+=1
+            self.cursor_A = self.unit('A',self.mainwindow,self.position_f,self,1,'r')
+            self.cursor_B = self.unit('B',self.mainwindow,self.position_f,self,2,'b')
+
+            # 測定結果フレーム
+            self.result_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.result_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.result_l = {}
+            self.result_e = {}
+            self.result_v = {}
+            pos = 0
+            for i in ['distance','direction']:
+                self.result_l[i] = ttk.Label(self.result_f, text=i)
+                self.result_l[i].grid(column=0, row=pos, sticky=(tk.E,tk.W))
+
+                self.result_v[i] = tk.DoubleVar(value=0)
+                self.result_e[i] = ttk.Entry(self.result_f, textvariable=self.result_v[i],width=8)
+                self.result_e[i].grid(column=1, row=pos, sticky=(tk.E,tk.W))
+                pos+=1
+
+            # 曲線軌道当てはめフレーム
+            self.curvetrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.curvetrack_f.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.curvetrack_value_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
+            self.curvetrack_value_f.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.curvetrack_l = {}
+            self.curvetrack_e = {}
+            self.curvetrack_v = {}
+            pos = 0
+            for i in ['TC length 1','TC length 2']:
+                self.curvetrack_l[i] = ttk.Label(self.curvetrack_value_f, text=i)
+                self.curvetrack_l[i].grid(column=0, row=pos, sticky=(tk.E,tk.W))
+
+                self.curvetrack_v[i] = tk.DoubleVar(value=0)
+                self.curvetrack_e[i] = ttk.Entry(self.curvetrack_value_f, textvariable=self.curvetrack_v[i],width=8)
+                self.curvetrack_e[i].grid(column=1, row=pos, sticky=(tk.E,tk.W))
+                pos+=1
+            self.calc_b = ttk.Button(self.curvetrack_f, text="CurveTrack", command=self.ctfit)
+            self.calc_b.grid(column=1, row=0, sticky=(tk.E,tk.W))
+
+            # 直交軌道探索フレーム
+            self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.nearesttrack_f.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.nearesttrack_sel_v = tk.StringVar(value='')
+            self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
+            self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())
+            self.nearesttrack_sel_e.grid(column=0, row=0, sticky=(tk.E,tk.W))
+
+            self.nearesttrack_doit_btn = ttk.Button(self.nearesttrack_f, text="NearestTrack", command=self.nearesttrack)
+            self.nearesttrack_doit_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
+
+            # カーソル延長線上の距離測定フレーム
+            self.alongcursor_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.alongcursor_f.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.alongcursor_btn = ttk.Button(self.alongcursor_f, text='AlongCursor', command=self.distalongcursor)
+            self.alongcursor_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
+
+            self.alongcursor_marker = marker(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g')
+        else:
+            print('Already open')
+    def closewindow(self):
+        self.master.withdraw()
+        self.master = None
+    def drawall(self):
+        if self.master != None:
+            self.cursor_A.marker.setmarkerobj(pos=True)
+            self.cursor_B.marker.setmarkerobj(pos=True)
             
-            self.result_v[i] = tk.DoubleVar(value=0)
-            self.result_e[i] = ttk.Entry(self.result_f, textvariable=self.result_v[i],width=8)
-            self.result_e[i].grid(column=1, row=pos, sticky=(tk.E,tk.W))
-            pos+=1
-            
-        # 曲線軌道当てはめフレーム
-        self.curvetrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.curvetrack_f.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E, tk.S))
-        
-        self.curvetrack_value_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
-        self.curvetrack_value_f.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
-        self.curvetrack_l = {}
-        self.curvetrack_e = {}
-        self.curvetrack_v = {}
-        pos = 0
-        for i in ['TC length 1','TC length 2']:
-            self.curvetrack_l[i] = ttk.Label(self.curvetrack_value_f, text=i)
-            self.curvetrack_l[i].grid(column=0, row=pos, sticky=(tk.E,tk.W))
-            
-            self.curvetrack_v[i] = tk.DoubleVar(value=0)
-            self.curvetrack_e[i] = ttk.Entry(self.curvetrack_value_f, textvariable=self.curvetrack_v[i],width=8)
-            self.curvetrack_e[i].grid(column=1, row=pos, sticky=(tk.E,tk.W))
-            pos+=1
-        self.calc_b = ttk.Button(self.curvetrack_f, text="CurveTrack", command=self.ctfit)
-        self.calc_b.grid(column=1, row=0, sticky=(tk.E,tk.W))
-
-        # 直交軌道探索フレーム
-        self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.nearesttrack_f.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E, tk.S))
-
-        self.nearesttrack_sel_v = tk.StringVar(value='')
-        self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
-        self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())
-        self.nearesttrack_sel_e.grid(column=0, row=0, sticky=(tk.E,tk.W))
-
-        self.nearesttrack_doit_btn = ttk.Button(self.nearesttrack_f, text="NearestTrack", command=self.nearesttrack)
-        self.nearesttrack_doit_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
-
-        # カーソル延長線上の距離測定フレーム
-        self.alongcursor_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.alongcursor_f.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E, tk.S))
-
-        self.alongcursor_btn = ttk.Button(self.alongcursor_f, text='AlongCursor', command=self.distalongcursor)
-        self.alongcursor_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
-
-        self.alongcursor_marker = marker(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g')
-
+            self.cursor_A.arrow.setobj((np.cos(np.deg2rad(self.cursor_A.values[2].get())),\
+                                        np.sin(np.deg2rad(self.cursor_A.values[2].get()))),reset=True)
+            self.cursor_B.arrow.setobj((np.cos(np.deg2rad(self.cursor_B.values[2].get())),\
+                                        np.sin(np.deg2rad(self.cursor_B.values[2].get()))),reset=True)
     def setdistance(self):
         self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2+(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))
         self.result_v['direction'].set(self.cursor_B.values[2].get()-self.cursor_A.values[2].get())

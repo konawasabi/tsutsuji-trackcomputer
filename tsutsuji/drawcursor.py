@@ -82,8 +82,9 @@ class marker():
         self.p = parent
         self.ax = self.p.parentwindow.ax_plane
         self.canvas = self.p.parentwindow.fig_canvas
-        
-        self.markerpos, = self.ax.plot([],[],color+'x')
+        self.color = color
+
+        self.setmarkerobj()
         self.prev_trackpos = None
     def start(self):
         self.track_key = self.p.values[3].get()
@@ -124,6 +125,10 @@ class marker():
         distance = (self.track_data - inputpos)**2
         min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
         return self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][min_dist_ix]
+    def setmarkerobj(self,pos=False):
+        self.markerpos, = self.ax.plot([],[],self.color+'x')
+        if pos:
+            self.markerpos.set_data(self.p.values[0].get(),self.p.values[1].get())
 class arrow():
     def __init__(self,parent,marker):
         self.p = parent
@@ -154,10 +159,7 @@ class arrow():
             else:
                 vector = np.array([np.cos(self.marker.prev_trackpos[4]-np.pi),np.sin(self.marker.prev_trackpos[4]-np.pi)])
                 element = vector
-        if self.pointerdir == None:
-            self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],angles='xy',scale=2,scale_units='inches',width=0.0025)
-        else:
-            self.pointerdir.set_UVC(element[0],element[1])
+        self.setobj(element)
         self.canvas.draw()
         
         sin = vector[1]/np.sqrt(vector[0]**2+vector[1]**2)
@@ -168,3 +170,11 @@ class arrow():
     def press(self,event):
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
+    def setobj(self,element,reset=False):
+        if self.pointerdir == None or reset:
+            if reset:
+                self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
+            self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],\
+                                             angles='xy',scale=2,scale_units='inches',width=0.0025)
+        else:
+            self.pointerdir.set_UVC(element[0],element[1])

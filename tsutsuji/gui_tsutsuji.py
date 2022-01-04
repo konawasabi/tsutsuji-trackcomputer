@@ -71,6 +71,7 @@ class mainwindow(ttk.Frame):
         
         self.backimgctrl = backimg.BackImgControl(self)
         self.cursor = drawcursor.cursor(self)
+        self.measurewindow = measure.interface(self)
         
         self.create_widgets()
         self.create_menubar()
@@ -202,6 +203,8 @@ class mainwindow(ttk.Frame):
         
         for i in self.backimgctrl.imgs.keys():
             self.backimgctrl.imgs[i].show(self.ax_plane)
+
+        self.measurewindow.drawall()
             
         if self.view_whole_v.get() == 'True':
             imgarea = self.backimgctrl.imgsarea()
@@ -221,7 +224,7 @@ class mainwindow(ttk.Frame):
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
     def measure(self):
-        obj = measure.interface(self)
+        self.measurewindow.create_widgets()
     
 def main():
     if not __debug__:
