@@ -23,6 +23,7 @@ from kobushi import trackcoordinate
 
 from . import drawcursor
 from . import solver
+from . import math
 
 class trackplot():
     def __init__(self):
@@ -235,18 +236,14 @@ class interface():
         inputpos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
         track = self.mainwindow.trackcontrol.track[self.nearesttrack_sel_v.get()]['result']
         track_pos = track[:,1:3]
-        distance = (track_pos - inputpos)**2
-        min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
 
-        min_dist = np.sqrt(distance[min_dist_ix][0]+distance[min_dist_ix][1])
-        v2track = (np.array([track[min_dist_ix][1],track[min_dist_ix][2]])-inputpos)/min_dist
-        print(min_dist, np.rad2deg(np.arccos(np.dot(v2track,np.array([np.cos(track[min_dist_ix][4]),\
-                                                                      np.sin(track[min_dist_ix][4])])))) )
+        result = math.minimumdist(track_pos, inputpos)
 
         ax = self.mainwindow.ax_plane
-        ax.scatter(track[min_dist_ix][1],track[min_dist_ix][2])
-        ax.plot([inputpos[0],track[min_dist_ix][1]],[inputpos[1],track[min_dist_ix][2]])
+        ax.scatter(track[result[2]][1],track[result[2]][2])
+        ax.plot([inputpos[0],result[1][0]],[inputpos[1],result[1][1]])
         self.mainwindow.fig_canvas.draw()
+
     def distalongcursor(self):
         '''カーソルAの延長線上の任意の点との距離を求める
         '''

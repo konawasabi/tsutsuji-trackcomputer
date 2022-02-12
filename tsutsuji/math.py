@@ -16,8 +16,23 @@
 
 import numpy as np
 
-def minimundist(x,y,p):
-    track = np.vstack((x,y)).T
+def minimumdist(track,p):
+    '''二次元曲線trackについて、座標pから最も近い点を求める。
+    trackの点間は線形補完される。
+    
+    Args:
+        track: np.array([x0,y0],
+                        [x1,y1],
+                        ...
+                        [xn,yn])
+        p: np.array([xp,yp])
+
+    Returns:
+        mindist: 曲線交点との距離
+        crosspt: 曲線との交点座標
+        index: track中で最もpに近い点のindex
+    '''
+    #track = np.vstack((x,y)).T
     dist = (track - p)**2
     min_ix = np.argmin(np.sqrt(dist[:,0]+dist[:,1]))
 
@@ -47,10 +62,8 @@ def minimundist(x,y,p):
             alpha = -np.dot(a-p,n)    
             mindist = (np.linalg.norm(a-p+alpha*n))
             crosspt = (a+alpha*n)
-
-        #print(track[min_ix],track[second_min_ix])
     else:
         mindist=(distance(dist,min_ix))
         crosspt=(track[min_ix])
 
-    return mindist, crosspt
+    return mindist, crosspt, min_ix
