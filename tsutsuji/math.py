@@ -17,22 +17,24 @@
 import numpy as np
 
 def minimumdist(track,p):
-    '''二次元曲線trackについて、座標pから最も近い点を求める。
-    trackの点間は線形補完される。
+    '''二次元曲線trackについて、座標pから最も近い曲線上の点を求める。
+    trackの点間は線形補間される。
     
     Args:
-        track: np.array([x0,y0],
-                        [x1,y1],
-                        ...
-                        [xn,yn])
-        p: np.array([xp,yp])
+        track (ndarray):
+            np.array([x0,y0],[x1,y1],...,[xn,yn])
+        p (ndarray):
+            np.array([xp,yp])
 
     Returns:
-        mindist: 曲線交点との距離
-        crosspt: 曲線との交点座標
-        index: track中で最もpに近い点のindex
+        float
+            mindist: 曲線交点との距離
+        ndarray
+            crosspt: 曲線との交点座標
+        int
+            index: track中で最もpに近い点のindex
     '''
-    #track = np.vstack((x,y)).T
+    
     dist = (track - p)**2
     min_ix = np.argmin(np.sqrt(dist[:,0]+dist[:,1]))
 

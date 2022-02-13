@@ -1,5 +1,5 @@
 '''
-    Copyright 2021 konawasabi
+    Copyright 2021-2022 konawasabi
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -109,3 +109,9 @@ class TrackControl():
                 extent[2] = tmp_result[2] if tmp_result[2] < extent[2] else extent[2]
                 extent[3] = tmp_result[3] if tmp_result[3] > extent[3] else extent[3]
         return extent
+    def dump_trackdata(self):
+        for key in self.conf.track_keys:
+            print(key)
+            for dat in self.track[key]['data'].own_track.data:
+                print(dat)
+            print()

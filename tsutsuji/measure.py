@@ -239,6 +239,8 @@ class interface():
 
         result = math.minimumdist(track_pos, inputpos)
 
+        print(result[0])
+
         ax = self.mainwindow.ax_plane
         ax.scatter(track[result[2]][1],track[result[2]][2])
         ax.plot([inputpos[0],result[1][0]],[inputpos[1],result[1][1]])

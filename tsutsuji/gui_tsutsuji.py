@@ -72,11 +72,11 @@ class mainwindow(ttk.Frame):
         self.backimgctrl = backimg.BackImgControl(self)
         self.cursor = drawcursor.cursor(self)
         self.measurewindow = measure.interface(self)
+
+        self.trackcontrol = track_control.TrackControl()
         
         self.create_widgets()
         self.create_menubar()
-        
-        self.trackcontrol = track_control.TrackControl()
     def create_widgets(self):
         font_title = font.Font(weight='bold',size=10)
         
@@ -145,6 +145,9 @@ class mainwindow(ttk.Frame):
         
         self.measure_btn = ttk.Button(self.button_frame, text="measure", command = self.measure)
         self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
+
+        self.printtracks_btn = ttk.Button(self.button_frame, text="P. Tracks", command = self.trackcontrol.dump_trackdata)
+        self.printtracks_btn.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
