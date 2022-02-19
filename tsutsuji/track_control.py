@@ -111,7 +111,22 @@ class TrackControl():
         return extent
     def dump_trackdata(self):
         for key in self.conf.track_keys:
-            print(key)
-            for dat in self.track[key]['data'].own_track.data:
-                print(dat)
+            #print(key)
+            for type in ['radius','cant','interpolate_func','center','gauge','turn','gradient']:
+                print(key,type)
+                for dat in self.track[key]['data'].own_track.data:
+                    if dat['key'] == type:
+                        print(dat)
             print()
+    def dump_trackpos(self):
+        for key in self.conf.track_keys:
+            print(key)
+            print(self.track[key]['result'])
+            print()
+    def plot_controlpoints(self,ax):
+        for key in self.conf.track_keys:
+            cp_dist = []
+            for dat in self.track[key]['data'].own_track.data:
+                cp_dist.append(dat['distance'])
+            pos_cp = self.track[key]['result'][np.isin(self.track[key]['result'][:,0],cp_dist)]
+            ax.scatter(pos_cp[:,1],pos_cp[:,2])
