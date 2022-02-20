@@ -21,6 +21,7 @@ from kobushi import mapinterpreter
 from kobushi import trackgenerator
 
 from . import config
+from . import math
 
 class TrackControl():
     def __init__(self):
@@ -122,11 +123,25 @@ class TrackControl():
         for key in self.conf.track_keys:
             print(key)
             print(self.track[key]['result'])
-            print()
     def plot_controlpoints(self,ax):
         for key in self.conf.track_keys:
             cp_dist = []
             for dat in self.track[key]['data'].own_track.data:
                 cp_dist.append(dat['distance'])
+            cp_dist = sorted(set(cp_dist))
             pos_cp = self.track[key]['result'][np.isin(self.track[key]['result'][:,0],cp_dist)]
+            print(key)
+            print(cp_dist)
             ax.scatter(pos_cp[:,1],pos_cp[:,2])
+            if(key != 'down'):
+                target = self.track['down']['result'][:,1:3]
+                kp_cp = []
+                rel_dist = []
+                for data in pos_cp:
+                    inputpos = np.array([data[1],data[2]])
+                    result = math.minimumdist(target,inputpos)
+                    kp_cp.append(math.cross_kilopost(self.track['down']['result'],result))
+                    rel_dist.append(result[0])
+                    ax.plot([inputpos[0],result[1][0]],[inputpos[1],result[1][1]],color='black')
+                print(kp_cp)
+                print(rel_dist)

@@ -32,7 +32,9 @@ def minimumdist(track,p):
         ndarray
             crosspt: 曲線との交点座標
         int
-            index: track中で最もpに近い点のindex
+            min_ix: track中で最もpに近い点のindex
+        int
+            second_min_ix: 最もpに近い点が含まれる区間の他端index。直交点が見つからない場合は-1。
     '''
     
     dist = (track - p)**2
@@ -54,6 +56,7 @@ def minimumdist(track,p):
         mindist=(np.linalg.norm(a-p+alpha*n))
         crosspt=(a+alpha*n)
 
+        # 求めたcrossptがtrack[min_ix] ~ track[second_min_ix]の間にない場合
         if crosspt[0]< track[min_ix][0] or crosspt[0]> track[second_min_ix][0]:
             second_min_ix = min_ix - 1
 
@@ -67,5 +70,27 @@ def minimumdist(track,p):
     else:
         mindist=(distance(dist,min_ix))
         crosspt=(track[min_ix])
+        second_min_ix = -1
 
-    return mindist, crosspt, min_ix
+    return mindist, crosspt, min_ix, second_min_ix
+
+def cross_kilopost(track, result):
+    '''minimumdistで求めたtrack上の最近傍点について、対応する距離程を求める。
+    
+    Args:
+        track (ndarray):
+            np.array([x0,y0],[x1,y1],...,[xn,yn])
+        result (list):
+            minimumdistの出力
+
+    Return:
+        float: 最近傍点の距離程。track端点が最近傍点の場合はNone
+    '''
+    if result[3]>0:
+        subdist = np.sqrt((track[result[2]][1]-result[1][0])**2+(track[result[2]][2]-result[1][1])**2)
+        if result[3] < result[2]:
+            subdist *= -1
+        kilopost = track[result[2]][0] + subdist
+    else:
+        kilopost = None
+    return kilopost

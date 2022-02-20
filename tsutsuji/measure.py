@@ -238,8 +238,9 @@ class interface():
         track_pos = track[:,1:3]
 
         result = math.minimumdist(track_pos, inputpos)
-
-        print(result[0])
+        kilopost = math.cross_kilopost(track, result)
+            
+        print(result[0], kilopost, track[result[2]][0])
 
         ax = self.mainwindow.ax_plane
         ax.scatter(track[result[2]][1],track[result[2]][2])
