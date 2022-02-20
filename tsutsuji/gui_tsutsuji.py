@@ -227,37 +227,6 @@ class mainwindow(ttk.Frame):
         self.measurewindow.create_widgets()
     def draw_tracks_cp(self):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
-        
-    def drawall(self):
-        self.ax_plane.cla()
-        self.trackcontrol.plot2d(self.ax_plane)
-        
-        for i in self.backimgctrl.imgs.keys():
-            self.backimgctrl.imgs[i].show(self.ax_plane)
-
-        self.measurewindow.drawall()
-            
-        if self.view_whole_v.get() == 'True':
-            imgarea = self.backimgctrl.imgsarea()
-            imgarea = self.trackcontrol.drawarea(imgarea)
-            
-            self.ax_plane.set_xlim(imgarea[0],imgarea[1])
-            self.ax_plane.set_ylim(imgarea[2],imgarea[3])
-        else:
-            center = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
-            #windowratio = self.ax_plane.bbox.height/self.ax_plane.bbox.width # 平面図のアスペクト比を取得
-            windowratio = 7/9
-            scalex = self.viewp_scale_v.get()
-            scaley = windowratio * scalex
-            
-            self.ax_plane.set_xlim(center[0]-scalex/2, center[0]+scalex/2)
-            self.ax_plane.set_ylim(center[1]-scaley/2, center[1]+scaley/2)
-        self.ax_plane.invert_yaxis()
-        self.fig_canvas.draw()
-    def measure(self):
-        self.measurewindow.create_widgets()
-    def draw_tracks_cp(self):
-        self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
     
 def main():
