@@ -57,7 +57,7 @@ class TrackControl():
             # 自軌道に対する相対座標の算出
             for pos in src:
                 tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
-                tgt_xy_trans = np.dot(self.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
+                tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
                 min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
                 min_ix_val = min_ix[0][0]
                 
@@ -74,19 +74,19 @@ class TrackControl():
                     self.rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
             
             # 相対曲率半径の算出
-            for ix in range(0,len(rel_track[tr])-2):
+            for ix in range(0,len(self.rel_track[tr])-2):
                 pos = []
-                pos.append(rel_track[tr][ix])
-                pos.append(rel_track[tr][ix+1])
-                pos.append(rel_track[tr][ix+2])
+                pos.append(self.rel_track[tr][ix])
+                pos.append(self.rel_track[tr][ix+1])
+                pos.append(self.rel_track[tr][ix+2])
                 
                 ds = np.sqrt((pos[1][0]-pos[0][0])**2 + (pos[1][2]-pos[0][2])**2)
                 dalpha = np.arctan((pos[2][2]-pos[1][2])/(pos[2][0]-pos[1][0])) - np.arctan((pos[1][2]-pos[0][2])/(pos[1][0]-pos[0][0]))
                 curvature = dalpha/ds
                 self.rel_track_radius[tr].append([pos[0][0],curvature,1/curvature if np.abs(1/curvature) < 1e4 else 0])
                 
-            self.rel_track[tr]=np.array(rel_track[tr])
-            self.rel_track_radius[tr]=np.array(rel_track_radius[tr])
+            self.rel_track[tr]=np.array(self.rel_track[tr])
+            self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
     def plot2d(self, ax):
         if len(self.track) > 0:
             for i in self.conf.track_keys:
@@ -94,11 +94,6 @@ class TrackControl():
                 ax.plot(tmp[:,1],tmp[:,2],label=i)
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
-    def rotate(self, tau1):
-        '''２次元回転行列を返す。
-        tau1: 回転角度 [rad]
-        '''
-        return np.array([[np.cos(tau1), -np.sin(tau1)], [np.sin(tau1),  np.cos(tau1)]])
     def drawarea(self, extent_input = None):
         extent = [0,0,0,0] if extent_input == None else extent_input
         if len(self.track) > 0:
