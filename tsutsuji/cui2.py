@@ -1,5 +1,5 @@
 '''
-    Copyright 2021 konawasabi
+    Copyright 2021-2022 konawasabi
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 '''
-# python -m tsutsuji.cui で起動
+# python -m tsutsuji.cui2 で起動
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -27,7 +27,6 @@ from . import track_control
 tc = track_control.TrackControl()
 tc.loadcfg('dev/test.cfg')
 tc.loadmap()
-
 tc.relativepoint()
 
 fig = plt.figure()
@@ -35,14 +34,15 @@ ax = fig.add_subplot(411)
 ax2 = fig.add_subplot(412)
 ax3 = fig.add_subplot(413)
 ax4 = fig.add_subplot(414)
+
 for i in tc.conf.track_keys:
     tmp = tc.track[i]['result']
     ax.plot(tmp[:,1],tmp[:,2],label=i)
-
 for tr in [i for i in tc.conf.track_keys if i != tc.conf.owntrack]:
     ax2.plot(tc.rel_track[tr][:,0],tc.rel_track[tr][:,2],label=tr)
     ax3.plot(tc.rel_track_radius[tr][:,0],tc.rel_track_radius[tr][:,1],label=tr)
     ax4.plot(tc.rel_track_radius[tr][:,0],tc.rel_track_radius[tr][:,2],label=tr)
+
 ax.legend()
 ax2.legend()
 ax3.legend()
