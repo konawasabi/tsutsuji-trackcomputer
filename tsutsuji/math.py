@@ -16,6 +16,12 @@
 
 import numpy as np
 
+def rotate(tau1):
+    '''２次元回転行列を返す。
+    tau1: 回転角度 [rad]
+    '''
+    return np.array([[np.cos(tau1), -np.sin(tau1)], [np.sin(tau1),  np.cos(tau1)]])
+
 def minimumdist(track,p):
     '''二次元曲線trackについて、座標pから最も近い曲線上の点を求める。
     trackの点間は線形補間される。
