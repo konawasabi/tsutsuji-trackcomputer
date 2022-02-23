@@ -52,7 +52,6 @@ class TrackControl():
             tgt = self.track[tr]['result']
             src = self.track[self.conf.owntrack]['result']
             self.rel_track[tr] = []
-            self.rel_track_radius[tr] = []
             len_tr = len(tgt)
             # 自軌道に対する相対座標の算出
             for pos in src:
@@ -61,7 +60,7 @@ class TrackControl():
                 min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
                 min_ix_val = min_ix[0][0]
                 
-                if min_ix_val > 0 and min_ix_val < len_tr-1:
+                if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
                     aroundzero = np.vstack((tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],tgt_xy_trans[1][min_ix_val-1:min_ix_val+2]))
                     signx = np.sign(aroundzero[0])
                     if signx[0] != signx[1]:
@@ -72,7 +71,11 @@ class TrackControl():
                         self.rel_track[tr].append([pos[0], 0,y0])
                 else:
                     self.rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
-            
+            self.rel_track[tr]=np.array(self.rel_track[tr])
+    def relativeradius(self,to_calc=None):
+        calc_track = [i for i in self.conf.track_keys if i != self.conf.owntrack] if to_calc == None else to_calc
+        for tr in calc_track:
+            self.rel_track_radius[tr] = []
             # 相対曲率半径の算出
             for ix in range(0,len(self.rel_track[tr])-2):
                 pos = []
@@ -85,7 +88,6 @@ class TrackControl():
                 curvature = dalpha/ds
                 self.rel_track_radius[tr].append([pos[0][0],curvature,1/curvature if np.abs(1/curvature) < 1e4 else 0])
                 
-            self.rel_track[tr]=np.array(self.rel_track[tr])
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
     def plot2d(self, ax):
         if len(self.track) > 0:

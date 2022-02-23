@@ -28,6 +28,7 @@ tc = track_control.TrackControl()
 tc.loadcfg('dev/test.cfg')
 tc.loadmap()
 tc.relativepoint()
+tc.relativeradius()
 
 fig = plt.figure()
 ax = fig.add_subplot(411)
