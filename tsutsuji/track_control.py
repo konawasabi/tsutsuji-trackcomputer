@@ -28,6 +28,7 @@ class TrackControl():
         self.track = {}
         self.rel_track = {}
         self.rel_track_radius = {}
+        self.rel_track_radius_cp = {}
         self.conf = None
     def loadcfg(self,path):
         self.conf = config.Config(path)
@@ -89,6 +90,28 @@ class TrackControl():
                 self.rel_track_radius[tr].append([pos[0][0],curvature,1/curvature if np.abs(1/curvature) < 1e4 else 0])
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
+    def relativeradius_cp(self,to_calc=None):
+        calc_track = [i for i in self.conf.track_keys if i != self.conf.owntrack] if to_calc == None else to_calc
+        cp_dist = []
+        for dat in self.track[self.conf.owntrack]['data'].own_track.data:
+            cp_dist.append(dat['distance'])
+        cp_dist = sorted(set(cp_dist))
+        for tr in calc_track:
+            self.rel_track_radius_cp[tr] = []
+            
+            #pos_cp = self.track[key]['result'][np.isin(self.track[key]['result'][:,0],cp_dist)]
+
+            ix=0
+            while ix < len(cp_dist)-1:
+                pos_cp = self.rel_track_radius[tr][(self.rel_track_radius[tr][:,0]>=cp_dist[ix]) & (self.rel_track_radius[tr][:,0]<cp_dist[ix+1])]
+                len_section = cp_dist[ix+1] - cp_dist[ix]
+                curvature_section = np.sum(pos_cp[:,1])/len_section
+                yval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][2]
+                self.rel_track_radius_cp[tr].append([cp_dist[ix],curvature_section,1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,yval])
+                ix+=1
+            self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
+            #print(self.rel_track_radius[tr])
+            print(self.rel_track_radius_cp[tr])
     def plot2d(self, ax):
         if len(self.track) > 0:
             for i in self.conf.track_keys:

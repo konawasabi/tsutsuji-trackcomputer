@@ -29,6 +29,7 @@ tc.loadcfg('dev/test.cfg')
 tc.loadmap()
 tc.relativepoint()
 tc.relativeradius()
+tc.relativeradius_cp()
 
 fig = plt.figure()
 ax = fig.add_subplot(411)
@@ -43,6 +44,13 @@ for tr in [i for i in tc.conf.track_keys if i != tc.conf.owntrack]:
     ax2.plot(tc.rel_track[tr][:,0],tc.rel_track[tr][:,2],label=tr)
     ax3.plot(tc.rel_track_radius[tr][:,0],tc.rel_track_radius[tr][:,1],label=tr)
     ax4.plot(tc.rel_track_radius[tr][:,0],tc.rel_track_radius[tr][:,2],label=tr)
+
+    ax3.scatter(tc.rel_track_radius_cp[tr][:,0],tc.rel_track_radius_cp[tr][:,1],label=tr,marker='x')
+    ax4.scatter(tc.rel_track_radius_cp[tr][:,0],tc.rel_track_radius_cp[tr][:,2],label=tr,marker='x')
+
+    for data in tc.rel_track_radius_cp[tr]:
+        print('{:.2f};'.format(data[0]))
+        print('Track[\''+tr+'\'].X.Interpolate({:.2f},{:.2f});'.format(data[3],data[2]))
 
 ax.legend()
 ax2.legend()
