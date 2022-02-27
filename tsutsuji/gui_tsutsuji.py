@@ -191,8 +191,8 @@ class mainwindow(ttk.Frame):
                 self.quit()
         else:
             self.quit()
-    def opencfg(self, event=None):
-        inputdir = filedialog.askopenfilename()
+    def opencfg(self, event=None, inputdir=None):
+        inputdir = filedialog.askopenfilename() if inputdir == None else inputdir
         self.trackcontrol.loadcfg(inputdir)
         self.trackcontrol.loadmap()
         self.drawall()
@@ -257,11 +257,12 @@ def main():
                 traceback.print_exception(type, value, tb)
                 # ...then start the debugger in post-mortem mode
                 pdb.pm()
-        import sys
         sys.excepthook = info
         print('Debug mode')
     
     tk.CallWrapper = Catcher
     root = tk.Tk()
     app = mainwindow(master=root)
+    if len(sys.argv)>1:
+        app.opencfg(inputdir=sys.argv[1])
     app.mainloop()
