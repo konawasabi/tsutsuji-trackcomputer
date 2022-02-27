@@ -47,11 +47,12 @@ class TrackControl():
                                                                 z0 = self.conf.track_data[i]['y'],\
                                                                 theta0 = self.conf.track_data[i]['angle'])
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
-    def relativepoint(self,to_calc=None):
-        calc_track = [i for i in self.conf.track_keys if i != self.conf.owntrack] if to_calc == None else to_calc
+    def relativepoint(self,to_calc=None,owntrack=None):
+        owntrack = self.conf.owntrack if owntrack == None else owntrack
+        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else to_calc
         for tr in calc_track:
             tgt = self.track[tr]['result']
-            src = self.track[self.conf.owntrack]['result']
+            src = self.track[owntrack]['result']
             self.rel_track[tr] = []
             len_tr = len(tgt)
             # 自軌道に対する相対座標の算出
@@ -73,8 +74,9 @@ class TrackControl():
                 else:
                     self.rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
             self.rel_track[tr]=np.array(self.rel_track[tr])
-    def relativeradius(self,to_calc=None):
-        calc_track = [i for i in self.conf.track_keys if i != self.conf.owntrack] if to_calc == None else to_calc
+    def relativeradius(self,to_calc=None,owntrack=None):
+        owntrack = self.conf.owntrack if owntrack == None else owntrack
+        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else to_calc
         for tr in calc_track:
             self.rel_track_radius[tr] = []
             # 相対曲率半径の算出
@@ -90,10 +92,11 @@ class TrackControl():
                 self.rel_track_radius[tr].append([pos[0][0],curvature,1/curvature if np.abs(1/curvature) < 1e4 else 0])
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
-    def relativeradius_cp(self,to_calc=None):
-        calc_track = [i for i in self.conf.track_keys if i != self.conf.owntrack] if to_calc == None else to_calc
+    def relativeradius_cp(self,to_calc=None,owntrack=None):
+        owntrack = self.conf.owntrack if owntrack == None else owntrack
+        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else to_calc
         cp_dist = []
-        for dat in self.track[self.conf.owntrack]['data'].own_track.data:
+        for dat in self.track[owntrack]['data'].own_track.data:
             cp_dist.append(dat['distance'])
         cp_dist = sorted(set(cp_dist))
         for tr in calc_track:
@@ -143,25 +146,47 @@ class TrackControl():
         for key in self.conf.track_keys:
             print(key)
             print(self.track[key]['result'])
-    def plot_controlpoints(self,ax):
+    def plot_controlpoints(self,ax,owntrack = None):
+        owntrack = self.conf.owntrack if owntrack == None else owntrack
         for key in self.conf.track_keys:
-            cp_dist = []
-            for dat in self.track[key]['data'].own_track.data:
-                cp_dist.append(dat['distance'])
-            cp_dist = sorted(set(cp_dist))
-            pos_cp = self.track[key]['result'][np.isin(self.track[key]['result'][:,0],cp_dist)]
+            # 注目軌道の制御点を抽出
+            cp_dist, pos_cp = self.takecp(key,owntrack)
             print(key)
-            print(cp_dist)
+            print('cp:',cp_dist)
             ax.scatter(pos_cp[:,1],pos_cp[:,2])
-            if(key != 'down'):
-                target = self.track['down']['result'][:,1:3]
-                kp_cp = []
-                rel_dist = []
-                for data in pos_cp:
-                    inputpos = np.array([data[1],data[2]])
-                    result = math.minimumdist(target,inputpos)
-                    kp_cp.append(math.cross_kilopost(self.track['down']['result'],result))
-                    rel_dist.append(result[0])
-                    ax.plot([inputpos[0],result[1][0]],[inputpos[1],result[1][1]],color='black')
-                print(kp_cp)
-                print(rel_dist)
+            # 抽出した制御点を自軌道座標に変換
+            if(key != owntrack):
+                rel_cp = self.convert_relativecp(key,pos_cp,ax,owntrack=owntrack)
+                print('kp:',rel_cp[:,3])
+                print('rel. dist:',rel_cp[:,4])
+                for data in rel_cp:
+                    ax.plot([data[1],data[5]],[data[2],data[6]],color='black')
+                #print(rel_cp)
+    def takecp(self,trackkey,owntrack = None):
+        ''' 注目軌道の制御点を抽出
+        '''
+        owntrack = self.conf.owntrack if owntrack == None else owntrack
+        cp_dist = []
+        for dat in self.track[trackkey]['data'].own_track.data:
+            cp_dist.append(dat['distance'])
+        cp_dist = sorted(set(cp_dist))
+        pos_cp = self.track[trackkey]['result'][np.isin(self.track[trackkey]['result'][:,0],cp_dist)]
+        return cp_dist, pos_cp
+    def convert_relativecp(self,trackkey,pos_cp,ax,owntrack = None):
+        ''' 抽出した制御点を自軌道座標に変換
+        Return: ndarray
+                [注目軌道基準の距離程, 注目軌道基準のx, y座標, 自軌道基準制御点の距離程, 自軌道基準のx方向距離, 自軌道基準制御点のx, y座標] 
+        '''
+        owntrack = self.conf.owntrack if owntrack == None else owntrack
+        target = self.track[owntrack]['result'][:,1:3]
+        kp_cp = []
+        rel_dist = []
+        resultcp = []
+        for data in pos_cp:
+            inputpos = np.array([data[1],data[2]])
+            result = math.minimumdist(target,inputpos)
+            #kp_cp.append(math.cross_kilopost(self.track[owntrack]['result'],result))
+            #rel_dist.append(result[0])
+            resultcp.append([data[0],inputpos[0],inputpos[1],math.cross_kilopost(self.track[owntrack]['result'],result),result[0],result[1][0],result[1][1]])
+            #ax.plot([inputpos[0],result[1][0]],[inputpos[1],result[1][1]],color='black')
+        return np.array(resultcp)

@@ -226,8 +226,16 @@ class mainwindow(ttk.Frame):
     def measure(self):
         self.measurewindow.create_widgets()
     def draw_tracks_cp(self):
-        self.trackcontrol.plot_controlpoints(self.ax_plane)
+        self.trackcontrol.plot_controlpoints(self.ax_plane,owntrack='down')
         self.fig_canvas.draw()
+    def get_relativepos_rad(self):
+        self.trackcontrol.relativepoint(owntrack='down')
+        self.trackcontrol.relativeradius(owntrack='down')
+        self.trackcontrol.relativeradius_cp(owntrack='down')
+        for tr in [i for i in tc.conf.track_keys if i != 'down']:
+            for data in tc.rel_track_radius_cp[tr]:
+                print('{:.2f};'.format(data[0]))
+                print('Track[\''+tr+'\'].X.Interpolate({:.2f},{:.2f});'.format(data[3],data[2]))
     
 def main():
     if not __debug__:
