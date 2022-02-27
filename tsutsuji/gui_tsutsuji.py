@@ -151,6 +151,9 @@ class mainwindow(ttk.Frame):
         
         self.printpos_btn = ttk.Button(self.button_frame, text="P. Pos", command = self.draw_tracks_cp)#trackcontrol.dump_trackpos)
         self.printpos_btn.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E))
+
+        self.getrelrad_btn = ttk.Button(self.button_frame, text="Rel. Rad.", command = self.get_relativepos_rad)#trackcontrol.dump_trackpos)
+        self.getrelrad_btn.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
@@ -231,9 +234,11 @@ class mainwindow(ttk.Frame):
     def get_relativepos_rad(self):
         self.trackcontrol.relativepoint(owntrack='down')
         self.trackcontrol.relativeradius(owntrack='down')
-        self.trackcontrol.relativeradius_cp(owntrack='down')
-        for tr in [i for i in tc.conf.track_keys if i != 'down']:
-            for data in tc.rel_track_radius_cp[tr]:
+        #self.trackcontrol.relativeradius_cp(owntrack='down')
+        for tr in [i for i in self.trackcontrol.conf.track_keys if i != 'down']:
+            cp_ownt, _ = self.trackcontrol.takecp(tr,owntrack='down')
+            self.trackcontrol.relativeradius_cp(to_calc=tr,owntrack='down',cp_dist=cp_ownt)
+            for data in self.trackcontrol.rel_track_radius_cp[tr]:
                 print('{:.2f};'.format(data[0]))
                 print('Track[\''+tr+'\'].X.Interpolate({:.2f},{:.2f});'.format(data[3],data[2]))
     

@@ -49,7 +49,7 @@ class TrackControl():
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
     def relativepoint(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else to_calc
+        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
         for tr in calc_track:
             tgt = self.track[tr]['result']
             src = self.track[owntrack]['result']
@@ -76,7 +76,7 @@ class TrackControl():
             self.rel_track[tr]=np.array(self.rel_track[tr])
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else to_calc
+        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
         for tr in calc_track:
             self.rel_track_radius[tr] = []
             # 相対曲率半径の算出
@@ -92,18 +92,17 @@ class TrackControl():
                 self.rel_track_radius[tr].append([pos[0][0],curvature,1/curvature if np.abs(1/curvature) < 1e4 else 0])
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
-    def relativeradius_cp(self,to_calc=None,owntrack=None):
+    def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else to_calc
-        cp_dist = []
-        for dat in self.track[owntrack]['data'].own_track.data:
-            cp_dist.append(dat['distance'])
+        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
+        if cp_dist == None:
+            cp_dist = []
+            for dat in self.track[owntrack]['data'].own_track.data:
+                cp_dist.append(dat['distance'])
         cp_dist = sorted(set(cp_dist))
         for tr in calc_track:
             self.rel_track_radius_cp[tr] = []
-            
             #pos_cp = self.track[key]['result'][np.isin(self.track[key]['result'][:,0],cp_dist)]
-
             ix=0
             while ix < len(cp_dist)-1:
                 pos_cp = self.rel_track_radius[tr][(self.rel_track_radius[tr][:,0]>=cp_dist[ix]) & (self.rel_track_radius[tr][:,0]<cp_dist[ix+1])]
@@ -156,7 +155,7 @@ class TrackControl():
             ax.scatter(pos_cp[:,1],pos_cp[:,2])
             # 抽出した制御点を自軌道座標に変換
             if(key != owntrack):
-                rel_cp = self.convert_relativecp(key,pos_cp,ax,owntrack=owntrack)
+                rel_cp = self.convert_relativecp(key,pos_cp,owntrack=owntrack)
                 print('kp:',rel_cp[:,3])
                 print('rel. dist:',rel_cp[:,4])
                 for data in rel_cp:
@@ -164,6 +163,14 @@ class TrackControl():
                 #print(rel_cp)
     def takecp(self,trackkey,owntrack = None):
         ''' 注目軌道の制御点を抽出
+        Args:
+                 trackkey (string): 
+                 owntrack (string): 
+        Returns:
+                 list
+                    cp_dist: 注目軌道の制御点距離程
+                 list
+                    pos_cp: 制御点における軌道座標データ
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         cp_dist = []
@@ -172,10 +179,11 @@ class TrackControl():
         cp_dist = sorted(set(cp_dist))
         pos_cp = self.track[trackkey]['result'][np.isin(self.track[trackkey]['result'][:,0],cp_dist)]
         return cp_dist, pos_cp
-    def convert_relativecp(self,trackkey,pos_cp,ax,owntrack = None):
+    def convert_relativecp(self,trackkey,pos_cp,owntrack = None):
         ''' 抽出した制御点を自軌道座標に変換
-        Return: ndarray
-                [注目軌道基準の距離程, 注目軌道基準のx, y座標, 自軌道基準制御点の距離程, 自軌道基準のx方向距離, 自軌道基準制御点のx, y座標] 
+        Return: 
+                ndarray
+                   resultcp: [注目軌道基準の距離程, 注目軌道基準のx, y座標, 自軌道基準制御点の距離程, 自軌道基準のx方向距離, 自軌道基準制御点のx, y座標] 
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         target = self.track[owntrack]['result'][:,1:3]
@@ -185,8 +193,5 @@ class TrackControl():
         for data in pos_cp:
             inputpos = np.array([data[1],data[2]])
             result = math.minimumdist(target,inputpos)
-            #kp_cp.append(math.cross_kilopost(self.track[owntrack]['result'],result))
-            #rel_dist.append(result[0])
             resultcp.append([data[0],inputpos[0],inputpos[1],math.cross_kilopost(self.track[owntrack]['result'],result),result[0],result[1][0],result[1][1]])
-            #ax.plot([inputpos[0],result[1][0]],[inputpos[1],result[1][1]],color='black')
         return np.array(resultcp)
