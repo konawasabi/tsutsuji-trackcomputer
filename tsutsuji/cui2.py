@@ -16,6 +16,7 @@
 # python -m tsutsuji.cui2 で起動
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 from kobushi import mapinterpreter
 from kobushi import trackgenerator
@@ -25,7 +26,7 @@ from . import math
 from . import track_control
 
 tc = track_control.TrackControl()
-tc.loadcfg('dev/test.cfg')
+tc.loadcfg('dev/test.cfg' if len(sys.argv)==1 else sys.argv[1])
 tc.loadmap()
 tc.relativepoint()
 tc.relativeradius()
