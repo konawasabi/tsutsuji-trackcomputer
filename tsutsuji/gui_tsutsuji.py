@@ -232,11 +232,17 @@ class mainwindow(ttk.Frame):
         self.trackcontrol.plot_controlpoints(self.ax_plane)#,owntrack='down')
         self.fig_canvas.draw()
     def get_relativepos_rad(self):
+        #import pdb
         self.trackcontrol.relativepoint() # 自軌道基準の座標に変換
         self.trackcontrol.relativeradius() # 自軌道基準の相対曲率半径を算出
+        cp_ownt,_  = self.trackcontrol.takecp(self.trackcontrol.conf.owntrack)
         for tr in [i for i in self.trackcontrol.conf.track_keys if i != self.trackcontrol.conf.owntrack]:#'down']:
-            cp_ownt, _ = self.trackcontrol.takecp(tr) # 注目している軌道の制御点を抽出
-            self.trackcontrol.relativeradius_cp(to_calc=tr,cp_dist=cp_ownt) # 制御点毎の相対半径を算出
+            _, pos_cp_tr = self.trackcontrol.takecp(tr) # 注目している軌道の制御点を抽出
+            #pdb.set_trace()
+            relativecp = self.trackcontrol.convert_relativecp(tr,pos_cp_tr)
+            cp_tr_ownt = sorted(set(cp_ownt + list(relativecp[:,0])))
+            
+            self.trackcontrol.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
             for data in self.trackcontrol.rel_track_radius_cp[tr]:
                 print('{:.2f};'.format(data[0]))
                 print('Track[\''+tr+'\'].X.Interpolate({:.2f},{:.2f});'.format(data[3],data[2]))
