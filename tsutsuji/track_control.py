@@ -34,8 +34,12 @@ class TrackControl():
         self.rel_track_radius_cp = {}
         self.conf = None
     def loadcfg(self,path):
+        '''cfgファイルの読み込み
+        '''
         self.conf = config.Config(path)
     def loadmap(self,to_load=None):
+        '''mapファイルの読み込みと座標データ生成
+        '''
         if self.conf != None:
             for i in self.conf.track_keys:
                 self.track[i] = {}
@@ -51,6 +55,8 @@ class TrackControl():
                                                                 theta0 = self.conf.track_data[i]['angle'])
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
     def relativepoint(self,to_calc=None,owntrack=None):
+        '''owntrackを基準とした相対座標への変換
+        '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
         for tr in calc_track:
@@ -177,8 +183,10 @@ class TrackControl():
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         cp_dist = []
-        for dat in self.track[trackkey]['data'].own_track.data:
+        for dat in self.track[trackkey]['data'].own_track.data: # 軌道要素が存在する距離程を抽出
             cp_dist.append(dat['distance'])
+        for dat in self.conf.track_data[trackkey]['supplemental_cp']: # supplemental_cpの追加
+            cp_dist.append(dat)
         cp_dist = sorted(set(cp_dist))
         pos_cp = self.track[trackkey]['result'][np.isin(self.track[trackkey]['result'][:,0],cp_dist)]
         return cp_dist, pos_cp

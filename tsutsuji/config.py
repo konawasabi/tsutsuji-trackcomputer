@@ -28,11 +28,11 @@ class Config():
         sections = cp.sections()
         self.track_keys = [i for i in sections if i != '@TSUTSUJI_GENERAL']
         
-        self.general = {'origin_distance':0, 'offset_variable':'offset', 'unit_length':1}
+        self.general = {'origin_distance':0, 'offset_variable':'offset', 'unit_length':1, 'owntrack':None}
         if '@TSUTSUJI_GENERAL' in sections:
             for k in cp.options('@TSUTSUJI_GENERAL'):
                 self.general[k] = cp['@TSUTSUJI_GENERAL'][k] if k not in ['origin_distance', 'unit_length'] else float(cp['@TSUTSUJI_GENERAL'][k])
-            
+            self.owntrack = self.general['owntrack']
         self.track_data = {}
         for tk in self.track_keys:
             self.track_data[tk] = {'absolute_coordinate':True,\
@@ -44,7 +44,8 @@ class Config():
                                     'file':None,\
                                     'parent_track':None,\
                                     'origin_distance':None,\
-                                    'isowntrack':False}
+                                    'isowntrack':False,\
+                                    'supplemental_cp':[]}
             for k in cp.options(tk):
                 if k.lower() == 'file':
                     self.track_data[tk][k] = self.path_parent.joinpath(pathlib.Path(cp[tk][k]))
@@ -52,6 +53,9 @@ class Config():
                     self.track_data[tk][k] = float(cp[tk][k])
                 elif k.lower() in ['isowntrack','absolute_coordinate']:
                     self.track_data[tk][k] = True if cp[tk][k].lower() == 'true' else False
+                elif k.lower() in ['supplemental_cp']:
+                    for supcp in cp[tk][k].split(','):
+                        self.track_data[tk][k].append(float(supcp))
                 else:
                     self.track_data[tk][k] = cp[tk][k]
             if self.track_data[tk]['isowntrack']:
