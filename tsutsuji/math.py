@@ -103,3 +103,14 @@ def cross_kilopost(track, result):
     else:
         kilopost = None
     return kilopost
+
+def cross_normal(position, track):
+    '''曲線trackの法線のうち、positionを通過するものを求める
+    Args:
+         ndarray
+            position: np.array([x,y])
+         ndarray
+            track: np.array([[x0,y0],[x1,y1],...,[xn,yn]])
+    Return:
+    '''
+    return None
