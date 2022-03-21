@@ -152,10 +152,10 @@ class mainwindow(ttk.Frame):
         self.printtracks_btn = ttk.Button(self.button_frame, text="P. Tracks", command = self.trackcontrol.dump_trackdata)
         self.printtracks_btn.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E))
         
-        self.printpos_btn = ttk.Button(self.button_frame, text="P. Pos", command = self.draw_tracks_cp)#trackcontrol.dump_trackpos)
+        self.printpos_btn = ttk.Button(self.button_frame, text="P. Pos", command = self.draw_tracks_cp)
         self.printpos_btn.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E))
 
-        self.getrelrad_btn = ttk.Button(self.button_frame, text="Rel. Rad.", command = self.get_relativepos_rad)#trackcontrol.dump_trackpos)
+        self.getrelrad_btn = ttk.Button(self.button_frame, text="Rel. Rad.", command = self.get_relativepos_rad)
         self.getrelrad_btn.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
@@ -232,7 +232,7 @@ class mainwindow(ttk.Frame):
     def measure(self):
         self.measurewindow.create_widgets()
     def draw_tracks_cp(self):
-        self.trackcontrol.plot_controlpoints(self.ax_plane)#,owntrack='down')
+        self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
     def get_relativepos_rad(self):
         #import pdb

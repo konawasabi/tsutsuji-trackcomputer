@@ -155,21 +155,40 @@ class TrackControl():
             print(key)
             print(self.track[key]['result'])
     def plot_controlpoints(self,ax,owntrack = None):
+        '''
+        '''
+
+        # 自軌道制御点の処理
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        for key in self.conf.track_keys:
+        cp_ownt,pos_ownt  = self.takecp(owntrack) # 自軌道の制御点距離程を抽出
+        for tr in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
+            cp_tr, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
+            relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
+            cp_tr_ownt = sorted(set(cp_ownt + cp_tr)) # 自軌道制御点との和をとる
+            rel_cp = np.vstack((np.hstack((pos_ownt[:,1],relativecp[:,5])),np.hstack((pos_ownt[:,2],relativecp[:,6])))).T
+            for data in relativecp:
+                ax.plot([data[1],data[5]],[data[2],data[6]],color='black')
+        ax.scatter(rel_cp[:,0],rel_cp[:,1])
+        print(owntrack)
+        print('cp:',cp_tr_ownt)
+
+        # 他軌道制御点の処理
+        for key in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
             # 注目軌道の制御点を抽出
-            cp_dist, pos_cp = self.takecp(key,owntrack)
+            cp_dist, pos_cp = self.takecp(key)
             print(key)
             print('cp:',cp_dist)
             ax.scatter(pos_cp[:,1],pos_cp[:,2])
             # 抽出した制御点を自軌道座標に変換
-            if(key != owntrack):
-                rel_cp = self.convert_relativecp(key,pos_cp,owntrack=owntrack)
-                print('kp:',rel_cp[:,3])
-                print('rel. dist:',rel_cp[:,4])
-                for data in rel_cp:
-                    ax.plot([data[1],data[5]],[data[2],data[6]],color='black')
-                #print(rel_cp)
+            '''
+            rel_cp = self.convert_relativecp(key,pos_cp,owntrack=owntrack)
+            print('kp:',rel_cp[:,3])
+            print('rel. dist:',rel_cp[:,4])
+            for data in rel_cp:
+                ax.plot([data[1],data[5]],[data[2],data[6]],color='black')
+            #print(rel_cp)
+            '''
+            
     def takecp(self,trackkey,owntrack = None):
         ''' 注目軌道の制御点を抽出
         Args:
