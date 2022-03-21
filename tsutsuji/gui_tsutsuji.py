@@ -235,7 +235,6 @@ class mainwindow(ttk.Frame):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
     def get_relativepos_rad(self):
-        #import pdb
         self.trackcontrol.generate_mapdata()
     
 def main():

@@ -54,35 +54,40 @@ class TrackControl():
                                                                 z0 = self.conf.track_data[i]['y'],\
                                                                 theta0 = self.conf.track_data[i]['angle'])
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
-    def relativepoint(self,to_calc=None,owntrack=None):
+    def relativepoint_single(self,to_calc,owntrack=None):
         '''owntrackを基準とした相対座標への変換
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
+        tgt = self.track[to_calc]['result']
+        src = self.track[owntrack]['result']
+        len_tr = len(tgt)
+        result = []
+        # 自軌道に対する相対座標の算出
+        for pos in src:
+            tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
+            tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
+            min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+            min_ix_val = min_ix[0][0]
+
+            if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
+                aroundzero = np.vstack((tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],tgt_xy_trans[1][min_ix_val-1:min_ix_val+2]))
+                signx = np.sign(aroundzero[0])
+                if signx[0] != signx[1]:
+                    y0 = (aroundzero[1][1]-aroundzero[1][0])/(aroundzero[0][1]-aroundzero[0][0])*(-aroundzero[0][0])+aroundzero[1][0]
+                    result.append([pos[0], 0,y0])
+                elif signx[1] != signx[2]:
+                    y0 = (aroundzero[1][2]-aroundzero[1][1])/(aroundzero[0][2]-aroundzero[0][1])*(-aroundzero[0][1])+aroundzero[1][1]
+                    result.append([pos[0], 0,y0])
+            else:
+                result.append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+        return(np.array(result))
+    def relativepoint_all(self,owntrack=None):
+        '''読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。
+        '''
+        owntrack = self.conf.owntrack if owntrack == None else owntrack
+        calc_track = [i for i in self.conf.track_keys if i != owntrack]
         for tr in calc_track:
-            tgt = self.track[tr]['result']
-            src = self.track[owntrack]['result']
-            self.rel_track[tr] = []
-            len_tr = len(tgt)
-            # 自軌道に対する相対座標の算出
-            for pos in src:
-                tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
-                tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
-                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = min_ix[0][0]
-                
-                if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
-                    aroundzero = np.vstack((tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],tgt_xy_trans[1][min_ix_val-1:min_ix_val+2]))
-                    signx = np.sign(aroundzero[0])
-                    if signx[0] != signx[1]:
-                        y0 = (aroundzero[1][1]-aroundzero[1][0])/(aroundzero[0][1]-aroundzero[0][0])*(-aroundzero[0][0])+aroundzero[1][0]
-                        self.rel_track[tr].append([pos[0], 0,y0])
-                    elif signx[1] != signx[2]:
-                        y0 = (aroundzero[1][2]-aroundzero[1][1])/(aroundzero[0][2]-aroundzero[0][1])*(-aroundzero[0][1])+aroundzero[1][1]
-                        self.rel_track[tr].append([pos[0], 0,y0])
-                else:
-                    self.rel_track[tr].append([pos[0], tgt_xy_trans[0][min_ix][0],tgt_xy_trans[1][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
-            self.rel_track[tr]=np.array(self.rel_track[tr])
+            self.rel_track[tr]=self.relativepoint_single(tr,owntrack)
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
@@ -161,33 +166,27 @@ class TrackControl():
         # 自軌道制御点の処理
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         cp_ownt,pos_ownt  = self.takecp(owntrack) # 自軌道の制御点距離程を抽出
-        for tr in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
+        rel_cp = None
+        for tr in [i for i in self.conf.track_keys if i != owntrack]:
             cp_tr, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
             relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
             cp_tr_ownt = sorted(set(cp_ownt + cp_tr)) # 自軌道制御点との和をとる
-            rel_cp = np.vstack((np.hstack((pos_ownt[:,1],relativecp[:,5])),np.hstack((pos_ownt[:,2],relativecp[:,6])))).T
+            rel_cp_tmp = np.vstack((np.hstack((pos_ownt[:,1],relativecp[:,5])),np.hstack((pos_ownt[:,2],relativecp[:,6])))).T
+            rel_cp = np.vstack((rel_cp,rel_cp_tmp)) if rel_cp != None else rel_cp_tmp
             for data in relativecp:
                 ax.plot([data[1],data[5]],[data[2],data[6]],color='black')
         ax.scatter(rel_cp[:,0],rel_cp[:,1])
         print(owntrack)
         print('cp:',cp_tr_ownt)
 
+        
         # 他軌道制御点の処理
-        for key in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
+        for key in [i for i in self.conf.track_keys if i != owntrack]:
             # 注目軌道の制御点を抽出
             cp_dist, pos_cp = self.takecp(key)
             print(key)
             print('cp:',cp_dist)
             ax.scatter(pos_cp[:,1],pos_cp[:,2])
-            # 抽出した制御点を自軌道座標に変換
-            '''
-            rel_cp = self.convert_relativecp(key,pos_cp,owntrack=owntrack)
-            print('kp:',rel_cp[:,3])
-            print('rel. dist:',rel_cp[:,4])
-            for data in rel_cp:
-                ax.plot([data[1],data[5]],[data[2],data[6]],color='black')
-            #print(rel_cp)
-            '''
             
     def takecp(self,trackkey,owntrack = None):
         ''' 注目軌道の制御点を抽出
@@ -227,7 +226,7 @@ class TrackControl():
         return np.array(resultcp)
     def generate_mapdata(self):
         # import pdb
-        self.relativepoint() # 全ての軌道データを自軌道基準の座標に変換
+        self.relativepoint_all() # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データを自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
         for tr in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
