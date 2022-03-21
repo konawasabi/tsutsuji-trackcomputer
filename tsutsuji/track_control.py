@@ -225,3 +225,18 @@ class TrackControl():
             result = math.minimumdist(target,inputpos)
             resultcp.append([data[0],inputpos[0],inputpos[1],math.cross_kilopost(self.track[owntrack]['result'],result),result[0],result[1][0],result[1][1]])
         return np.array(resultcp)
+    def generate_mapdata(self):
+        # import pdb
+        self.relativepoint() # 全ての軌道データを自軌道基準の座標に変換
+        self.relativeradius() # 全ての軌道データを自軌道基準の相対曲率半径を算出
+        cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
+        for tr in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
+            _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
+            #pdb.set_trace()
+            relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
+            cp_tr_ownt = sorted(set(cp_ownt + list(relativecp[:,0]))) # 自軌道制御点との和をとる
+            
+            self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
+            for data in self.rel_track_radius_cp[tr]:
+                print('{:.2f};'.format(data[0]))
+                print('Track[\''+tr+'\'].X.Interpolate({:.2f},{:.2f});'.format(data[3],data[2]))
