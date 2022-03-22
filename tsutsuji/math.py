@@ -21,6 +21,7 @@ import numpy as np
 
 def rotate(tau1):
     '''２次元回転行列を返す。
+
     tau1: 回転角度 [rad]
     '''
     return np.array([[np.cos(tau1), -np.sin(tau1)], [np.sin(tau1),  np.cos(tau1)]])
@@ -106,11 +107,13 @@ def cross_kilopost(track, result):
 
 def cross_normal(position, track):
     '''曲線trackの法線のうち、positionを通過するものを求める
+
     Args:
          ndarray
             position: np.array([x,y])
          ndarray
             track: np.array([[x0,y0],[x1,y1],...,[xn,yn]])
+
     Return:
     '''
     return None

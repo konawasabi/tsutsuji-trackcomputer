@@ -39,6 +39,7 @@ class TrackControl():
         self.conf = config.Config(path)
     def loadmap(self,to_load=None):
         '''mapファイルの読み込みと座標データ生成
+
         '''
         if self.conf != None:
             for i in self.conf.track_keys:
@@ -56,6 +57,7 @@ class TrackControl():
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
     def relativepoint_single(self,to_calc,owntrack=None):
         '''owntrackを基準とした相対座標への変換
+
         Args:
              string
                  to_calc: 変換する軌道
@@ -115,6 +117,7 @@ class TrackControl():
         return(np.array(result))
     def relativepoint_all(self,owntrack=None):
         '''読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。
+
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys if i != owntrack]
@@ -164,7 +167,7 @@ class TrackControl():
         if len(self.track) > 0:
             for i in self.conf.track_keys:
                 tmp = self.track[i]['result']
-                ax.plot(tmp[:,1],tmp[:,2],label=i)
+                ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
     def drawarea(self, extent_input = None):
@@ -207,7 +210,7 @@ class TrackControl():
             rel_cp = np.vstack((rel_cp,rel_cp_tmp)) if rel_cp != None else rel_cp_tmp
             for data in relativecp:
                 ax.plot([data[1],data[5]],[data[2],data[6]],color='black')
-        ax.scatter(rel_cp[:,0],rel_cp[:,1])
+        ax.scatter(rel_cp[:,0],rel_cp[:,1],color=self.conf.track_data[owntrack]['color'])
         print(owntrack)
         print('cp:',cp_tr_ownt)
 
@@ -221,13 +224,14 @@ class TrackControl():
             print(key)
             print('cp:',cp_dist)
             ownt_relcp = np.hstack((ownt_relcp[np.isin(ownt_relcp[:,0],cp_ownt)],pos_ownt))
-            ax.scatter(pos_cp[:,1],pos_cp[:,2])
-            ax.scatter(ownt_relcp[:,4],ownt_relcp[:,5])
+            ax.scatter(pos_cp[:,1],pos_cp[:,2],color=self.conf.track_data[key]['color'])
+            ax.scatter(ownt_relcp[:,4],ownt_relcp[:,5],color=self.conf.track_data[key]['color'],marker='x')
             for data in ownt_relcp:
                 ax.plot([data[4],data[7]],[data[5],data[8]],color='red')
             
     def takecp(self,trackkey,owntrack = None):
         ''' 注目軌道の制御点を抽出
+
         Args:
                  trackkey (string): 
                  owntrack (string): 
@@ -248,6 +252,7 @@ class TrackControl():
         return cp_dist, pos_cp
     def convert_relativecp(self,trackkey,pos_cp,owntrack = None):
         ''' 抽出した制御点を自軌道座標に変換
+
         Return: 
                 ndarray
                    resultcp: [注目軌道基準の距離程, 注目軌道基準のx, y座標, 自軌道基準制御点の距離程, 自軌道基準のx方向距離, 自軌道基準制御点のx, y座標] 

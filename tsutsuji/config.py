@@ -34,6 +34,8 @@ class Config():
                 self.general[k] = cp['@TSUTSUJI_GENERAL'][k] if k not in ['origin_distance', 'unit_length'] else float(cp['@TSUTSUJI_GENERAL'][k])
             self.owntrack = self.general['owntrack']
         self.track_data = {}
+        linecolor_default = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf']
+        color_ix = 0
         for tk in self.track_keys:
             self.track_data[tk] = {'absolute_coordinate':True,\
                                     'x':0,\
@@ -45,7 +47,8 @@ class Config():
                                     'parent_track':None,\
                                     'origin_distance':None,\
                                     'isowntrack':False,\
-                                    'supplemental_cp':[]}
+                                    'supplemental_cp':[],\
+                                    'color':linecolor_default[color_ix%10]}
             for k in cp.options(tk):
                 if k.lower() == 'file':
                     self.track_data[tk][k] = self.path_parent.joinpath(pathlib.Path(cp[tk][k]))
@@ -60,4 +63,5 @@ class Config():
                     self.track_data[tk][k] = cp[tk][k]
             if self.track_data[tk]['isowntrack']:
                 self.owntrack = tk
+            color_ix +=1
                     
