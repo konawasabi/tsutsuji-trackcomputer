@@ -87,10 +87,9 @@ class TrackControl():
                 aroundzero = np.vstack((aroundzero, tgt[:,0][min_ix_val-1:min_ix_val+2]))
                 aroundzero = np.vstack((aroundzero, tgt[:,1][min_ix_val-1:min_ix_val+2]))
                 aroundzero = np.vstack((aroundzero, tgt[:,2][min_ix_val-1:min_ix_val+2]))
+                # aroundzero : [変換後x座標成分, 変換後y座標成分, 対応する軌道の距離程, 絶対座標x成分, 絶対座標y成分]
                 signx = np.sign(aroundzero[0])
                 if signx[0] != signx[1]:
-                    #y0 = (aroundzero[1][1]-aroundzero[1][0])/(aroundzero[0][1]-aroundzero[0][0])*(-aroundzero[0][0])+aroundzero[1][0]
-                    #kp0 = (aroundzero[2][1]-aroundzero[2][0])/(aroundzero[0][1]-aroundzero[0][0])*(-aroundzero[0][0])+aroundzero[2][0]
                     result.append([pos[0],\
                                    0,\
                                    interpolate(aroundzero,0,1),\
@@ -162,7 +161,7 @@ class TrackControl():
                 ix+=1
             self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
             #print(self.rel_track_radius[tr])
-            print(self.rel_track_radius_cp[tr])
+            #print(self.rel_track_radius_cp[tr])
     def plot2d(self, ax):
         if len(self.track) > 0:
             for i in self.conf.track_keys:
@@ -276,6 +275,7 @@ class TrackControl():
             _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
             #pdb.set_trace()
             relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
+            #print(relativecp)
             cp_tr_ownt = sorted(set(cp_ownt + list(relativecp[:,0]))) # 自軌道制御点との和をとる
             
             self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出

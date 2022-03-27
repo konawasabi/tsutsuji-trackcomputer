@@ -81,6 +81,7 @@ def minimumdist(track,p):
         mindist=(distance(dist,min_ix))
         crosspt=(track[min_ix])
         second_min_ix = -1
+        #print(p,mindist,crosspt,min_ix,second_min_ix)
 
     return mindist, crosspt, min_ix, second_min_ix
 
