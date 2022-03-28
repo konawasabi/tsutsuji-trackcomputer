@@ -95,6 +95,7 @@ class TrackControl():
                     result.append([pos[0],\
                                    0,\
                                    interpolate(aroundzero,0,'y_tr'),\
+                                   interpolate(aroundzero,0,'z_ab') - pos[3],\
                                    interpolate(aroundzero,0,'kp'),\
                                    interpolate(aroundzero,0,'x_ab'),\
                                    interpolate(aroundzero,0,'y_ab'),\
@@ -104,6 +105,7 @@ class TrackControl():
                     result.append([pos[0],\
                                    0,\
                                    interpolate(aroundzero,1,'y_tr'),\
+                                   interpolate(aroundzero,1,'z_ab') - pos[3],\
                                    interpolate(aroundzero,1,'kp'),\
                                    interpolate(aroundzero,1,'x_ab'),\
                                    interpolate(aroundzero,1,'y_ab'),\
@@ -113,6 +115,7 @@ class TrackControl():
                 result.append([pos[0],\
                                tgt_xy_trans[0][min_ix][0],\
                                tgt_xy_trans[1][min_ix][0],\
+                               tgt[:,3][min_ix][0] - pos[3],\
                                tgt[:,0][min_ix][0],\
                                tgt[:,1][min_ix][0],\
                                tgt[:,2][min_ix][0],\
