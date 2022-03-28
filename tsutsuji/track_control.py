@@ -82,61 +82,42 @@ class TrackControl():
             min_ix_val = min_ix[0][0]
 
             if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
-                '''
-                aroundzero = np.vstack((tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
-                                        tgt_xy_trans[1][min_ix_val-1:min_ix_val+2]))
-                aroundzero = np.vstack((aroundzero, tgt[:,0][min_ix_val-1:min_ix_val+2]))
-                aroundzero = np.vstack((aroundzero, tgt[:,1][min_ix_val-1:min_ix_val+2]))
-                aroundzero = np.vstack((aroundzero, tgt[:,2][min_ix_val-1:min_ix_val+2]))
-                '''
                 aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
                               'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
                               'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
                               'x_ab':tgt[:,1][min_ix_val-1:min_ix_val+2],\
                               'y_ab':tgt[:,2][min_ix_val-1:min_ix_val+2],\
-                              'z_ab':tgt[:,3][min_ix_val-1:min_ix_val+2]}
+                              'z_ab':tgt[:,3][min_ix_val-1:min_ix_val+2],\
+                              'cant':tgt[:,8][min_ix_val-1:min_ix_val+2]}
                 # aroundzero : [変換後x座標成分, 変換後y座標成分, 対応する軌道の距離程, 絶対座標x成分, 絶対座標y成分]
                 signx = np.sign(aroundzero['x_tr'])
                 if signx[0] != signx[1]:
-                    '''
-                    result.append([pos[0],\
-                                   0,\
-                                   interpolate(aroundzero,0,1),\
-                                   interpolate(aroundzero,0,2),\
-                                   interpolate(aroundzero,0,3),\
-                                   interpolate(aroundzero,0,4)])
-                    '''
                     result.append([pos[0],\
                                    0,\
                                    interpolate(aroundzero,0,'y_tr'),\
                                    interpolate(aroundzero,0,'kp'),\
                                    interpolate(aroundzero,0,'x_ab'),\
-                                   interpolate(aroundzero,0,'y_ab')])
+                                   interpolate(aroundzero,0,'y_ab'),\
+                                   interpolate(aroundzero,0,'z_ab'),\
+                                   interpolate(aroundzero,0,'cant')])
                 elif signx[1] != signx[2]:
-                    #y0 = (aroundzero[1][2]-aroundzero[1][1])/(aroundzero[0][2]-aroundzero[0][1])*(-aroundzero[0][1])+aroundzero[1][1]
-                    #kp0 = (aroundzero[2][2]-aroundzero[2][1])/(aroundzero[0][2]-aroundzero[0][1])*(-aroundzero[0][1])+aroundzero[2][1]
-                    #result.append([pos[0], 0,y0,kp0])
-                    '''
-                    result.append([pos[0],\
-                                   0,\
-                                   interpolate(aroundzero,1,1),\
-                                   interpolate(aroundzero,1,2),\
-                                   interpolate(aroundzero,1,3),\
-                                   interpolate(aroundzero,1,4)])
-                    '''
                     result.append([pos[0],\
                                    0,\
                                    interpolate(aroundzero,1,'y_tr'),\
                                    interpolate(aroundzero,1,'kp'),\
                                    interpolate(aroundzero,1,'x_ab'),\
-                                   interpolate(aroundzero,1,'y_ab')])
+                                   interpolate(aroundzero,1,'y_ab'),\
+                                   interpolate(aroundzero,1,'z_ab'),\
+                                   interpolate(aroundzero,1,'cant')])
             else:
                 result.append([pos[0],\
                                tgt_xy_trans[0][min_ix][0],\
                                tgt_xy_trans[1][min_ix][0],\
                                tgt[:,0][min_ix][0],\
                                tgt[:,1][min_ix][0],\
-                               tgt[:,2][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+                               tgt[:,2][min_ix][0],\
+                               tgt[:,3][min_ix][0],\
+                               tgt[:,8][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
         return(np.array(result))
     def relativepoint_all(self,owntrack=None):
         '''読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。
