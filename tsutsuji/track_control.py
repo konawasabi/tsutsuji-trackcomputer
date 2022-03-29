@@ -65,7 +65,7 @@ class TrackControl():
                  owntrack: 自軌道 (Option)
         Return:
              ndarray
-                 [[owntrack基準の距離程, 変換後x座標成分(=0), 変換後y座標成分, 対応する軌道の距離程,絶対座標x成分,絶対座標y成分], ...]
+                 [[owntrack基準の距離程, 変換後x座標成分(=0), 変換後y座標成分, 変換後z座標成分, 対応する軌道の距離程,絶対座標x成分,絶対座標y成分,絶対座標z成分,カント], ...]
         '''
         def interpolate(aroundzero,ix,typ,base='x_tr'):
             return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
@@ -141,11 +141,24 @@ class TrackControl():
                 pos.append(self.rel_track[tr][ix])
                 pos.append(self.rel_track[tr][ix+1])
                 pos.append(self.rel_track[tr][ix+2])
-                
+
+                # 幾何学的に曲率を求める(xy平面)
                 ds = np.sqrt((pos[1][0]-pos[0][0])**2 + (pos[1][2]-pos[0][2])**2)
-                dalpha = np.arctan((pos[2][2]-pos[1][2])/(pos[2][0]-pos[1][0])) - np.arctan((pos[1][2]-pos[0][2])/(pos[1][0]-pos[0][0]))
+                dalpha = np.arctan((pos[2][2]-pos[1][2])/(pos[2][0]-pos[1][0])) \
+                    - np.arctan((pos[1][2]-pos[0][2])/(pos[1][0]-pos[0][0]))
                 curvature = dalpha/ds
-                self.rel_track_radius[tr].append([pos[0][0],curvature,1/curvature if np.abs(1/curvature) < 1e4 else 0])
+
+                # 幾何学的に曲率を求める(z面)
+                ds_z = np.sqrt((pos[1][0]-pos[0][0])**2 + (pos[1][3]-pos[0][3])**2)
+                dalpha_z = np.arctan((pos[2][3]-pos[1][3])/(pos[2][0]-pos[1][0])) \
+                    - np.arctan((pos[1][3]-pos[0][3])/(pos[1][0]-pos[0][0]))
+                curvature_z = dalpha_z/ds_z
+                
+                self.rel_track_radius[tr].append([pos[0][0],\
+                                                  curvature,\
+                                                  1/curvature if np.abs(1/curvature) < 1e4 else 0,\
+                                                  curvature_z,\
+                                                  1/curvature_z if np.abs(1/curvature_z) < 1e4 else 0])
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
     def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None):
@@ -162,13 +175,18 @@ class TrackControl():
             ix=0
             while ix < len(cp_dist)-1:
                 pos_cp = self.rel_track_radius[tr][(self.rel_track_radius[tr][:,0]>=cp_dist[ix]) & (self.rel_track_radius[tr][:,0]<cp_dist[ix+1])]
-                len_section = cp_dist[ix+1] - cp_dist[ix]
-                curvature_section = np.sum(pos_cp[:,1])/len_section
+                len_section         = cp_dist[ix+1] - cp_dist[ix]
+                curvature_section   = np.sum(pos_cp[:,1])/len_section
+                curvature_section_z = np.sum(pos_cp[:,3])/len_section
                 yval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][2]
+                zval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][3]
                 self.rel_track_radius_cp[tr].append([cp_dist[ix],\
                                                      curvature_section,\
                                                      1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,\
-                                                     yval])
+                                                     yval,\
+                                                     curvature_section_z,\
+                                                     1/curvature_section_z if np.abs(1/curvature_section_z) < 1e4 else 0,\
+                                                     zval])
                 ix+=1
             self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
             #print(self.rel_track_radius[tr])
@@ -235,9 +253,9 @@ class TrackControl():
             print('cp:',cp_dist)
             ownt_relcp = np.hstack((ownt_relcp[np.isin(ownt_relcp[:,0],cp_ownt)],pos_ownt))
             ax.scatter(pos_cp[:,1],pos_cp[:,2],color=self.conf.track_data[key]['color'])
-            ax.scatter(ownt_relcp[:,4],ownt_relcp[:,5],color=self.conf.track_data[key]['color'],marker='x')
+            ax.scatter(ownt_relcp[:,5],ownt_relcp[:,6],color=self.conf.track_data[key]['color'],marker='x')
             for data in ownt_relcp:
-                ax.plot([data[4],data[7]],[data[5],data[8]],color='red')
+                ax.plot([data[5],data[10]],[data[6],data[11]],color='red')
             
     def takecp(self,trackkey,owntrack = None):
         ''' 注目軌道の制御点を抽出
@@ -275,7 +293,13 @@ class TrackControl():
         for data in pos_cp:
             inputpos = np.array([data[1],data[2]])
             result = math.minimumdist(target,inputpos)
-            resultcp.append([data[0],inputpos[0],inputpos[1],math.cross_kilopost(self.track[owntrack]['result'],result),result[0],result[1][0],result[1][1]])
+            resultcp.append([data[0],\
+                             inputpos[0],\
+                             inputpos[1],\
+                             math.cross_kilopost(self.track[owntrack]['result'],result),\
+                             result[0],\
+                             result[1][0],\
+                             result[1][1]])
         return np.array(resultcp)
     def generate_mapdata(self):
         # import pdb
@@ -293,3 +317,4 @@ class TrackControl():
             for data in self.rel_track_radius_cp[tr]:
                 print('{:.2f};'.format(data[0]))
                 print('Track[\''+tr+'\'].X.Interpolate({:.2f},{:.2f});'.format(data[3],data[2]))
+                print('Track[\''+tr+'\'].Y.Interpolate({:.2f},{:.2f});'.format(data[6],data[5]))
