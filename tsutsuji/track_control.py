@@ -257,12 +257,13 @@ class TrackControl():
             for data in ownt_relcp:
                 ax.plot([data[5],data[10]],[data[6],data[11]],color='red')
             
-    def takecp(self,trackkey,owntrack = None):
+    def takecp(self,trackkey,owntrack = None, elem=None):
         ''' 注目軌道の制御点を抽出
 
         Args:
                  trackkey (string): 
-                 owntrack (string): 
+                 owntrack (string):
+                 elem     (string): elemで指定した要素のみ抽出する
         Returns:
                  list
                     cp_dist: 注目軌道の制御点距離程
@@ -272,7 +273,8 @@ class TrackControl():
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         cp_dist = []
         for dat in self.track[trackkey]['data'].own_track.data: # 軌道要素が存在する距離程を抽出
-            cp_dist.append(dat['distance'])
+            if elem == None or dat['key'] == elem:
+                cp_dist.append(dat['distance'])
         for dat in self.conf.track_data[trackkey]['supplemental_cp']: # supplemental_cpの追加
             cp_dist.append(dat)
         cp_dist = sorted(set(cp_dist))
@@ -302,28 +304,46 @@ class TrackControl():
                              result[1][1]])
         return np.array(resultcp)
     def generate_mapdata(self):
+        ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
+        '''
+        
         # import pdb
         self.relativepoint_all() # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データを自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
+
+        # owntrack以外の各軌道について処理する
         for tr in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
             _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
             #pdb.set_trace()
             relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
-            #print(relativecp)
             cp_tr_ownt = sorted(set(cp_ownt + list(relativecp[:,0]))) # 自軌道制御点との和をとる
             
             self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
-            output_map = {'x':'', 'y':'', 'cant':''}
+
+            # 他軌道構文生成
+            output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'function':'', 'gauge':''}
+            
             for data in self.rel_track_radius_cp[tr]:
-                #print('{:.2f};'.format(data[0]))
-                #print('Track[\''+tr+'\'].X.Interpolate({:.2f},{:.2f});'.format(data[3],data[2]))
-                #print('Track[\''+tr+'\'].Y.Interpolate({:.2f},{:.2f});'.format(data[6],data[5]))
                 output_map['x'] += '{:.2f};\n'.format(data[0])
                 output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],data[2])
                 output_map['y'] += '{:.2f};\n'.format(data[0])
                 output_map['y'] += 'Track[\'{:s}\'].Y.Interpolate({:.2f},{:.2f});\n'.format(tr,data[6],data[5])
+
+            #import pdb
+            #pdb.set_trace()
+            cp_dist_cant, pos_cp_cant = self.takecp(tr,elem='cant')
+            relativecp =  self.convert_relativecp(tr,pos_cp_cant)
+
+            for data in self.rel_track[tr][np.isin(self.rel_track[tr][:,0],relativecp[:,0])]:
+                output_map['cant'] += '{:.2f};\n'.format(data[0])
+                output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[8])
+                
+
+            # 他軌道構文印字
             print('# Track[\'{:s}\'].X'.format(tr))
             print(output_map['x'])
             print('# Track[\'{:s}\'].Y'.format(tr))
             print(output_map['y'])
+            print('# Track[\'{:s}\'].Cant'.format(tr))
+            print(output_map['cant'])
