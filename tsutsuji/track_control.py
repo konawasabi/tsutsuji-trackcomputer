@@ -314,7 +314,16 @@ class TrackControl():
             cp_tr_ownt = sorted(set(cp_ownt + list(relativecp[:,0]))) # 自軌道制御点との和をとる
             
             self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
+            output_map = {'x':'', 'y':'', 'cant':''}
             for data in self.rel_track_radius_cp[tr]:
-                print('{:.2f};'.format(data[0]))
-                print('Track[\''+tr+'\'].X.Interpolate({:.2f},{:.2f});'.format(data[3],data[2]))
-                print('Track[\''+tr+'\'].Y.Interpolate({:.2f},{:.2f});'.format(data[6],data[5]))
+                #print('{:.2f};'.format(data[0]))
+                #print('Track[\''+tr+'\'].X.Interpolate({:.2f},{:.2f});'.format(data[3],data[2]))
+                #print('Track[\''+tr+'\'].Y.Interpolate({:.2f},{:.2f});'.format(data[6],data[5]))
+                output_map['x'] += '{:.2f};\n'.format(data[0])
+                output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],data[2])
+                output_map['y'] += '{:.2f};\n'.format(data[0])
+                output_map['y'] += 'Track[\'{:s}\'].Y.Interpolate({:.2f},{:.2f});\n'.format(tr,data[6],data[5])
+            print('# Track[\'{:s}\'].X'.format(tr))
+            print(output_map['x'])
+            print('# Track[\'{:s}\'].Y'.format(tr))
+            print(output_map['y'])
