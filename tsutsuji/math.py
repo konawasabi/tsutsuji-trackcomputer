@@ -103,7 +103,7 @@ def cross_kilopost(track, result):
             subdist *= -1
         kilopost = track[result[2]][0] + subdist
     else:
-        kilopost = None
+        kilopost = track[result[2]][0]
     return kilopost
 
 def cross_normal(position, track):

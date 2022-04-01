@@ -330,8 +330,6 @@ class TrackControl():
                 output_map['y'] += '{:.2f};\n'.format(data[0])
                 output_map['y'] += 'Track[\'{:s}\'].Y.Interpolate({:.2f},{:.2f});\n'.format(tr,data[6],data[5])
 
-            #import pdb
-            #pdb.set_trace()
             cp_dist = {}
             pos_cp = {}
             relativecp = {}
@@ -342,6 +340,9 @@ class TrackControl():
             for data in self.rel_track[tr][np.isin(self.rel_track[tr][:,0],relativecp['cant'][:,0])]:
                 output_map['cant'] += '{:.2f};\n'.format(data[0])
                 output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[8])
+
+            #import pdb
+            #pdb.set_trace()
 
             key = 'interpolate_func'
             for index in range(len(relativecp[key])):
