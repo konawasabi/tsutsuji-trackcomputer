@@ -155,7 +155,7 @@ class mainwindow(ttk.Frame):
         self.printpos_btn = ttk.Button(self.button_frame, text="P. Pos", command = self.draw_tracks_cp)
         self.printpos_btn.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E))
 
-        self.getrelrad_btn = ttk.Button(self.button_frame, text="Rel. Rad.", command = self.get_relativepos_rad)
+        self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.get_relativepos_rad)
         self.getrelrad_btn.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定

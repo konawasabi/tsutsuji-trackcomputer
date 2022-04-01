@@ -257,7 +257,7 @@ class TrackControl():
             for data in ownt_relcp:
                 ax.plot([data[5],data[10]],[data[6],data[11]],color='red')
             
-    def takecp(self,trackkey,owntrack = None, elem=None):
+    def takecp(self,trackkey,owntrack = None, elem=None, supplemental=True):
         ''' 注目軌道の制御点を抽出
 
         Args:
@@ -275,8 +275,9 @@ class TrackControl():
         for dat in self.track[trackkey]['data'].own_track.data: # 軌道要素が存在する距離程を抽出
             if elem == None or dat['key'] == elem:
                 cp_dist.append(dat['distance'])
-        for dat in self.conf.track_data[trackkey]['supplemental_cp']: # supplemental_cpの追加
-            cp_dist.append(dat)
+        if supplemental:
+            for dat in self.conf.track_data[trackkey]['supplemental_cp']: # supplemental_cpの追加
+                cp_dist.append(dat)
         cp_dist = sorted(set(cp_dist))
         pos_cp = self.track[trackkey]['result'][np.isin(self.track[trackkey]['result'][:,0],cp_dist)]
         return cp_dist, pos_cp
@@ -334,7 +335,7 @@ class TrackControl():
             pos_cp = {}
             relativecp = {}
             for key in ['cant','interpolate_func','center','gauge']:
-                cp_dist[key], pos_cp[key] = self.takecp(tr,elem=key)
+                cp_dist[key], pos_cp[key] = self.takecp(tr,elem=key,supplemental=False)
                 relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
             
             for data in self.rel_track[tr][np.isin(self.rel_track[tr][:,0],relativecp['cant'][:,0])]:
