@@ -53,7 +53,7 @@ class TrackControl():
                                                                 x0 = self.conf.track_data[i]['z'],\
                                                                 y0 = self.conf.track_data[i]['x'],\
                                                                 z0 = self.conf.track_data[i]['y'],\
-                                                                theta0 = self.conf.track_data[i]['angle'])
+                                                                theta0 = np.deg2rad(self.conf.track_data[i]['angle']))
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
     def relativepoint_single(self,to_calc,owntrack=None):
         '''owntrackを基準とした相対座標への変換
