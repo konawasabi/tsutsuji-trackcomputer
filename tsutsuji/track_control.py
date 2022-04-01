@@ -337,28 +337,32 @@ class TrackControl():
             for key in ['cant','interpolate_func','center','gauge']:
                 cp_dist[key], pos_cp[key] = self.takecp(tr,elem=key,supplemental=False)
                 relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
-            
-            for data in self.rel_track[tr][np.isin(self.rel_track[tr][:,0],relativecp['cant'][:,0])]:
-                output_map['cant'] += '{:.2f};\n'.format(data[0])
-                output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[8])
+
+            if len(relativecp['cant'])>0:
+                for data in self.rel_track[tr][np.isin(self.rel_track[tr][:,0],relativecp['cant'][:,0])]:
+                    output_map['cant'] += '{:.2f};\n'.format(data[0])
+                    output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[8])
 
             #import pdb
             #pdb.set_trace()
 
             key = 'interpolate_func'
-            for index in range(len(relativecp[key])):
-                output_map[key] += '{:.2f};\n'.format(relativecp[key][index][3])
-                output_map[key] += 'Track[\'{:s}\'].Cant.SetFunction({:d});\n'.format(tr,int(pos_cp[key][index][7]))
+            if len(relativecp[key])>0:
+                for index in range(len(relativecp[key])):
+                    output_map[key] += '{:.2f};\n'.format(relativecp[key][index][3])
+                    output_map[key] += 'Track[\'{:s}\'].Cant.SetFunction({:d});\n'.format(tr,int(pos_cp[key][index][7]))
             
             key = 'center'
-            for index in range(len(relativecp[key])):
-                output_map[key] += '{:.2f};\n'.format(relativecp[key][index][3])
-                output_map[key] += 'Track[\'{:s}\'].Cant.SetCenter({:.3f});\n'.format(tr,pos_cp[key][index][9])
+            if len(relativecp[key])>0:
+                for index in range(len(relativecp[key])):
+                    output_map[key] += '{:.2f};\n'.format(relativecp[key][index][3])
+                    output_map[key] += 'Track[\'{:s}\'].Cant.SetCenter({:.3f});\n'.format(tr,pos_cp[key][index][9])
 
             key = 'gauge'
-            for index in range(len(relativecp[key])):
-                output_map[key] += '{:.2f};\n'.format(relativecp[key][index][3])
-                output_map[key] += 'Track[\'{:s}\'].Cant.SetGauge({:.3f});\n'.format(tr,pos_cp[key][index][10])
+            if len(relativecp[key])>0:
+                for index in range(len(relativecp[key])):
+                    output_map[key] += '{:.2f};\n'.format(relativecp[key][index][3])
+                    output_map[key] += 'Track[\'{:s}\'].Cant.SetGauge({:.3f});\n'.format(tr,pos_cp[key][index][10])
 
             # 他軌道構文印字
             print('# Track[\'{:s}\'].X'.format(tr))
