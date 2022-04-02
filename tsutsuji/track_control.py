@@ -193,9 +193,20 @@ class TrackControl():
                                                      1/curvature_section_z if np.abs(1/curvature_section_z) < 1e4 else 0,\
                                                      zval])
                 ix+=1
+
+            # 最終制御点の出力
+            yval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][2]
+            zval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][3]
+            curvature_section   = np.inf
+            curvature_section_z = np.inf
+            self.rel_track_radius_cp[tr].append([cp_dist[ix],\
+                                     curvature_section,\
+                                     1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,\
+                                     yval,\
+                                     curvature_section_z,\
+                                     1/curvature_section_z if np.abs(1/curvature_section_z) < 1e4 else 0,\
+                                     zval])
             self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
-            #print(self.rel_track_radius[tr])
-            #print(self.rel_track_radius_cp[tr])
     def plot2d(self, ax):
         if len(self.track) > 0:
             for i in self.conf.track_keys:
