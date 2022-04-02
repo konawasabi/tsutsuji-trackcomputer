@@ -47,8 +47,9 @@ class TrackControl():
                 self.track[i]['interp'] = mapinterpreter.ParseMap(env=None,parser=None)
                 self.track[i]['data'] = self.track[i]['interp'].load_files(self.conf.track_data[i]['file'])
                 self.track[i]['data'].cp_arbdistribution = [min(self.track[i]['data'].controlpoints.list_cp),\
-                                                            self.conf.track_data[i]['endpoint'],\
+                                                            self.conf.track_data[i]['endpoint']+self.conf.general['unit_length'],\
                                                             self.conf.general['unit_length']]
+                # endpoint + unit_lengthとすることで、endpointを確実に含ませる
                 self.track[i]['tgen'] = trackgenerator.TrackGenerator(self.track[i]['data'],\
                                                                 x0 = self.conf.track_data[i]['z'],\
                                                                 y0 = self.conf.track_data[i]['x'],\
@@ -291,6 +292,9 @@ class TrackControl():
         for dat in self.track[trackkey]['data'].own_track.data: # 軌道要素が存在する距離程を抽出
             if elem == None or dat['key'] == elem:
                 cp_dist.append(dat['distance'])
+        
+        cp_dist.append(self.conf.track_data[trackkey]['endpoint'])
+
         if supplemental:
             for dat in self.conf.track_data[trackkey]['supplemental_cp']: # supplemental_cpの追加
                 cp_dist.append(dat)
