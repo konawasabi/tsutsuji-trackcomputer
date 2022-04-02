@@ -170,6 +170,7 @@ class TrackControl():
             for dat in self.track[owntrack]['data'].own_track.data:
                 cp_dist.append(dat['distance'])
         cp_dist = sorted(set(cp_dist))
+        
         for tr in calc_track:
             self.rel_track_radius_cp[tr] = []
             #pos_cp = self.track[key]['result'][np.isin(self.track[key]['result'][:,0],cp_dist)]
@@ -184,11 +185,8 @@ class TrackControl():
                 len_section         = cp_dist[ix+1] - cp_dist[ix]
                 curvature_section   = np.sum(pos_cp[:,1])/len_section
                 curvature_section_z = np.sum(pos_cp[:,3])/len_section
-                #yval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][2]
-                #zval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][3]
-                pos_ix = np.argmin(np.abs(self.rel_track[tr][:,0] - cp_dist[ix]))
-                yval = self.rel_track[tr][pos_ix][2]
-                zval = self.rel_track[tr][pos_ix][3]
+                yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
+                zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
                 self.rel_track_radius_cp[tr].append([cp_dist[ix],\
                                                      curvature_section,\
                                                      1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,\
@@ -199,11 +197,8 @@ class TrackControl():
                 ix+=1
 
             # 最終制御点の出力
-            pos_ix = np.argmin(np.abs(self.rel_track[tr][:,0] - cp_dist[ix]))
-            yval = self.rel_track[tr][pos_ix][2]
-            zval = self.rel_track[tr][pos_ix][3]
-            #yval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][2]
-            #zval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][3]
+            yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
+            zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
             curvature_section   = np.inf
             curvature_section_z = np.inf
             self.rel_track_radius_cp[tr].append([cp_dist[ix],\
@@ -323,7 +318,7 @@ class TrackControl():
         for data in pos_cp:
             inputpos = np.array([data[1],data[2]])
             result = math.minimumdist(target,inputpos)
-            if result[3] == -1 and result[2]>0:
+            if result[3] == -1:
                 continue
             resultcp.append([data[0],\
                              inputpos[0],\
@@ -338,6 +333,8 @@ class TrackControl():
         '''
         
         #import pdb
+        #pdb.set_trace()
+
         self.relativepoint_all() # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データを自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
@@ -345,9 +342,8 @@ class TrackControl():
         # owntrack以外の各軌道について処理する
         for tr in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
             _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
-            #pdb.set_trace()
             relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
-            cp_tr_ownt = sorted(set([i for i in cp_ownt if i>=min(relativecp[:,3]) and i<=max(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点との和をとる
+            cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点との和をとる
             
             self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
 
@@ -372,8 +368,6 @@ class TrackControl():
                     output_map['cant'] += '{:.2f};\n'.format(data[0])
                     output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[8])
 
-            #import pdb
-            #pdb.set_trace()
 
             key = 'interpolate_func'
             if len(relativecp[key])>0:
@@ -406,3 +400,19 @@ class TrackControl():
             print(output_map['center'])
             print('# Track[\'{:s}\'].Cant.SetGauge'.format(tr))
             print(output_map['gauge'])
+    def interpolate_with_dist(self, element, tr, cp_dist):
+        def interpolate(aroundzero,ix,typ,cp_dist,base=0):
+            return (aroundzero[:,typ][ix+1]-aroundzero[:,typ][ix])/(aroundzero[:,base][ix+1]-aroundzero[:,base][ix])*(cp_dist-aroundzero[:,base][ix])+aroundzero[:,typ][ix]
+        min_ix = np.argmin(np.abs(self.rel_track[tr][:,0] - cp_dist))
+        
+        if min_ix > 0 and min_ix < len(self.rel_track[tr])-1:
+            aroundzero = self.rel_track[tr][min_ix-1:min_ix+2]
+            sign_dist = np.sign(aroundzero[:,0] - cp_dist)
+            if sign_dist[0] != sign_dist[1]:
+                result = interpolate(aroundzero,0,element,cp_dist)
+            else:
+                result = interpolate(aroundzero,1,element,cp_dist)
+            #result = self.rel_track[tr][pos_ix][element]
+        else:
+            result = self.rel_track[tr][min_ix][element]
+        return result
