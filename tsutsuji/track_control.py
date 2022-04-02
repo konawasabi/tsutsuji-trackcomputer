@@ -184,8 +184,11 @@ class TrackControl():
                 len_section         = cp_dist[ix+1] - cp_dist[ix]
                 curvature_section   = np.sum(pos_cp[:,1])/len_section
                 curvature_section_z = np.sum(pos_cp[:,3])/len_section
-                yval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][2]
-                zval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][3]
+                #yval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][2]
+                #zval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][3]
+                pos_ix = np.argmin(np.abs(self.rel_track[tr][:,0] - cp_dist[ix]))
+                yval = self.rel_track[tr][pos_ix][2]
+                zval = self.rel_track[tr][pos_ix][3]
                 self.rel_track_radius_cp[tr].append([cp_dist[ix],\
                                                      curvature_section,\
                                                      1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,\
@@ -196,8 +199,11 @@ class TrackControl():
                 ix+=1
 
             # 最終制御点の出力
-            yval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][2]
-            zval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][3]
+            pos_ix = np.argmin(np.abs(self.rel_track[tr][:,0] - cp_dist[ix]))
+            yval = self.rel_track[tr][pos_ix][2]
+            zval = self.rel_track[tr][pos_ix][3]
+            #yval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][2]
+            #zval = self.rel_track[tr][self.rel_track[tr][:,0] == cp_dist[ix]][0][3]
             curvature_section   = np.inf
             curvature_section_z = np.inf
             self.rel_track_radius_cp[tr].append([cp_dist[ix],\
@@ -294,6 +300,7 @@ class TrackControl():
                 cp_dist.append(dat['distance'])
         
         cp_dist.append(self.conf.track_data[trackkey]['endpoint'])
+        cp_dist.append(0)
 
         if supplemental:
             for dat in self.conf.track_data[trackkey]['supplemental_cp']: # supplemental_cpの追加
@@ -316,7 +323,7 @@ class TrackControl():
         for data in pos_cp:
             inputpos = np.array([data[1],data[2]])
             result = math.minimumdist(target,inputpos)
-            if result[3] == -1:
+            if result[3] == -1 and result[2]>0:
                 continue
             resultcp.append([data[0],\
                              inputpos[0],\
@@ -330,7 +337,7 @@ class TrackControl():
         ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
         '''
         
-        # import pdb
+        #import pdb
         self.relativepoint_all() # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データを自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
@@ -340,7 +347,7 @@ class TrackControl():
             _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
             #pdb.set_trace()
             relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
-            cp_tr_ownt = sorted(set(cp_ownt + list(relativecp[:,0]))) # 自軌道制御点との和をとる
+            cp_tr_ownt = sorted(set([i for i in cp_ownt if i>=min(relativecp[:,3]) and i<=max(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点との和をとる
             
             self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
 
