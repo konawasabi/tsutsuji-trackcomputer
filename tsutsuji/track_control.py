@@ -175,6 +175,11 @@ class TrackControl():
             ix=0
             while ix < len(cp_dist)-1:
                 pos_cp = self.rel_track_radius[tr][(self.rel_track_radius[tr][:,0]>=cp_dist[ix]) & (self.rel_track_radius[tr][:,0]<cp_dist[ix+1])]
+
+                if len(pos_cp) == 0:
+                    ix+=1
+                    continue
+
                 len_section         = cp_dist[ix+1] - cp_dist[ix]
                 curvature_section   = np.sum(pos_cp[:,1])/len_section
                 curvature_section_z = np.sum(pos_cp[:,3])/len_section
@@ -296,6 +301,8 @@ class TrackControl():
         for data in pos_cp:
             inputpos = np.array([data[1],data[2]])
             result = math.minimumdist(target,inputpos)
+            if result[3] == -1:
+                continue
             resultcp.append([data[0],\
                              inputpos[0],\
                              inputpos[1],\
