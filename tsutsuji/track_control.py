@@ -349,7 +349,10 @@ class TrackControl():
 
             # 他軌道構文生成
             output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
-            kp_val = '$'+self.conf.general['offset_variable']+' + '
+            if self.conf.general['offset_variable'] is not None:
+                kp_val = '$'+self.conf.general['offset_variable']+' + '
+            else:
+                kp_val = ''
 
             for data in self.rel_track_radius_cp[tr]:
                 output_map['x'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
@@ -389,8 +392,9 @@ class TrackControl():
                     output_map[key] += 'Track[\'{:s}\'].Cant.SetGauge({:.3f});\n'.format(tr,pos_cp[key][index][10])
 
             # 他軌道構文印字
-            print('# offset')
-            print('${:s} = {:f};\n'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance']))
+            if kp_val is not '':
+                print('# offset')
+                print('${:s} = {:f};\n'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance']))
             print('# Track[\'{:s}\'].X'.format(tr))
             print(output_map['x'])
             print('# Track[\'{:s}\'].Y'.format(tr))
