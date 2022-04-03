@@ -318,7 +318,7 @@ class TrackControl():
         for data in pos_cp:
             inputpos = np.array([data[1],data[2]])
             result = math.minimumdist(target,inputpos)
-            if result[3] == -1:
+            if result[3] == -1 and result[2]>0:
                 continue
             resultcp.append([data[0],\
                              inputpos[0],\
@@ -349,11 +349,12 @@ class TrackControl():
 
             # 他軌道構文生成
             output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
-            
+            kp_val = '$'+self.conf.general['offset_variable']+' + '
+
             for data in self.rel_track_radius_cp[tr]:
-                output_map['x'] += '{:.2f};\n'.format(data[0])
+                output_map['x'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
                 output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],data[2])
-                output_map['y'] += '{:.2f};\n'.format(data[0])
+                output_map['y'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
                 output_map['y'] += 'Track[\'{:s}\'].Y.Interpolate({:.2f},{:.2f});\n'.format(tr,data[6],data[5])
 
             cp_dist = {}
@@ -365,29 +366,31 @@ class TrackControl():
 
             if len(relativecp['cant'])>0:
                 for data in self.rel_track[tr][np.isin(self.rel_track[tr][:,0],relativecp['cant'][:,0])]:
-                    output_map['cant'] += '{:.2f};\n'.format(data[0])
+                    output_map['cant'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
                     output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[8])
 
 
             key = 'interpolate_func'
             if len(relativecp[key])>0:
                 for index in range(len(relativecp[key])):
-                    output_map[key] += '{:.2f};\n'.format(relativecp[key][index][3])
+                    output_map[key] += '{:s}{:.2f};\n'.format(kp_val,relativecp[key][index][3])
                     output_map[key] += 'Track[\'{:s}\'].Cant.SetFunction({:d});\n'.format(tr,int(pos_cp[key][index][7]))
             
             key = 'center'
             if len(relativecp[key])>0:
                 for index in range(len(relativecp[key])):
-                    output_map[key] += '{:.2f};\n'.format(relativecp[key][index][3])
+                    output_map[key] += '{:s}{:.2f};\n'.format(kp_val,relativecp[key][index][3])
                     output_map[key] += 'Track[\'{:s}\'].Cant.SetCenter({:.3f});\n'.format(tr,pos_cp[key][index][9])
 
             key = 'gauge'
             if len(relativecp[key])>0:
                 for index in range(len(relativecp[key])):
-                    output_map[key] += '{:.2f};\n'.format(relativecp[key][index][3])
+                    output_map[key] += '{:s}{:.2f};\n'.format(kp_val,relativecp[key][index][3])
                     output_map[key] += 'Track[\'{:s}\'].Cant.SetGauge({:.3f});\n'.format(tr,pos_cp[key][index][10])
 
             # 他軌道構文印字
+            print('# offset')
+            print('${:s} = {:f};\n'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance']))
             print('# Track[\'{:s}\'].X'.format(tr))
             print(output_map['x'])
             print('# Track[\'{:s}\'].Y'.format(tr))
