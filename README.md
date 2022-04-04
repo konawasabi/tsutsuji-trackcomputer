@@ -11,6 +11,14 @@ Bve trainsim 5/6向けマップファイルの制作支援Pythonスクリプト�
 - Python 3.x
 - Kobushi trackviewer 1.1以降
 
+(もう少し整理できたらpipからインストールできるようにします...)
+
+## Documents
+
+https://konawasabi.github.io/tsutsuji-trackcomputer/
+
+(まだ作りかけです...)
+
 ## License
 
 [Apache License, Version 2.0](LICENSE)

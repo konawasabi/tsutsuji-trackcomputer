@@ -246,7 +246,7 @@ class mainwindow(ttk.Frame):
         msg += 'https://www.apache.org/licenses/LICENSE-2.0'
         tk.messagebox.showinfo(message=msg)
     def open_webdocument(self, event=None):
-        webbrowser.open('https://github.com/konawasabi/tsutsuji-trackcomputer')
+        webbrowser.open('https://konawasabi.github.io/tsutsuji-trackcomputer/')
     
 def main():
     if not __debug__:
