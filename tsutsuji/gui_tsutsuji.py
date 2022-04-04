@@ -43,6 +43,7 @@ from . import track_control
 from . import drawcursor
 from . import backimg
 from . import measure
+from ._version import __version__
 
 class Catcher: # tkinter内で起きた例外をキャッチする
     def __init__(self, func, subst, widget):
@@ -180,12 +181,13 @@ class mainwindow(ttk.Frame):
         self.menu_file.add_command(label='終了', command=self.ask_quit, accelerator='Alt+F4')
         
         self.menu_backimg.add_command(label='Window...', command=self.backimgctrl.create_window)
+        '''
         self.menu_backimg.add_separator()
         self.menu_backimg.add_command(label='Load...', command=None)
         self.menu_backimg.add_command(label='Save...', command=None)
-        
-        self.menu_help.add_command(label='ヘルプ...', command=None)
-        self.menu_help.add_command(label='Tsutsujiについて...', command=None)
+        '''
+        self.menu_help.add_command(label='ヘルプ...', command=self.open_webdocument)
+        self.menu_help.add_command(label='Tsutsujiについて...', command=self.aboutwindow)
         
         self.master['menu'] = self.menubar
     def ask_quit(self, event=None, ask=True):
@@ -236,6 +238,15 @@ class mainwindow(ttk.Frame):
         self.fig_canvas.draw()
     def get_relativepos_rad(self):
         self.trackcontrol.generate_mapdata()
+    def aboutwindow(self, event=None):
+        msg  = 'Tsutsuji trackcomputer\n'
+        msg += 'Version '+__version__+'\n\n'
+        msg += 'Copyright © 2022 konawasabi\n'
+        msg += 'Released under the Apache License, Version 2.0 .\n'
+        msg += 'https://www.apache.org/licenses/LICENSE-2.0'
+        tk.messagebox.showinfo(message=msg)
+    def open_webdocument(self, event=None):
+        webbrowser.open('https://github.com/konawasabi/tsutsuji-trackcomputer')
     
 def main():
     if not __debug__:
