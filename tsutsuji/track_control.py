@@ -17,6 +17,8 @@
 '''
 '''
 
+import os
+import pathlib
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -391,22 +393,30 @@ class TrackControl():
                     output_map[key] += '{:s}{:.2f};\n'.format(kp_val,relativecp[key][index][3])
                     output_map[key] += 'Track[\'{:s}\'].Cant.SetGauge({:.3f});\n'.format(tr,pos_cp[key][index][10])
 
+            output_file = ''
             # 他軌道構文印字
-            if kp_val is not '':
-                print('# offset')
-                print('${:s} = {:f};\n'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance']))
-            print('# Track[\'{:s}\'].X'.format(tr))
-            print(output_map['x'])
-            print('# Track[\'{:s}\'].Y'.format(tr))
-            print(output_map['y'])
-            print('# Track[\'{:s}\'].Cant.Interpolate'.format(tr))
-            print(output_map['cant'])
-            print('# Track[\'{:s}\'].Cant.SetFunction'.format(tr))
-            print(output_map['interpolate_func'])
-            print('# Track[\'{:s}\'].Cant.SetCenter'.format(tr))
-            print(output_map['center'])
-            print('# Track[\'{:s}\'].Cant.SetGauge'.format(tr))
-            print(output_map['gauge'])
+            if kp_val != '':
+                output_file += '# offset\n'
+                output_file += '${:s} = {:f};\n'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance'])+'\n'
+            output_file += '# Track[\'{:s}\'].X\n'.format(tr)
+            output_file += output_map['x']+'\n'
+            output_file += '# Track[\'{:s}\'].Y\n'.format(tr)
+            output_file += output_map['y']+'\n'
+            output_file += '# Track[\'{:s}\'].Cant.Interpolate\n'.format(tr)
+            output_file += output_map['cant']+'\n'
+            output_file += '# Track[\'{:s}\'].Cant.SetFunction\n'.format(tr)
+            output_file += output_map['interpolate_func']+'\n'
+            output_file += '# Track[\'{:s}\'].Cant.SetCenter\n'.format(tr)
+            output_file += output_map['center']+'\n'
+            output_file += '# Track[\'{:s}\'].Cant.SetGauge\n'.format(tr)
+            output_file += output_map['gauge']+'\n'
+
+            print(output_file)
+            os.makedirs(self.conf.general['output_path'], exist_ok=True)
+            f = open(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))),'w')
+            f.write(output_file)
+            f.close()
+            
     def interpolate_with_dist(self, element, tr, cp_dist):
         def interpolate(aroundzero,ix,typ,cp_dist,base=0):
             return (aroundzero[:,typ][ix+1]-aroundzero[:,typ][ix])/(aroundzero[:,base][ix+1]-aroundzero[:,base][ix])*(cp_dist-aroundzero[:,base][ix])+aroundzero[:,typ][ix]
