@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>tsutsuji.math module &#8212; tsutsuji  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tsutsuji.measure module" href="tsutsuji.measure.html" />
+    <link rel="prev" title="tsutsuji.gui_tsutsuji module" href="tsutsuji.gui_tsutsuji.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tsutsuji.measure.html" title="tsutsuji.measure module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tsutsuji.gui_tsutsuji.html" title="tsutsuji.gui_tsutsuji module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="tsutsuji.html" accesskey="U">tsutsuji package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tsutsuji.math module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-tsutsuji.math">
+<span id="tsutsuji-math-module"></span><h1>tsutsuji.math module<a class="headerlink" href="#module-tsutsuji.math" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="tsutsuji.math.cross_kilopost">
+<span class="sig-prename descclassname"><span class="pre">tsutsuji.math.</span></span><span class="sig-name descname"><span class="pre">cross_kilopost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/math.html#cross_kilopost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.math.cross_kilopost" title="Permalink to this definition">¶</a></dt>
+<dd><p>minimumdistで求めたtrack上の最近傍点について、対応する距離程を求める。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>track</strong> (<em>ndarray</em>) – np.array([x0,y0],[x1,y1],…,[xn,yn])</p></li>
+<li><p><strong>result</strong> (<em>list</em>) – minimumdistの出力</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>最近傍点の距離程。track端点が最近傍点の場合はNone</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsutsuji.math.cross_normal">
+<span class="sig-prename descclassname"><span class="pre">tsutsuji.math.</span></span><span class="sig-name descname"><span class="pre">cross_normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/math.html#cross_normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.math.cross_normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>曲線trackの法線のうち、positionを通過するものを求める</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ndarray</strong> – position: np.array([x,y])</p></li>
+<li><p><strong>ndarray</strong> – track: np.array([[x0,y0],[x1,y1],…,[xn,yn]])</p></li>
+</ul>
+</dd>
+</dl>
+<p>Return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsutsuji.math.minimumdist">
+<span class="sig-prename descclassname"><span class="pre">tsutsuji.math.</span></span><span class="sig-name descname"><span class="pre">minimumdist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/math.html#minimumdist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.math.minimumdist" title="Permalink to this definition">¶</a></dt>
+<dd><p>二次元曲線trackについて、座標pから最も近い曲線上の点を求める。
+trackの点間は線形補間される。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>track</strong> (<em>ndarray</em>) – np.array([x0,y0],[x1,y1],…,[xn,yn])</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – np.array([xp,yp])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>float</dt><dd><p>mindist: 曲線交点との距離</p>
+</dd>
+<dt>ndarray</dt><dd><p>crosspt: 曲線との交点座標</p>
+</dd>
+<dt>int</dt><dd><p>min_ix: track中で最もpに近い点のindex</p>
+</dd>
+<dt>int</dt><dd><p>second_min_ix: 最もpに近い点が含まれる区間の他端index。直交点が見つからない場合は-1。</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsutsuji.math.rotate">
+<span class="sig-prename descclassname"><span class="pre">tsutsuji.math.</span></span><span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/math.html#rotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.math.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>２次元回転行列を返す。</p>
+<p>tau1: 回転角度 [rad]</p>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="tsutsuji.gui_tsutsuji.html"
+                          title="previous chapter">tsutsuji.gui_tsutsuji module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tsutsuji.measure.html"
+                          title="next chapter">tsutsuji.measure module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tsutsuji.math.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tsutsuji.measure.html" title="tsutsuji.measure module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tsutsuji.gui_tsutsuji.html" title="tsutsuji.gui_tsutsuji module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="tsutsuji.html" >tsutsuji package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tsutsuji.math module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Author.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

@@ -411,12 +411,12 @@ class TrackControl():
             output_file += '# Track[\'{:s}\'].Cant.SetGauge\n'.format(tr)
             output_file += output_map['gauge']+'\n'
 
-            print(output_file)
+            #print(output_file)
             os.makedirs(self.conf.general['output_path'], exist_ok=True)
             f = open(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))),'w')
             f.write(output_file)
             f.close()
-            
+            print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))            
     def interpolate_with_dist(self, element, tr, cp_dist):
         def interpolate(aroundzero,ix,typ,cp_dist,base=0):
             return (aroundzero[:,typ][ix+1]-aroundzero[:,typ][ix])/(aroundzero[:,base][ix+1]-aroundzero[:,base][ix])*(cp_dist-aroundzero[:,base][ix])+aroundzero[:,typ][ix]

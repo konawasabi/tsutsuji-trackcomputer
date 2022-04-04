@@ -1,0 +1,554 @@
+==========
+Tutorial
+==========
+
+はじめに
+========
+
+ここでは以下のような路線の制作を例に、Tsutsuji Trackcomputerの基本的な使い方を説明します。
+以下、黒線: up, 青線: downとして、upを自軌道としてdownを他軌道に変換する手順を見ていきます。
+
+.. image:: ./files/tutorial_plane_an.png
+	   :scale: 40%
+
+.. note::
+   
+   本Tutorialで用いるサンプルファイルは全て :download:`tsutsuji_tutorial_material.zip (1.0 MB) <./files/tsutsuji_tutorial_material.zip>` からダウンロードできます。
+
+   このzipファイルにはおまけとして、本Tutorialのデータを元に作成したサンプルシナリオが入っています。
+   サンプルシナリオ用のストラクチャーデータとして、https://bvets.net/jp/edit/tutorial/putstructs.html で公開されている strpack1.zipの内容物を同梱しています。
+   strpack1.zipを公開いただいたmackoy氏に感謝いたします。
+
+軌道毎のマップファイル作成
+=======================
+
+まず、軌道毎にマップファイルを作成します。
+最終的に他軌道となるものも含めて、全ての軌道を自軌道として記述していきます。
+
+フォーマットは普通のマップファイルと同様です。
+最初の行にはマップファイルのヘッダーが必要です。
+また、普通のマップファイルと同様に、変数、演算子、他ファイルのincludeが有効です。
+
+.. note::
+   
+   Tsutsujiに入力するマップファイルでは、自軌道に関係しない要素はすべて無視されます。
+   Curve, Gradient以外の要素を書いてもエラーにはなりませんが、最終的に出力されるファイルには反映されませんので注意してください。
+
+   また、変数、演算子類は計算後の値が出力され、元の記述は保存されません。
+   入力マップファイルに :code:`$hoge = 100; $hoge + 50/2;` という記述があった場合は、出力ファイルでは :code:`125;` に置き換わります。
+      
+
+up.txt
+-------
+
+.. code-block:: text
+   
+   BveTs Map 2.02:utf-8
+
+   0;
+   Curve.SetGauge(1.067);
+   Curve.SetFunction(1);
+
+   50;
+   Curve.BeginTransition();
+   Curve.SetCenter(-1.067/2);
+   72;
+   Curve.Begin(-200,-0.07);
+   74;
+   Curve.BeginTransition();
+   96;
+   Curve.End();
+
+   101;
+   Curve.BeginTransition();
+   Curve.SetCenter(1.067/2);
+   123;
+   Curve.Begin(200,0.07);
+   125;
+   Curve.BeginTransition();
+   147;
+   Curve.End();
+
+   distance + 20;
+   Curve.BeginTransition();
+   distance + 22;
+   Curve.Begin(200,0.07);
+
+   distance + 2;
+   Curve.BeginTransition();
+   distance + 22;
+   Curve.End();
+
+   distance + 5;
+   Curve.BeginTransition();
+   Curve.SetCenter(-0.5335);
+   distance + 22;
+   Curve.Begin(-200,-0.07);
+
+   distance + 2;
+   Curve.BeginTransition();
+   distance + 22;
+   Curve.End();
+
+   400;
+   Gradient.BeginTransition();
+   500;
+   Gradient.Begin(35);
+   600;
+   Gradient.BeginTransition();
+   700;
+   Gradient.End();
+
+   900;
+   Gradient.BeginTransition();
+   1000;
+   Gradient.Begin(-35);
+   1100;
+   Gradient.BeginTransition();
+   1200;
+   Gradient.End();
+
+down.txt
+---------
+
+.. code-block:: text
+   
+   BveTs Map 2.02:utf-8
+
+   0;
+   Curve.SetGauge(1.067);
+   Curve.SetFunction(0);
+
+   280;
+   Curve.BeginTransition();
+   Curve.SetCenter(1.067/2);
+   302;
+   Curve.Begin(200,0.07);
+   304;
+   Curve.BeginTransition();
+   326;
+   Curve.End();
+
+   346;
+   Curve.BeginTransition();
+   Curve.SetCenter(-1.067/2);
+   368;
+   Curve.Begin(-200,-0.07);
+   370;
+   Curve.BeginTransition();
+   392;
+   Curve.End();
+
+   $foo = 700;
+   $foo;
+   Curve.BeginTransition();
+   Curve.SetCenter(-1.067/2);
+   $foo + 22;
+   Curve.Begin(-200,-0.07);
+   $foo + 24;
+   Curve.BeginTransition();
+   $foo + 46;
+   Curve.End();
+
+   $bar = 894;
+   $bar;
+   Curve.BeginTransition();
+   Curve.SetCenter(1.067/2);
+   $bar + 22;
+   Curve.Begin(200,0.07);
+   $bar + 24;
+   Curve.BeginTransition();
+   $bar + 46;
+   Curve.End();
+
+
+cfgファイルの作成
+==================
+
+次にcfgファイルを作成します。
+Tsutsujiはこのcfgファイルの内容に従って軌道毎のマップファイルを処理します。
+詳しくは :doc:`cfgfileformat` を参照してください。
+
+ファイル名に制限はありません。ここでは tutorial.cfg とします。
+
+この内容で、upを自軌道として、出発点で右3.8mのところにdown軌道が並走するマップが作成されます。
+
+tutorial.cfg
+-------------
+
+.. code-block:: text
+
+   [@TSUTSUJI_GENERAL]
+   owntrack = up
+   unit_length = 1
+   origin_distance = 0
+   offset_variable = hoge
+
+   [up]
+   file = up.txt
+   absolute_coordinate = True
+   x = 0
+   y = 0
+   z = 0
+   angle = 0
+   endpoint = 1500
+
+   [down]
+   file = down.txt
+   absolute_coordinate = True
+   x = 3.8
+   y = 0
+   z = 0
+   angle = 0
+   endpoint = 1500
+
+各セクションの説明
+----------------
+
+[@TSUTSUJI_GENERAL]
+^^^^^^^^^^^^^^^^^^^^
+
+変換結果の出力に関係する設定を記述するセクションです。
+1つのcfgファイルに対して必ず記述が必要です。
+
+* owntrack
+
+  * 自軌道として扱う軌道キー
+
+* unit_length
+
+  * 各軌道について、軌道座標を計算する間隔
+  * デフォルトでは1 [m]
+  * この数値によって軌道位置の計算精度が決まる
+  * 極端に小さな値を設定すると、計算に必要なメモリ、時間が大幅に増えるので注意
+  
+* orign_distance
+
+* offset_variable
+
+
+[up], [down]
+^^^^^^^^^^^^^
+
+各軌道の設定を記述するセクションです。
+
+[]内に割り当てる軌道キーを記述します。軌道キーはマップファイルの名称と異なっていても構いません。
+
+* file
+  
+  * マップファイルへのファイルパス
+  * 相対パスでの指定も可能
+  * このtutorial.cfgでは、同じディレクトリにマップファイルが置かれていることを想定
+
+* absolute_coordinate
+
+  * 軌道の始点(距離程=0mの座標)を指定する方法を記述
+  * Trueとした場合、絶対座標系で指定する
+  * Falseは未実装  
+
+* x, y, z
+
+  * 軌道始点の座標
+  * 単位は[m]
+  * 座標軸の取り方は以下を参照
+
+.. image:: ./files/coordinate.png
+	   :scale: 75%
+
+* angle
+
+  * 軌道始点での進行方向
+  * 上図でのφに相当
+  * 単位は[°]
+    
+    * z軸方向を0°とする
+
+* endpoint
+
+  * 軌道計算を終了する距離程
+  * 単位は[m]
+
+
+Tsutsujiの起動〜マップファイルの出力
+=================================
+
+Tsutsujiを起動します。
+コマンドラインで :code:`python -m tsutsuji ./tutorial.cfg` を実行して下記ウィンドウが出て来れば起動成功です。
+
+起動時にcfgファイルを指定せずに、起動してからメニューの「開く」コマンドで指定しても同じ結果が得られます。
+
+.. image:: ./files/screenshot1.png
+	   :scale: 50%
+
+.. note::
+
+   次の手順で、軌道平面プロットの表示範囲を変更できます。
+
+   1. 描画中心にする座標をx,yフィールドに入力
+   2. 表示倍率(x軸の範囲)をscaleフィールドに入力
+   3. "Replot"を実行
+
+変換実行
+--------
+
+ウィンドウ右の **Generate** を実行すると、cfgファイルの記述に基づいて軌道情報をマップファイルに変換します。
+変換結果は他軌道ごとに1つのファイルに分割され、"result"ディレクトリ内に保存されます。
+"result"ディレクトリは、cfgファイルと同じ階層に作成されます。
+
+今回出力される "down_converted.txt" の内容は以下の通りです。
+
+down_converted.txt
+^^^^^^^^^^^^^^^^^^
+
+.. code-block:: text
+		
+   # offset
+   $hoge = 0.000000;
+
+   # Track['down'].X
+   $hoge + 0.00;
+   Track['down'].X.Interpolate(3.80,0.00);
+   $hoge + 50.00;
+   Track['down'].X.Interpolate(3.80,375.12);
+   $hoge + 72.00;
+   Track['down'].X.Interpolate(4.21,196.82);
+   $hoge + 74.00;
+   Track['down'].X.Interpolate(4.33,432.41);
+   $hoge + 96.00;
+   Track['down'].X.Interpolate(6.60,0.00);
+   $hoge + 101.00;
+   Track['down'].X.Interpolate(7.21,-366.39);
+   $hoge + 123.00;
+   Track['down'].X.Interpolate(9.41,-211.59);
+   $hoge + 125.00;
+   Track['down'].X.Interpolate(9.52,-439.41);
+   $hoge + 147.00;
+   Track['down'].X.Interpolate(9.91,0.00);
+   $hoge + 167.00;
+   Track['down'].X.Interpolate(9.91,-402.09);
+   $hoge + 189.00;
+   Track['down'].X.Interpolate(9.52,-208.56);
+   $hoge + 191.00;
+   Track['down'].X.Interpolate(9.41,-397.23);
+   $hoge + 213.00;
+   Track['down'].X.Interpolate(7.21,0.00);
+   $hoge + 218.00;
+   Track['down'].X.Interpolate(6.60,393.16);
+   $hoge + 240.00;
+   Track['down'].X.Interpolate(4.33,195.87);
+   $hoge + 242.00;
+   Track['down'].X.Interpolate(4.21,410.59);
+   $hoge + 264.00;
+   Track['down'].X.Interpolate(3.80,0.00);
+   $hoge + 280.58;
+   Track['down'].X.Interpolate(3.80,369.05);
+   $hoge + 302.57;
+   Track['down'].X.Interpolate(4.16,199.92);
+   $hoge + 304.57;
+   Track['down'].X.Interpolate(4.28,436.46);
+   $hoge + 326.45;
+   Track['down'].X.Interpolate(6.56,0.00);
+   $hoge + 346.30;
+   Track['down'].X.Interpolate(8.95,-356.90);
+   $hoge + 368.18;
+   Track['down'].X.Interpolate(11.22,-200.22);
+   $hoge + 370.18;
+   Track['down'].X.Interpolate(11.34,-454.42);
+   $hoge + 392.17;
+   Track['down'].X.Interpolate(11.71,0.00);
+   $hoge + 400.00;
+   Track['down'].X.Interpolate(11.71,0.00);
+   $hoge + 500.00;
+   Track['down'].X.Interpolate(11.71,0.00);
+   $hoge + 600.00;
+   Track['down'].X.Interpolate(11.71,0.00);
+   $hoge + 700.00;
+   Track['down'].X.Interpolate(11.71,-6475.69);
+   $hoge + 700.17;
+   Track['down'].X.Interpolate(11.71,-357.01);
+   $hoge + 722.17;
+   Track['down'].X.Interpolate(11.34,-200.21);
+   $hoge + 724.16;
+   Track['down'].X.Interpolate(11.22,-454.68);
+   $hoge + 746.04;
+   Track['down'].X.Interpolate(8.95,0.00);
+   $hoge + 892.98;
+   Track['down'].X.Interpolate(-8.77,1985.96);
+   $hoge + 900.00;
+   Track['down'].X.Interpolate(-9.61,273.00);
+   $hoge + 914.86;
+   Track['down'].X.Interpolate(-11.04,199.83);
+   $hoge + 916.85;
+   Track['down'].X.Interpolate(-11.16,425.05);
+   $hoge + 938.85;
+   Track['down'].X.Interpolate(-11.52,0.00);
+   $hoge + 1000.00;
+   Track['down'].X.Interpolate(-11.52,0.00);
+   $hoge + 1100.00;
+   Track['down'].X.Interpolate(-11.52,0.00);
+   $hoge + 1200.00;
+   Track['down'].X.Interpolate(-11.52,0.00);
+   $hoge + 1498.85;
+   Track['down'].X.Interpolate(-11.52,0.00);
+
+   # Track['down'].Y
+   $hoge + 0.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 50.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 72.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 74.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 96.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 101.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 123.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 125.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 147.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 167.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 189.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 191.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 213.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 218.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 240.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 242.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 264.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 280.58;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 302.57;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 304.57;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 326.45;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 346.30;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 368.18;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 370.18;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 392.17;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 400.00;
+   Track['down'].Y.Interpolate(0.00,-2875.02);
+   $hoge + 500.00;
+   Track['down'].Y.Interpolate(-1.75,0.00);
+   $hoge + 600.00;
+   Track['down'].Y.Interpolate(-5.25,2875.00);
+   $hoge + 700.00;
+   Track['down'].Y.Interpolate(-7.00,0.00);
+   $hoge + 700.17;
+   Track['down'].Y.Interpolate(-7.00,0.00);
+   $hoge + 722.17;
+   Track['down'].Y.Interpolate(-7.00,0.00);
+   $hoge + 724.16;
+   Track['down'].Y.Interpolate(-7.00,0.00);
+   $hoge + 746.04;
+   Track['down'].Y.Interpolate(-7.00,0.00);
+   $hoge + 892.98;
+   Track['down'].Y.Interpolate(-7.00,0.00);
+   $hoge + 900.00;
+   Track['down'].Y.Interpolate(-7.00,2831.25);
+   $hoge + 914.86;
+   Track['down'].Y.Interpolate(-6.96,2853.34);
+   $hoge + 916.85;
+   Track['down'].Y.Interpolate(-6.95,2858.11);
+   $hoge + 938.85;
+   Track['down'].Y.Interpolate(-6.73,2892.76);
+   $hoge + 1000.00;
+   Track['down'].Y.Interpolate(-5.25,0.00);
+   $hoge + 1100.00;
+   Track['down'].Y.Interpolate(-1.75,-2875.00);
+   $hoge + 1200.00;
+   Track['down'].Y.Interpolate(0.00,0.00);
+   $hoge + 1498.85;
+   Track['down'].Y.Interpolate(0.00,0.00);
+
+   # Track['down'].Cant.Interpolate
+   $hoge + 0.00;
+   Track['down'].Cant.Interpolate(0.000);
+   $hoge + 280.00;
+   Track['down'].Cant.Interpolate(0.000);
+   $hoge + 302.00;
+   Track['down'].Cant.Interpolate(0.070);
+   $hoge + 304.00;
+   Track['down'].Cant.Interpolate(0.070);
+   $hoge + 326.00;
+   Track['down'].Cant.Interpolate(0.000);
+   $hoge + 346.00;
+   Track['down'].Cant.Interpolate(0.000);
+   $hoge + 368.00;
+   Track['down'].Cant.Interpolate(-0.070);
+   $hoge + 370.00;
+   Track['down'].Cant.Interpolate(-0.070);
+   $hoge + 392.00;
+   Track['down'].Cant.Interpolate(-0.000);
+   $hoge + 700.00;
+   Track['down'].Cant.Interpolate(0.000);
+   $hoge + 722.00;
+   Track['down'].Cant.Interpolate(-0.070);
+   $hoge + 724.00;
+   Track['down'].Cant.Interpolate(-0.070);
+   $hoge + 746.00;
+   Track['down'].Cant.Interpolate(-0.000);
+   $hoge + 894.00;
+   Track['down'].Cant.Interpolate(0.000);
+   $hoge + 916.00;
+   Track['down'].Cant.Interpolate(0.070);
+   $hoge + 918.00;
+   Track['down'].Cant.Interpolate(0.069);
+   $hoge + 940.00;
+   Track['down'].Cant.Interpolate(0.000);
+   $hoge + 1500.00;
+   Track['down'].Cant.Interpolate(0.000);
+
+   # Track['down'].Cant.SetFunction
+   $hoge + 0.00;
+   Track['down'].Cant.SetFunction(0);
+   $hoge + 1498.85;
+   Track['down'].Cant.SetFunction(0);
+
+   # Track['down'].Cant.SetCenter
+   $hoge + 0.00;
+   Track['down'].Cant.SetCenter(0.000);
+   $hoge + 280.58;
+   Track['down'].Cant.SetCenter(0.533);
+   $hoge + 346.30;
+   Track['down'].Cant.SetCenter(-0.533);
+   $hoge + 700.17;
+   Track['down'].Cant.SetCenter(-0.533);
+   $hoge + 892.98;
+   Track['down'].Cant.SetCenter(0.533);
+   $hoge + 1498.85;
+   Track['down'].Cant.SetCenter(0.533);
+
+   # Track['down'].Cant.SetGauge
+   $hoge + 0.00;
+   Track['down'].Cant.SetGauge(1.067);
+   $hoge + 1498.85;
+   Track['down'].Cant.SetGauge(1.067);
+
+サンプルシナリオについて
+======================
+
+冒頭で述べた通り、このtutorialで用いたデータを元に作成したサンプルシナリオが、tsutsuji_tutorial_material.zipに同梱されています。
+始点でのスクリーンショットを以下に載せます。
+
+.. image:: ./files/screenshot_scenario.png
+	   :scale: 40%
+
+.. image:: ./files/screenshot_scenario_tele.png
+	   :scale: 40%
