@@ -545,10 +545,18 @@ down_converted.txt
 ======================
 
 冒頭で述べた通り、このtutorialで用いたデータを元に作成したサンプルシナリオが、tsutsuji_tutorial_material.zipに同梱されています。
-始点でのスクリーンショットを以下に載せます。
+始点付近でのスクリーンショットを以下に載せます。
 
-.. image:: ./files/screenshot_scenario.png
-	   :scale: 40%
+.. image:: ./files/screenshot_scenario.jpg
+	   :scale: 30%
 
-.. image:: ./files/screenshot_scenario_tele.png
-	   :scale: 40%
+もう少し手を加えてみる
+--------------------
+
+
+		   
+.. image:: ./files/screenshot_scenario_tele1.jpg
+	   :scale: 30%
+
+.. image:: ./files/screenshot_scenario_tele2.jpg
+	   :scale: 30%
