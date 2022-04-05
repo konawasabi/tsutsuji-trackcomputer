@@ -46,14 +46,14 @@ class Config():
                                     'endpoint':0,\
                                     'file':None,\
                                     'parent_track':None,\
-                                    'origin_distance':None,\
+                                    'origin_kilopost':None,\
                                     'isowntrack':False,\
                                     'supplemental_cp':[],\
                                     'color':linecolor_default[color_ix%10]}
             for k in cp.options(tk):
                 if k.lower() == 'file':
                     self.track_data[tk][k] = self.path_parent.joinpath(pathlib.Path(cp[tk][k]))
-                elif k.lower() in ['x','y','z','angle','endpoint','origin_distance']:
+                elif k.lower() in ['x','y','z','angle','endpoint','origin_kilopost']:
                     self.track_data[tk][k] = float(cp[tk][k])
                 elif k.lower() in ['isowntrack','absolute_coordinate']:
                     self.track_data[tk][k] = True if cp[tk][k].lower() == 'true' else False

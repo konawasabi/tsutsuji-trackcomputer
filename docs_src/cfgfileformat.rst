@@ -68,7 +68,7 @@ parent_track
 * **absolute_coordinate == Falseの場合にのみ有効**
 * ver1.0.0では未実装
 
-origin_distance
+origin_kilopost
 ===============
 * type: float
 * 座標系の原点となる距離程
