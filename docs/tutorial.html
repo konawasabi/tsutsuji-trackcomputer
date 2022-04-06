@@ -1,12 +1,12 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="jp">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Tutorial &#8212; tsutsuji  documentation</title>
+    <title>Tutorial &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
@@ -16,7 +16,9 @@
     <script src="_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CFG file format" href="cfgfileformat.html" />
+    <link rel="prev" title="Documents for Tsutsuji trackcomputer" href="index.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,7 +29,13 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji  documentation</a> &#187;</li>
+        <li class="right" >
+          <a href="cfgfileformat.html" title="CFG file format"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Documents for Tsutsuji trackcomputer"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Tutorial</a></li> 
       </ul>
     </div>  
@@ -47,7 +55,7 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>本Tutorialで用いるサンプルファイルは全て <a class="reference download internal" download="" href="_downloads/acdce8fd1b61af09f942d4b22917ca3a/tsutsuji_tutorial_material.zip"><code class="xref download docutils literal notranslate"><span class="pre">tsutsuji_tutorial_material.zip</span> <span class="pre">(1.0</span> <span class="pre">MB)</span></code></a> からダウンロードできます。</p>
-<p>このzipファイルにはおまけとして、本Tutorialのデータを元に作成したサンプルシナリオが入っています。
+<p>このzipファイルには、本Tutorialのデータを元に作成したサンプルシナリオが入っています。
 サンプルシナリオ用のストラクチャーデータとして、<a class="reference external" href="https://bvets.net/jp/edit/tutorial/putstructs.html">https://bvets.net/jp/edit/tutorial/putstructs.html</a> で公開されている strpack1.zipの内容物を同梱しています。
 strpack1.zipを公開いただいたmackoy氏に感謝いたします。</p>
 </div>
@@ -237,14 +245,19 @@ endpoint = 1500
 </li>
 <li><p>unit_length</p>
 <ul>
-<li><p>各軌道について、軌道座標を計算する間隔</p></li>
-<li><p>デフォルトでは1 [m]</p></li>
-<li><p>この数値によって軌道位置の計算精度が決まる</p></li>
-<li><p>極端に小さな値を設定すると、計算に必要なメモリ、時間が大幅に増えるので注意</p></li>
+<li><p>各軌道について、軌道座標を計算する距離程の間隔</p></li>
 </ul>
 </li>
-<li><p>orign_distance</p></li>
-<li><p>offset_variable</p></li>
+<li><p>offset_variable</p>
+<ul>
+<li><p>変換後のデータについて、距離程を <code class="code docutils literal notranslate"><span class="pre">$offset_variable</span> <span class="pre">+</span> <span class="pre">起点からの距離;</span></code> の形式で表す場合の変数名</p></li>
+</ul>
+</li>
+<li><p>orign_distance</p>
+<ul>
+<li><p>offset_variableで指定した変数に代入する数値</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="up-down">
@@ -309,15 +322,15 @@ endpoint = 1500
 <ol class="arabic simple">
 <li><p>描画中心にする座標をx,yフィールドに入力</p></li>
 <li><p>表示倍率(x軸の範囲)をscaleフィールドに入力</p></li>
-<li><p>“Replot”を実行</p></li>
+<li><p>&quot;Replot&quot;を実行</p></li>
 </ol>
 </div>
 <section id="id4">
 <h3>変換実行<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>ウィンドウ右の <strong>Generate</strong> を実行すると、cfgファイルの記述に基づいて軌道情報をマップファイルに変換します。
-変換結果は他軌道ごとに1つのファイルに分割され、”result”ディレクトリ内に保存されます。
-“result”ディレクトリは、cfgファイルと同じ階層に作成されます。</p>
-<p>今回出力される “down_converted.txt” の内容は以下の通りです。</p>
+変換結果は他軌道ごとに1つのファイルに分割され、&quot;result&quot;ディレクトリ内に保存されます。
+&quot;result&quot;ディレクトリは、cfgファイルと同じ階層に作成されます。</p>
+<p>今回出力される &quot;down_converted.txt&quot; の内容は以下の通りです。</p>
 <section id="down-converted-txt">
 <h4>down_converted.txt<a class="headerlink" href="#down-converted-txt" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span># offset
@@ -412,52 +425,7 @@ Track[&#39;down&#39;].X.Interpolate(-11.52,0.00);
 # Track[&#39;down&#39;].Y
 $hoge + 0.00;
 Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 50.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 72.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 74.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 96.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 101.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 123.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 125.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 147.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 167.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 189.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 191.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 213.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 218.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 240.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 242.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 264.00;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 280.58;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 302.57;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 304.57;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 326.45;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 346.30;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 368.18;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
-$hoge + 370.18;
-Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
+# ... (省略) ...
 $hoge + 392.17;
 Track[&#39;down&#39;].Y.Interpolate(0.00,0.00);
 $hoge + 400.00;
@@ -565,10 +533,22 @@ Track[&#39;down&#39;].Cant.SetGauge(1.067);
 </section>
 <section id="id5">
 <h2>サンプルシナリオについて<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<p>冒頭で述べた通り、このtutorialで用いたデータを元に作成したサンプルシナリオが、tsutsuji_tutorial_material.zipに同梱されています。
-始点でのスクリーンショットを以下に載せます。</p>
-<a class="reference internal image-reference" href="_images/screenshot_scenario.png"><img alt="_images/screenshot_scenario.png" src="_images/screenshot_scenario.png" style="width: 512.8000000000001px; height: 412.8px;" /></a>
-<a class="reference internal image-reference" href="_images/screenshot_scenario_tele.png"><img alt="_images/screenshot_scenario_tele.png" src="_images/screenshot_scenario_tele.png" style="width: 512.8000000000001px; height: 412.8px;" /></a>
+<p>このtutorialで用いたデータを元に作成したサンプルシナリオが、このページ冒頭で触れたtsutsuji_tutorial_material.zipに同梱されています。
+始点付近でのスクリーンショットは以下の通りです。
+Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線を含むマップがそれらしく変換されていることを見ていただけるかと思います。</p>
+<a class="reference internal image-reference" href="_images/screenshot_scenario.jpg"><img alt="_images/screenshot_scenario.jpg" src="_images/screenshot_scenario.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
+<section id="id6">
+<h3>もう少し手を加える<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>さて、運転台からは「それらしく」見えているサンプルシナリオですが、望遠ズームしてみると粗が目立ってきます。</p>
+<p>下図は、サンプルシナリオ出発点にてdown軌道上を7倍ズームしたときのスクリーンショットです。
+直線であるはずのdown軌道が左右に歪んでいるのがわかります。</p>
+<a class="reference internal image-reference" href="_images/screenshot_scenario_tele1.jpg"><img alt="_images/screenshot_scenario_tele1.jpg" src="_images/screenshot_scenario_tele1.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
+<p>これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因です。</p>
+<p>Track構文を設置する距離程を手動で設定するため、cfgファイルの[<em>track</em>]セクションに <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span></code> 要素が利用できます。</p>
+<p><code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span> <span class="pre">=</span> <span class="pre">60,85,112,137,177,203,228,250</span></code> をtutorial.cfg [down]セクションに追加し、tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。</p>
+<a class="reference internal image-reference" href="_images/screenshot_scenario_tele2.jpg"><img alt="_images/screenshot_scenario_tele2.jpg" src="_images/screenshot_scenario_tele2.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
+<p>[おわり]</p>
+</section>
 </section>
 </section>
 
@@ -605,11 +585,24 @@ Track[&#39;down&#39;].Cant.SetGauge(1.067);
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id5">サンプルシナリオについて</a></li>
+<li><a class="reference internal" href="#id5">サンプルシナリオについて</a><ul>
+<li><a class="reference internal" href="#id6">もう少し手を加える</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Documents for Tsutsuji trackcomputer</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cfgfileformat.html"
+                          title="next chapter">CFG file format</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -641,12 +634,18 @@ Track[&#39;down&#39;].Cant.SetGauge(1.067);
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji  documentation</a> &#187;</li>
+        <li class="right" >
+          <a href="cfgfileformat.html" title="CFG file format"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Documents for Tsutsuji trackcomputer"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Tutorial</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Author.
+        &#169; Copyright 2022, konawasabi.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

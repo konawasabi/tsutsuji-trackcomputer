@@ -15,7 +15,7 @@ Tutorial
    
    本Tutorialで用いるサンプルファイルは全て :download:`tsutsuji_tutorial_material.zip (1.0 MB) <./files/tsutsuji_tutorial_material.zip>` からダウンロードできます。
 
-   このzipファイルにはおまけとして、本Tutorialのデータを元に作成したサンプルシナリオが入っています。
+   このzipファイルには、本Tutorialのデータを元に作成したサンプルシナリオが入っています。
    サンプルシナリオ用のストラクチャーデータとして、https://bvets.net/jp/edit/tutorial/putstructs.html で公開されている strpack1.zipの内容物を同梱しています。
    strpack1.zipを公開いただいたmackoy氏に感謝いたします。
 
@@ -217,15 +217,16 @@ tutorial.cfg
 
 * unit_length
 
-  * 各軌道について、軌道座標を計算する間隔
-  * デフォルトでは1 [m]
-  * この数値によって軌道位置の計算精度が決まる
-  * 極端に小さな値を設定すると、計算に必要なメモリ、時間が大幅に増えるので注意
-  
-* orign_distance
+  * 各軌道について、軌道座標を計算する距離程の間隔
+
 
 * offset_variable
 
+  * 変換後のデータについて、距離程を :code:`$offset_variable + 起点からの距離;` の形式で表す場合の変数名
+  
+* orign_distance
+
+  * offset_variableで指定した変数に代入する数値
 
 [up], [down]
 ^^^^^^^^^^^^^
@@ -394,52 +395,7 @@ down_converted.txt
    # Track['down'].Y
    $hoge + 0.00;
    Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 50.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 72.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 74.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 96.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 101.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 123.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 125.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 147.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 167.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 189.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 191.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 213.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 218.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 240.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 242.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 264.00;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 280.58;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 302.57;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 304.57;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 326.45;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 346.30;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 368.18;
-   Track['down'].Y.Interpolate(0.00,0.00);
-   $hoge + 370.18;
-   Track['down'].Y.Interpolate(0.00,0.00);
+   # ... (省略) ...
    $hoge + 392.17;
    Track['down'].Y.Interpolate(0.00,0.00);
    $hoge + 400.00;
@@ -544,11 +500,31 @@ down_converted.txt
 サンプルシナリオについて
 ======================
 
-冒頭で述べた通り、このtutorialで用いたデータを元に作成したサンプルシナリオが、tsutsuji_tutorial_material.zipに同梱されています。
-始点でのスクリーンショットを以下に載せます。
+このtutorialで用いたデータを元に作成したサンプルシナリオが、このページ冒頭で触れたtsutsuji_tutorial_material.zipに同梱されています。
+始点付近でのスクリーンショットは以下の通りです。
+Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線を含むマップがそれらしく変換されていることを見ていただけるかと思います。
 
-.. image:: ./files/screenshot_scenario.png
-	   :scale: 40%
+.. image:: ./files/screenshot_scenario.jpg
+	   :scale: 30%
 
-.. image:: ./files/screenshot_scenario_tele.png
-	   :scale: 40%
+もう少し手を加える
+----------------
+
+さて、運転台からは「それらしく」見えているサンプルシナリオですが、望遠ズームしてみると粗が目立ってきます。
+
+下図は、サンプルシナリオ出発点にてdown軌道上を7倍ズームしたときのスクリーンショットです。
+直線であるはずのdown軌道が左右に歪んでいるのがわかります。
+
+.. image:: ./files/screenshot_scenario_tele1.jpg
+	   :scale: 30%
+
+これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因です。
+
+Track構文を設置する距離程を手動で設定するため、cfgファイルの[*track*]セクションに :code:`supplemental_cp` 要素が利用できます。
+
+:code:`supplemental_cp = 60,85,112,137,177,203,228,250` をtutorial.cfg [down]セクションに追加し、tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。
+
+.. image:: ./files/screenshot_scenario_tele2.jpg
+	   :scale: 30%
+
+[おわり]

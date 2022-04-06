@@ -17,9 +17,9 @@ sys.path.insert(0, '/Users/hiroyoshi/python/tsutsuji/')
 
 # -- Project information -----------------------------------------------------
 
-project = 'tsutsuji'
-copyright = '2022, Author'
-author = 'Author'
+project = 'tsutsuji-trackcomputer'
+copyright = '2022, konawasabi'
+author = 'konawasabi'
 
 
 # -- General configuration ---------------------------------------------------
@@ -43,7 +43,7 @@ templates_path = ['_templates']
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'en'
+language = 'jp'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

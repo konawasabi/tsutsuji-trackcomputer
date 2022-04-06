@@ -16,20 +16,24 @@ unit_length
 * type: float
 * 各軌道について軌道座標を計算する間隔 [m]
 
-  * デフォルトでは1m
+  * デフォルトでは1 [m]
+
+* この数値によって軌道位置の計算精度が決まる
+  
+  * 極端に小さな値を設定すると、計算に必要なメモリ、時間が大幅に増えるので注意
 
 offset_variable
 ================  
 * type: string
-* 計算結果の距離程を :code:`$hoge + dist` の形で表すときの変数名。
+* 変換結果の距離程を :code:`$offset_variable + distance;` の形で表すときの変数名。
 
-   * このときdistの原点はorigin_distance。
-   * 省略した場合は絶対距離程で表す。
+  * 省略した場合はdistanceのみで表す。
 
 origin_distance
 ================  
 * type: float
-* 計算結果の距離程始端
+
+  * offset_variableで指定した変数に代入する数値
 
 output_path
 ============
@@ -43,7 +47,7 @@ output_path
 [*trackkey*]
 ************
 
-* *trackkey* : 読み込む軌道名
+* *trackkey* : 読み込む軌道データに与える軌道キー
 
 file
 ===========
@@ -119,6 +123,9 @@ supplemental_cp
 * type: float, float, ..., float
 * 制御点として追加する距離程
 
+  * コンマ区切りリストで記述する
+  * 注目している軌道基準での該当する距離程でTrack構文を出力する
+
 color
 ======
 * type: string
@@ -127,7 +134,11 @@ color
   * 16進数カラーコード('#rrggbb')または色名で指定
   * デフォルトでは読み込んだ軌道ごとに下記の順序で設定
     
-    * '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'
+    * .. image:: ./files/color_default.png
+	   :scale: 50%
       
-  * 指定できる色名(https://matplotlib.org/2.0.2/examples/color/named_colors.html をもとに作成)
-.. image:: ./files/namedcolor.png
+  * 指定できる色名
+
+    * https://matplotlib.org/2.0.2/examples/color/named_colors.html をもとに作成
+    * .. image:: ./files/namedcolor.png
+	   :scale: 75%

@@ -1,12 +1,12 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="jp">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>CFG file format &#8212; tsutsuji  documentation</title>
+    <title>CFG file format &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
@@ -16,7 +16,9 @@
     <script src="_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tsutsuji package" href="tsutsuji.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,7 +29,13 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji  documentation</a> &#187;</li>
+        <li class="right" >
+          <a href="tsutsuji.html" title="tsutsuji package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">CFG file format</a></li> 
       </ul>
     </div>  
@@ -54,30 +62,35 @@
 <li><p>type: float</p></li>
 <li><p>各軌道について軌道座標を計算する間隔 [m]</p>
 <ul>
-<li><p>デフォルトでは1m</p></li>
+<li><p>デフォルトでは1 [m]</p></li>
+</ul>
+</li>
+<li><p>この数値によって軌道位置の計算精度が決まる</p>
+<ul>
+<li><p>極端に小さな値を設定すると、計算に必要なメモリ、時間が大幅に増えるので注意</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="offset-variable">
 <h3>offset_variable<a class="headerlink" href="#offset-variable" title="Permalink to this headline">¶</a></h3>
-<ul>
+<ul class="simple">
 <li><p>type: string</p></li>
-<li><p>計算結果の距離程を <code class="code docutils literal notranslate"><span class="pre">$hoge</span> <span class="pre">+</span> <span class="pre">dist</span></code> の形で表すときの変数名。</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>このときdistの原点はorigin_distance。</p></li>
-<li><p>省略した場合は絶対距離程で表す。</p></li>
+<li><p>変換結果の距離程を <code class="code docutils literal notranslate"><span class="pre">$offset_variable</span> <span class="pre">+</span> <span class="pre">distance;</span></code> の形で表すときの変数名。</p>
+<ul>
+<li><p>省略した場合はdistanceのみで表す。</p></li>
 </ul>
-</div></blockquote>
 </li>
 </ul>
 </section>
 <section id="origin-distance">
 <h3>origin_distance<a class="headerlink" href="#origin-distance" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>type: float</p></li>
-<li><p>計算結果の距離程始端</p></li>
+<li><p>type: float</p>
+<ul>
+<li><p>offset_variableで指定した変数に代入する数値</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="output-path">
@@ -96,7 +109,7 @@
 <section id="trackkey">
 <h2>[<em>trackkey</em>]<a class="headerlink" href="#trackkey" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><em>trackkey</em> : 読み込む軌道名</p></li>
+<li><p><em>trackkey</em> : 読み込む軌道データに与える軌道キー</p></li>
 </ul>
 <section id="file">
 <h3>file<a class="headerlink" href="#file" title="Permalink to this headline">¶</a></h3>
@@ -131,8 +144,8 @@
 <li><p>ver1.0.0では未実装</p></li>
 </ul>
 </section>
-<section id="id1">
-<h3>origin_distance<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<section id="origin-kilopost">
+<h3>origin_kilopost<a class="headerlink" href="#origin-kilopost" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
 <li><p>座標系の原点となる距離程</p></li>
@@ -193,27 +206,38 @@
 <section id="supplemental-cp">
 <h3>supplemental_cp<a class="headerlink" href="#supplemental-cp" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>type: float, float, …, float</p></li>
-<li><p>制御点として追加する距離程</p></li>
+<li><p>type: float, float, ..., float</p></li>
+<li><p>制御点として追加する距離程</p>
+<ul>
+<li><p>コンマ区切りリストで記述する</p></li>
+<li><p>注目している軌道基準での該当する距離程でTrack構文を出力する</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="color">
 <h3>color<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
+<ul>
 <li><p>type: string</p></li>
 <li><p>軌道プロット時の線色</p>
 <ul>
-<li><p>16進数カラーコード(‘#rrggbb’)または色名で指定</p></li>
+<li><p>16進数カラーコード('#rrggbb')または色名で指定</p></li>
 <li><p>デフォルトでは読み込んだ軌道ごとに下記の順序で設定</p>
 <ul>
-<li><p>‘#1f77b4’, ‘#ff7f0e’, ‘#2ca02c’, ‘#d62728’, ‘#9467bd’, ‘#8c564b’, ‘#e377c2’, ‘#7f7f7f’, ‘#bcbd22’, ‘#17becf’</p></li>
-</ul>
-</li>
-<li><p>指定できる色名(<a class="reference external" href="https://matplotlib.org/2.0.2/examples/color/named_colors.html">https://matplotlib.org/2.0.2/examples/color/named_colors.html</a> をもとに作成)</p></li>
-</ul>
+<li><a class="reference internal image-reference" href="_images/color_default.png"><img alt="_images/color_default.png" src="_images/color_default.png" style="width: 121.0px; height: 100.0px;" /></a>
 </li>
 </ul>
-<img alt="_images/namedcolor.png" src="_images/namedcolor.png" />
+</li>
+<li><p>指定できる色名</p>
+<ul>
+<li><p><a class="reference external" href="https://matplotlib.org/2.0.2/examples/color/named_colors.html">https://matplotlib.org/2.0.2/examples/color/named_colors.html</a> をもとに作成</p></li>
+<li><a class="reference internal image-reference" href="_images/namedcolor.png"><img alt="_images/namedcolor.png" src="_images/namedcolor.png" style="width: 600.0px; height: 375.0px;" /></a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 </section>
 </section>
 </section>
@@ -241,7 +265,7 @@
 <li><a class="reference internal" href="#file">file</a></li>
 <li><a class="reference internal" href="#absolute-coordinate">absolute_coordinate</a></li>
 <li><a class="reference internal" href="#parent-track">parent_track</a></li>
-<li><a class="reference internal" href="#id1">origin_distance</a></li>
+<li><a class="reference internal" href="#origin-kilopost">origin_kilopost</a></li>
 <li><a class="reference internal" href="#x">x</a></li>
 <li><a class="reference internal" href="#y">y</a></li>
 <li><a class="reference internal" href="#z">z</a></li>
@@ -256,6 +280,16 @@
 </li>
 </ul>
 
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="tutorial.html"
+                          title="previous chapter">Tutorial</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tsutsuji.html"
+                          title="next chapter">tsutsuji package</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -287,12 +321,18 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji  documentation</a> &#187;</li>
+        <li class="right" >
+          <a href="tsutsuji.html" title="tsutsuji package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">CFG file format</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Author.
+        &#169; Copyright 2022, konawasabi.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
