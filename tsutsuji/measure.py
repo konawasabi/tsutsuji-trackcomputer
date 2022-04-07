@@ -220,14 +220,18 @@ class interface():
         tranfunc = 'line'
         
         result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
-        
+
+        '''
         if not __debug__:
             print(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
             print(result)
-            
+        '''
+        
         trackp = trackplot()
         trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
-        print(trackp.result)
+        #print(trackp.result)
+
+        print('R: {:f}, TCL_in: {:f}, TCL_out: {:f}, CCL: {:f}'.format(result[0],lenTC1,lenTC2,result[0]*np.abs(phiB-phiA)))
         
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])

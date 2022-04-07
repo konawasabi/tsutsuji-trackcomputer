@@ -280,5 +280,5 @@ def main():
     root = tk.Tk()
     app = mainwindow(master=root)
     if len(sys.argv)>1:
-        app.opencfg(inputdir=sys.argv[1])
+        app.opencfg(in_dir=sys.argv[1])
     app.mainloop()
