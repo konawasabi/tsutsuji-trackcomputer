@@ -319,8 +319,8 @@ endpoint = 1500
 <section id="tsutsuji">
 <h2>Tsutsujiの起動〜マップファイルの出力<a class="headerlink" href="#tsutsuji" title="Permalink to this headline">¶</a></h2>
 <p>Tsutsujiを起動します。
-コマンドラインで <code class="code docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">tsutsuji</span> <span class="pre">./tutorial.cfg</span></code> を実行して下記ウィンドウが出て来れば起動成功です。</p>
-<p>起動時にcfgファイルを指定せずに、起動してからメニューの「開く」コマンドで指定しても同じ結果が得られます。</p>
+コマンドラインで <code class="code docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">tsutsuji</span></code> を実行して、メニューの「開く」コマンドでtutorial.cfgを選択すれば、以下のウィンドウが現れます。</p>
+<p><code class="code docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">tsutsuji</span> <span class="pre">tutorial.cfg</span></code> として、起動時に開くファイルを直接指定することも可能です。</p>
 <a class="reference internal image-reference" href="_images/screenshot1.png"><img alt="_images/screenshot1.png" src="_images/screenshot1.png" style="width: 558.0px; height: 372.5px;" /></a>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -553,8 +553,8 @@ Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線�
 直線であるはずのdown軌道が左右に歪んでいるのがわかります。</p>
 <p>これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因で、改善するにはTrack構文を適当な箇所に増設する必要があります。
 ここでは、down軌道基準の距離程で60m, 85m, 112m, 137m, 177m, 203m, 228m, 250mの位置にTrack構文を増設してみます。（これで、おおむね10m間隔でTrack構文が設置されます）</p>
-<p>Track構文を増設する箇所を指定するためには、tutorial.cfgの[down]セクションに <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span></code> 要素を追加します。
-<code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span> <span class="pre">=</span> <span class="pre">60,85,112,137,177,203,228,250</span></code> をtutorial.cfg [down]セクションに追加し、tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。</p>
+<p>Track構文を増設するには、tutorial.cfgの[down]セクションに <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span></code> 要素を追加します。
+<code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span> <span class="pre">=</span> <span class="pre">60,85,112,137,177,203,228,250</span></code> をtutorial.cfgの[down]セクションに追加し、Tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。</p>
 <a class="reference internal image-reference" href="_images/screenshot_scenario_tele2.jpg"><img alt="_images/screenshot_scenario_tele2.jpg" src="_images/screenshot_scenario_tele2.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
 <p>[おわり]</p>
 </section>

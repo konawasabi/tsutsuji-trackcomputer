@@ -277,9 +277,9 @@ Tsutsujiの起動〜マップファイルの出力
 =================================
 
 Tsutsujiを起動します。
-コマンドラインで :code:`python -m tsutsuji ./tutorial.cfg` を実行して下記ウィンドウが出て来れば起動成功です。
+コマンドラインで :code:`python -m tsutsuji` を実行して、メニューの「開く」コマンドでtutorial.cfgを選択すれば、以下のウィンドウが現れます。
 
-起動時にcfgファイルを指定せずに、起動してからメニューの「開く」コマンドで指定しても同じ結果が得られます。
+:code:`python -m tsutsuji tutorial.cfg` として、起動時に開くファイルを直接指定することも可能です。
 
 .. image:: ./files/screenshot1.png
 	   :scale: 50%
@@ -526,8 +526,8 @@ Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線�
 これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因で、改善するにはTrack構文を適当な箇所に増設する必要があります。
 ここでは、down軌道基準の距離程で60m, 85m, 112m, 137m, 177m, 203m, 228m, 250mの位置にTrack構文を増設してみます。（これで、おおむね10m間隔でTrack構文が設置されます）
 
-Track構文を増設する箇所を指定するためには、tutorial.cfgの[down]セクションに :code:`supplemental_cp` 要素を追加します。
-:code:`supplemental_cp = 60,85,112,137,177,203,228,250` をtutorial.cfg [down]セクションに追加し、tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。
+Track構文を増設するには、tutorial.cfgの[down]セクションに :code:`supplemental_cp` 要素を追加します。
+:code:`supplemental_cp = 60,85,112,137,177,203,228,250` をtutorial.cfgの[down]セクションに追加し、Tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。
 
 .. image:: ./files/screenshot_scenario_tele2.jpg
 	   :scale: 30%
