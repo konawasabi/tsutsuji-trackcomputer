@@ -17,7 +17,7 @@ Tsutsuji trackcomputerは、Bve Trainsim 5/6向けマップファイルの制作
 * カント
 * カント回転中心
   
-も同時に変換できることが特徴です。
+の変換にも対応しています。
 
 まずは :doc:`tutorial` をご覧ください。
 

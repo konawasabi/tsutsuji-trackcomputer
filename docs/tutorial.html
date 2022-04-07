@@ -1,5 +1,6 @@
 
-<!DOCTYPE html>
+
+<!doctype html>
 
 <html lang="jp">
   <head>
@@ -8,17 +9,21 @@
 
     <title>Tutorial &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
     
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    
+    <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="CFG file format" href="cfgfileformat.html" />
-    <link rel="prev" title="Documents for Tsutsuji trackcomputer" href="index.html" /> 
+    <link rel="prev" title="Documents for Tsutsuji trackcomputer" href="index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -235,8 +240,9 @@ endpoint = 1500
 <h3>各セクションの説明<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <section id="tsutsuji-general">
 <h4>[&#64;TSUTSUJI_GENERAL]<a class="headerlink" href="#tsutsuji-general" title="Permalink to this headline">¶</a></h4>
-<p>変換結果の出力に関係する設定を記述するセクションです。
-1つのcfgファイルに対して必ず記述が必要です。</p>
+<p>変換結果の出力に関係する設定を記述するセクションです。</p>
+<p>1つのcfgファイルに対して必ず記述が必要です。</p>
+<p>各要素の意味は次の通りです。</p>
 <ul class="simple">
 <li><p>owntrack</p>
 <ul>
@@ -264,6 +270,7 @@ endpoint = 1500
 <h4>[up], [down]<a class="headerlink" href="#up-down" title="Permalink to this headline">¶</a></h4>
 <p>各軌道の設定を記述するセクションです。</p>
 <p>[]内に割り当てる軌道キーを記述します。軌道キーはマップファイルの名称と異なっていても構いません。</p>
+<p>各要素の意味は次の通りです。</p>
 <ul class="simple">
 <li><p>file</p>
 <ul>
@@ -275,8 +282,7 @@ endpoint = 1500
 <li><p>absolute_coordinate</p>
 <ul>
 <li><p>軌道の始点(距離程=0mの座標)を指定する方法を記述</p></li>
-<li><p>Trueとした場合、絶対座標系で指定する</p></li>
-<li><p>Falseは未実装</p></li>
+<li><p>Trueとした場合、各軌道に依存しない絶対座標系で指定する</p></li>
 </ul>
 </li>
 <li><p>x, y, z</p>
@@ -287,7 +293,7 @@ endpoint = 1500
 </ul>
 </li>
 </ul>
-<a class="reference internal image-reference" href="_images/coordinate.png"><img alt="_images/coordinate.png" src="_images/coordinate.png" style="width: 273.75px; height: 191.25px;" /></a>
+<a class="reference internal image-reference" href="_images/coordinate.png"><img alt="_images/coordinate.png" src="_images/coordinate.png" style="width: 224.25px; height: 204.75px;" /></a>
 <ul class="simple">
 <li><p>angle</p>
 <ul>
@@ -540,12 +546,13 @@ Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線�
 <section id="id6">
 <h3>もう少し手を加える<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>さて、運転台からは「それらしく」見えているサンプルシナリオですが、望遠ズームしてみると粗が目立ってきます。</p>
-<p>下図は、サンプルシナリオ出発点にてdown軌道上を7倍ズームしたときのスクリーンショットです。
-直線であるはずのdown軌道が左右に歪んでいるのがわかります。</p>
 <a class="reference internal image-reference" href="_images/screenshot_scenario_tele1.jpg"><img alt="_images/screenshot_scenario_tele1.jpg" src="_images/screenshot_scenario_tele1.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
-<p>これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因です。</p>
-<p>Track構文を設置する距離程を手動で設定するため、cfgファイルの[<em>track</em>]セクションに <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span></code> 要素が利用できます。</p>
-<p><code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span> <span class="pre">=</span> <span class="pre">60,85,112,137,177,203,228,250</span></code> をtutorial.cfg [down]セクションに追加し、tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。</p>
+<p>上図は、サンプルシナリオ出発点にてdown軌道上を7倍にズームしたときのスクリーンショットです。
+直線であるはずのdown軌道が左右に歪んでいるのがわかります。
+これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因で、改善するにはTrack構文を適当な箇所に増設する必要があります。</p>
+<p>このような場合に対応するため、cfgファイルの[<em>track</em>]セクションで <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span></code> 要素を用います。
+ここでは、down軌道基準の距離程で60m, 85m, 112m, 137m, 177m, 203m, 228m, 250mの位置にTrack構文を増設してみます。（これで、おおむね10m間隔でTrack構文が設置されます）
+<code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span> <span class="pre">=</span> <span class="pre">60,85,112,137,177,203,228,250</span></code> をtutorial.cfg [down]セクションに追加し、tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。</p>
 <a class="reference internal image-reference" href="_images/screenshot_scenario_tele2.jpg"><img alt="_images/screenshot_scenario_tele2.jpg" src="_images/screenshot_scenario_tele2.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
 <p>[おわり]</p>
 </section>

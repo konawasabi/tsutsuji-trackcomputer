@@ -60,7 +60,7 @@ absolute_coordinate
 * type: bool
 * 軌道始点座標の指定方法
   
-  * True: 絶対座標系
+  * True: 各軌道から独立した絶対座標系
   * False: 別軌道のある距離程を基準とした座標系
 
     * ver1.0.0ではTrueのみ対応
@@ -83,24 +83,31 @@ x
 ==========
 * type: float
 * 軌道始端座標のx成分 [m]
-
+  
 y
 ===========
 * type: float
 * 軌道始端座標のy成分 [m]
-
+  
 z
 ===========
 * type: float
 * 軌道始端座標のz成分 [m]
-
+  
 angle
 ===========
 * type: float
-* 軌道始端における進行方角 [°]
-* z軸方向を0とする。
+* 軌道始端における進行方向 [°]
+* 絶対座標系のz軸方向を0とする。
+  
   
 * x, y, z, angle については下図を参照
+
+  * 下図のTrack A, B始端座標について
+
+    * Track Aの(x, y, z, φ) = (0, y\ :sub:`0`\, z\ :sub:`0`\, 0)
+    * Track Bの(x, y, z, φ) = (x\ :sub:`0`\, y\ :sub:`0`\, z\ :sub:`0`\, φ\ :sub:`0`\)
+  
 
 .. image:: ./files/coordinate.png
 
