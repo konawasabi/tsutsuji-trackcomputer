@@ -339,7 +339,9 @@ endpoint = 1500
 <p>今回出力される &quot;down_converted.txt&quot; の内容は以下の通りです。</p>
 <section id="down-converted-txt">
 <h4>down_converted.txt<a class="headerlink" href="#down-converted-txt" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># offset
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BveTs Map 2.02:utf-8
+
+# offset
 $hoge = 0.000000;
 
 # Track[&#39;down&#39;].X
@@ -548,10 +550,10 @@ Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線�
 <p>さて、運転台からは「それらしく」見えているサンプルシナリオですが、望遠ズームしてみると粗が目立ってきます。</p>
 <a class="reference internal image-reference" href="_images/screenshot_scenario_tele1.jpg"><img alt="_images/screenshot_scenario_tele1.jpg" src="_images/screenshot_scenario_tele1.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
 <p>上図は、サンプルシナリオ出発点にてdown軌道上を7倍にズームしたときのスクリーンショットです。
-直線であるはずのdown軌道が左右に歪んでいるのがわかります。
-これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因で、改善するにはTrack構文を適当な箇所に増設する必要があります。</p>
-<p>このような場合に対応するため、cfgファイルの[<em>track</em>]セクションで <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span></code> 要素を用います。
-ここでは、down軌道基準の距離程で60m, 85m, 112m, 137m, 177m, 203m, 228m, 250mの位置にTrack構文を増設してみます。（これで、おおむね10m間隔でTrack構文が設置されます）
+直線であるはずのdown軌道が左右に歪んでいるのがわかります。</p>
+<p>これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因で、改善するにはTrack構文を適当な箇所に増設する必要があります。
+ここでは、down軌道基準の距離程で60m, 85m, 112m, 137m, 177m, 203m, 228m, 250mの位置にTrack構文を増設してみます。（これで、おおむね10m間隔でTrack構文が設置されます）</p>
+<p>Track構文を増設する箇所を指定するためには、tutorial.cfgの[down]セクションに <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span></code> 要素を追加します。
 <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span> <span class="pre">=</span> <span class="pre">60,85,112,137,177,203,228,250</span></code> をtutorial.cfg [down]セクションに追加し、tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。</p>
 <a class="reference internal image-reference" href="_images/screenshot_scenario_tele2.jpg"><img alt="_images/screenshot_scenario_tele2.jpg" src="_images/screenshot_scenario_tele2.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
 <p>[おわり]</p>

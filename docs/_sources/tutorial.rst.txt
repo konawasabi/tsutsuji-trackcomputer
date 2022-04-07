@@ -305,7 +305,9 @@ down_converted.txt
 ^^^^^^^^^^^^^^^^^^
 
 .. code-block:: text
-		
+
+   BveTs Map 2.02:utf-8
+
    # offset
    $hoge = 0.000000;
 
@@ -520,10 +522,11 @@ Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線�
 
 上図は、サンプルシナリオ出発点にてdown軌道上を7倍にズームしたときのスクリーンショットです。
 直線であるはずのdown軌道が左右に歪んでいるのがわかります。
-これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因で、改善するにはTrack構文を適当な箇所に増設する必要があります。
 
-このような場合に対応するため、cfgファイルの[*track*]セクションで :code:`supplemental_cp` 要素を用います。
+これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因で、改善するにはTrack構文を適当な箇所に増設する必要があります。
 ここでは、down軌道基準の距離程で60m, 85m, 112m, 137m, 177m, 203m, 228m, 250mの位置にTrack構文を増設してみます。（これで、おおむね10m間隔でTrack構文が設置されます）
+
+Track構文を増設する箇所を指定するためには、tutorial.cfgの[down]セクションに :code:`supplemental_cp` 要素を追加します。
 :code:`supplemental_cp = 60,85,112,137,177,203,228,250` をtutorial.cfg [down]セクションに追加し、tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。
 
 .. image:: ./files/screenshot_scenario_tele2.jpg

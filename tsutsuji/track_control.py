@@ -394,6 +394,7 @@ class TrackControl():
                     output_map[key] += 'Track[\'{:s}\'].Cant.SetGauge({:.3f});\n'.format(tr,pos_cp[key][index][10])
 
             output_file = ''
+            output_file += 'BveTs Map 2.02:utf-8\n\n'
             # 他軌道構文印字
             if kp_val != '':
                 output_file += '# offset\n'
