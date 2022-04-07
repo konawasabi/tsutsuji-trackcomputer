@@ -35,10 +35,12 @@ class TrackControl():
         self.rel_track_radius = {}
         self.rel_track_radius_cp = {}
         self.conf = None
+        self.path = None
     def loadcfg(self,path):
         '''cfgファイルの読み込み
         '''
         self.conf = config.Config(path)
+        self.path = path
     def loadmap(self,to_load=None):
         '''mapファイルの読み込みと座標データ生成
 

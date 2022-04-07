@@ -81,6 +81,7 @@ class mainwindow(ttk.Frame):
         
         self.create_widgets()
         self.create_menubar()
+        self.bind_keyevent()
     def create_widgets(self):
         font_title = font.Font(weight='bold',size=10)
         
@@ -177,6 +178,7 @@ class mainwindow(ttk.Frame):
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
         self.menu_file.add_command(label='開く...', command=self.opencfg, accelerator='Control+O')
+        self.menu_file.add_command(label='リロード', command=self.reloadcfg, accelerator='F5')
         self.menu_file.add_separator()
         self.menu_file.add_command(label='終了', command=self.ask_quit, accelerator='Alt+F4')
         
@@ -190,17 +192,25 @@ class mainwindow(ttk.Frame):
         self.menu_help.add_command(label='Tsutsujiについて...', command=self.aboutwindow)
         
         self.master['menu'] = self.menubar
+    def bind_keyevent(self):
+        self.bind_all("<Control-o>", self.opencfg)
+        self.bind_all("<F5>", self.reloadcfg)
+        self.bind_all("<Alt-F4>", self.ask_quit)
     def ask_quit(self, event=None, ask=True):
         if ask:
             if tk.messagebox.askyesno(message='Tsutsuji を終了しますか？'):
                 self.quit()
         else:
             self.quit()
-    def opencfg(self, event=None, inputdir=None):
-        inputdir = filedialog.askopenfilename() if inputdir == None else inputdir
+    def opencfg(self, event=None, in_dir=None):
+        inputdir = filedialog.askopenfilename() if in_dir == None else in_dir
+        print('loading',inputdir)
         self.trackcontrol.loadcfg(inputdir)
         self.trackcontrol.loadmap()
         self.drawall()
+    def reloadcfg(self, event=None):
+        if self.trackcontrol.path is not None:
+            self.opencfg(event=event,in_dir=self.trackcontrol.path)
     def draw2dplot(self):
         self.ax_plane.cla()
         self.trackcontrol.plot2d(self.ax_plane)
