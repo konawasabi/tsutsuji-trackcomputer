@@ -31,7 +31,7 @@ from . import track_control
 tc = track_control.TrackControl()
 tc.loadcfg('dev/test.cfg' if len(sys.argv)==1 else sys.argv[1])
 tc.loadmap()
-tc.relativepoint()
+tc.relativepoint_all()
 tc.relativeradius()
 tc.relativeradius_cp()
 
