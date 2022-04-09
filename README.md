@@ -23,6 +23,12 @@ Tsutsuji本体と、動作に必要なパッケージが自動でインストー
 pip install tsutsuji-trackcomputer
 ```
 
+Tsutsujiは次のコマンドで起動できます。
+
+```
+python -m tsutsuji
+```
+
 ## Documents
 
 https://konawasabi.github.io/tsutsuji-trackcomputer/
