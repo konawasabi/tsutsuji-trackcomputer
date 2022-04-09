@@ -192,6 +192,14 @@ class interface():
                 self.curvetrack_e[i] = ttk.Entry(self.curvetrack_value_f, textvariable=self.curvetrack_v[i],width=8)
                 self.curvetrack_e[i].grid(column=1, row=pos, sticky=(tk.E,tk.W))
                 pos+=1
+            self.curve_transfunc_v = tk.StringVar(value='line')
+            self.curve_transfunc_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
+            self.curve_transfunc_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S)
+            self.curve_transfunc_line_b = ttk.Radiobutton(self.curve_transfunc_f, text='line', variable=self.curve_transfunc_v, value='line')
+            self.curve_transfunc_line_b.grid(column=0, row=0, sticky=(tk.E,tk.W))
+            self.curve_transfunc_sin_b = ttk.Radiobutton(self.curve_transfunc_f, text='sin', variable=self.curve_transfunc_v, value='sin')
+            self.curve_transfunc_sin_b.grid(column=0, row=2, sticky=(tk.E,tk.W))
+            
             self.calc_b = ttk.Button(self.curvetrack_f, text="CurveTrack", command=self.ctfit)
             self.calc_b.grid(column=1, row=0, sticky=(tk.E,tk.W))
 
@@ -257,7 +265,7 @@ class interface():
         phiB = np.deg2rad(self.cursor_B.values[2].get())
         lenTC1 = self.curvetrack_v['TC length 1'].get()
         lenTC2 = self.curvetrack_v['TC length 2'].get()
-        tranfunc = 'line'
+        tranfunc = self.curve_transfunc_v.get()
         
         result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
 
@@ -300,7 +308,7 @@ class interface():
             
         #print(result[0], kilopost, track[result[2]][0])
         print()
-        print('[Distance toward the nearest track]')
+        print('[Distance nearest point along the track]')
         print('Inputs')
         print('   Ponint A: ({:f}, {:f})'.format(inputpos[0],inputpos[1]))
         print('   Trakckey: {:s}'.format(self.nearesttrack_sel_v.get())) 
