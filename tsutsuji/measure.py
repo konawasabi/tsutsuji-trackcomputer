@@ -75,7 +75,7 @@ class interface():
             self.parentwindow = parentwindow
             self.parent = parent
             self.name = name
-            self.marker = drawcursor.marker(self,color=color)
+            self.marker = drawcursor.marker_pos(self,color=color)
             self.arrow = drawcursor.arrow(self,self.marker)
             
             self.create_widgets(row)
@@ -231,7 +231,7 @@ class interface():
         trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
         #print(trackp.result)
 
-        print('R: {:f}, TCL_in: {:f}, TCL_out: {:f}, CCL: {:f}'.format(result[0],lenTC1,lenTC2,result[0]*np.abs(phiB-phiA)))
+        print('R: {:f}, TCL_in: {:f}, TCL_out: {:f}, CCL: {:f}'.format(result[0],lenTC1,lenTC2,np.abs(result[0]*(phiB-phiA))))
         
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])

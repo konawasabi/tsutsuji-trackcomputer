@@ -132,6 +132,7 @@ class marker():
         self.markerpos, = self.ax.plot([],[],self.color+'x')
         if pos:
             self.markerpos.set_data(self.p.values[0].get(),self.p.values[1].get())
+        
 class arrow():
     def __init__(self,parent,marker):
         self.p = parent
@@ -210,3 +211,47 @@ class marker_simple():
         self.canvas.draw()
     def setobj(self):
         self.markerpos, = self.ax.plot([],[],self.color+'x')
+
+class marker_pos():
+    def __init__(self,parent,color):
+        self.p = parent
+        self.ax = self.p.parentwindow.ax_plane
+        self.canvas = self.p.parentwindow.fig_canvas
+        self.color = color
+        
+        self.markerobj = marker_simple(self.p,self.ax,self.canvas,self.color)
+    def start(self):
+        self.track_key = self.p.values[3].get()
+        if self.track_key != '@absolute':
+            self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:,1:3]
+        else:
+            self.track_data = None
+        self.markerobj.start(lambda x,y:self.posfunc(x,y),lambda p:self.pressfunc(p))
+    def move(self,event):
+        self.markerobj.move(event)
+    def press(self,event):
+        self.markerobj.press(event)
+    def nearestpoint(self,x,y):
+        inputpos = np.array([x,y])
+        distance = (self.track_data - inputpos)**2
+        min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+        return self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][min_dist_ix]
+    def setmarkerobj(self,pos=False):
+        self.markerobj.setobj()
+        if pos:
+            self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get())
+    def posfunc(self,xpos,ypos):
+        if self.track_key == '@absolute':
+            x = xpos
+            y = ypos
+        else:
+            result = self.nearestpoint(xpos,ypos)
+            x = result[1]
+            y = result[2]
+        self.p.values[0].set(x)
+        self.p.values[1].set(y)
+        self.p.parent.setdistance()
+        return x,y
+    def pressfunc(self,parent):
+        if self.track_key != '@absolute':
+            self.prev_trackpos = self.nearestpoint(self.markerobj.xout,self.markerobj.yout)
