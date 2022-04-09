@@ -194,14 +194,14 @@ class interface():
                 pos+=1
             self.curve_transfunc_v = tk.StringVar(value='line')
             self.curve_transfunc_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
-            self.curve_transfunc_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S)
+            self.curve_transfunc_f.grid(column=2, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
             self.curve_transfunc_line_b = ttk.Radiobutton(self.curve_transfunc_f, text='line', variable=self.curve_transfunc_v, value='line')
             self.curve_transfunc_line_b.grid(column=0, row=0, sticky=(tk.E,tk.W))
             self.curve_transfunc_sin_b = ttk.Radiobutton(self.curve_transfunc_f, text='sin', variable=self.curve_transfunc_v, value='sin')
             self.curve_transfunc_sin_b.grid(column=0, row=2, sticky=(tk.E,tk.W))
             
             self.calc_b = ttk.Button(self.curvetrack_f, text="CurveTrack", command=self.ctfit)
-            self.calc_b.grid(column=1, row=0, sticky=(tk.E,tk.W))
+            self.calc_b.grid(column=3, row=0, sticky=(tk.E,tk.W))
 
             # 直交軌道探索フレーム
             self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
