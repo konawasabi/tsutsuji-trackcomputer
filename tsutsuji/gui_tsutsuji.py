@@ -148,7 +148,7 @@ class mainwindow(ttk.Frame):
         self.viewp_sc_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
         self.view_whole_e.grid(column=0, row=2, sticky=(tk.E,tk.W))
         
-        self.measure_btn = ttk.Button(self.button_frame, text="measure", command = self.measure)
+        self.measure_btn = ttk.Button(self.button_frame, text="measure (experimental)", command = self.measure)
         self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
 
         self.printtracks_btn = ttk.Button(self.button_frame, text="P. Tracks", command = self.trackcontrol.dump_trackdata)

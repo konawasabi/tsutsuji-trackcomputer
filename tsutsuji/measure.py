@@ -67,7 +67,29 @@ class trackplot():
         
         self.result = np.dot(self.curvegen.rotate(phiA), self.result.T).T
         self.result += A
+    def ccl(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
+        delta_phi = phiB - phiA #曲線前後での方位変化
+        
+        if(lenTC1>0):
+            tc1_tmp = self.curvegen.transition_curve(lenTC1,\
+                                          0,\
+                                          Radius,\
+                                          0,\
+                                          tranfunc) # 入口側の緩和曲線
+        else:
+            tc1_tmp=(np.array([[0,0]]),0,0)
+            
+        if(lenTC2>0):
+            tc2_tmp = self.curvegen.transition_curve(lenTC2,\
+                                          Radius,\
+                                          0,\
+                                          0,\
+                                          tranfunc) # 出口側の緩和曲線
+        else:
+            tc2_tmp=(np.array([[0,0]]),0,0)
 
+        phi_circul = delta_phi - tc1_tmp[1] - tc2_tmp[1] # 円軌道での方位角変化
+        return (Radius*phi_circul, phi_circul)
 class interface():
     class unit():
         def __init__(self,name,parentwindow,frame,parent,row,color):
@@ -211,6 +233,22 @@ class interface():
         self.result_v['distance'].set('{:.1f}'.format(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2\
                                               +(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2)))
         self.result_v['direction'].set('{:.1f}'.format(self.cursor_B.values[2].get()-self.cursor_A.values[2].get()))
+    def printdistance(self):
+        print()
+        print('[Distance between Point A and B]')
+        print('Inputs:')
+        print('   Ponint A: ({:f}, {:f})'.format(self.cursor_A.values[0].get(),self.cursor_A.values[1].get()))
+        print('   Ponint B: ({:f}, {:f})'.format(self.cursor_B.values[0].get(),self.cursor_B.values[1].get()))
+        print('Result:')
+        print('   distance: {:s}'.format(self.result_v['distance'].get()))
+    def printdirection(self):
+        print()
+        print('[Direction toward Point A to B]')
+        print('Inputs:')
+        print('   Dircection A: {:f}'.format(self.cursor_A.values[2].get()))
+        print('   Dircection B: {:f}'.format(self.cursor_B.values[2].get()))
+        print('Result:')
+        print('   direction:    {:s}'.format(self.result_v['direction'].get()))
     def ctfit(self):
         sv = solver.solver()
         A = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
@@ -232,9 +270,20 @@ class interface():
         trackp = trackplot()
         trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
         #print(trackp.result)
-
-        print('R: {:f}, TCL_in: {:f}, TCL_out: {:f}, CCL: {:f}'.format(result[0],lenTC1,lenTC2,np.abs(result[0]*(phiB-phiA))))
-        
+        print()
+        print('[Curve fitting]')
+        print('Inputs:')
+        print('   Ponint A:         ({:f}, {:f})'.format(A[0],A[1]))
+        print('   Ponint B:         ({:f}, {:f})'.format(B[0],B[1]))
+        print('   Dircection A:     {:f}'.format(self.cursor_A.values[2].get()))
+        print('   Dircection B:     {:f}'.format(self.cursor_B.values[2].get()))
+        print('   Transition func.: {:s}'.format(tranfunc))
+        print('   TCL_in:           {:f}'.format(lenTC1))
+        print('   TCL_out:          {:f}'.format(lenTC2))
+        print('Results:')
+        print('   R:   {:f}'.format(result[0]))
+        print('   CCL: {:f}'.format(trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]))
+        print('   endpoint: ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])
         ax.scatter(result[1][0][0],result[1][0][1])
@@ -249,7 +298,14 @@ class interface():
         result = math.minimumdist(track_pos, inputpos)
         kilopost = math.cross_kilopost(track, result)
             
-        print(result[0], kilopost, track[result[2]][0])
+        #print(result[0], kilopost, track[result[2]][0])
+        print()
+        print('[Distance toward the nearest track]')
+        print('Inputs')
+        print('   Ponint A: ({:f}, {:f})'.format(inputpos[0],inputpos[1]))
+        print('   Trakckey: {:s}'.format(self.nearesttrack_sel_v.get())) 
+        print('Results')
+        print('   distance: {:f}, kilopost: {:f}'.format(result[0], kilopost))
 
         ax = self.mainwindow.ax_plane
         ax.scatter(track[result[2]][1],track[result[2]][2])
@@ -267,5 +323,13 @@ class interface():
             else:
                 return (spos[0],y)
         def printpos(self,spos):
-            print(self.xout,self.yout, np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2))
+            #print(self.xout,self.yout, np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2))
+            print('Result')
+            print('   position:     ({:f}, {:f})'.format(self.xout,self.yout))
+            print('   distance:     {:f}'.format(np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2)))
         self.alongcursor_marker.start(lambda x,y: alongf(x,y,sourcepos,sourcedir),lambda self: printpos(self,sourcepos))
+        print()
+        print('[distance along cursor A]')
+        print('Inputs')
+        print('   Ponint A:     ({:f}, {:f})'.format(sourcepos[0],sourcepos[1]))
+        print('   Dircection A: {:f}'.format(self.cursor_A.values[2].get()))

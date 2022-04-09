@@ -173,6 +173,7 @@ class arrow():
         self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(theta)))
         self.p.parent.setdistance()
     def press(self,event):
+        self.p.parent.printdirection()
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
     def setobj(self,element,reset=False):
@@ -256,5 +257,6 @@ class marker_pos():
         self.p.parent.setdistance()
         return x,y
     def pressfunc(self,parent):
+        self.p.parent.printdistance()
         if self.track_key != '@absolute':
             self.prev_trackpos = self.nearestpoint(self.markerobj.xout,self.markerobj.yout)
