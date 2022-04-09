@@ -84,9 +84,10 @@ class interface():
             self.name_l.grid(column=0, row=row, sticky=(tk.E,tk.W))
             
             self.values = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.StringVar(value='')]
-            self.x_e = ttk.Entry(self.pframe, textvariable=self.values[0],width=5)
-            self.y_e = ttk.Entry(self.pframe, textvariable=self.values[1],width=5)
-            self.theta_e = ttk.Entry(self.pframe, textvariable=self.values[2],width=5)
+            self.values_toshow = [tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value='')]
+            self.x_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[0],width=5)
+            self.y_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[1],width=5)
+            self.theta_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[2],width=5)
             self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=8)
             
             self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
@@ -145,7 +146,8 @@ class interface():
                 self.result_l[i] = ttk.Label(self.result_f, text=i)
                 self.result_l[i].grid(column=0, row=pos, sticky=(tk.E,tk.W))
 
-                self.result_v[i] = tk.DoubleVar(value=0)
+                #self.result_v[i] = tk.DoubleVar(value=0)
+                self.result_v[i] = tk.StringVar(value='0')
                 self.result_e[i] = ttk.Entry(self.result_f, textvariable=self.result_v[i],width=8)
                 self.result_e[i].grid(column=1, row=pos, sticky=(tk.E,tk.W))
                 pos+=1
@@ -206,9 +208,9 @@ class interface():
 
             self.alongcursor_marker.setobj()
     def setdistance(self):
-        self.result_v['distance'].set(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2\
-                                              +(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2))
-        self.result_v['direction'].set(self.cursor_B.values[2].get()-self.cursor_A.values[2].get())
+        self.result_v['distance'].set('{:.1f}'.format(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2\
+                                              +(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2)))
+        self.result_v['direction'].set('{:.1f}'.format(self.cursor_B.values[2].get()-self.cursor_A.values[2].get()))
     def ctfit(self):
         sv = solver.solver()
         A = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])

@@ -170,6 +170,7 @@ class arrow():
         cos = vector[0]/np.sqrt(vector[0]**2+vector[1]**2)
         theta = np.arccos(cos) if sin > 0 else -np.arccos(cos)
         self.p.values[2].set(np.rad2deg(theta))
+        self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(theta)))
         self.p.parent.setdistance()
     def press(self,event):
         self.canvas.mpl_disconnect(self.press_id)
@@ -250,6 +251,8 @@ class marker_pos():
             y = result[2]
         self.p.values[0].set(x)
         self.p.values[1].set(y)
+        self.p.values_toshow[0].set('{:.1f}'.format(x))
+        self.p.values_toshow[1].set('{:.1f}'.format(y))
         self.p.parent.setdistance()
         return x,y
     def pressfunc(self,parent):
