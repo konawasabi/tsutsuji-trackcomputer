@@ -238,8 +238,8 @@ class BackImgControl():
             self.imgs[sections].origin[0] = float(origin[0])
             self.imgs[sections].origin[1] = float(origin[1])
             shift = conf[sections]['shift'].split(',')
-            self.imgs[sections].shift[0] = float(conf[sections]['shift'][0])
-            self.imgs[sections].shift[1] = float(conf[sections]['shift'][1])
+            self.imgs[sections].shift[0] = float(shift[0])
+            self.imgs[sections].shift[1] = float(shift[1])
 
             self.imgs[sections].rotrad = float(conf[sections]['rot'])
             self.imgs[sections].alpha = float(conf[sections]['alpha'])
