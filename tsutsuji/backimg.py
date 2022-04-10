@@ -25,6 +25,8 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import numpy as np
 
+import configparser
+
 class BackImgControl():
     class BackImgData():
         def __init__(self,path):
@@ -196,6 +198,7 @@ class BackImgControl():
         self.rot_v.set(self.imgs[selected].rotrad)
         self.alpha_v.set(self.imgs[selected].alpha)
         self.toshow_v.set(self.imgs[selected].toshow)
+        self.scale_v.set(self.imgs[selected].scale)
         for i in [0,1]:
             self.origin[i].set(self.imgs[selected].origin[i])
             self.shift[i].set(self.imgs[selected].shift[i])
@@ -208,3 +211,36 @@ class BackImgControl():
             extent[2] = img.extent[2] if img.extent[2] < extent[2] else extent[2]
             extent[3] = img.extent[3] if img.extent[3] > extent[3] else extent[3]
         return extent
+    def save_setting(self,outputpath=None):
+        if outputpath is None:
+            outputpath = filedialog.asksaveasfilename()
+        if outputpath != '':
+            fp = open(outputpath, 'w')
+            for imgkey in self.imgs.keys():
+                fp.writelines('[{:s}]\n'.format(imgkey))
+                #fp.writelines('file = {:s}\n'.format(imgkey))
+                fp.writelines('rot = {:f}\n'.format(self.imgs[imgkey].rotrad))
+                fp.writelines('alpha = {:f}\n'.format(self.imgs[imgkey].alpha))
+                fp.writelines('scale = {:f}\n'.format(self.imgs[imgkey].scale))
+                fp.writelines('origin = {:f},{:f}\n'.format(self.imgs[imgkey].origin[0],self.imgs[imgkey].origin[1]))
+                fp.writelines('shift = {:f},{:f}\n'.format(self.imgs[imgkey].shift[0],self.imgs[imgkey].shift[1]))
+                fp.writelines('\n')
+            fp.close()
+    def load_setting(self,path=None):
+        if path is None:
+            path = filedialog.askopenfilename()
+        conf = configparser.ConfigParser()
+        conf.read(path)
+
+        for sections in conf.sections():
+            self.imgs[sections]=self.BackImgData(sections)
+            origin = conf[sections]['origin'].split(',')
+            self.imgs[sections].origin[0] = float(origin[0])
+            self.imgs[sections].origin[1] = float(origin[1])
+            shift = conf[sections]['shift'].split(',')
+            self.imgs[sections].shift[0] = float(conf[sections]['shift'][0])
+            self.imgs[sections].shift[1] = float(conf[sections]['shift'][1])
+
+            self.imgs[sections].rotrad = float(conf[sections]['rot'])
+            self.imgs[sections].alpha = float(conf[sections]['alpha'])
+            self.imgs[sections].scale = float(conf[sections]['scale'])
