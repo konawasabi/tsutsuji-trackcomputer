@@ -246,14 +246,19 @@ class marker_pos():
         if self.track_key == '@absolute':
             x = xpos
             y = ypos
+            kp = None
         else:
             result = self.nearestpoint(xpos,ypos)
             x = result[1]
             y = result[2]
+            kp = result[0]
         self.p.values[0].set(x)
         self.p.values[1].set(y)
         self.p.values_toshow[0].set('{:.1f}'.format(x))
         self.p.values_toshow[1].set('{:.1f}'.format(y))
+        if kp is not None:
+            self.p.values[4].set(kp)
+            self.p.values_toshow[4].set('{:.1f}'.format(kp))
         self.p.parent.setdistance()
         return x,y
     def pressfunc(self,parent):

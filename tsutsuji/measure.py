@@ -105,12 +105,13 @@ class interface():
             self.name_l = ttk.Label(self.pframe, text=self.name)
             self.name_l.grid(column=0, row=row, sticky=(tk.E,tk.W))
             
-            self.values = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.StringVar(value='')]
-            self.values_toshow = [tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value='')]
+            self.values = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.StringVar(value=''),tk.DoubleVar(value=0)]
+            self.values_toshow = [tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value=''),tk.StringVar(value='0')]
             self.x_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[0],width=5)
             self.y_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[1],width=5)
             self.theta_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[2],width=5)
             self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=8)
+            self.trackkp_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[4],width=5)
             
             self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
             self.values[3].set('@absolute')
@@ -122,8 +123,9 @@ class interface():
             self.y_e.grid(column=2, row=row, sticky=(tk.E,tk.W))
             self.theta_e.grid(column=3, row=row, sticky=(tk.E,tk.W))
             self.track_e.grid(column=4, row=row, sticky=(tk.E,tk.W))
-            self.setcursor_b.grid(column=5, row=row, sticky=(tk.E,tk.W))
-            self.setcursor_dir_b.grid(column=6, row=row, sticky=(tk.E,tk.W))
+            self.trackkp_e.grid(column=5, row=row, sticky=(tk.E,tk.W))
+            self.setcursor_b.grid(column=6, row=row, sticky=(tk.E,tk.W))
+            self.setcursor_dir_b.grid(column=7, row=row, sticky=(tk.E,tk.W))
         def printmode(self):
             print(self.name,self.cursormode_v.get(), self.values[3].get() if self.cursormode_v.get() == 'track' else '')
             
@@ -149,7 +151,7 @@ class interface():
 
             self.position_label = {}
             pos = 1
-            for i in ['x','y','dir','track',' ',' ']:
+            for i in ['x','y','dir','track','kilopost',' ',' ']:
                 self.position_label[i] = ttk.Label(self.position_f, text=i)
                 self.position_label[i].grid(column=pos, row=0, sticky=(tk.E,tk.W))
                 pos+=1
@@ -245,8 +247,8 @@ class interface():
         print()
         print('[Distance between Point A and B]')
         print('Inputs:')
-        print('   Ponint A: ({:f}, {:f})'.format(self.cursor_A.values[0].get(),self.cursor_A.values[1].get()))
-        print('   Ponint B: ({:f}, {:f})'.format(self.cursor_B.values[0].get(),self.cursor_B.values[1].get()))
+        print('   Ponint A: ({:f}, {:f}), kp = {:f}'.format(self.cursor_A.values[0].get(),self.cursor_A.values[1].get(),self.cursor_A.values[4].get()))
+        print('   Ponint B: ({:f}, {:f}), kp = {:f}'.format(self.cursor_B.values[0].get(),self.cursor_B.values[1].get(),self.cursor_B.values[4].get()))
         print('Result:')
         print('   distance: {:s}'.format(self.result_v['distance'].get()))
     def printdirection(self):
