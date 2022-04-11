@@ -201,6 +201,10 @@ class interface():
             self.curve_transfunc_line_b.grid(column=0, row=0, sticky=(tk.E,tk.W))
             self.curve_transfunc_sin_b = ttk.Radiobutton(self.curve_transfunc_f, text='sin', variable=self.curve_transfunc_v, value='sin')
             self.curve_transfunc_sin_b.grid(column=0, row=2, sticky=(tk.E,tk.W))
+
+            self.curve_inverse_v = tk.BooleanVar(value=False)
+            self.curve_inverse_b = ttk.Checkbutton(self.curve_transfunc_f, text='B->A',variable=self.curve_inverse_v,onvalue=True,offvalue=False)
+            self.curve_inverse_b.grid(column=1, row=0, sticky=(tk.E,tk.W))
             
             self.calc_b = ttk.Button(self.curvetrack_f, text="CurveTrack", command=self.ctfit)
             self.calc_b.grid(column=3, row=0, sticky=(tk.E,tk.W))
@@ -223,6 +227,9 @@ class interface():
 
             self.alongcursor_btn = ttk.Button(self.alongcursor_f, text='AlongCursor', command=self.distalongcursor)
             self.alongcursor_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
+
+            self.acrosscursor_btn = ttk.Button(self.alongcursor_f, text='AcrossCursor', command=self.distacrosscursor)
+            self.acrosscursor_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
 
             self.alongcursor_marker = drawcursor.marker_simple(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g')
         else:
@@ -268,8 +275,11 @@ class interface():
         lenTC1 = self.curvetrack_v['TC length 1'].get()
         lenTC2 = self.curvetrack_v['TC length 2'].get()
         tranfunc = self.curve_transfunc_v.get()
-        
-        result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
+
+        if self.curve_inverse_v.get() == False:
+            result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
+        else:
+            result = sv.curvetrack_fit(B,phiB-np.pi,A,phiA-np.pi,lenTC2,lenTC1,tranfunc)
 
         '''
         if not __debug__:
@@ -294,6 +304,7 @@ class interface():
         print('   R:   {:f}'.format(result[0]))
         print('   CCL: {:f}'.format(trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]))
         print('   endpoint: ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
+        print(self.curve_inverse_v.get())
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])
         ax.scatter(result[1][0][0],result[1][0][1])
@@ -330,6 +341,27 @@ class interface():
         def alongf(x,y,spos,sdir):
             if np.abs(sdir) != np.pi:
                 return (x, np.tan(sdir)*(x-spos[0]) + spos[1])
+            else:
+                return (spos[0],y)
+        def printpos(self,spos):
+            #print(self.xout,self.yout, np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2))
+            print('Result')
+            print('   position:     ({:f}, {:f})'.format(self.xout,self.yout))
+            print('   distance:     {:f}'.format(np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2)))
+        self.alongcursor_marker.start(lambda x,y: alongf(x,y,sourcepos,sourcedir),lambda self: printpos(self,sourcepos))
+        print()
+        print('[distance along cursor A]')
+        print('Inputs')
+        print('   Ponint A:     ({:f}, {:f})'.format(sourcepos[0],sourcepos[1]))
+        print('   Dircection A: {:f}'.format(self.cursor_A.values[2].get()))
+    def distacrosscursor(self):
+        '''カーソルAの法線上の任意の点との距離を求める
+        '''
+        sourcepos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
+        sourcedir = np.deg2rad(self.cursor_A.values[2].get())
+        def alongf(x,y,spos,sdir):
+            if np.abs(sdir) != np.pi:
+                return (x, np.tan(sdir-np.pi/2)*(x-spos[0]) + spos[1])
             else:
                 return (spos[0],y)
         def printpos(self,spos):
