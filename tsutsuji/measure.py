@@ -267,6 +267,8 @@ class interface():
         print('Result:')
         print('   direction:    {:s}'.format(self.result_v['direction'].get()))
     def ctfit(self):
+        '''カーソルA, B間を結ぶ最適な曲線軌道を求める
+        '''
         sv = solver.solver()
         A = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
         B = np.array([self.cursor_B.values[0].get(),self.cursor_B.values[1].get()])
@@ -276,10 +278,15 @@ class interface():
         lenTC2 = self.curvetrack_v['TC length 2'].get()
         tranfunc = self.curve_transfunc_v.get()
 
+        trackp = trackplot()
         if self.curve_inverse_v.get() == False:
             result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
+            trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
         else:
-            result = sv.curvetrack_fit(B,phiB-np.pi,A,phiA-np.pi,lenTC2,lenTC1,tranfunc)
+            phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
+            phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
+            result = sv.curvetrack_fit(B,phiB_inv,A,phiA_inv,lenTC2,lenTC1,tranfunc)
+            trackp.generate(B,phiB_inv,phiA_inv,result[0],lenTC2,lenTC1,tranfunc)
 
         '''
         if not __debug__:
@@ -287,8 +294,6 @@ class interface():
             print(result)
         '''
         
-        trackp = trackplot()
-        trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
         #print(trackp.result)
         print()
         print('[Curve fitting]')
@@ -301,7 +306,7 @@ class interface():
         print('   TCL_in:           {:f}'.format(lenTC1))
         print('   TCL_out:          {:f}'.format(lenTC2))
         print('Results:')
-        print('   R:   {:f}'.format(result[0]))
+        print('   R:   {:f}'.format(result[0] if self.curve_inverse_v.get() == False else -result[0]))
         print('   CCL: {:f}'.format(trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]))
         print('   endpoint: ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
         print(self.curve_inverse_v.get())
