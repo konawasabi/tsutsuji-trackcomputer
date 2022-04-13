@@ -249,7 +249,14 @@ class interface():
     def setdistance(self):
         self.result_v['distance'].set('{:.1f}'.format(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2\
                                               +(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2)))
-        self.result_v['direction'].set('{:.1f}'.format(self.cursor_B.values[2].get()-self.cursor_A.values[2].get()))
+        #self.result_v['direction'].set('{:.1f}'.format(self.cursor_B.values[2].get()-self.cursor_A.values[2].get()))
+        phiA = np.deg2rad(self.cursor_A.values[2].get())
+        phiB = np.deg2rad(self.cursor_B.values[2].get())
+        eA = np.array([np.cos(phiA),np.sin(phiA)])
+        eB = np.array([np.cos(phiB),np.sin(phiB)])
+
+        self.result_v['direction'].set('{:.1f}'.format(np.rad2deg(np.arccos(np.dot(eA,eB)))*np.sign(np.cross(eA,eB))))
+        
     def printdistance(self):
         print()
         print('[Distance between Point A and B]')
@@ -259,10 +266,6 @@ class interface():
         print('Result:')
         print('   distance: {:s}'.format(self.result_v['distance'].get()))
     def printdirection(self):
-        phiA = np.deg2rad(self.cursor_A.values[2].get())
-        phiB = np.deg2rad(self.cursor_B.values[2].get())
-        eA = np.array([np.cos(phiA),np.sin(phiA)])
-        eB = np.array([np.cos(phiB),np.sin(phiB)])
         print()
         print('[Direction toward Point A to B]')
         print('Inputs:')
@@ -270,8 +273,6 @@ class interface():
         print('   Dircection B: {:f}'.format(self.cursor_B.values[2].get()))
         print('Result:')
         print('   direction:    {:s}'.format(self.result_v['direction'].get()))
-        print('   dot, cross:   {:f}, {:f}'.format(np.dot(eA,eB),np.cross(eA,eB)))
-        print('   arccos   :    {:f}'.format(np.rad2deg(np.arccos(np.dot(eA,eB)))*np.sign(np.cross(eA,eB))))
     def ctfit(self):
         '''カーソルA, B間を結ぶ最適な曲線軌道を求める
         '''
