@@ -250,12 +250,8 @@ class interface():
         self.result_v['distance'].set('{:.1f}'.format(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2\
                                               +(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2)))
         #self.result_v['direction'].set('{:.1f}'.format(self.cursor_B.values[2].get()-self.cursor_A.values[2].get()))
-        phiA = np.deg2rad(self.cursor_A.values[2].get())
-        phiB = np.deg2rad(self.cursor_B.values[2].get())
-        eA = np.array([np.cos(phiA),np.sin(phiA)])
-        eB = np.array([np.cos(phiB),np.sin(phiB)])
 
-        self.result_v['direction'].set('{:.1f}'.format(np.rad2deg(np.arccos(np.dot(eA,eB)))*np.sign(np.cross(eA,eB))))
+        self.result_v['direction'].set('{:.1f}'.format(np.rad2deg(math.angle_twov(np.deg2rad(self.cursor_A.values[2].get()),np.deg2rad(self.cursor_B.values[2].get())))))
         
     def printdistance(self):
         print()

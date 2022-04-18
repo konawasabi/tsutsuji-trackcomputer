@@ -118,3 +118,7 @@ def cross_normal(position, track):
     Return:
     '''
     return None
+def angle_twov(phiA, phiB):
+    eA = np.array([np.cos(phiA),np.sin(phiA)])
+    eB = np.array([np.cos(phiB),np.sin(phiB)])
+    return np.arccos(np.dot(eA,eB))*np.sign(np.cross(eA,eB))
