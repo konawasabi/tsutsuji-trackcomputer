@@ -272,6 +272,10 @@ class interface():
     def ctfit(self):
         '''カーソルA, B間を結ぶ最適な曲線軌道を求める
         '''
+        
+        # import pdb
+        # pdb.set_trace()
+        
         sv = solver.solver()
         A = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
         B = np.array([self.cursor_B.values[0].get(),self.cursor_B.values[1].get()])
@@ -291,12 +295,6 @@ class interface():
             result = sv.curvetrack_fit(B,phiB_inv,A,phiA_inv,lenTC2,lenTC1,tranfunc)
             trackp.generate(B,phiB_inv,phiA_inv,result[0],lenTC2,lenTC1,tranfunc)
 
-        '''
-        if not __debug__:
-            print(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
-            print(result)
-        '''
-        
         #print(trackp.result)
         print()
         print('[Curve fitting]')
@@ -327,7 +325,6 @@ class interface():
         result = math.minimumdist(track_pos, inputpos)
         kilopost = math.cross_kilopost(track, result)
             
-        #print(result[0], kilopost, track[result[2]][0])
         print()
         print('[Distance nearest point along the track]')
         print('Inputs')
@@ -352,7 +349,6 @@ class interface():
             else:
                 return (spos[0],y)
         def printpos(self,spos):
-            #print(self.xout,self.yout, np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2))
             print('Result')
             print('   position:     ({:f}, {:f})'.format(self.xout,self.yout))
             print('   distance:     {:f}'.format(np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2)))
@@ -373,7 +369,6 @@ class interface():
             else:
                 return (spos[0],y)
         def printpos(self,spos):
-            #print(self.xout,self.yout, np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2))
             print('Result')
             print('   position:     ({:f}, {:f})'.format(self.xout,self.yout))
             print('   distance:     {:f}'.format(np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2)))
