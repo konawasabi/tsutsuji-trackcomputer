@@ -40,7 +40,7 @@ class trackplot():
                                           0,\
                                           Radius,\
                                           0,\
-                                          tranfunc) # 入口側の緩和曲線
+                                          tranfunc,n=10) # 入口側の緩和曲線
         else:
             tc1_tmp=(np.array([[0,0]]),0,0)
             
@@ -49,7 +49,7 @@ class trackplot():
                                           Radius,\
                                           0,\
                                           0,\
-                                          tranfunc) # 出口側の緩和曲線
+                                          tranfunc,n=10) # 出口側の緩和曲線
         else:
             tc2_tmp=(np.array([[0,0]]),0,0)
 
@@ -272,9 +272,10 @@ class interface():
     def ctfit(self):
         '''カーソルA, B間を結ぶ最適な曲線軌道を求める
         '''
-        
-        # import pdb
-        # pdb.set_trace()
+
+        if False:
+            import pdb
+            pdb.set_trace()
         
         sv = solver.solver()
         A = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
