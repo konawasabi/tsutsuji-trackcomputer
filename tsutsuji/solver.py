@@ -40,7 +40,7 @@ class solver():
         '''
 
         def func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,x):
-            delta_phi = phiB - phiA #曲線前後での方位変化
+            delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
             
             if(lenTC1>0):
                 tc1_tmp = self.ci.transition_curve(lenTC1,\

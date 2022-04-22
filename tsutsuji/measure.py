@@ -33,7 +33,7 @@ class trackplot():
         self.curvegen = trackcoordinate.curve()
         self.result=np.array([[0,0]])
     def generate(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
-        delta_phi = phiB - phiA #曲線前後での方位変化
+        delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
         
         if(lenTC1>0):
             tc1_tmp = self.curvegen.transition_curve(lenTC1,\
@@ -68,7 +68,7 @@ class trackplot():
         self.result = np.dot(self.curvegen.rotate(phiA), self.result.T).T
         self.result += A
     def ccl(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
-        delta_phi = phiB - phiA #曲線前後での方位変化
+        delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
         
         if(lenTC1>0):
             tc1_tmp = self.curvegen.transition_curve(lenTC1,\
