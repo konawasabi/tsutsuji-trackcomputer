@@ -68,8 +68,11 @@ class TrackControl():
                                                                     theta0 = np.deg2rad(self.conf.track_data[i]['angle']))
                 else:
                     if self.conf.track_data[i]['parent_track'] not in self.track.keys():
-                        raise('invalid trackkey')
-                    pos_origin = self.track[self.conf.track_data[i]['parent_track']]['result'][self.track[self.conf.track_data[i]['parent_track']]['result'][:,0] == self.conf.track_data[i]['origin_kilopost']][-1]
+                        raise Exception('invalid trackkey: {:s}'.format(self.conf.track_data[i]['parent_track']))
+                    try:
+                        pos_origin = self.track[self.conf.track_data[i]['parent_track']]['result'][self.track[self.conf.track_data[i]['parent_track']]['result'][:,0] == self.conf.track_data[i]['origin_kilopost']][-1]
+                    except:
+                        raise Exception('invalid kilopost: {:.1f} on \'{:s}\''.format(self.conf.track_data[i]['origin_kilopost'],self.conf.track_data[i]['parent_track']))
                     self.track[i]['tgen'] = trackgenerator.TrackGenerator(self.track[i]['data'],\
                                                                     x0 = self.conf.track_data[i]['z'] + pos_origin[1],\
                                                                     y0 = self.conf.track_data[i]['x'] + pos_origin[2],\
