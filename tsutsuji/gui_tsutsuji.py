@@ -257,6 +257,9 @@ class mainwindow(ttk.Frame):
         tk.messagebox.showinfo(message=msg)
     def open_webdocument(self, event=None):
         webbrowser.open('https://konawasabi.github.io/tsutsuji-trackcomputer/')
+    def sendtopmost(self,event=None):
+        self.master.lift()
+        self.master.focus_force()
     
 def main():
     if not __debug__:

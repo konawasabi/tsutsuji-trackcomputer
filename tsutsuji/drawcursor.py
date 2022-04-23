@@ -147,6 +147,7 @@ class arrow():
             self.pointerdir = None
         self.track_key = self.p.values[3].get()
         self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
+        self.p.parentwindow.sendtopmost()
         self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
     def move(self,event):
@@ -188,16 +189,18 @@ class arrow():
 
 
 class marker_simple():
-    def __init__(self,parent,ax,canvas,color):
+    def __init__(self,parent,ax,canvas,color,rootwindow):
         self.parent = parent
         self.ax = ax
         self.canvas = canvas
         self.color = color
+        self.rootwindow = rootwindow
 
         self.setobj()
     def start(self,posfunc,pressfunc):
         self.posfunc = posfunc
         self.pressfunc = pressfunc
+        self.rootwindow.sendtopmost()
         self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
     def move(self,event):
@@ -221,7 +224,7 @@ class marker_pos():
         self.canvas = self.p.parentwindow.fig_canvas
         self.color = color
         
-        self.markerobj = marker_simple(self.p,self.ax,self.canvas,self.color)
+        self.markerobj = marker_simple(self.p,self.ax,self.canvas,self.color,self.p.parentwindow)
     def start(self):
         self.track_key = self.p.values[3].get()
         if self.track_key != '@absolute':

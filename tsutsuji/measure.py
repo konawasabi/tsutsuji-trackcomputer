@@ -231,7 +231,7 @@ class interface():
             self.acrosscursor_btn = ttk.Button(self.alongcursor_f, text='AcrossCursor', command=self.distacrosscursor)
             self.acrosscursor_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
 
-            self.alongcursor_marker = drawcursor.marker_simple(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g')
+            self.alongcursor_marker = drawcursor.marker_simple(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g',self.mainwindow)
         else:
             print('Already open')
     def closewindow(self):
