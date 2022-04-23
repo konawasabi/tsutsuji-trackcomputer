@@ -45,6 +45,10 @@ class TrackControl():
         '''mapファイルの読み込みと座標データ生成
 
         '''
+
+        #import pdb
+        #pdb.set_trace()
+        
         if self.conf != None:
             for i in self.conf.track_keys:
                 self.track[i] = {}
@@ -54,11 +58,23 @@ class TrackControl():
                                                             self.conf.track_data[i]['endpoint']+self.conf.general['unit_length'],\
                                                             self.conf.general['unit_length']]
                 # endpoint + unit_lengthとすることで、endpointを確実に含ませる
-                self.track[i]['tgen'] = trackgenerator.TrackGenerator(self.track[i]['data'],\
-                                                                x0 = self.conf.track_data[i]['z'],\
-                                                                y0 = self.conf.track_data[i]['x'],\
-                                                                z0 = self.conf.track_data[i]['y'],\
-                                                                theta0 = np.deg2rad(self.conf.track_data[i]['angle']))
+
+                # 原点座標の処理
+                if self.conf.track_data[i]['absolute_coordinate'] == True:
+                    self.track[i]['tgen'] = trackgenerator.TrackGenerator(self.track[i]['data'],\
+                                                                    x0 = self.conf.track_data[i]['z'],\
+                                                                    y0 = self.conf.track_data[i]['x'],\
+                                                                    z0 = self.conf.track_data[i]['y'],\
+                                                                    theta0 = np.deg2rad(self.conf.track_data[i]['angle']))
+                else:
+                    if self.conf.track_data[i]['parent_track'] not in self.track.keys():
+                        raise('invalid trackkey')
+                    pos_origin = self.track[self.conf.track_data[i]['parent_track']]['result'][self.track[self.conf.track_data[i]['parent_track']]['result'][:,0] == self.conf.track_data[i]['origin_kilopost']][-1]
+                    self.track[i]['tgen'] = trackgenerator.TrackGenerator(self.track[i]['data'],\
+                                                                    x0 = self.conf.track_data[i]['z'] + pos_origin[1],\
+                                                                    y0 = self.conf.track_data[i]['x'] + pos_origin[2],\
+                                                                    z0 = self.conf.track_data[i]['y'] + pos_origin[3],\
+                                                                    theta0 = np.deg2rad(self.conf.track_data[i]['angle']) + pos_origin[4])
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
     def relativepoint_single(self,to_calc,owntrack=None):
         '''owntrackを基準とした相対座標への変換
