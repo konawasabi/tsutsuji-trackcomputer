@@ -157,10 +157,12 @@ class BackImgControl():
         
         self.button_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.button_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
-        self.button_load = ttk.Button(self.button_frame, text="Load", command=self.newimg)
-        self.button_load.grid(column=0, row=0, sticky=(tk.S))
+        self.button_add = ttk.Button(self.button_frame, text="Add", command=self.newimg)
+        self.button_add.grid(column=0, row=0, sticky=(tk.S))
+        self.button_delete = ttk.Button(self.button_frame, text="Delete", command=self.deleteimg)
+        self.button_delete.grid(column=1, row=0, sticky=(tk.S))
         self.button_show = ttk.Button(self.button_frame, text="Show", command=self.showimg)
-        self.button_show.grid(column=1, row=0, sticky=(tk.S))
+        self.button_show.grid(column=2, row=0, sticky=(tk.S))
         self.button_close = ttk.Button(self.button_frame, text="Close", command=self.master.destroy)
         self.button_close.grid(column=0, row=1, sticky=(tk.S))
         
@@ -175,7 +177,13 @@ class BackImgControl():
             self.imglist_sb.insert('',tk.END, inputdir, text=inputdir)
             self.imglist_sb.selection_set(inputdir)
             self.mainwindow.drawall()
+    def deleteimg(self):
+        selected = str(self.imglist_sb.selection()[0])
+        del self.imgs[selected]
+        self.imglist_sb.delete(selected)
+        self.mainwindow.drawall()
     def showimg(self):
+
         selected = str(self.imglist_sb.selection()[0])
         for i in [0,1,2,3]:
             self.imgs[selected].extent[i] = self.extent[i].get()
@@ -191,17 +199,18 @@ class BackImgControl():
             #self.imgs[selected].rotate(self.imgs[selected].rotrad)
         self.mainwindow.drawall()
     def clickimglist(self,event):
-        selected = str(self.imglist_sb.selection()[0])
-        #print('Hi',event,selected)
-        for i in [0,1,2,3]:
-            self.extent[i].set(self.imgs[selected].extent[i])
-        self.rot_v.set(self.imgs[selected].rotrad)
-        self.alpha_v.set(self.imgs[selected].alpha)
-        self.toshow_v.set(self.imgs[selected].toshow)
-        self.scale_v.set(self.imgs[selected].scale)
-        for i in [0,1]:
-            self.origin[i].set(self.imgs[selected].origin[i])
-            self.shift[i].set(self.imgs[selected].shift[i])
+        if len(self.imglist_sb.selection())>0:
+            selected = str(self.imglist_sb.selection()[0])
+            #print('Hi',event,selected)
+            for i in [0,1,2,3]:
+                self.extent[i].set(self.imgs[selected].extent[i])
+            self.rot_v.set(self.imgs[selected].rotrad)
+            self.alpha_v.set(self.imgs[selected].alpha)
+            self.toshow_v.set(self.imgs[selected].toshow)
+            self.scale_v.set(self.imgs[selected].scale)
+            for i in [0,1]:
+                self.origin[i].set(self.imgs[selected].origin[i])
+                self.shift[i].set(self.imgs[selected].shift[i])
     def imgsarea(self, extent_input = None):
         extent = [0,0,0,0] if extent_input == None else extent_input
         for key in list(self.imgs.keys()):
