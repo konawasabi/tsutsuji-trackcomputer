@@ -263,3 +263,4 @@ class BackImgControl():
             self.imgs[sections].rotrad = float(conf[sections]['rot'])
             self.imgs[sections].alpha = float(conf[sections]['alpha'])
             self.imgs[sections].scale = float(conf[sections]['scale'])
+        self.mainwindow.drawall()
