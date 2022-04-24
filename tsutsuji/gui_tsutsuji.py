@@ -118,35 +118,57 @@ class mainwindow(ttk.Frame):
         #ボタンフレーム
         self.button_frame = ttk.Frame(self, padding='3 3 3 3')
         self.button_frame.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+        # ---
         
         self.replot_btn = ttk.Button(self.button_frame, text="Replot", command = self.drawall)
         self.replot_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
         
         self.plotarea_frame = ttk.Frame(self.button_frame, padding='3 3 3 3')
         self.plotarea_frame.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+        self.plotarea_val_frame = ttk.Frame(self.plotarea_frame, padding='3 3 3 3')
+        self.plotarea_val_frame.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         
         self.viewpos_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.viewp_scale_v = tk.DoubleVar(value=1000)
         self.view_whole_v = tk.StringVar()
         self.view_whole_v.set('False')
         
-        self.viewp_x_l = ttk.Label(self.plotarea_frame, text='x')
-        self.viewp_y_l = ttk.Label(self.plotarea_frame, text='y')
-        self.viewp_sc_l = ttk.Label(self.plotarea_frame, text='scale')
+        self.viewp_x_l = ttk.Label(self.plotarea_val_frame, text='x')
+        self.viewp_y_l = ttk.Label(self.plotarea_val_frame, text='y')
+        self.viewp_sc_l = ttk.Label(self.plotarea_val_frame, text='scale')
         
         self.viewp_x_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
         self.viewp_y_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
         self.viewp_sc_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
         
-        self.viewp_x_e = ttk.Entry(self.plotarea_frame, textvariable=self.viewpos_v[0],width=5)
-        self.viewp_y_e = ttk.Entry(self.plotarea_frame, textvariable=self.viewpos_v[1],width=5)
-        self.viewp_sc_e = ttk.Entry(self.plotarea_frame, textvariable=self.viewp_scale_v,width=5)
-        self.view_whole_e = ttk.Checkbutton(self.plotarea_frame, text='Whole', variable=self.view_whole_v, onvalue='True', offvalue='False')
+        self.viewp_x_e = ttk.Entry(self.plotarea_val_frame, textvariable=self.viewpos_v[0],width=5)
+        self.viewp_y_e = ttk.Entry(self.plotarea_val_frame, textvariable=self.viewpos_v[1],width=5)
+        self.viewp_sc_e = ttk.Entry(self.plotarea_val_frame, textvariable=self.viewp_scale_v,width=5)
+        self.view_whole_e = ttk.Checkbutton(self.plotarea_val_frame, text='Whole', variable=self.view_whole_v, onvalue='True', offvalue='False')
         
         self.viewp_x_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
         self.viewp_y_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
         self.viewp_sc_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
         self.view_whole_e.grid(column=0, row=2, sticky=(tk.E,tk.W))
+
+        # ---
+        
+        self.plotmove_frame = ttk.Frame(self.plotarea_frame, padding='3 3 3 3')
+        self.plotmove_frame.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+        self.plotmove_btn_up = ttk.Button(self.plotmove_frame, text="↑", command = lambda: self.move_xy(0,-1))
+        self.plotmove_btn_down = ttk.Button(self.plotmove_frame, text="↓", command = lambda: self.move_xy(0,1))
+        self.plotmove_btn_left = ttk.Button(self.plotmove_frame, text="←", command = lambda: self.move_xy(-1,0))
+        self.plotmove_btn_right = ttk.Button(self.plotmove_frame, text="→", command = lambda: self.move_xy(1,0))
+
+        self.plotmove_btn_up.grid(column=1, row=0, sticky=(tk.E,tk.W))
+        self.plotmove_btn_down.grid(column=1, row=2, sticky=(tk.E,tk.W))
+        self.plotmove_btn_left.grid(column=0, row=1, sticky=(tk.E,tk.W))
+        self.plotmove_btn_right.grid(column=2, row=1, sticky=(tk.E,tk.W))
+
+        # --- 
         
         self.measure_btn = ttk.Button(self.button_frame, text="measure (experimental)", command = self.measure)
         self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
@@ -241,6 +263,15 @@ class mainwindow(ttk.Frame):
             self.ax_plane.set_ylim(center[1]-scaley/2, center[1]+scaley/2)
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
+    def move_xy(self,x,y):
+        nowpos = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
+        windowratio = 7/9
+        scalex = self.viewp_scale_v.get()
+        scaley = windowratio * scalex
+
+        self.viewpos_v[0].set(nowpos[0] + x*scalex/5)
+        self.viewpos_v[1].set(nowpos[1] + y*scalex/5)
+        self.drawall()
     def measure(self):
         self.measurewindow.create_widgets()
     def draw_tracks_cp(self):
