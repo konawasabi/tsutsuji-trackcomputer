@@ -187,7 +187,13 @@ class arrow():
                                              angles='xy',scale=2,scale_units='inches',width=0.0025)
         else:
             self.pointerdir.set_UVC(element[0],element[1])
-
+    def set_direct(self):
+        if self.pointerdir != None:
+            self.pointerdir.remove()
+            self.pointerdir = None
+        self.setobj(None,reset=True)
+        self.p.parent.printdirection()
+        self.canvas.draw()
 
 class marker_simple():
     def __init__(self,parent,ax,canvas,color,ch_main,ch_measure):
@@ -213,8 +219,12 @@ class marker_simple():
         self.ch_measure()
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
-    def setpos(self,x,y):
-        self.xout, self.yout = self.posfunc(x,y)
+    def setpos(self,x,y,direct=False):
+        if direct:
+            self.xout = x
+            self.yout = y
+        else:
+            self.xout, self.yout = self.posfunc(x,y)
         self.markerpos.set_data(self.xout,self.yout)
         self.canvas.draw()
     def setobj(self):
@@ -271,3 +281,7 @@ class marker_pos():
         self.p.parent.printdistance()
         if self.track_key != '@absolute':
             self.prev_trackpos = self.nearestpoint(self.markerobj.xout,self.markerobj.yout)
+    def set_direct(self):
+        self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get(),direct=True)
+        self.p.parent.setdistance()
+        self.p.parent.printdistance()

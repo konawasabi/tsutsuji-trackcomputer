@@ -158,9 +158,17 @@ class interface():
             self.cursor_A = self.unit('A',self.mainwindow,self.position_f,self,1,'r')
             self.cursor_B = self.unit('B',self.mainwindow,self.position_f,self,2,'b')
 
+            
+            # キー入力値セットボタンフレーム
+            self.otherbuttons_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.otherbuttons_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
+            
+            self.setposvalues_btn = ttk.Button(self.otherbuttons_f, text='SetMarkerPosition', command=self.setmarkerpos_fromkeyboard)
+            self.setposvalues_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
+
             # 測定結果フレーム
             self.result_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-            self.result_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.result_f.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E, tk.S))
 
             self.result_l = {}
             self.result_e = {}
@@ -178,7 +186,7 @@ class interface():
 
             # 曲線軌道当てはめフレーム
             self.curvetrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-            self.curvetrack_f.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.curvetrack_f.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E, tk.S))
 
             self.curvetrack_value_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
             self.curvetrack_value_f.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -211,7 +219,7 @@ class interface():
 
             # 直交軌道探索フレーム
             self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-            self.nearesttrack_f.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.nearesttrack_f.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E, tk.S))
 
             self.nearesttrack_sel_v = tk.StringVar(value='')
             self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
@@ -223,7 +231,7 @@ class interface():
 
             # カーソル延長線上の距離測定フレーム
             self.alongcursor_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-            self.alongcursor_f.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.alongcursor_f.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E, tk.S))
 
             self.alongcursor_btn = ttk.Button(self.alongcursor_f, text='AlongCursor', command=self.distalongcursor)
             self.alongcursor_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
@@ -232,6 +240,7 @@ class interface():
             self.acrosscursor_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
 
             self.alongcursor_marker = drawcursor.marker_simple(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g',self.mainwindow.sendtopmost,self.sendtopmost)
+
         else:
             print('Already open')
     def closewindow(self):
@@ -382,3 +391,12 @@ class interface():
     def sendtopmost(self,event=None):
         self.master.lift()
         self.master.focus_force()
+    def setmarkerpos_fromkeyboard(self):
+        for marker in [self.cursor_A, self.cursor_B]:
+            if marker.values[3].get() == '@absolute':
+                for i in [0,1,2]:
+                    marker.values[i].set(float(marker.values_toshow[i].get()))
+                marker.marker.set_direct()
+                marker.arrow.set_direct()
+            else:
+                pass
