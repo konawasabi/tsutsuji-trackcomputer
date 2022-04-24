@@ -134,7 +134,7 @@ class mainwindow(ttk.Frame):
         self.viewp_scale_v = tk.DoubleVar(value=1000)
         self.view_whole_v = tk.StringVar()
         self.view_whole_v.set('False')
-        self.aspectratio_v = tk.DoubleVar(value=7/9)
+        self.aspectratio_v = tk.DoubleVar(value=1)
         
         self.viewp_x_l = ttk.Label(self.plotarea_val_frame, text='x')
         self.viewp_y_l = ttk.Label(self.plotarea_val_frame, text='y')
@@ -260,7 +260,7 @@ class mainwindow(ttk.Frame):
         else:
             center = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
             #windowratio = self.ax_plane.bbox.height/self.ax_plane.bbox.width # 平面図のアスペクト比を取得
-            windowratio = self.aspectratio_v.get()
+            windowratio = self.aspectratio_v.get()*7/9
             scalex = self.viewp_scale_v.get()
             scaley = windowratio * scalex
             
@@ -270,7 +270,7 @@ class mainwindow(ttk.Frame):
         self.fig_canvas.draw()
     def move_xy(self,x,y):
         nowpos = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
-        windowratio = self.aspectratio_v.get()
+        windowratio = self.aspectratio_v.get()*7/9
         scalex = self.viewp_scale_v.get()
         scaley = windowratio * scalex
 
