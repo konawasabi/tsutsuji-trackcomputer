@@ -393,10 +393,8 @@ class interface():
         self.master.focus_force()
     def setmarkerpos_fromkeyboard(self):
         for marker in [self.cursor_A, self.cursor_B]:
-            if marker.values[3].get() == '@absolute':
-                for i in [0,1,2]:
-                    marker.values[i].set(float(marker.values_toshow[i].get()))
-                marker.marker.set_direct()
-                marker.arrow.set_direct()
-            else:
-                pass
+            for i in [0,1,2,4]:
+                marker.values[i].set(float(marker.values_toshow[i].get()))
+            marker.marker.set_direct()
+            marker.arrow.set_direct()
+                
