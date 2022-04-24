@@ -134,24 +134,29 @@ class mainwindow(ttk.Frame):
         self.viewp_scale_v = tk.DoubleVar(value=1000)
         self.view_whole_v = tk.StringVar()
         self.view_whole_v.set('False')
+        self.aspectratio_v = tk.DoubleVar(value=7/9)
         
         self.viewp_x_l = ttk.Label(self.plotarea_val_frame, text='x')
         self.viewp_y_l = ttk.Label(self.plotarea_val_frame, text='y')
         self.viewp_sc_l = ttk.Label(self.plotarea_val_frame, text='scale')
+        self.viewp_asr_l = ttk.Label(self.plotarea_val_frame, text='aspect')
         
         self.viewp_x_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
         self.viewp_y_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
         self.viewp_sc_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
+        self.viewp_asr_l.grid(column=2, row=1, sticky=(tk.E,tk.W))
         
         self.viewp_x_e = ttk.Entry(self.plotarea_val_frame, textvariable=self.viewpos_v[0],width=5)
         self.viewp_y_e = ttk.Entry(self.plotarea_val_frame, textvariable=self.viewpos_v[1],width=5)
         self.viewp_sc_e = ttk.Entry(self.plotarea_val_frame, textvariable=self.viewp_scale_v,width=5)
         self.view_whole_e = ttk.Checkbutton(self.plotarea_val_frame, text='Whole', variable=self.view_whole_v, onvalue='True', offvalue='False')
+        self.viewp_asr_e = ttk.Entry(self.plotarea_val_frame, textvariable=self.aspectratio_v,width=5)
         
         self.viewp_x_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
         self.viewp_y_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
         self.viewp_sc_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
-        self.view_whole_e.grid(column=0, row=2, sticky=(tk.E,tk.W))
+        self.viewp_asr_e.grid(column=3, row=1, sticky=(tk.E,tk.W))
+        self.view_whole_e.grid(column=0, row=3, sticky=(tk.E,tk.W))
 
         # ---
         
@@ -255,7 +260,7 @@ class mainwindow(ttk.Frame):
         else:
             center = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
             #windowratio = self.ax_plane.bbox.height/self.ax_plane.bbox.width # 平面図のアスペクト比を取得
-            windowratio = 7/9
+            windowratio = self.aspectratio_v.get()
             scalex = self.viewp_scale_v.get()
             scaley = windowratio * scalex
             
@@ -265,7 +270,7 @@ class mainwindow(ttk.Frame):
         self.fig_canvas.draw()
     def move_xy(self,x,y):
         nowpos = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
-        windowratio = 7/9
+        windowratio = self.aspectratio_v.get()
         scalex = self.viewp_scale_v.get()
         scaley = windowratio * scalex
 
