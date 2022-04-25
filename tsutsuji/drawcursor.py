@@ -295,8 +295,9 @@ class marker_pos():
             self.p.values_toshow[0].set('{:.1f}'.format(pos_kp[1]))
             self.p.values_toshow[1].set('{:.1f}'.format(pos_kp[2]))
 
-            #self.p.values[4].set(kp)
-            #self.p.values_toshow[4].set('{:.1f}'.format(kp))
+            self.p.values[2].set(np.rad2deg(pos_kp[4]))
+            self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(pos_kp[4])))
+
             self.prev_trackpos = pos_kp
             
         self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get(),direct=True)
