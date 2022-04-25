@@ -107,6 +107,8 @@ class interface():
             
             self.values = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.StringVar(value=''),tk.DoubleVar(value=0)]
             self.values_toshow = [tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value=''),tk.StringVar(value='0')]
+            self.coordinate_v = tk.StringVar(value='abs')
+            
             self.x_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[0],width=5)
             self.y_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[1],width=5)
             self.theta_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[2],width=5)
@@ -116,8 +118,11 @@ class interface():
             self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
             self.values[3].set('@absolute')
             
-            self.setcursor_b = ttk.Button(self.pframe, text="Set", command=self.marker.start, width=2)
-            self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir", command=self.arrow.start, width=2)
+            self.setcursor_b = ttk.Button(self.pframe, text="Pos.", command=self.marker.start, width=3)
+            self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir.", command=self.arrow.start, width=3)
+            self.setfromval_b = ttk.Button(self.pframe, text="Val.", command=self.setmarkerpos_fromkeyboard, width=3)
+
+            self.relativepos_b = ttk.Checkbutton(self.pframe, text='Rel.', variable=self.coordinate_v, onvalue='rel', offvalue='abs')
 
             self.x_e.grid(column=1, row=row, sticky=(tk.E,tk.W))
             self.y_e.grid(column=2, row=row, sticky=(tk.E,tk.W))
@@ -126,9 +131,15 @@ class interface():
             self.trackkp_e.grid(column=5, row=row, sticky=(tk.E,tk.W))
             self.setcursor_b.grid(column=6, row=row, sticky=(tk.E,tk.W))
             self.setcursor_dir_b.grid(column=7, row=row, sticky=(tk.E,tk.W))
+            self.setfromval_b.grid(column=8, row=row, sticky=(tk.E,tk.W))
+            self.relativepos_b.grid(column=9, row=row, sticky=(tk.E,tk.W))
         def printmode(self):
             print(self.name,self.cursormode_v.get(), self.values[3].get() if self.cursormode_v.get() == 'track' else '')
-            
+        def setmarkerpos_fromkeyboard(self):
+            for i in [0,1,2,4]:
+                self.values[i].set(float(self.values_toshow[i].get()))
+            self.marker.set_direct()
+            self.arrow.set_direct()
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
         self.master = None
@@ -158,14 +169,15 @@ class interface():
             self.cursor_A = self.unit('A',self.mainwindow,self.position_f,self,1,'r')
             self.cursor_B = self.unit('B',self.mainwindow,self.position_f,self,2,'b')
 
-            
+            '''
             # キー入力値セットボタンフレーム
             self.otherbuttons_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
             self.otherbuttons_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
             
             self.setposvalues_btn = ttk.Button(self.otherbuttons_f, text='SetMarkerPosition', command=self.setmarkerpos_fromkeyboard)
             self.setposvalues_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
-
+            '''
+            
             # 測定結果フレーム
             self.result_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
             self.result_f.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E, tk.S))
