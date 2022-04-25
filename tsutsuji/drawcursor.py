@@ -236,8 +236,10 @@ class marker_pos():
         self.ax = self.p.parentwindow.ax_plane
         self.canvas = self.p.parentwindow.fig_canvas
         self.color = color
-        
+
         self.markerobj = marker_simple(self.p,self.ax,self.canvas,self.color,self.p.parentwindow.sendtopmost,self.p.parent.sendtopmost)
+        self.markerobj.posfunc = lambda x,y:self.posfunc(x,y)
+        self.markerobj.pressfunc = lambda p:self.pressfunc(p)
     def start(self):
         self.track_key = self.p.values[3].get()
         if self.track_key != '@absolute':
@@ -257,7 +259,8 @@ class marker_pos():
     def setmarkerobj(self,pos=False):
         self.markerobj.setobj()
         if pos:
-            self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get())
+            #self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get())
+            self.set_direct()
     def posfunc(self,xpos,ypos):
         if self.track_key == '@absolute':
             x = xpos
@@ -289,6 +292,7 @@ class marker_pos():
         else:
             kp = self.p.values[4].get()
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result']
+
             pos_kp = self.track_data[self.track_data[:,0] == kp][-1]
             self.p.values[0].set(pos_kp[1])
             self.p.values[1].set(pos_kp[2])
@@ -299,6 +303,7 @@ class marker_pos():
             self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(pos_kp[4])))
 
             self.prev_trackpos = pos_kp
+            self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:1,3]
             
         self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get(),direct=True)
         self.p.parent.setdistance()
