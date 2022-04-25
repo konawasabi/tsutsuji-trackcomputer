@@ -260,7 +260,7 @@ class marker_pos():
         self.markerobj.setobj()
         if pos:
             #self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get())
-            self.set_direct()
+            self.set_direct(replot=True)
     def posfunc(self,xpos,ypos):
         if self.track_key == '@absolute':
             x = xpos
@@ -284,7 +284,7 @@ class marker_pos():
         self.p.parent.printdistance()
         if self.track_key != '@absolute':
             self.prev_trackpos = self.nearestpoint(self.markerobj.xout,self.markerobj.yout)
-    def set_direct(self):
+    def set_direct(self,replot=False):
         self.track_key = self.p.values[3].get()
         if self.track_key == '@absolute':
             self.track_data = None
@@ -306,5 +306,6 @@ class marker_pos():
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:1,3]
             
         self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get(),direct=True)
-        self.p.parent.setdistance()
-        self.p.parent.printdistance()
+        if not replot:
+            self.p.parent.setdistance()
+            self.p.parent.printdistance()
