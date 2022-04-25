@@ -18,6 +18,7 @@
 '''
 
 import numpy as np
+from . import math
 
 class cursor():
     def __init__(self,parent):
@@ -294,10 +295,17 @@ class marker_pos():
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result']
 
             pos_kp = self.track_data[self.track_data[:,0] == kp][-1]
-            self.p.values[0].set(pos_kp[1])
-            self.p.values[1].set(pos_kp[2])
-            self.p.values_toshow[0].set('{:.1f}'.format(pos_kp[1]))
-            self.p.values_toshow[1].set('{:.1f}'.format(pos_kp[2]))
+
+            if self.p.coordinate_v.get() == 'abs':
+                offset = np.array([0,0])
+            else:
+                offset = np.dot(math.rotate(pos_kp[4]), np.array([self.p.values[0].get(), self.p.values[1].get()]))
+                self.p.coordinate_v.set('abs')
+
+            self.p.values[0].set(pos_kp[1]+offset[0])
+            self.p.values[1].set(pos_kp[2]+offset[1])
+            self.p.values_toshow[0].set('{:.1f}'.format(pos_kp[1]+offset[0]))
+            self.p.values_toshow[1].set('{:.1f}'.format(pos_kp[2]+offset[1]))
 
             self.p.values[2].set(np.rad2deg(pos_kp[4]))
             self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(pos_kp[4])))
