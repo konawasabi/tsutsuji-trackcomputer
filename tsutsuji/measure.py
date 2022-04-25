@@ -354,10 +354,10 @@ class interface():
         sourcepos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
         sourcedir = np.deg2rad(self.cursor_A.values[2].get())
         def alongf(x,y,spos,sdir):
-            if np.abs(sdir) != np.pi:
-                return (x, np.tan(sdir)*(x-spos[0]) + spos[1])
-            else:
-                return (spos[0],y)
+            unitv = np.array([np.cos(sdir),np.sin(sdir)])
+            pointed = np.array([x,y])-spos
+            result = spos + unitv*np.dot(unitv,pointed)
+            return (result[0],result[1])
         def printpos(self,spos):
             print('Result')
             print('   position:     ({:f}, {:f})'.format(self.xout,self.yout))
@@ -374,10 +374,10 @@ class interface():
         sourcepos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
         sourcedir = np.deg2rad(self.cursor_A.values[2].get())
         def alongf(x,y,spos,sdir):
-            if np.abs(sdir) != np.pi:
-                return (x, np.tan(sdir-np.pi/2)*(x-spos[0]) + spos[1])
-            else:
-                return (spos[0],y)
+            unitv = np.array([np.cos(sdir-np.pi/2),np.sin(sdir-np.pi/2)])
+            pointed = np.array([x,y])-spos
+            result = spos + unitv*np.dot(unitv,pointed)
+            return (result[0],result[1])
         def printpos(self,spos):
             print('Result')
             print('   position:     ({:f}, {:f})'.format(self.xout,self.yout))
