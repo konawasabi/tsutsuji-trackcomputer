@@ -302,13 +302,15 @@ class marker_pos():
 
             if self.p.coordinate_v.get() == 'abs':
                 offset = np.array([0,0])
+                offs_angle = 0 
             else:
                 offset_input =dialog_multifields.dialog_multifields(self.p.parent.mainwindow,\
                                                       [{'name':'x', 'type':'Double', 'label':'x','default':0},\
                                                        {'name':'y', 'type':'Double', 'label':'y','default':0},\
                                                        {'name':'theta', 'type':'Double', 'label':'theta','default':0}],\
                                                       message = 'set offset')
-                offset = np.dot(math.rotate(pos_kp[4]+float(offset_input.variables['theta'].get())), np.array([float(offset_input.variables['x'].get()), float(offset_input.variables['y'].get())]))
+                offs_angle =np.deg2rad(float(offset_input.variables['theta'].get()))
+                offset = np.dot(math.rotate(pos_kp[4]+offs_angle), np.array([float(offset_input.variables['x'].get()), float(offset_input.variables['y'].get())]))
                 #self.p.coordinate_v.set('abs')
 
             self.p.values[0].set(pos_kp[1]+offset[0])
@@ -316,8 +318,8 @@ class marker_pos():
             self.p.values_toshow[0].set('{:.1f}'.format(pos_kp[1]+offset[0]))
             self.p.values_toshow[1].set('{:.1f}'.format(pos_kp[2]+offset[1]))
 
-            self.p.values[2].set(np.rad2deg(pos_kp[4]))
-            self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(pos_kp[4])))
+            self.p.values[2].set(np.rad2deg(pos_kp[4]+offs_angle))
+            self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(pos_kp[4]+offs_angle)))
 
             self.prev_trackpos = pos_kp
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:1,3]
