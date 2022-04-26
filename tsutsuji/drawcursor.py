@@ -227,9 +227,11 @@ class marker_simple():
         else:
             self.xout, self.yout = self.posfunc(x,y)
         self.markerpos.set_data(self.xout,self.yout)
+        #self.annotate.set(text ='({:.1f},{:.1f})'.format(self.xout,self.yout), position=(self.xout,self.yout))
         self.canvas.draw()
     def setobj(self):
         self.markerpos, = self.ax.plot([],[],self.color+'x')
+        #self.annotate = self.ax.text(0,0,'')
 
 class marker_pos():
     def __init__(self,parent,color):
