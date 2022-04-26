@@ -19,6 +19,8 @@
 
 import numpy as np
 from . import math
+import tkinter as tk
+from kobushi import dialog_multifields
 
 class cursor():
     def __init__(self,parent):
@@ -301,8 +303,13 @@ class marker_pos():
             if self.p.coordinate_v.get() == 'abs':
                 offset = np.array([0,0])
             else:
-                offset = np.dot(math.rotate(pos_kp[4]), np.array([self.p.values[0].get(), self.p.values[1].get()]))
-                self.p.coordinate_v.set('abs')
+                offset_input =dialog_multifields.dialog_multifields(self.p.parent.mainwindow,\
+                                                      [{'name':'x', 'type':'Double', 'label':'x','default':0},\
+                                                       {'name':'y', 'type':'Double', 'label':'y','default':0},\
+                                                       {'name':'theta', 'type':'Double', 'label':'theta','default':0}],\
+                                                      message = 'set offset')
+                offset = np.dot(math.rotate(pos_kp[4]+float(offset_input.variables['theta'].get())), np.array([float(offset_input.variables['x'].get()), float(offset_input.variables['y'].get())]))
+                #self.p.coordinate_v.set('abs')
 
             self.p.values[0].set(pos_kp[1]+offset[0])
             self.p.values[1].set(pos_kp[2]+offset[1])
