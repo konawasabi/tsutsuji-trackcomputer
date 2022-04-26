@@ -246,9 +246,6 @@ class mainwindow(ttk.Frame):
         self.ax_plane.cla()
         self.trackcontrol.plot2d(self.ax_plane)
         
-        for i in self.backimgctrl.imgs.keys():
-            self.backimgctrl.imgs[i].show(self.ax_plane)
-
         self.measurewindow.drawall()
             
         if self.view_whole_v.get() == 'True':
@@ -266,6 +263,10 @@ class mainwindow(ttk.Frame):
             
             self.ax_plane.set_xlim(center[0]-scalex/2, center[0]+scalex/2)
             self.ax_plane.set_ylim(center[1]-scaley/2, center[1]+scaley/2)
+
+        for i in self.backimgctrl.imgs.keys():
+            self.backimgctrl.imgs[i].show(self.ax_plane,as_ratio=self.aspectratio_v.get())
+
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
     def move_xy(self,x,y):

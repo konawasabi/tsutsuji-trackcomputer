@@ -63,14 +63,11 @@ class BackImgControl():
             shape_rot = shape_rot + np.vstack((self.shift[0],self.shift[1]))
             
             self.extent = [min(shape_rot[0]),max(shape_rot[0]),min(shape_rot[1]),max(shape_rot[1])]
-        def show(self,ax):
+        def show(self,ax,as_ratio=1):
             if self.toshow:
                 self.rotate(self.rotrad)
-                #width  = self.output_data.shape[1]
-                #height = self.output_data.shape[0]
-                #print(width,height)
-                #ax.imshow(self.output_data,alpha=self.alpha,extent=self.extent)
-                ax.imshow(self.output_data,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]])
+                as_ratio_mod = (self.extent[1]-self.extent[0])/(self.extent[3]-self.extent[2])*as_ratio
+                ax.imshow(self.output_data,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=as_ratio_mod)
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
         self.imgs = {}
