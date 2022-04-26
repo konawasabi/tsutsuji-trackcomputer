@@ -169,7 +169,7 @@ class interface():
             self.cursor_A = self.unit('A',self.mainwindow,self.position_f,self,1,'r')
             self.cursor_B = self.unit('B',self.mainwindow,self.position_f,self,2,'b')
             self.cursor_C = self.unit('C',self.mainwindow,self.position_f,self,3,'c')
-            self.cursor_F = self.unit('D',self.mainwindow,self.position_f,self,4,'m')
+            self.cursor_D = self.unit('D',self.mainwindow,self.position_f,self,4,'m')
 
             '''
             # キー入力値セットボタンフレーム
