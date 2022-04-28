@@ -271,12 +271,12 @@ class mainwindow(ttk.Frame):
         self.fig_canvas.draw()
     def move_xy(self,x,y):
         nowpos = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
-        windowratio = self.aspectratio_v.get()*7/9
+        windowratio = 1/self.aspectratio_v.get()*7/9
         scalex = self.viewp_scale_v.get()
         scaley = windowratio * scalex
 
         self.viewpos_v[0].set(nowpos[0] + x*scalex/5)
-        self.viewpos_v[1].set(nowpos[1] + y*scalex/5)
+        self.viewpos_v[1].set(nowpos[1] + y*scaley/5)
         self.drawall()
     def measure(self):
         self.measurewindow.create_widgets()
