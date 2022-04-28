@@ -139,7 +139,7 @@ class mainwindow(ttk.Frame):
         self.viewp_x_l = ttk.Label(self.plotarea_val_frame, text='x')
         self.viewp_y_l = ttk.Label(self.plotarea_val_frame, text='y')
         self.viewp_sc_l = ttk.Label(self.plotarea_val_frame, text='scale')
-        self.viewp_asr_l = ttk.Label(self.plotarea_val_frame, text='aspect')
+        self.viewp_asr_l = ttk.Label(self.plotarea_val_frame, text='Y mag.')
         
         self.viewp_x_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
         self.viewp_y_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
@@ -257,7 +257,7 @@ class mainwindow(ttk.Frame):
         else:
             center = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
             #windowratio = self.ax_plane.bbox.height/self.ax_plane.bbox.width # 平面図のアスペクト比を取得
-            windowratio = self.aspectratio_v.get()*7/9
+            windowratio = 1/self.aspectratio_v.get()*7/9
             scalex = self.viewp_scale_v.get()
             scaley = windowratio * scalex
             
@@ -265,7 +265,7 @@ class mainwindow(ttk.Frame):
             self.ax_plane.set_ylim(center[1]-scaley/2, center[1]+scaley/2)
 
         for i in self.backimgctrl.imgs.keys():
-            self.backimgctrl.imgs[i].show(self.ax_plane,as_ratio=self.aspectratio_v.get())
+            self.backimgctrl.imgs[i].show(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
 
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
