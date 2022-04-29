@@ -171,15 +171,6 @@ class interface():
             self.cursor_B = self.unit('B',self.mainwindow,self.position_f,self,2,'b')
             self.cursor_C = self.unit('C',self.mainwindow,self.position_f,self,3,'c')
             self.cursor_D = self.unit('D',self.mainwindow,self.position_f,self,4,'m')
-
-            '''
-            # キー入力値セットボタンフレーム
-            self.otherbuttons_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-            self.otherbuttons_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
-            
-            self.setposvalues_btn = ttk.Button(self.otherbuttons_f, text='SetMarkerPosition', command=self.setmarkerpos_fromkeyboard)
-            self.setposvalues_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
-            '''
             
             # 測定結果フレーム
             self.result_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
@@ -202,9 +193,15 @@ class interface():
             # 曲線軌道当てはめフレーム
             self.curvetrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
             self.curvetrack_f.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.curvetrack_f['borderwidth'] = 1
+            self.curvetrack_f['relief'] = 'solid'
 
+            self.curvetrack_title = ttk.Label(self.curvetrack_f, text='CurveTrack Solver',font=tk.font.Font(weight='bold'))
+            self.curvetrack_title.grid(column=0, row=0, sticky=(tk.E,tk.W))
+            
+            
             self.curvetrack_value_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
-            self.curvetrack_value_f.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.curvetrack_value_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
             self.curvetrack_l = {}
             self.curvetrack_e = {}
             self.curvetrack_v = {}
@@ -218,8 +215,9 @@ class interface():
                 self.curvetrack_e[i].grid(column=pos, row=1, sticky=(tk.E,tk.W))
                 pos+=1
             self.curve_transfunc_v = tk.StringVar(value='line')
+            
             self.curve_transfunc_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
-            self.curve_transfunc_f.grid(column=3, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.curve_transfunc_f.grid(column=3, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
             self.curve_transfunc_line_b = ttk.Radiobutton(self.curve_transfunc_f, text='line', variable=self.curve_transfunc_v, value='line')
             self.curve_transfunc_line_b.grid(column=0, row=0, sticky=(tk.E,tk.W))
             self.curve_transfunc_sin_b = ttk.Radiobutton(self.curve_transfunc_f, text='sin', variable=self.curve_transfunc_v, value='sin')
@@ -231,7 +229,7 @@ class interface():
             self.curve_fitmode_box['values'] = ('1. A(fix)->B(free), R(free)','2. A(free)->B(fix), R(free)','3. A(free)->B(free), R(fix)')
             self.curve_fitmode_box.state(["readonly"])
             
-            self.calc_b = ttk.Button(self.curve_transfunc_f, text="CurveTrack", command=self.ctfit)
+            self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
             self.calc_b.grid(column=1, row=2, sticky=(tk.E,tk.W))
 
             self.calc_mapsyntax_v = tk.BooleanVar(value=False)
