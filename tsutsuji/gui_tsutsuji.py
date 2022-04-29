@@ -175,17 +175,18 @@ class mainwindow(ttk.Frame):
 
         # --- 
         
-        self.measure_btn = ttk.Button(self.button_frame, text="measure (experimental)", command = self.measure)
+        self.measure_btn = ttk.Button(self.button_frame, text="Measure", command = self.measure)
         self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
 
-        self.printtracks_btn = ttk.Button(self.button_frame, text="P. Tracks", command = self.trackcontrol.dump_trackdata)
-        self.printtracks_btn.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E))
-        
-        self.printpos_btn = ttk.Button(self.button_frame, text="P. Pos", command = self.draw_tracks_cp)
-        self.printpos_btn.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E))
-
         self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.get_relativepos_rad)
-        self.getrelrad_btn.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E))
+        self.getrelrad_btn.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E))
+
+        if not __debug__:
+            self.printtracks_btn = ttk.Button(self.button_frame, text="P. Tracks", command = self.trackcontrol.dump_trackdata)
+            self.printtracks_btn.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E))
+
+            self.printpos_btn = ttk.Button(self.button_frame, text="P. Pos", command = self.draw_tracks_cp)
+            self.printpos_btn.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
