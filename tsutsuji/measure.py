@@ -225,9 +225,6 @@ class interface():
             self.curve_transfunc_sin_b = ttk.Radiobutton(self.curve_transfunc_f, text='sin', variable=self.curve_transfunc_v, value='sin')
             self.curve_transfunc_sin_b.grid(column=0, row=2, sticky=(tk.E,tk.W))
 
-            #self.curve_inverse_v = tk.BooleanVar(value=False)
-            #self.curve_inverse_b = ttk.Checkbutton(self.curve_transfunc_f, text='B->A',variable=self.curve_inverse_v,onvalue=True,offvalue=False)
-            #self.curve_inverse_b.grid(column=1, row=0, sticky=(tk.E,tk.W))
             self.curve_fitmode_v = tk.StringVar(value='1. A(fix)->B(free), R(free)')
             self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v)
             self.curve_fitmode_box.grid(column=1, row=0, sticky=(tk.E,tk.W))
@@ -236,6 +233,10 @@ class interface():
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="CurveTrack", command=self.ctfit)
             self.calc_b.grid(column=1, row=2, sticky=(tk.E,tk.W))
+
+            self.calc_mapsyntax_v = tk.BooleanVar(value=False)
+            self.calc_mapsyntax_b = ttk.Checkbutton(self.curve_transfunc_f, text='mapsyntax',variable=self.calc_mapsyntax_v,onvalue=True,offvalue=False)
+            self.calc_mapsyntax_b.grid(column=2, row=2, sticky=(tk.E,tk.W))
 
             # 直交軌道探索フレーム
             self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
@@ -302,10 +303,6 @@ class interface():
     def ctfit(self):
         '''カーソルA, B間を結ぶ最適な曲線軌道を求める
         '''
-
-        if False:
-            import pdb
-            pdb.set_trace()
         
         sv = solver.solver()
         A = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
@@ -324,38 +321,71 @@ class interface():
             result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
             trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
             R_result = result[0]
+            CCL_result = trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
+            shift_result = np.linalg.norm(result[1][0] - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),result[1][0] - B))
         elif fitmode == '2. A(free)->B(fix), R(free)':
             phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
             phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
             result = sv.curvetrack_fit(B,phiB_inv,A,phiA_inv,lenTC2,lenTC1,tranfunc)
             trackp.generate(B,phiB_inv,phiA_inv,result[0],lenTC2,lenTC1,tranfunc)
             R_result = -result[0]
+            CCL_result = -trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
+            shift_result = np.linalg.norm(result[1][0] - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),result[1][0] - A))
         elif fitmode == '3. A(free)->B(free), R(fix)':
+            if False:
+                import pdb
+                pdb.set_trace()
             result = sv.curvetrack_relocation(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc,R_input)
-            R_result = R_input
             A_result = A + np.array([np.cos(phiA),np.sin(phiA)])*result[0]
             trackp.generate(A_result,phiA,phiB,R_input,lenTC1,lenTC2,tranfunc)
+            CCL_result = -trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
             #print('  x = {:f}'.format(result[0]))
+        else:
+            raise('invalid fitmode')
 
-        #print(trackp.result)
-        print()
-        print('[Curve fitting]')
-        print('Inputs:')
-        print('   Ponint A:         ({:f}, {:f})'.format(A[0],A[1]))
-        print('   Ponint B:         ({:f}, {:f})'.format(B[0],B[1]))
-        print('   Dircection A:     {:f}'.format(self.cursor_A.values[2].get()))
-        print('   Dircection B:     {:f}'.format(self.cursor_B.values[2].get()))
-        print('   Transition func.: {:s}'.format(tranfunc))
-        print('   TCL_in:           {:f}'.format(lenTC1))
-        print('   TCL_out:          {:f}'.format(lenTC2))
-        print('   Fitmode:          {:s}'.format(fitmode))
-        print('Results:')
-        print('   R:   {:f}'.format(R_result))
-        print('   CCL: {:f}'.format(trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]))
-        print('   endpoint: ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
+        if fitmode == '1. A(fix)->B(free), R(free)' or fitmode == '2. A(free)->B(fix), R(free)':
+            print()
+            print('[Curve fitting]')
+            print('Inputs:')
+            print('   Fitmode:          {:s}'.format(fitmode))
+            print('   Ponint A:         ({:f}, {:f})'.format(A[0],A[1]))
+            print('   Ponint B:         ({:f}, {:f})'.format(B[0],B[1]))
+            print('   Dircection A:     {:f}'.format(self.cursor_A.values[2].get()))
+            print('   Dircection B:     {:f}'.format(self.cursor_B.values[2].get()))
+            print('   Transition func.: {:s}'.format(tranfunc))
+            print('   TCL_in:           {:f}'.format(lenTC1))
+            print('   TCL_out:          {:f}'.format(lenTC2))            
+            print('Results:')
+            print('   R:   {:f}'.format(R_result))
+            print('   CCL: {:f}'.format(CCL_result))
+            if fitmode == '1. A(fix)->B(free), R(free)':
+                print('   endpt:            ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
+                print('   shift from pt. B: {:f}'.format(shift_result))
+            else:
+                print('   startpt:          ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
+                print('   shift from pt. A: {:f}'.format(shift_result))
+        elif fitmode == '3. A(free)->B(free), R(fix)':
+            print()
+            print('[Curve fitting]')
+            print('Inputs:')
+            print('   Fitmode:          {:s}'.format(fitmode))
+            print('   Ponint A:         ({:f}, {:f})'.format(A[0],A[1]))
+            print('   Ponint B:         ({:f}, {:f})'.format(B[0],B[1]))
+            print('   Dircection A:     {:f}'.format(self.cursor_A.values[2].get()))
+            print('   Dircection B:     {:f}'.format(self.cursor_B.values[2].get()))
+            print('   Transition func.: {:s}'.format(tranfunc))
+            print('   TCL_in:           {:f}'.format(lenTC1))
+            print('   TCL_out:          {:f}'.format(lenTC2))
+            print('   R:                {:f}'.format(R_input))
+            print('Results:')
+            print('   CCL:        {:f}'.format(CCL_result))
+            print('   startpoint: ({:f}, {:f})'.format(A_result[0],A_result[1]))
+            print('   shift:      {:f}'.format(result[0]))
+            
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])
-        ax.scatter(result[1][0][0],result[1][0][1])
+        if not __debug__:
+            ax.scatter(result[1][0][0],result[1][0][1])
         self.mainwindow.fig_canvas.draw()
     def nearesttrack(self):
         '''指定した軌道上のカーソルAに最も近い点を求める
