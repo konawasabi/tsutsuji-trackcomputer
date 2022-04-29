@@ -54,8 +54,14 @@ class TrackControl():
                 self.track[i] = {}
                 self.track[i]['interp'] = mapinterpreter.ParseMap(env=None,parser=None)
                 self.track[i]['data'] = self.track[i]['interp'].load_files(self.conf.track_data[i]['file'])
+                
+                if self.conf.track_data[i]['endpoint'] > max(self.track[i]['data'].controlpoints.list_cp):
+                    endkp = self.conf.track_data[i]['endpoint']
+                else:
+                    endkp = max(self.track[i]['data'].controlpoints.list_cp)
+                    
                 self.track[i]['data'].cp_arbdistribution = [min(self.track[i]['data'].controlpoints.list_cp),\
-                                                            self.conf.track_data[i]['endpoint']+self.conf.general['unit_length'],\
+                                                            endkp + self.conf.general['unit_length'],\
                                                             self.conf.general['unit_length']]
                 # endpoint + unit_lengthとすることで、endpointを確実に含ませる
 
