@@ -181,18 +181,61 @@ class interface():
             self.result_v = {}
             pos = 0
             for i in ['distance','direction']:
-                self.result_l[i] = ttk.Label(self.result_f, text=i)
-                self.result_l[i].grid(column=0, row=pos, sticky=(tk.E,tk.W))
+                self.result_l[i] = ttk.Label(self.result_f, text=i+'(A->B)')
+                self.result_l[i].grid(column=pos*2, row=0, sticky=(tk.E,tk.W))
 
                 #self.result_v[i] = tk.DoubleVar(value=0)
                 self.result_v[i] = tk.StringVar(value='0')
                 self.result_e[i] = ttk.Entry(self.result_f, textvariable=self.result_v[i],width=8)
-                self.result_e[i].grid(column=1, row=pos, sticky=(tk.E,tk.W))
+                self.result_e[i].grid(column=pos*2+1, row=0, sticky=(tk.E,tk.W))
                 pos+=1
+
+            # 直交軌道探索フレーム
+            self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.nearesttrack_f.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.nearesttrack_sel_l = ttk.Label(self.nearesttrack_f, text='Track')
+            self.nearesttrack_sel_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
+            self.nearesttrack_sel_v = tk.StringVar(value='')
+            self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
+            self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())
+            self.nearesttrack_sel_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
+            self.nearesttrack_sel_e.state(["readonly"])
+            
+            self.nearesttrack_cursor_l = ttk.Label(self.nearesttrack_f, text='Cursor')
+            self.nearesttrack_cursor_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
+            self.nearesttrack_cursor_v = tk.StringVar(value='A')
+            self.nearesttrack_cursor_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_cursor_v,width=4)
+            self.nearesttrack_cursor_e['values'] = ('A','B','C','D')
+            self.nearesttrack_cursor_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
+            self.nearesttrack_cursor_e.state(["readonly"])
+
+            self.nearesttrack_doit_btn = ttk.Button(self.nearesttrack_f, text="NearestTrack", command=self.nearesttrack)
+            self.nearesttrack_doit_btn.grid(column=4, row=0, sticky=(tk.E,tk.W))
+
+            # カーソル延長線上の距離測定フレーム
+            self.alongcursor_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.alongcursor_f.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.alongcursor_cursor_l = ttk.Label(self.alongcursor_f, text='Cursor')
+            self.alongcursor_cursor_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
+            self.alongcursor_cursor_v = tk.StringVar(value='A')
+            self.alongcursor_cursor_e = ttk.Combobox(self.alongcursor_f, textvariable=self.alongcursor_cursor_v,width=4)
+            self.alongcursor_cursor_e['values'] = ('A','B','C','D')
+            self.alongcursor_cursor_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
+            self.alongcursor_cursor_e.state(["readonly"])
+
+            self.alongcursor_btn = ttk.Button(self.alongcursor_f, text='//', command=self.distalongcursor)
+            self.alongcursor_btn.grid(column=2, row=0, sticky=(tk.E,tk.W))
+
+            self.acrosscursor_btn = ttk.Button(self.alongcursor_f, text='⊥', command=self.distacrosscursor)
+            self.acrosscursor_btn.grid(column=3, row=0, sticky=(tk.E,tk.W))
+
+            self.alongcursor_marker = drawcursor.marker_simple(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g',self.mainwindow.sendtopmost,self.sendtopmost)
 
             # 曲線軌道当てはめフレーム
             self.curvetrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-            self.curvetrack_f.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.curvetrack_f.grid(column=0, row=6, sticky=(tk.N, tk.W, tk.E, tk.S))
             self.curvetrack_f['borderwidth'] = 1
             self.curvetrack_f['relief'] = 'solid'
 
@@ -236,31 +279,6 @@ class interface():
             self.calc_mapsyntax_b = ttk.Checkbutton(self.curve_transfunc_f, text='mapsyntax',variable=self.calc_mapsyntax_v,onvalue=True,offvalue=False)
             self.calc_mapsyntax_b.grid(column=2, row=2, sticky=(tk.E,tk.W))
 
-            # 直交軌道探索フレーム
-            self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-            self.nearesttrack_f.grid(column=0, row=4, sticky=(tk.N, tk.W, tk.E, tk.S))
-
-            self.nearesttrack_sel_v = tk.StringVar(value='')
-            self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
-            self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())
-            self.nearesttrack_sel_e.grid(column=0, row=0, sticky=(tk.E,tk.W))
-            self.nearesttrack_sel_e.state(["readonly"])
-
-            self.nearesttrack_doit_btn = ttk.Button(self.nearesttrack_f, text="NearestTrack", command=self.nearesttrack)
-            self.nearesttrack_doit_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
-
-            # カーソル延長線上の距離測定フレーム
-            self.alongcursor_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
-            self.alongcursor_f.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E, tk.S))
-
-            self.alongcursor_btn = ttk.Button(self.alongcursor_f, text='AlongCursor', command=self.distalongcursor)
-            self.alongcursor_btn.grid(column=0, row=0, sticky=(tk.E,tk.W))
-
-            self.acrosscursor_btn = ttk.Button(self.alongcursor_f, text='AcrossCursor', command=self.distacrosscursor)
-            self.acrosscursor_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
-
-            self.alongcursor_marker = drawcursor.marker_simple(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g',self.mainwindow.sendtopmost,self.sendtopmost)
-
         else:
             print('Already open')
     def closewindow(self):
@@ -270,9 +288,13 @@ class interface():
         if self.master != None:
             self.cursor_A.marker.setmarkerobj(pos=True)
             self.cursor_B.marker.setmarkerobj(pos=True)
+            self.cursor_C.marker.setmarkerobj(pos=True)
+            self.cursor_D.marker.setmarkerobj(pos=True)
             
             self.cursor_A.arrow.setobj(None,reset=True)
             self.cursor_B.arrow.setobj(None,reset=True)
+            self.cursor_C.arrow.setobj(None,reset=True)
+            self.cursor_D.arrow.setobj(None,reset=True)
 
             self.alongcursor_marker.setobj()
     def setdistance(self):
@@ -414,7 +436,10 @@ class interface():
     def nearesttrack(self):
         '''指定した軌道上のカーソルAに最も近い点を求める
         '''
-        inputpos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
+        cursor = self.nearesttrack_cursor_v.get()
+        cursor_obj = {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
+        
+        inputpos = np.array([cursor_obj[cursor].values[0].get(),cursor_obj[cursor].values[1].get()])
         track = self.mainwindow.trackcontrol.track[self.nearesttrack_sel_v.get()]['result']
         track_pos = track[:,1:3]
 
@@ -424,7 +449,7 @@ class interface():
         print()
         print('[Distance nearest point along the track]')
         print('Inputs')
-        print('   Ponint A: ({:f}, {:f})'.format(inputpos[0],inputpos[1]))
+        print('   Ponint {:s}: ({:f}, {:f})'.format(cursor,inputpos[0],inputpos[1]))
         print('   Trakckey: {:s}'.format(self.nearesttrack_sel_v.get())) 
         print('Results')
         print('   distance: {:f}, kilopost: {:f}'.format(result[0], kilopost))
@@ -437,8 +462,11 @@ class interface():
     def distalongcursor(self):
         '''カーソルAの延長線上の任意の点との距離を求める
         '''
-        sourcepos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
-        sourcedir = np.deg2rad(self.cursor_A.values[2].get())
+        cursor = self.alongcursor_cursor_v.get()
+        cursor_obj = {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
+        
+        sourcepos = np.array([cursor_obj[cursor].values[0].get(),cursor_obj[cursor].values[1].get()])
+        sourcedir = np.deg2rad(cursor_obj[cursor].values[2].get())
         def alongf(x,y,spos,sdir):
             unitv = np.array([np.cos(sdir),np.sin(sdir)])
             pointed = np.array([x,y])-spos
@@ -450,15 +478,18 @@ class interface():
             print('   distance:     {:f}'.format(np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2)))
         self.alongcursor_marker.start(lambda x,y: alongf(x,y,sourcepos,sourcedir),lambda self: printpos(self,sourcepos))
         print()
-        print('[distance along cursor A]')
+        print('[distance along cursor {:s}]'.format(cursor))
         print('Inputs')
-        print('   Ponint A:     ({:f}, {:f})'.format(sourcepos[0],sourcepos[1]))
-        print('   Dircection A: {:f}'.format(self.cursor_A.values[2].get()))
+        print('   Ponint {:s}:     ({:f}, {:f})'.format(cursor,sourcepos[0],sourcepos[1]))
+        print('   Dircection {:s}: {:f}'.format(cursor,cursor_obj[cursor].values[2].get()))
     def distacrosscursor(self):
         '''カーソルAの法線上の任意の点との距離を求める
         '''
-        sourcepos = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
-        sourcedir = np.deg2rad(self.cursor_A.values[2].get())
+        cursor = self.alongcursor_cursor_v.get()
+        cursor_obj = {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
+        
+        sourcepos = np.array([cursor_obj[cursor].values[0].get(),cursor_obj[cursor].values[1].get()])
+        sourcedir = np.deg2rad(cursor_obj[cursor].values[2].get())
         def alongf(x,y,spos,sdir):
             unitv = np.array([np.cos(sdir-np.pi/2),np.sin(sdir-np.pi/2)])
             pointed = np.array([x,y])-spos
@@ -470,10 +501,10 @@ class interface():
             print('   distance:     {:f}'.format(np.sqrt((self.xout-sourcepos[0])**2+(self.yout-sourcepos[1])**2)))
         self.alongcursor_marker.start(lambda x,y: alongf(x,y,sourcepos,sourcedir),lambda self: printpos(self,sourcepos))
         print()
-        print('[distance along cursor A]')
+        print('[distance across cursor {:s}]'.format(cursor))
         print('Inputs')
-        print('   Ponint A:     ({:f}, {:f})'.format(sourcepos[0],sourcepos[1]))
-        print('   Dircection A: {:f}'.format(self.cursor_A.values[2].get()))
+        print('   Ponint {:s}:     ({:f}, {:f})'.format(cursor,sourcepos[0],sourcepos[1]))
+        print('   Dircection {:s}: {:f}'.format(cursor,cursor_obj[cursor].values[2].get()))
     def sendtopmost(self,event=None):
         self.master.lift()
         self.master.focus_force()
