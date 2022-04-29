@@ -374,7 +374,7 @@ class TrackControl():
         for tr in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
             _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
             relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
-            cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点との和をとる
+            cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3]) and i>min(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点のうち注目軌道が含まれる点と、自軌道基準に変換した注目軌道距離程の和をとる
             
             self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
 
