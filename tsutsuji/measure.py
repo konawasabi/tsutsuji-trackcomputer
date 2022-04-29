@@ -337,7 +337,7 @@ class interface():
             A_result = A + np.array([np.cos(phiA),np.sin(phiA)])*result[0]
             R_result = R_input
             trackp.generate(A_result,phiA,phiB,R_input,lenTC1,lenTC2,tranfunc)
-            CCL_result = -trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
+            CCL_result = trackp.ccl(A_result,phiA,phiB,R_input,lenTC1,lenTC2,tranfunc)[0]
             shift_result = result[0]
             #print('  x = {:f}'.format(result[0]))
         else:
@@ -386,21 +386,21 @@ class interface():
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
             print()
-            print('Curve.SetFunction({:d});'.format(0 if tranfunc == 'sin' else 1))
             if fitmode == '1. A(fix)->B(free), R(free)':
                 shift = 0
                 print('$pt_a;')
             else:
                 shift = shift_result
-                print('$pt_a; {:s} {:f};'.format('+' if shift>=0 else '-',shift))
+                print('$pt_a {:s}{:f};'.format('+' if shift>=0 else '',shift))
+            print('Curve.SetFunction({:d});'.format(0 if tranfunc == 'sin' else 1))
             print('Curve.BeginTransition();')
             if lenTC1 != 0:
-                print('$pt_a + {:f};'.format(shift + lenTC1))
+                print('$pt_a {:s}{:f};'.format('+' if (shift + lenTC1)>0 else '', shift + lenTC1))
             print('Curve.Begin({:f});'.format(R_result))
-            print('$pt_a + {:f};'.format(shift + lenTC1 + CCL_result))
+            print('$pt_a {:s}{:f};'.format('+' if (shift + lenTC1 + CCL_result)>=0 else '', shift + lenTC1 + CCL_result))
             print('Curve.BeginTransition();')
             if lenTC2 != 0:
-                print('$pt_a + {:f};'.format(shift + lenTC1 + CCL_result + lenTC2))
+                print('$pt_a {:s}{:f};'.format('+' if (shift + lenTC1 + CCL_result + lenTC2)>=0 else '', shift + lenTC1 + CCL_result + lenTC2))
             print('Curve.End();')
             
         ax = self.mainwindow.ax_plane
