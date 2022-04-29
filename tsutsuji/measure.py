@@ -117,6 +117,7 @@ class interface():
             
             self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
             self.values[3].set('@absolute')
+            self.track_e.state(["readonly"])
             
             self.setcursor_b = ttk.Button(self.pframe, text="Pos.", command=self.marker.start, width=3)
             self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir.", command=self.arrow.start, width=3)
@@ -208,28 +209,33 @@ class interface():
             self.curvetrack_e = {}
             self.curvetrack_v = {}
             pos = 0
-            for i in ['TC length 1','TC length 2']:
+            for i in ['TCL A','TCL B','R']:
                 self.curvetrack_l[i] = ttk.Label(self.curvetrack_value_f, text=i)
-                self.curvetrack_l[i].grid(column=0, row=pos, sticky=(tk.E,tk.W))
+                self.curvetrack_l[i].grid(column=pos, row=0, sticky=(tk.E,tk.W))
 
                 self.curvetrack_v[i] = tk.DoubleVar(value=0)
                 self.curvetrack_e[i] = ttk.Entry(self.curvetrack_value_f, textvariable=self.curvetrack_v[i],width=8)
-                self.curvetrack_e[i].grid(column=1, row=pos, sticky=(tk.E,tk.W))
+                self.curvetrack_e[i].grid(column=pos, row=1, sticky=(tk.E,tk.W))
                 pos+=1
             self.curve_transfunc_v = tk.StringVar(value='line')
             self.curve_transfunc_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
-            self.curve_transfunc_f.grid(column=2, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.curve_transfunc_f.grid(column=3, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
             self.curve_transfunc_line_b = ttk.Radiobutton(self.curve_transfunc_f, text='line', variable=self.curve_transfunc_v, value='line')
             self.curve_transfunc_line_b.grid(column=0, row=0, sticky=(tk.E,tk.W))
             self.curve_transfunc_sin_b = ttk.Radiobutton(self.curve_transfunc_f, text='sin', variable=self.curve_transfunc_v, value='sin')
             self.curve_transfunc_sin_b.grid(column=0, row=2, sticky=(tk.E,tk.W))
 
-            self.curve_inverse_v = tk.BooleanVar(value=False)
-            self.curve_inverse_b = ttk.Checkbutton(self.curve_transfunc_f, text='B->A',variable=self.curve_inverse_v,onvalue=True,offvalue=False)
-            self.curve_inverse_b.grid(column=1, row=0, sticky=(tk.E,tk.W))
+            #self.curve_inverse_v = tk.BooleanVar(value=False)
+            #self.curve_inverse_b = ttk.Checkbutton(self.curve_transfunc_f, text='B->A',variable=self.curve_inverse_v,onvalue=True,offvalue=False)
+            #self.curve_inverse_b.grid(column=1, row=0, sticky=(tk.E,tk.W))
+            self.curve_fitmode_v = tk.StringVar(value='1. A(fix)->B(free), R(free)')
+            self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v)
+            self.curve_fitmode_box.grid(column=1, row=0, sticky=(tk.E,tk.W))
+            self.curve_fitmode_box['values'] = ('1. A(fix)->B(free), R(free)','2. A(free)->B(fix), R(free)','3. A(free)->B(free), R(fix)')
+            self.curve_fitmode_box.state(["readonly"])
             
-            self.calc_b = ttk.Button(self.curvetrack_f, text="CurveTrack", command=self.ctfit)
-            self.calc_b.grid(column=3, row=0, sticky=(tk.E,tk.W))
+            self.calc_b = ttk.Button(self.curve_transfunc_f, text="CurveTrack", command=self.ctfit)
+            self.calc_b.grid(column=1, row=2, sticky=(tk.E,tk.W))
 
             # 直交軌道探索フレーム
             self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
@@ -239,6 +245,7 @@ class interface():
             self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
             self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())
             self.nearesttrack_sel_e.grid(column=0, row=0, sticky=(tk.E,tk.W))
+            self.nearesttrack_sel_e.state(["readonly"])
 
             self.nearesttrack_doit_btn = ttk.Button(self.nearesttrack_f, text="NearestTrack", command=self.nearesttrack)
             self.nearesttrack_doit_btn.grid(column=1, row=0, sticky=(tk.E,tk.W))
@@ -305,19 +312,30 @@ class interface():
         B = np.array([self.cursor_B.values[0].get(),self.cursor_B.values[1].get()])
         phiA = np.deg2rad(self.cursor_A.values[2].get())
         phiB = np.deg2rad(self.cursor_B.values[2].get())
-        lenTC1 = self.curvetrack_v['TC length 1'].get()
-        lenTC2 = self.curvetrack_v['TC length 2'].get()
+        lenTC1 = self.curvetrack_v['TCL A'].get()
+        lenTC2 = self.curvetrack_v['TCL B'].get()
+        R_input = self.curvetrack_v['R'].get()
         tranfunc = self.curve_transfunc_v.get()
 
+        fitmode = self.curve_fitmode_v.get()
+
         trackp = trackplot()
-        if self.curve_inverse_v.get() == False:
+        if fitmode == '1. A(fix)->B(free), R(free)':
             result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
             trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
-        else:
+            R_result = result[0]
+        elif fitmode == '2. A(free)->B(fix), R(free)':
             phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
             phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
             result = sv.curvetrack_fit(B,phiB_inv,A,phiA_inv,lenTC2,lenTC1,tranfunc)
             trackp.generate(B,phiB_inv,phiA_inv,result[0],lenTC2,lenTC1,tranfunc)
+            R_result = -result[0]
+        elif fitmode == '3. A(free)->B(free), R(fix)':
+            result = sv.curvetrack_relocation(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc,R_input)
+            R_result = R_input
+            A_result = A + np.array([np.cos(phiA),np.sin(phiA)])*result[0]
+            trackp.generate(A_result,phiA,phiB,R_input,lenTC1,lenTC2,tranfunc)
+            #print('  x = {:f}'.format(result[0]))
 
         #print(trackp.result)
         print()
@@ -330,11 +348,11 @@ class interface():
         print('   Transition func.: {:s}'.format(tranfunc))
         print('   TCL_in:           {:f}'.format(lenTC1))
         print('   TCL_out:          {:f}'.format(lenTC2))
+        print('   Fitmode:          {:s}'.format(fitmode))
         print('Results:')
-        print('   R:   {:f}'.format(result[0] if self.curve_inverse_v.get() == False else -result[0]))
+        print('   R:   {:f}'.format(R_result))
         print('   CCL: {:f}'.format(trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]))
         print('   endpoint: ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
-        print(self.curve_inverse_v.get())
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])
         ax.scatter(result[1][0][0],result[1][0][1])
