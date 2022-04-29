@@ -395,12 +395,15 @@ class interface():
             print('Curve.SetFunction({:d});'.format(0 if tranfunc == 'sin' else 1))
             print('Curve.BeginTransition();')
             if lenTC1 != 0:
-                print('$pt_a {:s}{:f};'.format('+' if (shift + lenTC1)>0 else '', shift + lenTC1))
+                tmp = shift + lenTC1
+                print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
             print('Curve.Begin({:f});'.format(R_result))
-            print('$pt_a {:s}{:f};'.format('+' if (shift + lenTC1 + CCL_result)>=0 else '', shift + lenTC1 + CCL_result))
+            tmp = (shift + lenTC1 + CCL_result)
+            print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
             print('Curve.BeginTransition();')
             if lenTC2 != 0:
-                print('$pt_a {:s}{:f};'.format('+' if (shift + lenTC1 + CCL_result + lenTC2)>=0 else '', shift + lenTC1 + CCL_result + lenTC2))
+                tmp = (shift + lenTC1 + CCL_result + lenTC2)
+                print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
             print('Curve.End();')
             
         ax = self.mainwindow.ax_plane
