@@ -246,6 +246,12 @@ class interface():
 
             self.alongcursor_marker = drawcursor.marker_simple(self,self.mainwindow.ax_plane,self.mainwindow.fig_canvas,'g',self.mainwindow.sendtopmost,self.sendtopmost)
 
+            self.alongcursor_dist_l = ttk.Label(self.alongcursor_f, text='distance')
+            self.alongcursor_dist_l.grid(column=4, row=0, sticky=(tk.E,tk.W))
+            self.alongcursor_dist_v = tk.StringVar(value='0')
+            self.alongcursor_dist_e = ttk.Entry(self.alongcursor_f, textvariable=self.alongcursor_dist_v,width=8)
+            self.alongcursor_dist_e.grid(column=5, row=0, sticky=(tk.E,tk.W))
+
             # 曲線軌道当てはめフレーム
             self.curvetrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
             self.curvetrack_f.grid(column=0, row=6, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -501,6 +507,7 @@ class interface():
             unitv = np.array([np.cos(sdir),np.sin(sdir)])
             pointed = np.array([x,y])-spos
             result = spos + unitv*np.dot(unitv,pointed)
+            self.alongcursor_dist_v.set('{:.3f}'.format(np.linalg.norm(result-spos)))
             return (result[0],result[1])
         def printpos(self,spos):
             print('Result')
@@ -524,6 +531,7 @@ class interface():
             unitv = np.array([np.cos(sdir-np.pi/2),np.sin(sdir-np.pi/2)])
             pointed = np.array([x,y])-spos
             result = spos + unitv*np.dot(unitv,pointed)
+            self.alongcursor_dist_v.set('{:.3f}'.format(np.linalg.norm(result-spos)))
             return (result[0],result[1])
         def printpos(self,spos):
             print('Result')
