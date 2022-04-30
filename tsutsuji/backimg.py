@@ -59,7 +59,7 @@ class BackImgControl():
             shape_orig = np.hstack((shape_orig,np.vstack((width,height))))
             shape_orig = np.hstack((shape_orig,np.vstack((0,height))))
             
-            shape_rot = np.dot(rotmatrix(np.deg2rad(rad)),shape_orig*self.scale - np.vstack((self.origin[0],self.origin[1])))
+            shape_rot = np.dot(rotmatrix(np.deg2rad(rad)),(shape_orig - np.vstack((self.origin[0],self.origin[1])))*self.scale)
             shape_rot = shape_rot + np.vstack((self.shift[0],self.shift[1]))
             
             self.extent = [min(shape_rot[0]),max(shape_rot[0]),min(shape_rot[1]),max(shape_rot[1])]
