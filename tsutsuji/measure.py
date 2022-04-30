@@ -181,7 +181,7 @@ class interface():
             self.result_v = {}
             pos = 0
             for i in ['distance','direction']:
-                self.result_l[i] = ttk.Label(self.result_f, text=i+'(A->B)')
+                self.result_l[i] = ttk.Label(self.result_f, text=i)
                 self.result_l[i].grid(column=pos*2, row=0, sticky=(tk.E,tk.W))
 
                 #self.result_v[i] = tk.DoubleVar(value=0)
@@ -189,6 +189,19 @@ class interface():
                 self.result_e[i] = ttk.Entry(self.result_f, textvariable=self.result_v[i],width=8)
                 self.result_e[i].grid(column=pos*2+1, row=0, sticky=(tk.E,tk.W))
                 pos+=1
+
+            self.result_cursor = {'l':{}, 'e':{}, 'v':{}}
+            for i in ['from','to']:
+                self.result_cursor['l'][i] = ttk.Label(self.result_f, text=i)
+                self.result_cursor['l'][i].grid(column=pos*2, row=0, sticky=(tk.E,tk.W))
+                self.result_cursor['v'][i] = tk.StringVar()
+                self.result_cursor['e'][i] = ttk.Combobox(self.result_f, textvariable=self.result_cursor['v'][i],width=4)
+                self.result_cursor['e'][i]['values'] = ('A','B','C','D')
+                self.result_cursor['e'][i].grid(column=pos*2+1, row=0, sticky=(tk.E,tk.W))
+                self.result_cursor['e'][i].state(["readonly"])
+                pos+=1
+            self.result_cursor['v']['from'].set('A')
+            self.result_cursor['v']['to'].set('B')
 
             # 直交軌道探索フレーム
             self.nearesttrack_f = ttk.Frame(self.mainframe, padding='3 3 3 3')
@@ -298,28 +311,45 @@ class interface():
 
             self.alongcursor_marker.setobj()
     def setdistance(self):
-        self.result_v['distance'].set('{:.1f}'.format(np.sqrt((self.cursor_A.values[0].get()-self.cursor_B.values[0].get())**2\
-                                              +(self.cursor_A.values[1].get()-self.cursor_B.values[1].get())**2)))
-        #self.result_v['direction'].set('{:.1f}'.format(self.cursor_B.values[2].get()-self.cursor_A.values[2].get()))
-
-        self.result_v['direction'].set('{:.1f}'.format(np.rad2deg(math.angle_twov(np.deg2rad(self.cursor_A.values[2].get()),np.deg2rad(self.cursor_B.values[2].get())))))
+        cursor_obj = {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
+        cursor_f = cursor_obj[self.result_cursor['v']['from'].get()]
+        cursor_t = cursor_obj[self.result_cursor['v']['to'].get()]
         
-    def printdistance(self):
-        print()
-        print('[Distance between Point A and B]')
-        print('Inputs:')
-        print('   Ponint A: ({:f}, {:f}), kp = {:f}'.format(self.cursor_A.values[0].get(),self.cursor_A.values[1].get(),self.cursor_A.values[4].get()))
-        print('   Ponint B: ({:f}, {:f}), kp = {:f}'.format(self.cursor_B.values[0].get(),self.cursor_B.values[1].get(),self.cursor_B.values[4].get()))
-        print('Result:')
-        print('   distance: {:s}'.format(self.result_v['distance'].get()))
-    def printdirection(self):
-        print()
-        print('[Direction toward Point A to B]')
-        print('Inputs:')
-        print('   Dircection A: {:f}'.format(self.cursor_A.values[2].get()))
-        print('   Dircection B: {:f}'.format(self.cursor_B.values[2].get()))
-        print('Result:')
-        print('   direction:    {:s}'.format(self.result_v['direction'].get()))
+        self.result_v['distance'].set('{:.1f}'.format(np.sqrt((cursor_f.values[0].get()-cursor_t.values[0].get())**2\
+                                              +(cursor_f.values[1].get()-cursor_t.values[1].get())**2)))
+
+        self.result_v['direction'].set('{:.1f}'.format(np.rad2deg(math.angle_twov(np.deg2rad(cursor_f.values[2].get()),np.deg2rad(cursor_t.values[2].get())))))
+        
+    def printdistance(self,mycursor=None):
+        cursor_obj = {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
+        cursor_f_name = self.result_cursor['v']['from'].get()
+        cursor_t_name = self.result_cursor['v']['to'].get()
+        cursor_f = cursor_obj[cursor_f_name]
+        cursor_t = cursor_obj[cursor_t_name]
+
+        if mycursor == None or (cursor_f == mycursor or cursor_t == mycursor):
+            print()
+            print('[Distance between Point {:s} and {:s}]'.format(cursor_f_name,cursor_t_name))
+            print('Inputs:')
+            print('   Ponint {:s}: ({:f}, {:f}), kp = {:f}'.format(cursor_f_name,cursor_f.values[0].get(),cursor_f.values[1].get(),cursor_f.values[4].get()))
+            print('   Ponint {:s}: ({:f}, {:f}), kp = {:f}'.format(cursor_t_name,cursor_t.values[0].get(),cursor_t.values[1].get(),cursor_t.values[4].get()))
+            print('Result:')
+            print('   distance: {:s}'.format(self.result_v['distance'].get()))
+    def printdirection(self,mycursor=None):
+        cursor_obj =  {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
+        cursor_f_name = self.result_cursor['v']['from'].get()
+        cursor_t_name = self.result_cursor['v']['to'].get()
+        cursor_f = cursor_obj[cursor_f_name]
+        cursor_t = cursor_obj[cursor_t_name]
+
+        if mycursor == None or (cursor_f == mycursor or cursor_t == mycursor):
+            print()
+            print('[Direction toward Point {:s} to {:s}]'.format(cursor_f_name,cursor_t_name))
+            print('Inputs:')
+            print('   Dircection {:s}: {:f}'.format(cursor_f_name,cursor_f.values[2].get()))
+            print('   Dircection {:s}: {:f}'.format(cursor_t_name,cursor_t.values[2].get()))
+            print('Result:')
+            print('   direction:    {:s}'.format(self.result_v['direction'].get()))
     def ctfit(self):
         '''カーソルA, B間を結ぶ最適な曲線軌道を求める
         '''
