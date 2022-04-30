@@ -300,18 +300,20 @@ class interface():
             self.curve_transfunc_sin_b = ttk.Radiobutton(self.curve_transfunc_f, text='sin', variable=self.curve_transfunc_v, value='sin')
             self.curve_transfunc_sin_b.grid(column=0, row=2, sticky=(tk.E,tk.W))
 
+            self.curve_fitmode_l = ttk.Label(self.curve_transfunc_f, text='Mode')
+            self.curve_fitmode_l.grid(column=1, row=0, sticky=(tk.E))
             self.curve_fitmode_v = tk.StringVar(value='1. α(fix)->β(free), R(free)')
             self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v)
-            self.curve_fitmode_box.grid(column=1, row=0, sticky=(tk.E,tk.W))
+            self.curve_fitmode_box.grid(column=2, row=0, sticky=(tk.E,tk.W))
             self.curve_fitmode_box['values'] = ('1. α(fix)->β(free), R(free)','2. α(free)->β(fix), R(free)','3. α(free)->β(free), R(fix)')
             self.curve_fitmode_box.state(["readonly"])
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
-            self.calc_b.grid(column=1, row=2, sticky=(tk.E,tk.W))
+            self.calc_b.grid(column=2, row=2, sticky=(tk.E,tk.W))
 
             self.calc_mapsyntax_v = tk.BooleanVar(value=True)
             self.calc_mapsyntax_b = ttk.Checkbutton(self.curve_transfunc_f, text='mapsyntax',variable=self.calc_mapsyntax_v,onvalue=True,offvalue=False)
-            self.calc_mapsyntax_b.grid(column=2, row=2, sticky=(tk.E,tk.W))
+            self.calc_mapsyntax_b.grid(column=1, row=2, sticky=(tk.E,tk.W))
 
         else:
             print('Already open')
