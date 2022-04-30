@@ -309,7 +309,7 @@ class interface():
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
             self.calc_b.grid(column=1, row=2, sticky=(tk.E,tk.W))
 
-            self.calc_mapsyntax_v = tk.BooleanVar(value=False)
+            self.calc_mapsyntax_v = tk.BooleanVar(value=True)
             self.calc_mapsyntax_b = ttk.Checkbutton(self.curve_transfunc_f, text='mapsyntax',variable=self.calc_mapsyntax_v,onvalue=True,offvalue=False)
             self.calc_mapsyntax_b.grid(column=2, row=2, sticky=(tk.E,tk.W))
 
