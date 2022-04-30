@@ -112,16 +112,16 @@ class interface():
             self.x_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[0],width=5)
             self.y_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[1],width=5)
             self.theta_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[2],width=5)
-            self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=8)
+            self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=9)
             self.trackkp_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[4],width=5)
             
             self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
             self.values[3].set('@absolute')
             self.track_e.state(["readonly"])
             
-            self.setcursor_b = ttk.Button(self.pframe, text="Pos.", command=self.marker.start, width=3)
-            self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir.", command=self.arrow.start, width=3)
-            self.setfromval_b = ttk.Button(self.pframe, text="Val.", command=self.setmarkerpos_fromkeyboard, width=3)
+            self.setcursor_b = ttk.Button(self.pframe, text="Pos.", command=self.marker.start, width=4)
+            self.setcursor_dir_b = ttk.Button(self.pframe, text="Dir.", command=self.arrow.start, width=4)
+            self.setfromval_b = ttk.Button(self.pframe, text="Val.", command=self.setmarkerpos_fromkeyboard, width=4)
 
             self.relativepos_b = ttk.Checkbutton(self.pframe, text='Rel.', variable=self.coordinate_v, onvalue='rel', offvalue='abs')
 
