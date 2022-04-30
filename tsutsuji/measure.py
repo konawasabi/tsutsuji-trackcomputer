@@ -260,7 +260,22 @@ class interface():
 
             self.curvetrack_title = ttk.Label(self.curvetrack_f, text='CurveTrack Solver',font=tk.font.Font(weight='bold'))
             self.curvetrack_title.grid(column=0, row=0, sticky=(tk.E,tk.W))
-            
+
+            self.curvetrack_cursor_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
+            self.curvetrack_cursor_f.grid(column=3, row=0, sticky=(tk.E,tk.W))
+            self.curvetrack_cursor = {'l':{}, 'e':{}, 'v':{}}
+            pos=0
+            for i in ['α','β']:
+                self.curvetrack_cursor['l'][i] = ttk.Label(self.curvetrack_cursor_f, text=i)
+                self.curvetrack_cursor['l'][i].grid(column=pos*2, row=0, sticky=(tk.E,tk.W))
+                self.curvetrack_cursor['v'][i] = tk.StringVar()
+                self.curvetrack_cursor['e'][i] = ttk.Combobox(self.curvetrack_cursor_f, textvariable=self.curvetrack_cursor['v'][i],width=4)
+                self.curvetrack_cursor['e'][i]['values'] = ('A','B','C','D')
+                self.curvetrack_cursor['e'][i].grid(column=pos*2+1, row=0, sticky=(tk.E,tk.W))
+                self.curvetrack_cursor['e'][i].state(["readonly"])
+                pos+=1
+            self.curvetrack_cursor['v']['α'].set('A')
+            self.curvetrack_cursor['v']['β'].set('B')
             
             self.curvetrack_value_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
             self.curvetrack_value_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -268,7 +283,7 @@ class interface():
             self.curvetrack_e = {}
             self.curvetrack_v = {}
             pos = 0
-            for i in ['TCL A','TCL B','R']:
+            for i in ['TCL α','TCL β','R']:
                 self.curvetrack_l[i] = ttk.Label(self.curvetrack_value_f, text=i)
                 self.curvetrack_l[i].grid(column=pos, row=0, sticky=(tk.E,tk.W))
 
@@ -285,10 +300,10 @@ class interface():
             self.curve_transfunc_sin_b = ttk.Radiobutton(self.curve_transfunc_f, text='sin', variable=self.curve_transfunc_v, value='sin')
             self.curve_transfunc_sin_b.grid(column=0, row=2, sticky=(tk.E,tk.W))
 
-            self.curve_fitmode_v = tk.StringVar(value='1. A(fix)->B(free), R(free)')
+            self.curve_fitmode_v = tk.StringVar(value='1. α(fix)->β(free), R(free)')
             self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v)
             self.curve_fitmode_box.grid(column=1, row=0, sticky=(tk.E,tk.W))
-            self.curve_fitmode_box['values'] = ('1. A(fix)->B(free), R(free)','2. A(free)->B(fix), R(free)','3. A(free)->B(free), R(fix)')
+            self.curve_fitmode_box['values'] = ('1. α(fix)->β(free), R(free)','2. α(free)->β(fix), R(free)','3. α(free)->β(free), R(fix)')
             self.curve_fitmode_box.state(["readonly"])
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
@@ -359,27 +374,32 @@ class interface():
     def ctfit(self):
         '''カーソルA, B間を結ぶ最適な曲線軌道を求める
         '''
+        cursor_obj =  {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
+        cursor_f_name = self.curvetrack_cursor['v']['α'].get()
+        cursor_t_name = self.curvetrack_cursor['v']['β'].get()
+        cursor_f = cursor_obj[cursor_f_name]
+        cursor_t = cursor_obj[cursor_t_name]
         
         sv = solver.solver()
-        A = np.array([self.cursor_A.values[0].get(),self.cursor_A.values[1].get()])
-        B = np.array([self.cursor_B.values[0].get(),self.cursor_B.values[1].get()])
-        phiA = np.deg2rad(self.cursor_A.values[2].get())
-        phiB = np.deg2rad(self.cursor_B.values[2].get())
-        lenTC1 = self.curvetrack_v['TCL A'].get()
-        lenTC2 = self.curvetrack_v['TCL B'].get()
+        A = np.array([cursor_f.values[0].get(),cursor_f.values[1].get()])
+        B = np.array([cursor_t.values[0].get(),cursor_t.values[1].get()])
+        phiA = np.deg2rad(cursor_f.values[2].get())
+        phiB = np.deg2rad(cursor_t.values[2].get())
+        lenTC1 = self.curvetrack_v['TCL α'].get()
+        lenTC2 = self.curvetrack_v['TCL β'].get()
         R_input = self.curvetrack_v['R'].get()
         tranfunc = self.curve_transfunc_v.get()
 
         fitmode = self.curve_fitmode_v.get()
 
         trackp = trackplot()
-        if fitmode == '1. A(fix)->B(free), R(free)':
+        if fitmode == '1. α(fix)->β(free), R(free)':
             result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
             trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
             R_result = result[0]
             CCL_result = trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
             shift_result = np.linalg.norm(result[1][0] - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),result[1][0] - B))
-        elif fitmode == '2. A(free)->B(fix), R(free)':
+        elif fitmode == '2. α(free)->β(fix), R(free)':
             phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
             phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
             result = sv.curvetrack_fit(B,phiB_inv,A,phiA_inv,lenTC2,lenTC1,tranfunc)
@@ -387,7 +407,7 @@ class interface():
             R_result = -result[0]
             CCL_result = -trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
             shift_result = np.linalg.norm(result[1][0] - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),result[1][0] - A))
-        elif fitmode == '3. A(free)->B(free), R(fix)':
+        elif fitmode == '3. α(free)->β(free), R(fix)':
             if False:
                 import pdb
                 pdb.set_trace()
@@ -402,36 +422,36 @@ class interface():
             raise('invalid fitmode')
 
         # パラメータ、計算結果の印字
-        if fitmode == '1. A(fix)->B(free), R(free)' or fitmode == '2. A(free)->B(fix), R(free)':
+        if fitmode == '1. α(fix)->β(free), R(free)' or fitmode == '2. α(free)->β(fix), R(free)':
             print()
             print('[Curve fitting]')
             print('Inputs:')
             print('   Fitmode:          {:s}'.format(fitmode))
-            print('   Ponint A:         ({:f}, {:f})'.format(A[0],A[1]))
-            print('   Ponint B:         ({:f}, {:f})'.format(B[0],B[1]))
-            print('   Dircection A:     {:f}'.format(self.cursor_A.values[2].get()))
-            print('   Dircection B:     {:f}'.format(self.cursor_B.values[2].get()))
+            print('   Ponint α:         ({:f}, {:f})'.format(A[0],A[1]))
+            print('   Ponint β:         ({:f}, {:f})'.format(B[0],B[1]))
+            print('   Dircection α:     {:f}'.format(cursor_f.values[2].get()))
+            print('   Dircection β:     {:f}'.format(cursor_t.values[2].get()))
             print('   Transition func.: {:s}'.format(tranfunc))
             print('   TCL_in:           {:f}'.format(lenTC1))
             print('   TCL_out:          {:f}'.format(lenTC2))            
             print('Results:')
             print('   R:   {:f}'.format(R_result))
             print('   CCL: {:f}'.format(CCL_result))
-            if fitmode == '1. A(fix)->B(free), R(free)':
+            if fitmode == '1. α(fix)->β(free), R(free)':
                 print('   endpt:            ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
-                print('   shift from pt. B: {:f}'.format(shift_result))
+                print('   shift from pt. β: {:f}'.format(shift_result))
             else:
                 print('   startpt:          ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
-                print('   shift from pt. A: {:f}'.format(shift_result))
-        elif fitmode == '3. A(free)->B(free), R(fix)':
+                print('   shift from pt. α: {:f}'.format(shift_result))
+        elif fitmode == '3. α(free)->β(free), R(fix)':
             print()
             print('[Curve fitting]')
             print('Inputs:')
             print('   Fitmode:          {:s}'.format(fitmode))
-            print('   Ponint A:         ({:f}, {:f})'.format(A[0],A[1]))
-            print('   Ponint B:         ({:f}, {:f})'.format(B[0],B[1]))
-            print('   Dircection A:     {:f}'.format(self.cursor_A.values[2].get()))
-            print('   Dircection B:     {:f}'.format(self.cursor_B.values[2].get()))
+            print('   Ponint α:         ({:f}, {:f})'.format(A[0],A[1]))
+            print('   Ponint β:         ({:f}, {:f})'.format(B[0],B[1]))
+            print('   Dircection α:     {:f}'.format(cursor_f.values[2].get()))
+            print('   Dircection β:     {:f}'.format(cursor_t.values[2].get()))
             print('   Transition func.: {:s}'.format(tranfunc))
             print('   TCL_in:           {:f}'.format(lenTC1))
             print('   TCL_out:          {:f}'.format(lenTC2))
@@ -444,7 +464,7 @@ class interface():
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
             print()
-            if fitmode == '1. A(fix)->B(free), R(free)':
+            if fitmode == '1. α(fix)->β(free), R(free)':
                 shift = 0
                 print('$pt_a;')
             else:
