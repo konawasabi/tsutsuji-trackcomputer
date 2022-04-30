@@ -60,24 +60,22 @@ absolute_coordinate
 * type: bool
 * 軌道始点座標の指定方法
   
-  * True: 各軌道から独立した絶対座標系
+  * True: 絶対座標系
   * False: 別軌道のある距離程を基準とした座標系
 
-    * ver1.0.0ではTrueのみ対応
+    * `parent_track` で指定した軌道の距離程\ `origin_kilopost` の座標を原点として、\ `x` ,\ `y` ,\ `z`  で指定した距離オフセットした位置を軌道始点とする
 
 parent_track
 ============
 * type: string
 * 座標系の原点となる軌道のtrackkey
 * **absolute_coordinate == Falseの場合にのみ有効**
-* ver1.0.0では未実装
 
 origin_kilopost
 ===============
 * type: float
 * 座標系の原点となる距離程
 * **absolute_coordinate == Falseの場合にのみ有効**
-* ver1.0.0では未実装
  
 x
 ==========
@@ -98,7 +96,8 @@ angle
 ===========
 * type: float
 * 軌道始端における進行方向 [°]
-* 絶対座標系のz軸方向を0とする。
+* `absolute_coordinate = True` の場合、絶対座標系のz軸方向を0とする
+* `absolute_coordinate = False` の場合、相対座標系のz軸方向(指定された距離程での軌道の向き)を0とする
   
   
 * x, y, z, angle については下図を参照

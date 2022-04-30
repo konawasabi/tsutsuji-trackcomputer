@@ -163,6 +163,10 @@
 <span class="sd">    Return:</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="angle_twov"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.angle_twov">[docs]</a><span class="k">def</span> <span class="nf">angle_twov</span><span class="p">(</span><span class="n">phiA</span><span class="p">,</span> <span class="n">phiB</span><span class="p">):</span>
+    <span class="n">eA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phiA</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phiA</span><span class="p">)])</span>
+    <span class="n">eB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phiB</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phiB</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eA</span><span class="p">,</span><span class="n">eB</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">eA</span><span class="p">,</span><span class="n">eB</span><span class="p">))</span></div>
 </pre></div>
 
             <div class="clearer"></div>

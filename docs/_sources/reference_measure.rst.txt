@@ -1,0 +1,9 @@
+======================
+Reference for Measure
+======================
+
+Measureウィンドウ
+=================
+
+.. image:: ./files/measure.png
+	   :scale: 60%
