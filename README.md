@@ -23,7 +23,7 @@ Tsutsuji本体と、動作に必要なパッケージが自動でインストー
 pip install tsutsuji-trackcomputer
 ```
 
-インストール済みのTsutsujiをバージョンアップする際は、`pip install -U tsutsuji-trackcomputer`を実行してください。
+インストール済みのTsutsujiをバージョンアップする際は、`pip install --upgrade tsutsuji-trackcomputer`を実行してください。
 
 
 Tsutsujiは次のコマンドで起動できます。
