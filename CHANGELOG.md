@@ -2,7 +2,7 @@
 
 ## to be implemented
 
-## 1.1.0 - not released yet
+## 1.1.0 - 2022-05-01
 
 - 別軌道に従属した座標系で軌道原点を表す
 - プロット画面
@@ -27,4 +27,4 @@
 
 - 1st release
 
-[1.1.0]: https://github.com/konawasabi/kobushi-trackviewer/compare/ver1.0.0...ver1.1.0
+[1.1.0]: https://github.com/konawasabi/kobushi-trackviewer/compare/v1.0.0...ver1.1.0
