@@ -27,4 +27,4 @@
 
 - 1st release
 
-[1.1.0]: https://github.com/konawasabi/kobushi-trackviewer/compare/v1.0.0...ver1.1.0
+[1.1.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/v1.0.0...ver1.1.0
