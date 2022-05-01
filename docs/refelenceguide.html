@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>メインウィンドウ &#8212; tsutsuji-trackcomputer  documentation</title>
+    <title>リファレンスガイド &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
     
@@ -18,8 +18,6 @@
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Measure ウィンドウ" href="reference_measure.html" />
-    <link rel="prev" title="Reference Guide" href="referenceguide.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!--[if lt IE 9]>
     <script src="_static/css3-mediaqueries.js"></script>
@@ -34,15 +32,8 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="reference_measure.html" title="Measure ウィンドウ"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="referenceguide.html" title="Reference Guide"
-             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="referenceguide.html" accesskey="U">Reference Guide</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">メインウィンドウ</a></li> 
+        <li class="nav-item nav-item-this"><a href="">リファレンスガイド</a></li> 
       </ul>
     </div>  
 
@@ -52,10 +43,12 @@
           <div class="body" role="main">
             
   <section id="id1">
-<h1>メインウィンドウ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<a class="reference internal image-reference" href="_images/mainwindow.png"><img alt="_images/mainwindow.png" src="_images/mainwindow.png" style="width: 698.4px; height: 460.79999999999995px;" /></a>
+<h1>リファレンスガイド<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <section id="id2">
-<h2>プロット制御パネル<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2>メインウィンドウ<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/mainwindow.png"><img alt="_images/mainwindow.png" src="_images/mainwindow.png" style="width: 698.4px; height: 460.79999999999995px;" /></a>
+<section id="id3">
+<h3>プロット制御パネル<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p>x, y</p>
 <ul class="simple">
@@ -85,39 +78,50 @@
 </li>
 <li><p>Replotボタン</p>
 <ul class="simple">
-<li><p>プロットウィンドウの再描画を行う</p></li>
+<li><p>再プロットを行う</p></li>
 <li><p>x, y, scale, Y. Magの値を変更した場合、Replotを実行するまで反映されない</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="measure">
-<h2>Measureボタン<a class="headerlink" href="#measure" title="Permalink to this headline">¶</a></h2>
-<p>Measureウィンドウを開きます。
-詳細は <a class="reference internal" href="reference_measure.html"><span class="doc">Measure ウィンドウ</span></a> を参照。</p>
-<a class="reference internal image-reference" href="_images/measure.png"><img alt="_images/measure.png" src="_images/measure.png" style="width: 273.0px; height: 203.4px;" /></a>
+<h3>Measureボタン<a class="headerlink" href="#measure" title="Permalink to this headline">¶</a></h3>
+<p>測量ウィンドウを開きます。
+詳細は <a class="reference internal" href="reference_measure.html"><span class="doc">Reference for Measure</span></a> を参照。</p>
 </section>
 <section id="generate">
-<h2>Generateボタン<a class="headerlink" href="#generate" title="Permalink to this headline">¶</a></h2>
+<h3>Generateボタン<a class="headerlink" href="#generate" title="Permalink to this headline">¶</a></h3>
 <p>cfgファイルの設定に従い、他軌道構文データを出力します。
 デフォルトではcfgファイルと同じ階層のresultディレクトリに結果を保存します。</p>
-<section id="id3">
-<h3>メニュー<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 </section>
 </section>
 <section id="id4">
-<h2>ファイル<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<h2>メニュー<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<section id="id5">
+<h3>ファイル<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<section id="id6">
+<h4>開く...<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
 <p>cfgファイルを指定するファイルダイアログを表示します。
-指定したcfgファイルに基づいて各mapファイルを読み込み、各軌道毎の座標データをプロットウィンドウに表示します。
-cfgファイルの詳細については、 <a class="reference internal" href="cfgfileformat.html"><span class="doc">CFG file format</span></a> を参照してください。</p>
+指定したcfgファイルに基づいて各mapファイルを読み込み、各軌道毎の座標データをプロットウィンドウに表示します。</p>
+</section>
+<section id="id7">
+<h4>リロード<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
 <p>一旦開いたcfgファイルを再読み込みします。
 cfgファイルで指定された各mapファイルも全て再読み込みされ、軌道座標データを再構築します。</p>
+</section>
+<section id="id8">
+<h4>終了<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
 <p>Tsutsujiを終了します。</p>
 </section>
-<section id="id5">
-<h2>背景画像<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="id9">
+<h3>背景画像<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<section id="window">
+<h4>window...<a class="headerlink" href="#window" title="Permalink to this headline">¶</a></h4>
 <a class="reference internal image-reference" href="_images/backimg.png"><img alt="_images/backimg.png" src="_images/backimg.png" style="width: 306.59999999999997px; height: 159.6px;" /></a>
 <p>プロットウィンドウの背景に表示する画像を管理するBackground imagesウィンドウを開きます。</p>
+<section id="id10">
+<h5>ファイル操作<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p>Add</p>
 <ul>
@@ -136,6 +140,9 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 </ul>
 </li>
 </ul>
+</section>
+<section id="id11">
+<h5>表示パラメータ<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h5>
 <p>filepathリストで選択した画像毎に下記のパラメータを設定できます。</p>
 <ul class="simple">
 <li><p>x0, y0</p>
@@ -154,7 +161,6 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 <ul>
 <li><p>回転角度を指定</p></li>
 <li><p>単位は[°]</p></li>
-<li><p>x0, y0で指定した座標を中心に回転する</p></li>
 </ul>
 </li>
 <li><p>alpha</p>
@@ -167,7 +173,7 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 <li><p>拡大率を指定</p></li>
 <li><p>単位は [m/pixel]</p>
 <ul>
-<li><p>例: 画像ファイル上での106 pixelを20 mとして表示したいときは、20/106 = 0.188を指定する</p></li>
+<li><p>画像ファイル上での106 pixelを20 mとして表示したいときは、20/106 = 0.188を指定する</p></li>
 </ul>
 </li>
 </ul>
@@ -178,13 +184,28 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 </ul>
 </li>
 </ul>
+</section>
+</section>
+<section id="load">
+<h4>load...<a class="headerlink" href="#load" title="Permalink to this headline">¶</a></h4>
 <p>save...で書き出した設定ファイルを読み込みます。</p>
+</section>
+<section id="save">
+<h4>save...<a class="headerlink" href="#save" title="Permalink to this headline">¶</a></h4>
 <p>現在読み込まれている背景画像の設定を書き出します。</p>
 </section>
-<section id="id6">
-<h2>ヘルプ<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="id12">
+<h3>ヘルプ<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<section id="id13">
+<h4>ヘルプ...<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
 <p>システム規定のwebブラウザで <a class="reference external" href="https://konawasabi.github.io/tsutsuji-trackcomputer/">https://konawasabi.github.io/tsutsuji-trackcomputer/</a> を表示します。</p>
+</section>
+<section id="tsutsuji">
+<h4>Tsutsujiについて...<a class="headerlink" href="#tsutsuji" title="Permalink to this headline">¶</a></h4>
 <p>バージョン情報を表示します。</p>
+</section>
+</section>
 </section>
 </section>
 
@@ -198,35 +219,46 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">メインウィンドウ</a><ul>
-<li><a class="reference internal" href="#id2">プロット制御パネル</a></li>
+<li><a class="reference internal" href="#">リファレンスガイド</a><ul>
+<li><a class="reference internal" href="#id2">メインウィンドウ</a><ul>
+<li><a class="reference internal" href="#id3">プロット制御パネル</a></li>
 <li><a class="reference internal" href="#measure">Measureボタン</a></li>
-<li><a class="reference internal" href="#generate">Generateボタン</a><ul>
-<li><a class="reference internal" href="#id3">メニュー</a></li>
+<li><a class="reference internal" href="#generate">Generateボタン</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id4">ファイル</a></li>
-<li><a class="reference internal" href="#id5">背景画像</a></li>
-<li><a class="reference internal" href="#id6">ヘルプ</a></li>
+<li><a class="reference internal" href="#id4">メニュー</a><ul>
+<li><a class="reference internal" href="#id5">ファイル</a><ul>
+<li><a class="reference internal" href="#id6">開く...</a></li>
+<li><a class="reference internal" href="#id7">リロード</a></li>
+<li><a class="reference internal" href="#id8">終了</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id9">背景画像</a><ul>
+<li><a class="reference internal" href="#window">window...</a><ul>
+<li><a class="reference internal" href="#id10">ファイル操作</a></li>
+<li><a class="reference internal" href="#id11">表示パラメータ</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#load">load...</a></li>
+<li><a class="reference internal" href="#save">save...</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id12">ヘルプ</a><ul>
+<li><a class="reference internal" href="#id13">ヘルプ...</a></li>
+<li><a class="reference internal" href="#tsutsuji">Tsutsujiについて...</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
   </div>
-  <div>
-    <h4>Previous topic</h4>
-    <p class="topless"><a href="referenceguide.html"
-                          title="previous chapter">Reference Guide</a></p>
-  </div>
-  <div>
-    <h4>Next topic</h4>
-    <p class="topless"><a href="reference_measure.html"
-                          title="next chapter">Measure ウィンドウ</a></p>
-  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/reference_main.rst.txt"
+      <li><a href="_sources/refelenceguide.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -253,15 +285,8 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="reference_measure.html" title="Measure ウィンドウ"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="referenceguide.html" title="Reference Guide"
-             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="referenceguide.html" >Reference Guide</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">メインウィンドウ</a></li> 
+        <li class="nav-item nav-item-this"><a href="">リファレンスガイド</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

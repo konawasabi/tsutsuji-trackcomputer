@@ -22,13 +22,11 @@ Tsutsuji trackcomputerは、Bve Trainsim 5/6向けマップファイルの制作
 まずは :doc:`tutorial` をご覧ください。
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
    tutorial
-   reference_main
-   reference_measure
-   cfgfileformat
+   referenceguide
    tsutsuji API (Under construction) <tsutsuji>
 
 Repository:
