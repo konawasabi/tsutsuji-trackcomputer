@@ -1,5 +1,5 @@
 ======================
-Reference for Measure
+Measure ウィンドウ
 ======================
 
 .. image:: ./files/measure.png
