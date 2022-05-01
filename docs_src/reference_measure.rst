@@ -50,7 +50,7 @@ trackボックスで軌道キーを指定している場合は、kilopostで指�
 
 Rel.をチェックしてからVal.ボタンを押すと、下記のset offsetダイアログが現れ、カーソルの現在位置に対して指定した値だけ位置と方角をオフセットできます。
 座標系の取り方は下記を参照してください。
-この機能はtrackボックスで軌道キーをしている場合のみ有効です。
+この機能はtrackボックスで軌道キーを選択している場合のみ有効です。
 
 .. image:: ./files/cursor_setoffset.png
 
@@ -139,8 +139,8 @@ Mode
       Cursor α,β:       A,B
       Ponint α:         (-109.225328, 12.428684)
       Ponint β:         (139.534313, 46.285293)
-      Dircection α:     33.036680
-      Dircection β:     -40.175224
+      Direction α:     33.036680
+      Direction β:     -40.175224
       Transition func.: line
       TCL α:            0.000000
       TCL β:            0.000000
