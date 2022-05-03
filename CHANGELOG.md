@@ -2,6 +2,22 @@
 
 ## to be implemented
 
+- 背景画像関係
+  - Reload時に背景画像を再読み込み
+  - cfgファイルで背景画像を呼び出せるように
+    - @TSUTSUJI_GENERALに背景cfgの項目をつける
+  - コントラスト調整
+- measure関係
+  - Reload/Replot時、relにチェックが入っている場合にオフセットダイアログが開かないようにする
+  - relにチェックしてval.実行時、オフセット込みの座標をx,yに表示する
+    - @absoluteに自動切り替え？
+	- @absoluteカーソルを別カーソル位置基準でオフセットする考え方で、オフセットダイアログに基準カーソル選択ボックスを出す
+  - measureボタン押した時にすでにmeasureウィンドウが開かれている場合、トップに持ってくる
+  - Reload時に軌道キーリストを書き直す
+    - reload時にmeasureウィンドウが開いているとリストが更新されない
+	
+## [1.1.1] - not released yet
+
 ## [1.1.0] - 2022-05-01
 
 - 別軌道に従属した座標系で軌道原点を表す
@@ -27,4 +43,5 @@
 
 - 1st release
 
+[1.1.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.0...ver1.1.1
 [1.1.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/v1.0.0...ver1.1.0
