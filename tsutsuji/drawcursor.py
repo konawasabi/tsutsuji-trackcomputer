@@ -311,7 +311,7 @@ class marker_pos():
                                                       message = 'set offset')
                 offs_angle =np.deg2rad(float(offset_input.variables['theta'].get()))
                 offset = np.dot(math.rotate(pos_kp[4]+offs_angle), np.array([float(offset_input.variables['x'].get()), float(offset_input.variables['y'].get())]))
-                #self.p.coordinate_v.set('abs')
+                self.p.coordinate_v.set('abs')
 
             self.p.values[0].set(pos_kp[1]+offset[0])
             self.p.values[1].set(pos_kp[2]+offset[1])
