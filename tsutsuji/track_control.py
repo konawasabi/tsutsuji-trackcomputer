@@ -50,6 +50,10 @@ class TrackControl():
         #pdb.set_trace()
         
         if self.conf != None:
+            self.track = {}
+            self.rel_track = {}
+            self.rel_track_radius = {}
+            self.rel_track_radius_cp = {}
             for i in self.conf.track_keys:
                 self.track[i] = {}
                 self.track[i]['interp'] = mapinterpreter.ParseMap(env=None,parser=None)

@@ -115,7 +115,7 @@ class interface():
             self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=9)
             self.trackkp_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[4],width=5)
             
-            self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
+            self.make_trackkeylist()
             self.values[3].set('@absolute')
             self.track_e.state(["readonly"])
             
@@ -141,6 +141,11 @@ class interface():
                 self.values[i].set(float(self.values_toshow[i].get()))
             self.marker.set_direct()
             self.arrow.set_direct()
+        def make_trackkeylist(self):
+            currentval = self.values[3].get()
+            self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
+            if currentval not in self.track_e['values']:
+                self.values[3].set('@absolute')
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
         self.master = None
@@ -576,4 +581,8 @@ class interface():
                 marker.values[i].set(float(marker.values_toshow[i].get()))
             marker.marker.set_direct()
             marker.arrow.set_direct()
+    def reload_trackkeys(self):
+        if self.master is not None:
+            for marker in [self.cursor_A, self.cursor_B, self.cursor_C, self.cursor_D]:
+                marker.make_trackkeylist()
                 
