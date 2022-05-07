@@ -288,7 +288,7 @@ class TrackControl():
             relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
             cp_tr_ownt = sorted(set(cp_ownt + cp_tr)) # 自軌道制御点との和をとる
             rel_cp_tmp = np.vstack((np.hstack((pos_ownt[:,1],relativecp[:,5])),np.hstack((pos_ownt[:,2],relativecp[:,6])))).T
-            rel_cp = np.vstack((rel_cp,rel_cp_tmp)) if rel_cp != None else rel_cp_tmp
+            rel_cp = np.vstack((rel_cp,rel_cp_tmp)) if rel_cp is not None else rel_cp_tmp
             for data in relativecp:
                 ax.plot([data[1],data[5]],[data[2],data[6]],color='black')
         ax.scatter(rel_cp[:,0],rel_cp[:,1],color=self.conf.track_data[owntrack]['color'])
@@ -308,7 +308,7 @@ class TrackControl():
             ax.scatter(pos_cp[:,1],pos_cp[:,2],color=self.conf.track_data[key]['color'])
             ax.scatter(ownt_relcp[:,5],ownt_relcp[:,6],color=self.conf.track_data[key]['color'],marker='x')
             for data in ownt_relcp:
-                ax.plot([data[5],data[10]],[data[6],data[11]],color='red')
+                ax.plot([data[5],data[10]],[data[6],data[11]],color='red',alpha=0)
             
     def takecp(self,trackkey,owntrack = None, elem=None, supplemental=True):
         ''' 注目軌道の制御点を抽出
@@ -366,9 +366,9 @@ class TrackControl():
     def generate_mapdata(self):
         ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
         '''
-        
-        #import pdb
-        #pdb.set_trace()
+        if False:
+            import pdb
+            pdb.set_trace()
 
         self.relativepoint_all() # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データを自軌道基準の相対曲率半径を算出
@@ -403,9 +403,14 @@ class TrackControl():
                 relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
 
             if len(relativecp['cant'])>0:
+                '''
                 for data in self.rel_track[tr][np.isin(self.rel_track[tr][:,0],relativecp['cant'][:,0])]:
                     output_map['cant'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
                     output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[8])
+                '''
+                for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
+                    output_map['cant'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
+                    output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[1])
 
 
             key = 'interpolate_func'
@@ -467,3 +472,13 @@ class TrackControl():
         else:
             result = self.rel_track[tr][min_ix][element]
         return result
+    def convert_cant_with_relativecp(self, tr, cp_dist):
+        ''' trで指定した軌道について、対応する距離程でのカントを求める 
+        '''
+        result = []
+        for cp in cp_dist:
+            result.append([cp, self.interpolate_with_dist(8,tr,cp)])
+        
+        return result
+        
+        
