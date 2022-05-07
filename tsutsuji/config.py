@@ -28,12 +28,14 @@ class Config():
         sections = cp.sections()
         self.track_keys = [i for i in sections if i != '@TSUTSUJI_GENERAL']
         
-        self.general = {'origin_distance':0, 'offset_variable':None, 'unit_length':1, 'owntrack':None, 'output_path':'./result'}
+        self.general = {'origin_distance':0, 'offset_variable':None, 'unit_length':1, 'owntrack':None, 'output_path':'./result', 'backimg':None}
         if '@TSUTSUJI_GENERAL' in sections:
             for k in cp.options('@TSUTSUJI_GENERAL'):
                 self.general[k] = cp['@TSUTSUJI_GENERAL'][k] if k not in ['origin_distance', 'unit_length'] else float(cp['@TSUTSUJI_GENERAL'][k])
             self.owntrack = self.general['owntrack']
             self.general['output_path'] = self.path_parent.joinpath(pathlib.Path(self.general['output_path']))
+            if self.general['backimg'] is not None:
+                self.general['backimg'] = self.path_parent.joinpath(pathlib.Path(self.general['backimg']))
         self.track_data = {}
         linecolor_default = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf']
         color_ix = 0

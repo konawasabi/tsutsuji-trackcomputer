@@ -235,14 +235,15 @@ class mainwindow(ttk.Frame):
         print('loading',inputdir)
         self.trackcontrol.loadcfg(inputdir)
         self.trackcontrol.loadmap()
+        if self.trackcontrol.conf.general['backimg'] is not None:
+            self.backimgctrl.load_setting(path = self.trackcontrol.conf.general['backimg'])
+        elif self.backimgctrl.conf_path is not None:
+            self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
         self.measurewindow.reload_trackkeys()
         self.drawall()
     def reloadcfg(self, event=None):
         if self.trackcontrol.path is not None:
             self.opencfg(event=event,in_dir=self.trackcontrol.path)
-
-        if self.backimgctrl.conf_path is not None:
-            self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
     def draw2dplot(self):
         self.ax_plane.cla()
         self.trackcontrol.plot2d(self.ax_plane)
