@@ -144,6 +144,7 @@ class arrow():
         self.marker = marker
         
         self.pointerdir = None
+        self.tangentline = None
     def start(self):
         if self.pointerdir != None:
             self.pointerdir.remove()
@@ -168,6 +169,7 @@ class arrow():
                 vector = np.array([np.cos(self.marker.prev_trackpos[4]-np.pi),np.sin(self.marker.prev_trackpos[4]-np.pi)])
                 element = vector
         self.setobj(element)
+        self.settangent(position)
         self.canvas.draw()
         
         sin = vector[1]/np.sqrt(vector[0]**2+vector[1]**2)
@@ -181,6 +183,7 @@ class arrow():
         self.p.parent.sendtopmost()
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
+        self.tangentline = None
     def setobj(self,element,reset=False):
         if self.pointerdir == None or reset:
             if reset:
@@ -190,6 +193,15 @@ class arrow():
                                              angles='xy',scale=2,scale_units='inches',width=0.0025)
         else:
             self.pointerdir.set_UVC(element[0],element[1])
+    def settangent(self,pointerpos,reset=False):
+        origin = np.array([self.p.values[0].get(),self.p.values[1].get()])
+        diff = pointerpos - origin
+        diagonal = np.dot(math.rotate(np.pi),diff) + origin
+        
+        if self.tangentline == None or reset:
+            self.tangentline, = self.ax.plot([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]],'k--',alpha=0.25)
+        else:
+            self.tangentline.set_data([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]])
     def set_direct(self):
         if self.pointerdir != None:
             self.pointerdir.remove()

@@ -124,6 +124,7 @@ class interface():
             self.setfromval_b = ttk.Button(self.pframe, text="Val.", command=self.setmarkerpos_fromkeyboard, width=4)
 
             self.relativepos_b = ttk.Checkbutton(self.pframe, text='Rel.', variable=self.coordinate_v, onvalue='rel', offvalue='abs')
+            #self.setfromothercursor_b = ttk.Button(self.pframe, text="Offs.", command=None, width=4)
 
             self.x_e.grid(column=1, row=row, sticky=(tk.E,tk.W))
             self.y_e.grid(column=2, row=row, sticky=(tk.E,tk.W))
@@ -134,6 +135,7 @@ class interface():
             self.setcursor_dir_b.grid(column=7, row=row, sticky=(tk.E,tk.W))
             self.setfromval_b.grid(column=8, row=row, sticky=(tk.E,tk.W))
             self.relativepos_b.grid(column=9, row=row, sticky=(tk.E,tk.W))
+            #self.setfromothercursor_b.grid(column=9, row=row, sticky=(tk.E,tk.W))
         def printmode(self):
             print(self.name,self.cursormode_v.get(), self.values[3].get() if self.cursormode_v.get() == 'track' else '')
         def setmarkerpos_fromkeyboard(self):
