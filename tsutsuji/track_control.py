@@ -308,7 +308,7 @@ class TrackControl():
             ax.scatter(pos_cp[:,1],pos_cp[:,2],color=self.conf.track_data[key]['color'])
             ax.scatter(ownt_relcp[:,5],ownt_relcp[:,6],color=self.conf.track_data[key]['color'],marker='x')
             for data in ownt_relcp:
-                ax.plot([data[5],data[10]],[data[6],data[11]],color='red',alpha=0)
+                ax.plot([data[5],data[10]],[data[6],data[11]],color='red',alpha=0.25)
             
     def takecp(self,trackkey,owntrack = None, elem=None, supplemental=True):
         ''' 注目軌道の制御点を抽出

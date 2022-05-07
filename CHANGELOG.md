@@ -4,6 +4,10 @@
 
 - solver
   - 渡り線フィッティング
+  
+## [1.1.2] - 2022-05-08
+
+- 多くの場合に他軌道のカントが出力されないバグの修正
 	
 ## [1.1.1] - 2022-05-07
 
@@ -41,5 +45,6 @@
 
 - 1st release
 
+[1.1.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.1...ver1.1.2
 [1.1.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.0...ver1.1.1
 [1.1.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/v1.0.0...ver1.1.0
