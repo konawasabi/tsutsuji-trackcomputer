@@ -169,7 +169,8 @@ class arrow():
                 vector = np.array([np.cos(self.marker.prev_trackpos[4]-np.pi),np.sin(self.marker.prev_trackpos[4]-np.pi)])
                 element = vector
         self.setobj(element)
-        self.settangent(position)
+        if self.track_key == '@absolute':
+            self.settangent(position)
         self.canvas.draw()
         
         sin = vector[1]/np.sqrt(vector[0]**2+vector[1]**2)
