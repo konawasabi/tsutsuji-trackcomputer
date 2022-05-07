@@ -240,6 +240,9 @@ class mainwindow(ttk.Frame):
     def reloadcfg(self, event=None):
         if self.trackcontrol.path is not None:
             self.opencfg(event=event,in_dir=self.trackcontrol.path)
+
+        if self.backimgctrl.conf_path is not None:
+            self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
     def draw2dplot(self):
         self.ax_plane.cla()
         self.trackcontrol.plot2d(self.ax_plane)

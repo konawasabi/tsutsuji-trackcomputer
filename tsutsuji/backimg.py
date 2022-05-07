@@ -71,6 +71,7 @@ class BackImgControl():
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
         self.imgs = {}
+        self.conf_path = None
     def create_window(self):
         self.master = tk.Toplevel(self.mainwindow)
         self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
@@ -247,7 +248,9 @@ class BackImgControl():
             path = filedialog.askopenfilename()
         conf = configparser.ConfigParser()
         conf.read(path)
+        self.conf_path = path
 
+        self.imgs = {}
         for sections in conf.sections():
             self.imgs[sections]=self.BackImgData(sections)
             origin = conf[sections]['origin'].split(',')
