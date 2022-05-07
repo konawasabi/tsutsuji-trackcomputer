@@ -95,6 +95,10 @@
         <span class="c1">#pdb.set_trace()</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">track</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rel_track</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rel_track_radius</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rel_track_radius_cp</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">track_keys</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;interp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapinterpreter</span><span class="o">.</span><span class="n">ParseMap</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">parser</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>

@@ -116,6 +116,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mainwindow</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span> <span class="o">=</span> <span class="n">mainwindow</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_path</span> <span class="o">=</span> <span class="kc">None</span>
 <div class="viewcode-block" id="BackImgControl.create_window"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.create_window">[docs]</a>    <span class="k">def</span> <span class="nf">create_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainframe</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;3 3 3 3&#39;</span><span class="p">)</span>
@@ -292,7 +293,9 @@
             <span class="n">path</span> <span class="o">=</span> <span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">()</span>
         <span class="n">conf</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
         <span class="n">conf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_path</span> <span class="o">=</span> <span class="n">path</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">sections</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">sections</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">BackImgData</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
             <span class="n">origin</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="n">sections</span><span class="p">][</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
