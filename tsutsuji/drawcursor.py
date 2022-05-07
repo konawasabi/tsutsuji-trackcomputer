@@ -156,29 +156,30 @@ class arrow():
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
     def move(self,event):
         position = np.array([event.xdata,event.ydata])
-        if self.track_key == '@absolute':
-            vector = (position - self.pointed_pos)
-            element = vector/np.sqrt(vector[0]**2+vector[1]**2)
-        else:
-            v_marker = (position - self.pointed_pos)
-            v_track = np.array([np.cos(self.marker.prev_trackpos[4]),np.sin(self.marker.prev_trackpos[4])])
-            if np.dot(v_marker, v_track) > 0:
-                vector = v_track
-                element = vector
+        if event.xdata is not None and event.ydata is not None:
+            if self.track_key == '@absolute':
+                vector = (position - self.pointed_pos)
+                element = vector/np.sqrt(vector[0]**2+vector[1]**2)
             else:
-                vector = np.array([np.cos(self.marker.prev_trackpos[4]-np.pi),np.sin(self.marker.prev_trackpos[4]-np.pi)])
-                element = vector
-        self.setobj(element)
-        if self.track_key == '@absolute':
-            self.settangent(position)
-        self.canvas.draw()
-        
-        sin = vector[1]/np.sqrt(vector[0]**2+vector[1]**2)
-        cos = vector[0]/np.sqrt(vector[0]**2+vector[1]**2)
-        theta = np.arccos(cos) if sin > 0 else -np.arccos(cos)
-        self.p.values[2].set(np.rad2deg(theta))
-        self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(theta)))
-        self.p.parent.setdistance()
+                v_marker = (position - self.pointed_pos)
+                v_track = np.array([np.cos(self.marker.prev_trackpos[4]),np.sin(self.marker.prev_trackpos[4])])
+                if np.dot(v_marker, v_track) > 0:
+                    vector = v_track
+                    element = vector
+                else:
+                    vector = np.array([np.cos(self.marker.prev_trackpos[4]-np.pi),np.sin(self.marker.prev_trackpos[4]-np.pi)])
+                    element = vector
+            self.setobj(element)
+            if self.track_key == '@absolute':
+                self.settangent(position)
+            self.canvas.draw()
+
+            sin = vector[1]/np.sqrt(vector[0]**2+vector[1]**2)
+            cos = vector[0]/np.sqrt(vector[0]**2+vector[1]**2)
+            theta = np.arccos(cos) if sin > 0 else -np.arccos(cos)
+            self.p.values[2].set(np.rad2deg(theta))
+            self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(theta)))
+            self.p.parent.setdistance()
     def press(self,event):
         self.p.parent.printdirection(mycursor=self.p)
         self.p.parent.sendtopmost()
@@ -228,9 +229,11 @@ class marker_simple():
         self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
     def move(self,event):
-        self.setpos(event.xdata,event.ydata)
+        if event.xdata is not None and event.ydata is not None:
+            self.setpos(event.xdata,event.ydata)
     def press(self,event):
-        self.setpos(event.xdata,event.ydata)
+        if event.xdata is not None and event.ydata is not None:
+            self.setpos(event.xdata,event.ydata)
         self.pressfunc(self)
         self.ch_measure()
         self.canvas.mpl_disconnect(self.press_id)
