@@ -321,7 +321,7 @@ class interface():
             self.calc_mapsyntax_b.grid(column=1, row=2, sticky=(tk.E,tk.W))
 
         else:
-            print('Already open')
+            self.sendtopmost()
     def closewindow(self):
         self.master.withdraw()
         self.master = None
