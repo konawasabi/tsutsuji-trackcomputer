@@ -168,18 +168,20 @@ Inputs:
    TCL β:            0.000000
    R:                -400.000000
 Results:
-   CCL:        511.115512                # 円軌道の長さ
-   startpoint: (-195.139999, -43.443187) # 始点座標
-   shift:      -102.484129               # 始点座標とカーソルαの距離
+   CCL:        511.115511                # 円軌道の長さ
+   startpoint: (-195.139998, -43.443185) # 始点座標
+   shift:      -102.484127               # 始点座標とカーソルαの距離
 
 # ここからCurve構文の出力
-$pt_a -102.484129;                       # $pt_aはカーソルαの位置の距離程を想定
+$pt_a -102.484127;                       # $pt_aはカーソルαの位置の距離程を想定
 Curve.SetFunction(1);
-Curve.BeginTransition();
-Curve.Begin(-400.000000);
-$pt_a +408.631383;
-Curve.BeginTransition();
-Curve.End();
+Curve.Interpolate(0.000000,0.000000);
+$pt_a -102.484127;
+Curve.Interpolate(-400.000000,0.000000);
+$pt_a +408.631384;
+Curve.Interpolate(-400.000000,0.000000);
+$pt_a +408.631384;
+Curve.Interpolate(0.000000,0.000000);
 </pre></div>
 </div>
 </section>
