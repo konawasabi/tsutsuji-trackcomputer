@@ -281,7 +281,7 @@ Tsutsujiを起動します。
 
 :code:`python -m tsutsuji tutorial.cfg` として、起動時に開くファイルを直接指定することも可能です。
 
-.. image:: ./files/screenshot1.png
+.. image:: ./files/screenshot2.png
 	   :scale: 50%
 
 .. note::
@@ -441,39 +441,39 @@ down_converted.txt
    # Track['down'].Cant.Interpolate
    $hoge + 0.00;
    Track['down'].Cant.Interpolate(0.000);
-   $hoge + 280.00;
+   $hoge + 280.58;
    Track['down'].Cant.Interpolate(0.000);
-   $hoge + 302.00;
+   $hoge + 302.57;
    Track['down'].Cant.Interpolate(0.070);
-   $hoge + 304.00;
+   $hoge + 304.57;
    Track['down'].Cant.Interpolate(0.070);
-   $hoge + 326.00;
+   $hoge + 326.45;
    Track['down'].Cant.Interpolate(0.000);
-   $hoge + 346.00;
-   Track['down'].Cant.Interpolate(0.000);
-   $hoge + 368.00;
-   Track['down'].Cant.Interpolate(-0.070);
-   $hoge + 370.00;
-   Track['down'].Cant.Interpolate(-0.070);
-   $hoge + 392.00;
+   $hoge + 346.30;
    Track['down'].Cant.Interpolate(-0.000);
-   $hoge + 700.00;
-   Track['down'].Cant.Interpolate(0.000);
-   $hoge + 722.00;
+   $hoge + 368.18;
    Track['down'].Cant.Interpolate(-0.070);
-   $hoge + 724.00;
+   $hoge + 370.18;
    Track['down'].Cant.Interpolate(-0.070);
-   $hoge + 746.00;
+   $hoge + 392.17;
    Track['down'].Cant.Interpolate(-0.000);
-   $hoge + 894.00;
+   $hoge + 700.17;
+   Track['down'].Cant.Interpolate(-0.000);
+   $hoge + 722.17;
+   Track['down'].Cant.Interpolate(-0.070);
+   $hoge + 724.16;
+   Track['down'].Cant.Interpolate(-0.070);
+   $hoge + 746.04;
+   Track['down'].Cant.Interpolate(-0.000);
+   $hoge + 892.98;
    Track['down'].Cant.Interpolate(0.000);
-   $hoge + 916.00;
+   $hoge + 914.86;
    Track['down'].Cant.Interpolate(0.070);
-   $hoge + 918.00;
-   Track['down'].Cant.Interpolate(0.069);
-   $hoge + 940.00;
+   $hoge + 916.85;
+   Track['down'].Cant.Interpolate(0.070);
+   $hoge + 938.85;
    Track['down'].Cant.Interpolate(0.000);
-   $hoge + 1500.00;
+   $hoge + 1498.85;
    Track['down'].Cant.Interpolate(0.000);
 
    # Track['down'].Cant.SetFunction
