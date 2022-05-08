@@ -482,18 +482,22 @@ class interface():
                 shift = shift_result
                 print('$pt_a {:s}{:f};'.format('+' if shift>=0 else '',shift))
             print('Curve.SetFunction({:d});'.format(0 if tranfunc == 'sin' else 1))
-            print('Curve.BeginTransition();')
-            if lenTC1 != 0:
+            #print('Curve.BeginTransition();')
+            print('Curve.Interpolate({:f},{:f});'.format(0,0))
+            if lenTC1 != 0 or True:
                 tmp = shift + lenTC1
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            print('Curve.Begin({:f});'.format(R_result))
+            #print('Curve.Begin({:f});'.format(R_result))
+            print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
             tmp = (shift + lenTC1 + CCL_result)
             print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            print('Curve.BeginTransition();')
-            if lenTC2 != 0:
+            #print('Curve.BeginTransition();')
+            print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
+            if lenTC2 != 0 or True:
                 tmp = (shift + lenTC1 + CCL_result + lenTC2)
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            print('Curve.End();')
+            #print('Curve.End();')
+            print('Curve.Interpolate({:f},{:f});'.format(0,0))
             
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])
