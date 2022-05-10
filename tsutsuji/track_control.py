@@ -21,6 +21,7 @@ import os
 import pathlib
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import interpolate
 
 from kobushi import mapinterpreter
 from kobushi import trackgenerator
@@ -171,23 +172,30 @@ class TrackControl():
         calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
         for tr in calc_track:
             self.rel_track_radius[tr] = []
+
+            # 注目軌道相対座標を線形補間する
+            x_interp = np.linspace(min(self.rel_track[tr][:,0]),max(self.rel_track[tr][:,0]),int((max(self.rel_track[tr][:,0])-min(self.rel_track[tr][:,0]))/1.0)+1)
+            f_xy = interpolate.interp1d(self.rel_track[tr][:,0],self.rel_track[tr][:,2])
+            f_z  = interpolate.interp1d(self.rel_track[tr][:,0],self.rel_track[tr][:,3])
+            input_np = np.vstack((np.vstack((x_interp,f_xy(x_interp))),f_z(x_interp))).T
+            
             # 相対曲率半径の算出
-            for ix in range(0,len(self.rel_track[tr])-2):
+            for ix in range(0,len(input_np)-2):
                 pos = []
-                pos.append(self.rel_track[tr][ix])
-                pos.append(self.rel_track[tr][ix+1])
-                pos.append(self.rel_track[tr][ix+2])
+                pos.append(input_np[ix])
+                pos.append(input_np[ix+1])
+                pos.append(input_np[ix+2])
 
                 # 幾何学的に曲率を求める(xy平面)
-                ds = np.sqrt((pos[1][0]-pos[0][0])**2 + (pos[1][2]-pos[0][2])**2)
-                dalpha = np.arctan((pos[2][2]-pos[1][2])/(pos[2][0]-pos[1][0])) \
-                    - np.arctan((pos[1][2]-pos[0][2])/(pos[1][0]-pos[0][0]))
+                ds = np.sqrt((pos[1][0]-pos[0][0])**2 + (pos[1][1]-pos[0][1])**2)
+                dalpha = np.arctan((pos[2][1]-pos[1][1])/(pos[2][0]-pos[1][0])) \
+                    - np.arctan((pos[1][1]-pos[0][1])/(pos[1][0]-pos[0][0]))
                 curvature = dalpha/ds
 
                 # 幾何学的に曲率を求める(z面)
-                ds_z = np.sqrt((pos[1][0]-pos[0][0])**2 + (pos[1][3]-pos[0][3])**2)
-                dalpha_z = np.arctan((pos[2][3]-pos[1][3])/(pos[2][0]-pos[1][0])) \
-                    - np.arctan((pos[1][3]-pos[0][3])/(pos[1][0]-pos[0][0]))
+                ds_z = np.sqrt((pos[1][0]-pos[0][0])**2 + (pos[1][2]-pos[0][2])**2)
+                dalpha_z = np.arctan((pos[2][2]-pos[1][2])/(pos[2][0]-pos[1][0])) \
+                    - np.arctan((pos[1][2]-pos[0][2])/(pos[1][0]-pos[0][0]))
                 curvature_z = dalpha_z/ds_z
                 
                 self.rel_track_radius[tr].append([pos[0][0],\
@@ -371,7 +379,7 @@ class TrackControl():
             pdb.set_trace()
 
         self.relativepoint_all() # 全ての軌道データを自軌道基準の座標に変換
-        self.relativeradius() # 全ての軌道データを自軌道基準の相対曲率半径を算出
+        self.relativeradius() # 全ての軌道データについて自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
 
         # owntrack以外の各軌道について処理する
@@ -379,6 +387,7 @@ class TrackControl():
             _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
             relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
             cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3]) and i>min(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点のうち注目軌道が含まれる点と、自軌道基準に変換した注目軌道距離程の和をとる
+            #cp_tr_ownt = sorted(list(relativecp[:,3])) # 
             
             self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
 
