@@ -222,8 +222,8 @@ class mainwindow(ttk.Frame):
         self.master['menu'] = self.menubar
     def bind_keyevent(self):
         self.bind_all("<Control-o>", self.opencfg)
-        #self.bind_all("<F5>", self.reloadcfg)
-        #self.bind_all("<Alt-F4>", self.ask_quit)
+        self.bind_all("<F5>", self.reloadcfg)
+        self.bind_all("<Alt-F4>", self.ask_quit)
     def ask_quit(self, event=None, ask=True):
         if ask:
             if tk.messagebox.askyesno(message='Tsutsuji を終了しますか？'):
