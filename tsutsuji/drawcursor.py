@@ -146,9 +146,12 @@ class arrow():
         self.pointerdir = None
         self.tangentline = None
     def start(self):
-        if self.pointerdir != None:
+        if self.pointerdir is not None:
             self.pointerdir.remove()
             self.pointerdir = None
+        if self.tangentline is not None:
+            self.tangentline.remove()
+            self.tangentline = None
         self.track_key = self.p.values[3].get()
         self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
         self.p.parentwindow.sendtopmost()
@@ -185,7 +188,6 @@ class arrow():
         self.p.parent.sendtopmost()
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
-        self.tangentline = None
     def setobj(self,element,reset=False):
         if self.pointerdir == None or reset:
             if reset:
