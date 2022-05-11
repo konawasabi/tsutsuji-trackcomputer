@@ -5,10 +5,11 @@
 - solver
   - 渡り線フィッティング
   
-## [1.1.3] - not released yet
+## [1.1.3] - 2022-05-11
 
 - 相対半径算出ルーチンの修正
   - 相対座標を線形補間してから曲率を計算する
+- direction設定時に表示する接線を重複して描画しないように修正
   
 ## [1.1.2] - 2022-05-08
 
@@ -56,6 +57,7 @@
 
 - 1st release
 
+[1.1.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.1...ver1.1.3
 [1.1.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.1...ver1.1.2
 [1.1.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.0...ver1.1.1
 [1.1.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/v1.0.0...ver1.1.0
