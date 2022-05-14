@@ -81,11 +81,9 @@ class TrackControl():
                     if self.conf.track_data[i]['parent_track'] not in self.track.keys():
                         raise Exception('invalid trackkey: {:s}'.format(self.conf.track_data[i]['parent_track']))
 
-                    # 可能な場合は内挿して原点を設定する
-                    try:
-                        pos_origin_abs = self.track[self.conf.track_data[i]['parent_track']]['result'][self.track[self.conf.track_data[i]['parent_track']]['result'][:,0] == self.conf.track_data[i]['origin_kilopost']][-1]
-                    except:
-                        raise Exception('invalid kilopost: {:.1f} on \'{:s}\''.format(self.conf.track_data[i]['origin_kilopost'],self.conf.track_data[i]['parent_track']))
+                    pos_origin_abs = []
+                    for j in range(0,5):
+                        pos_origin_abs.append(math.interpolate_with_dist(self.track[self.conf.track_data[i]['parent_track']]['result'],j,self.conf.track_data[i]['origin_kilopost']))
 
                     pos_origin_rot = np.dot(math.rotate(pos_origin_abs[4]), np.array([self.conf.track_data[i]['z'],self.conf.track_data[i]['x']]))
                     self.track[i]['tgen'] = trackgenerator.TrackGenerator(self.track[i]['data'],\
