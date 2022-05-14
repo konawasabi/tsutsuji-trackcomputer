@@ -230,8 +230,10 @@ class TrackControl():
                 len_section         = cp_dist[ix+1] - cp_dist[ix]
                 curvature_section   = np.sum(pos_cp[:,1])/len_section
                 curvature_section_z = np.sum(pos_cp[:,3])/len_section
-                yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
-                zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
+                #yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
+                yval = math.interpolate_with_dist(self.rel_track[tr],2,cp_dist[ix])
+                #zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
+                zval = math.interpolate_with_dist(self.rel_track[tr],3,cp_dist[ix])
                 self.rel_track_radius_cp[tr].append([cp_dist[ix],\
                                                      curvature_section,\
                                                      1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,\
@@ -242,8 +244,10 @@ class TrackControl():
                 ix+=1
 
             # 最終制御点の出力
-            yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
-            zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
+            #yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
+            yval = math.interpolate_with_dist(self.rel_track[tr],2,cp_dist[ix])
+            #zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
+            zval = math.interpolate_with_dist(self.rel_track[tr],3,cp_dist[ix])
             curvature_section   = np.inf
             curvature_section_z = np.inf
             self.rel_track_radius_cp[tr].append([cp_dist[ix],\
@@ -488,7 +492,8 @@ class TrackControl():
         '''
         result = []
         for cp in cp_dist:
-            result.append([cp, self.interpolate_with_dist(8,tr,cp)])
+            #result.append([cp, self.interpolate_with_dist(8,tr,cp)])
+            result.append([cp, math.interpolate_with_dist(self.rel_track[tr],8,cp)])
         
         return result
         
