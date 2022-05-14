@@ -329,7 +329,12 @@ def main():
     args = argparser.parse_args()
 
     if args.nogui:
-        print('Nothing to be done')
+        if args.filepath is None:
+            raise Exception('no cfg file')
+        trackcontrol = track_control.TrackControl()
+        trackcontrol.loadcfg(args.filepath)
+        trackcontrol.loadmap()
+        trackcontrol.generate_mapdata()
     else:
         tk.CallWrapper = Catcher
         root = tk.Tk()
