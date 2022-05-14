@@ -21,6 +21,7 @@ import sys
 import pathlib
 import os
 import webbrowser
+import argparse
 
 import tkinter as tk
 from tkinter import ttk
@@ -321,10 +322,20 @@ def main():
                 pdb.pm()
         sys.excepthook = info
         print('Debug mode')
-    
-    tk.CallWrapper = Catcher
-    root = tk.Tk()
-    app = mainwindow(master=root)
-    if len(sys.argv)>1:
-        app.opencfg(in_dir=sys.argv[1])
-    app.mainloop()
+
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('-f', '--filepath', type=str, help='map cfg')
+    argparser.add_argument('-n', '--nogui', help='no gui mode', action='store_true')
+    args = argparser.parse_args()
+
+    if args.nogui:
+        print('Nothing to be done')
+    else:
+        tk.CallWrapper = Catcher
+        root = tk.Tk()
+        app = mainwindow(master=root)
+        #if len(sys.argv)>1:
+        #    app.opencfg(in_dir=sys.argv[1])
+        if args.filepath is not None:
+            app.opencfg(in_dir=args.filepath)
+        app.mainloop()
