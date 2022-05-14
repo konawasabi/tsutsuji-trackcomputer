@@ -122,3 +122,20 @@ def angle_twov(phiA, phiB):
     eA = np.array([np.cos(phiA),np.sin(phiA)])
     eB = np.array([np.cos(phiB),np.sin(phiB)])
     return np.arccos(np.dot(eA,eB))*np.sign(np.cross(eA,eB))
+
+def interpolate_with_dist(track, element, cp_dist):
+    def interpolate(data,ix,typ,cp_dist,base=0):
+        return (data[:,typ][ix+1]-data[:,typ][ix])/(data[:,base][ix+1]-data[:,base][ix])*(cp_dist-data[:,base][ix])+data[:,typ][ix]
+    min_ix = np.argmin(np.abs(track[:,0] - cp_dist))
+
+    if min_ix > 0 and min_ix < len(track)-1:
+        aroundzero = track[min_ix-1:min_ix+2]
+        sign_dist = np.sign(aroundzero[:,0] - cp_dist)
+        if sign_dist[0] != sign_dist[1]:
+            result = interpolate(aroundzero,0,element,cp_dist)
+        else:
+            result = interpolate(aroundzero,1,element,cp_dist)
+        #result = track[pos_ix][element]
+    else:
+        result = track[min_ix][element]
+    return result

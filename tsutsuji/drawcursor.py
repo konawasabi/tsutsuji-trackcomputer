@@ -316,8 +316,11 @@ class marker_pos():
             kp = self.p.values[4].get()
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result']
 
-            pos_kp = self.track_data[self.track_data[:,0] == kp][-1]
-
+            pos_kp = []
+            for i in range(0,5):
+                pos_kp.append(math.interpolate_with_dist(self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'],i,kp))
+            #pos_kp = self.track_data[self.track_data[:,0] == kp][-1]
+           
             if self.p.coordinate_v.get() == 'abs':
                 offset = np.array([0,0])
                 offs_angle = 0 
@@ -341,7 +344,7 @@ class marker_pos():
 
             self.prev_trackpos = pos_kp
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:1,3]
-            
+                
         self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get(),direct=True)
         if not replot:
             self.p.parent.setdistance()

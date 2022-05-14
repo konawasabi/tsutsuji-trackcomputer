@@ -5,6 +5,12 @@
 - solver
   - 渡り線フィッティング
   
+## [1.2.0] - not released yet
+
+- measure関係
+   - track上の距離程でカーソル座標を指定する場合、unit_lengthの倍数でない距離程を指定した場合は前後の点から内挿して求めた座標を設定する
+   - 
+  
 ## [1.1.3] - 2022-05-11
 
 - 相対半径算出ルーチンの修正
@@ -57,6 +63,7 @@
 
 - 1st release
 
+[1.2,0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.3...ver1.2.0
 [1.1.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.2...ver1.1.3
 [1.1.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.1...ver1.1.2
 [1.1.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.0...ver1.1.1

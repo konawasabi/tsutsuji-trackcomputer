@@ -80,6 +80,8 @@ class TrackControl():
                 else:
                     if self.conf.track_data[i]['parent_track'] not in self.track.keys():
                         raise Exception('invalid trackkey: {:s}'.format(self.conf.track_data[i]['parent_track']))
+
+                    # 可能な場合は内挿して原点を設定する
                     try:
                         pos_origin_abs = self.track[self.conf.track_data[i]['parent_track']]['result'][self.track[self.conf.track_data[i]['parent_track']]['result'][:,0] == self.conf.track_data[i]['origin_kilopost']][-1]
                     except:
