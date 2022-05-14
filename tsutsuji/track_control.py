@@ -469,6 +469,7 @@ class TrackControl():
             f.write(output_file)
             f.close()
             print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))            
+    '''
     def interpolate_with_dist(self, element, tr, cp_dist):
         def interpolate(aroundzero,ix,typ,cp_dist,base=0):
             return (aroundzero[:,typ][ix+1]-aroundzero[:,typ][ix])/(aroundzero[:,base][ix+1]-aroundzero[:,base][ix])*(cp_dist-aroundzero[:,base][ix])+aroundzero[:,typ][ix]
@@ -485,6 +486,7 @@ class TrackControl():
         else:
             result = self.rel_track[tr][min_ix][element]
         return result
+    '''
     def convert_cant_with_relativecp(self, tr, cp_dist):
         ''' trで指定した軌道について、対応する距離程でのカントを求める 
         '''
