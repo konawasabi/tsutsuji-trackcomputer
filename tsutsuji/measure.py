@@ -451,7 +451,11 @@ class interface():
             CCL_result = lenCC
             shift_result = 0
         elif fitmode == self.curve_fitmode_box['values'][4]: #'5. β(fix), R(fix), CCL(fix)'
-            raise Exception('not available 4')
+            phi_end = phiB - (lenCC/R_input + trackp.phi_TC(lenTC1, R_input, tranfunc) + trackp.phi_TC(lenTC2, R_input, tranfunc))
+            trackp.generate(B, phiB + np.pi if phiB>0 else phiB - np.pi, phi_end + np.pi if phi_end>0 else phi_end - np.pi, -R_input, lenTC2, lenTC1, tranfunc)
+            R_result = R_input
+            CCL_result = lenCC
+            shift_result = 0
         else:
             raise Exception('invalid fitmode')
 
@@ -496,22 +500,27 @@ class interface():
             print('   CCL:        {:f}'.format(CCL_result))
             print('   startpoint: ({:f}, {:f})'.format(A_result[0],A_result[1]))
             print('   shift:      {:f}'.format(shift_result))
-        elif fitmode == self.curve_fitmode_box['values'][3]: #4
+        elif fitmode == self.curve_fitmode_box['values'][3] or fitmode == self.curve_fitmode_box['values'][4]: #4, 5
+            cursor_label = 'α' if fitmode == self.curve_fitmode_box['values'][3] else 'β'
             print()
             print('[Curve fitting]')
             print('Inputs:')
             print('   Fitmode:          {:s}'.format(fitmode))
-            print('   Cursor α:         {:s}'.format(cursor_f_name))
-            print('   Ponint α:         ({:f}, {:f})'.format(A[0],A[1]))
-            print('   Direction α:      {:f}'.format(cursor_f.values[2].get()))
+            print('   Cursor {:s}:         {:s}'.format(cursor_label,cursor_f_name))
+            print('   Ponint {:s}:         ({:f}, {:f})'.format(cursor_label,A[0],A[1]))
+            print('   Direction {:s}:      {:f}'.format(cursor_label,cursor_f.values[2].get()))
             print('   Transition func.: {:s}'.format(tranfunc))
             print('   TCL α:            {:f}'.format(lenTC1))
             print('   TCL β:            {:f}'.format(lenTC2))
             print('   CCL:              {:f}'.format(CCL_result))
             print('   R:                {:f}'.format(R_input))
             print('Results:')
-            print('   endpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
-            print('   Δφ:       {:f}'.format(np.rad2deg(phi_end-phiA)))
+            if fitmode == self.curve_fitmode_box['values'][3]:
+                print('   endpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
+                print('   Δφ:       {:f}'.format(np.rad2deg(phi_end-phiA)))
+            else:
+                print('   startpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
+                print('   Δφ:         {:f}'.format(np.rad2deg(phiB-phi_end)))
             
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
