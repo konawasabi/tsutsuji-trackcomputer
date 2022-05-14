@@ -68,6 +68,8 @@ class trackplot():
         self.result = np.dot(self.curvegen.rotate(phiA), self.result.T).T
         self.result += A
     def ccl(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
+        ''' 円軌道の長さ(CCL), 円軌道での方位角変化を求める
+        '''
         delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
         
         if(lenTC1>0):
@@ -90,6 +92,16 @@ class trackplot():
 
         phi_circul = delta_phi - tc1_tmp[1] - tc2_tmp[1] # 円軌道での方位角変化
         return (Radius*phi_circul, phi_circul)
+    def phi_TC(self,lenTC1, Radius, tranfunc):
+        if lenTC1>0:
+            tc1_tmp = self.curvegen.transition_curve(lenTC1,\
+                                              0,\
+                                              Radius,\
+                                              0,\
+                                              tranfunc) # 入口側の緩和曲線
+        else:
+            tc1_tmp=(np.array([[0,0]]),0,0)    
+        return tc1_tmp[1]
 class interface():
     class unit():
         def __init__(self,name,parentwindow,frame,parent,row,color):
@@ -290,7 +302,7 @@ class interface():
             self.curvetrack_e = {}
             self.curvetrack_v = {}
             pos = 0
-            for i in ['TCL α','TCL β','R']:
+            for i in ['TCL α','TCL β','CCL', 'R']:
                 self.curvetrack_l[i] = ttk.Label(self.curvetrack_value_f, text=i)
                 self.curvetrack_l[i].grid(column=pos, row=0, sticky=(tk.E,tk.W))
 
@@ -312,7 +324,11 @@ class interface():
             self.curve_fitmode_v = tk.StringVar(value='1. α(fix)->β(free), R(free)')
             self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v)
             self.curve_fitmode_box.grid(column=2, row=0, sticky=(tk.E,tk.W))
-            self.curve_fitmode_box['values'] = ('1. α(fix)->β(free), R(free)','2. α(free)->β(fix), R(free)','3. α(free)->β(free), R(fix)')
+            self.curve_fitmode_box['values'] = ('1. α(fix)->β(free), R(free)',\
+                                                '2. α(free)->β(fix), R(free)',\
+                                                '3. α(free)->β(free), R(fix)',\
+                                                '4. α(fix), R(fix), CCL(fix)',\
+                                                '5. β(fix), R(fix), CCL(fix)')
             self.curve_fitmode_box.state(["readonly"])
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
@@ -396,19 +412,20 @@ class interface():
         phiB = np.deg2rad(cursor_t.values[2].get())
         lenTC1 = self.curvetrack_v['TCL α'].get()
         lenTC2 = self.curvetrack_v['TCL β'].get()
+        lenCC = self.curvetrack_v['CCL'].get()
         R_input = self.curvetrack_v['R'].get()
         tranfunc = self.curve_transfunc_v.get()
 
         fitmode = self.curve_fitmode_v.get()
 
         trackp = trackplot()
-        if fitmode == '1. α(fix)->β(free), R(free)':
+        if fitmode == self.curve_fitmode_box['values'][0]: #'1. α(fix)->β(free), R(free)'
             result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
             trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
             R_result = result[0]
             CCL_result = trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
             shift_result = np.linalg.norm(result[1][0] - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),result[1][0] - B))
-        elif fitmode == '2. α(free)->β(fix), R(free)':
+        elif fitmode == self.curve_fitmode_box['values'][1]: #'2. α(free)->β(fix), R(free)'
             phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
             phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
             result = sv.curvetrack_fit(B,phiB_inv,A,phiA_inv,lenTC2,lenTC1,tranfunc)
@@ -416,7 +433,7 @@ class interface():
             R_result = -result[0]
             CCL_result = -trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
             shift_result = np.linalg.norm(result[1][0] - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),result[1][0] - A))
-        elif fitmode == '3. α(free)->β(free), R(fix)':
+        elif fitmode == self.curve_fitmode_box['values'][2]: #'3. α(free)->β(free), R(fix)'
             if False:
                 import pdb
                 pdb.set_trace()
@@ -427,11 +444,19 @@ class interface():
             CCL_result = trackp.ccl(A_result,phiA,phiB,R_input,lenTC1,lenTC2,tranfunc)[0]
             shift_result = result[0]
             #print('  x = {:f}'.format(result[0]))
+        elif fitmode == self.curve_fitmode_box['values'][3]: #'4. α(fix), R(fix), CCL(fix)'
+            phi_end = phiA + lenCC/R_input + trackp.phi_TC(lenTC1, R_input, tranfunc) + trackp.phi_TC(lenTC2, R_input, tranfunc)
+            trackp.generate(A, phiA, phi_end, R_input, lenTC1, lenTC2, tranfunc)
+            R_result = R_input
+            CCL_result = lenCC
+            shift_result = 0
+        elif fitmode == self.curve_fitmode_box['values'][4]: #'5. β(fix), R(fix), CCL(fix)'
+            raise Exception('not available 4')
         else:
-            raise('invalid fitmode')
+            raise Exception('invalid fitmode')
 
         # パラメータ、計算結果の印字
-        if fitmode == '1. α(fix)->β(free), R(free)' or fitmode == '2. α(free)->β(fix), R(free)':
+        if fitmode == self.curve_fitmode_box['values'][0] or fitmode == self.curve_fitmode_box['values'][1]: #'1 or 2'
             print()
             print('[Curve fitting]')
             print('Inputs:')
@@ -447,13 +472,13 @@ class interface():
             print('Results:')
             print('   R:   {:f}'.format(R_result))
             print('   CCL: {:f}'.format(CCL_result))
-            if fitmode == '1. α(fix)->β(free), R(free)':
+            if fitmode == self.curve_fitmode_box['values'][0]:
                 print('   endpt:            ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
                 print('   shift from pt. β: {:f}'.format(shift_result))
             else:
                 print('   startpt:          ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
                 print('   shift from pt. α: {:f}'.format(shift_result))
-        elif fitmode == '3. α(free)->β(free), R(fix)':
+        elif fitmode == self.curve_fitmode_box['values'][2]: # 3
             print()
             print('[Curve fitting]')
             print('Inputs:')
@@ -471,32 +496,44 @@ class interface():
             print('   CCL:        {:f}'.format(CCL_result))
             print('   startpoint: ({:f}, {:f})'.format(A_result[0],A_result[1]))
             print('   shift:      {:f}'.format(shift_result))
-
+        elif fitmode == self.curve_fitmode_box['values'][3]: #4
+            print()
+            print('[Curve fitting]')
+            print('Inputs:')
+            print('   Fitmode:          {:s}'.format(fitmode))
+            print('   Cursor α:         {:s}'.format(cursor_f_name))
+            print('   Ponint α:         ({:f}, {:f})'.format(A[0],A[1]))
+            print('   Direction α:      {:f}'.format(cursor_f.values[2].get()))
+            print('   Transition func.: {:s}'.format(tranfunc))
+            print('   TCL α:            {:f}'.format(lenTC1))
+            print('   TCL β:            {:f}'.format(lenTC2))
+            print('   CCL:              {:f}'.format(CCL_result))
+            print('   R:                {:f}'.format(R_input))
+            print('Results:')
+            print('   endpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
+            print('   Δφ:       {:f}'.format(np.rad2deg(phi_end-phiA)))
+            
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
             print()
-            if fitmode == '1. α(fix)->β(free), R(free)':
+            if fitmode == self.curve_fitmode_box['values'][0]:
                 shift = 0
                 print('$pt_a;')
             else:
                 shift = shift_result
                 print('$pt_a {:s}{:f};'.format('+' if shift>=0 else '',shift))
             print('Curve.SetFunction({:d});'.format(0 if tranfunc == 'sin' else 1))
-            #print('Curve.BeginTransition();')
             print('Curve.Interpolate({:f},{:f});'.format(0,0))
             if lenTC1 != 0 or True:
                 tmp = shift + lenTC1
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            #print('Curve.Begin({:f});'.format(R_result))
             print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
             tmp = (shift + lenTC1 + CCL_result)
             print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            #print('Curve.BeginTransition();')
             print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
             if lenTC2 != 0 or True:
                 tmp = (shift + lenTC1 + CCL_result + lenTC2)
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            #print('Curve.End();')
             print('Curve.Interpolate({:f},{:f});'.format(0,0))
             
         ax = self.mainwindow.ax_plane
