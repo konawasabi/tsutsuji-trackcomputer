@@ -200,16 +200,17 @@ class arrow():
         else:
             self.pointerdir.set_UVC(element[0],element[1])
     def settangent(self,pointerpos,reset=False):
-        if reset:
-            pointerpos = self.lastmousepoint
-        origin = np.array([self.p.values[0].get(),self.p.values[1].get()])
-        diff = pointerpos - origin
-        diagonal = np.dot(math.rotate(np.pi),diff) + origin
-        
-        if self.tangentline == None or reset:
-            self.tangentline, = self.ax.plot([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]],'k--',alpha=0.25)
-        else:
-            self.tangentline.set_data([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]])
+        if self.p.values[3].get() == '@absolute':
+            if reset:
+                pointerpos = self.lastmousepoint
+            origin = np.array([self.p.values[0].get(),self.p.values[1].get()])
+            diff = pointerpos - origin
+            diagonal = np.dot(math.rotate(np.pi),diff) + origin
+
+            if self.tangentline == None or reset:
+                self.tangentline, = self.ax.plot([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]],'k--',alpha=0.25)
+            else:
+                self.tangentline.set_data([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]])
     def set_direct(self):
         if self.pointerdir != None:
             self.pointerdir.remove()
