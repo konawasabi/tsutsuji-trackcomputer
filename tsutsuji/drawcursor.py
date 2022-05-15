@@ -145,6 +145,7 @@ class arrow():
         
         self.pointerdir = None
         self.tangentline = None
+        self.lastmousepoint = np.array([0, 0])
     def start(self):
         if self.pointerdir is not None:
             self.pointerdir.remove()
@@ -163,6 +164,7 @@ class arrow():
             if self.track_key == '@absolute':
                 vector = (position - self.pointed_pos)
                 element = vector/np.sqrt(vector[0]**2+vector[1]**2)
+                self.lastmousepoint = np.array([event.xdata, event.ydata])
             else:
                 v_marker = (position - self.pointed_pos)
                 v_track = np.array([np.cos(self.marker.prev_trackpos[4]),np.sin(self.marker.prev_trackpos[4])])
@@ -198,6 +200,8 @@ class arrow():
         else:
             self.pointerdir.set_UVC(element[0],element[1])
     def settangent(self,pointerpos,reset=False):
+        if reset:
+            pointerpos = self.lastmousepoint
         origin = np.array([self.p.values[0].get(),self.p.values[1].get()])
         diff = pointerpos - origin
         diagonal = np.dot(math.rotate(np.pi),diff) + origin

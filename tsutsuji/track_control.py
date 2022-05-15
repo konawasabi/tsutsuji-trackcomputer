@@ -469,25 +469,7 @@ class TrackControl():
             f = open(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))),'w')
             f.write(output_file)
             f.close()
-            print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))            
-    '''
-    def interpolate_with_dist(self, element, tr, cp_dist):
-        def interpolate(aroundzero,ix,typ,cp_dist,base=0):
-            return (aroundzero[:,typ][ix+1]-aroundzero[:,typ][ix])/(aroundzero[:,base][ix+1]-aroundzero[:,base][ix])*(cp_dist-aroundzero[:,base][ix])+aroundzero[:,typ][ix]
-        min_ix = np.argmin(np.abs(self.rel_track[tr][:,0] - cp_dist))
-        
-        if min_ix > 0 and min_ix < len(self.rel_track[tr])-1:
-            aroundzero = self.rel_track[tr][min_ix-1:min_ix+2]
-            sign_dist = np.sign(aroundzero[:,0] - cp_dist)
-            if sign_dist[0] != sign_dist[1]:
-                result = interpolate(aroundzero,0,element,cp_dist)
-            else:
-                result = interpolate(aroundzero,1,element,cp_dist)
-            #result = self.rel_track[tr][pos_ix][element]
-        else:
-            result = self.rel_track[tr][min_ix][element]
-        return result
-    '''
+            print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))
     def convert_cant_with_relativecp(self, tr, cp_dist):
         ''' trで指定した軌道について、対応する距離程でのカントを求める 
         '''
@@ -498,6 +480,8 @@ class TrackControl():
         
         return result
     def take_cp_by_types(self, source, types=None):
+        '''軌道要素が存在する距離程を要素毎にリスト化する
+        '''
         cplist = {}
         for typ in ['radius', 'gradient', 'interpolate_func', 'cant', 'center', 'gauge']:
             cplist[typ] = []
@@ -506,6 +490,8 @@ class TrackControl():
                 cplist[data['key']].append(data['distance'])
         return cplist
     def plot_symbols(self, ax, symboltype):
+        ''' 制御点座標をプロットする
+        '''
         symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x'}
         for tr_l in self.conf.track_keys:
             if symboltype == 'supplemental_cp':

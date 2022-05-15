@@ -16,6 +16,7 @@
   - cfgファイルを起動時に指定する際は-fオプションを前置する
 - 各軌道の制御点を種類別に表示
   - curve, gradient, supplemental_cpの3種類
+- direction設定時の接線をreplot時に再描画
   
 ## [1.1.3] - 2022-05-11
 

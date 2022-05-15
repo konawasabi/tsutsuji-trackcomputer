@@ -345,15 +345,10 @@ class interface():
         self.master = None
     def drawall(self):
         if self.master != None:
-            self.cursor_A.marker.setmarkerobj(pos=True)
-            self.cursor_B.marker.setmarkerobj(pos=True)
-            self.cursor_C.marker.setmarkerobj(pos=True)
-            self.cursor_D.marker.setmarkerobj(pos=True)
-            
-            self.cursor_A.arrow.setobj(None,reset=True)
-            self.cursor_B.arrow.setobj(None,reset=True)
-            self.cursor_C.arrow.setobj(None,reset=True)
-            self.cursor_D.arrow.setobj(None,reset=True)
+            for cursorobj in [self.cursor_A, self.cursor_B, self.cursor_C, self.cursor_D]:
+                cursorobj.marker.setmarkerobj(pos=True)
+                cursorobj.arrow.setobj(None,reset=True)
+                cursorobj.arrow.settangent(None,reset=True)
 
             self.alongcursor_marker.setobj()
     def setdistance(self):
