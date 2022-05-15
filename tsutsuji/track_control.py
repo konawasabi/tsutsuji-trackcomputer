@@ -94,6 +94,7 @@ class TrackControl():
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
                 self.track[i]['cplist_symbol'] = self.take_cp_by_types(self.track[i]['data'].own_track.data)
                 self.track[i]['toshow'] = True
+                self.track[i]['output_mapfile'] = None
     def relativepoint_single(self,to_calc,owntrack=None):
         '''owntrackを基準とした相対座標への変換
 
@@ -466,6 +467,8 @@ class TrackControl():
             output_file += '# Track[\'{:s}\'].Cant.SetGauge\n'.format(tr)
             output_file += output_map['gauge']+'\n'
 
+            self.track[tr]['output_mapfile'] = output_file
+            
             #print(output_file)
             os.makedirs(self.conf.general['output_path'], exist_ok=True)
             f = open(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))),'w')
