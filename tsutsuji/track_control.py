@@ -93,6 +93,7 @@ class TrackControl():
                                                                     theta0 = np.deg2rad(self.conf.track_data[i]['angle']) + pos_origin_abs[4])
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
                 self.track[i]['cplist_symbol'] = self.take_cp_by_types(self.track[i]['data'].own_track.data)
+                self.track[i]['toshow'] = True
     def relativepoint_single(self,to_calc,owntrack=None):
         '''owntrackを基準とした相対座標への変換
 
@@ -260,8 +261,9 @@ class TrackControl():
     def plot2d(self, ax):
         if len(self.track) > 0:
             for i in self.conf.track_keys:
-                tmp = self.track[i]['result']
-                ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
+                if self.track[i]['toshow']:
+                    tmp = self.track[i]['result']
+                    ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
     def drawarea(self, extent_input = None):
@@ -494,9 +496,10 @@ class TrackControl():
         '''
         symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x'}
         for tr_l in self.conf.track_keys:
-            if symboltype == 'supplemental_cp':
-                pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
-            else:
-                pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
-            ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75)
+            if self.track[tr_l]['toshow']:
+                if symboltype == 'supplemental_cp':
+                    pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
+                else:
+                    pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
+                ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75)
         
