@@ -45,6 +45,7 @@ from . import drawcursor
 from . import backimg
 from . import measure
 from ._version import __version__
+from . import trackwindow
 
 class Catcher: # tkinter内で起きた例外をキャッチする
     def __init__(self, func, subst, widget):
@@ -77,6 +78,7 @@ class mainwindow(ttk.Frame):
         self.backimgctrl = backimg.BackImgControl(self)
         self.cursor = drawcursor.cursor(self)
         self.measurewindow = measure.interface(self)
+        self.trackwindow = trackwindow.TrackWindow(self)
 
         self.trackcontrol = track_control.TrackControl()
         
@@ -212,11 +214,11 @@ class mainwindow(ttk.Frame):
         self.menubar = tk.Menu(self.master)
         
         self.menu_file = tk.Menu(self.menubar)
-        self.menu_backimg = tk.Menu(self.menubar)
+        self.menu_setting = tk.Menu(self.menubar)
         self.menu_help = tk.Menu(self.menubar)
         
         self.menubar.add_cascade(menu=self.menu_file, label='ファイル')
-        self.menubar.add_cascade(menu=self.menu_backimg, label='背景画像')
+        self.menubar.add_cascade(menu=self.menu_setting, label='設定')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
         self.menu_file.add_command(label='開く...', command=self.opencfg, accelerator='Control+O')
@@ -224,11 +226,11 @@ class mainwindow(ttk.Frame):
         self.menu_file.add_separator()
         self.menu_file.add_command(label='終了', command=self.ask_quit, accelerator='Alt+F4')
         
-        self.menu_backimg.add_command(label='Window...', command=self.backimgctrl.create_window)
-        
-        self.menu_backimg.add_separator()
-        self.menu_backimg.add_command(label='Load...', command=self.backimgctrl.load_setting)
-        self.menu_backimg.add_command(label='Save...', command=self.backimgctrl.save_setting)
+        self.menu_setting.add_command(label='Backimg...', command=self.backimgctrl.create_window)
+        self.menu_setting.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
+        self.menu_setting.add_command(label='Save Backimg...', command=self.backimgctrl.save_setting)
+        self.menu_setting.add_separator()
+        self.menu_setting.add_command(label='Track...', command=self.trackwindow.create_window)
         
         self.menu_help.add_command(label='ヘルプ...', command=self.open_webdocument)
         self.menu_help.add_command(label='Tsutsujiについて...', command=self.aboutwindow)
