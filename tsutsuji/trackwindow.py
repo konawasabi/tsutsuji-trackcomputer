@@ -96,5 +96,6 @@ class TrackWindow(ttk.Frame):
             self.track_tree.tag_configure(i,foreground=self.mainwindow.trackcontrol.conf.track_data[i]['color'])
             self.track_tree.change_state(i, 'checked' if self.mainwindow.trackcontrol.track[i]['toshow'] else 'unchecked')
     def reset_treevalue(self):
-        if self.master.winfo_exists():
-            self.set_treevalue()
+        if hasattr(self,'master'):
+            if self.master.winfo_exists():
+                self.set_treevalue()
