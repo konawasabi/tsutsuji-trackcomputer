@@ -125,7 +125,7 @@ class mainwindow(ttk.Frame):
         self.replot_btn = ttk.Button(self.button_frame, text="Replot", command = self.drawall)
         self.replot_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
         
-        self.plotarea_frame = ttk.Frame(self.button_frame, padding='3 3 3 3')
+        self.plotarea_frame = ttk.Labelframe(self.button_frame, padding='3 3 3 3', text = 'Plot control')
         self.plotarea_frame.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
 
         self.plotarea_val_frame = ttk.Frame(self.plotarea_frame, padding='3 3 3 3')
@@ -174,7 +174,20 @@ class mainwindow(ttk.Frame):
         self.plotmove_btn_left.grid(column=0, row=1, sticky=(tk.E,tk.W))
         self.plotmove_btn_right.grid(column=2, row=1, sticky=(tk.E,tk.W))
 
-        # --- 
+        # ---
+
+        self.plotarea_symbol_frame = ttk.Labelframe(self.plotarea_frame, padding='3 3 3 3', text = 'Symbols')
+        self.plotarea_symbol_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
+        self.plot_marker_ctrl = {}
+        position = 0
+        for val in ['radius','gradient','supplemental_cp']:
+            self.plot_marker_ctrl[val] = {}
+            self.plot_marker_ctrl[val]['variable'] = tk.BooleanVar(value=False)
+            self.plot_marker_ctrl[val]['widget'] = ttk.Checkbutton(self.plotarea_symbol_frame, text=val, variable=self.plot_marker_ctrl[val]['variable'], onvalue=True, offvalue=False)
+            self.plot_marker_ctrl[val]['widget'].grid(column=0, row=position, sticky=(tk.E,tk.W))
+            position +=1
+
+        # ---
         
         self.measure_btn = ttk.Button(self.button_frame, text="Measure", command = self.measure)
         self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
@@ -252,6 +265,9 @@ class mainwindow(ttk.Frame):
     def drawall(self):
         self.ax_plane.cla()
         self.trackcontrol.plot2d(self.ax_plane)
+        for key in self.plot_marker_ctrl.keys():
+            if self.plot_marker_ctrl[key]['variable'].get():
+                self.trackcontrol.plot_symbols(self.ax_plane,key)
         
         self.measurewindow.drawall()
             

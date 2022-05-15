@@ -92,6 +92,7 @@ class TrackControl():
                                                                     z0 = self.conf.track_data[i]['y'] + pos_origin_abs[3],\
                                                                     theta0 = np.deg2rad(self.conf.track_data[i]['angle']) + pos_origin_abs[4])
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
+                self.track[i]['cplist_symbol'] = self.take_cp_by_types(self.track[i]['data'].own_track.data)
     def relativepoint_single(self,to_calc,owntrack=None):
         '''owntrackを基準とした相対座標への変換
 
@@ -496,5 +497,20 @@ class TrackControl():
             result.append([cp, math.interpolate_with_dist(self.rel_track[tr],8,cp)])
         
         return result
-        
+    def take_cp_by_types(self, source, types=None):
+        cplist = {}
+        for typ in ['radius', 'gradient', 'interpolate_func', 'cant', 'center', 'gauge']:
+            cplist[typ] = []
+        for data in source:
+            if data['key'] in ['radius', 'gradient', 'interpolate_func', 'cant', 'center', 'gauge']:
+                cplist[data['key']].append(data['distance'])
+        return cplist
+    def plot_symbols(self, ax, symboltype):
+        symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x'}
+        for tr_l in self.conf.track_keys:
+            if symboltype == 'supplemental_cp':
+                pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
+            else:
+                pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
+            ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75)
         
