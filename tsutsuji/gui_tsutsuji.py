@@ -256,6 +256,7 @@ class mainwindow(ttk.Frame):
             self.backimgctrl.load_setting(path = self.trackcontrol.conf.general['backimg'])
         elif self.backimgctrl.conf_path is not None:
             self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
+        self.trackwindow.reset_treevalue()
         self.measurewindow.reload_trackkeys()
         self.drawall()
     def reloadcfg(self, event=None):
