@@ -37,6 +37,7 @@ class TrackControl():
         self.rel_track_radius_cp = {}
         self.conf = None
         self.path = None
+        self.generated_othertrack = None
     def loadcfg(self,path):
         '''cfgファイルの読み込み
         '''
@@ -55,6 +56,7 @@ class TrackControl():
             self.rel_track = {}
             self.rel_track_radius = {}
             self.rel_track_radius_cp = {}
+            self.generated_othertrack = None
             for i in self.conf.track_keys:
                 self.track[i] = {}
                 self.track[i]['interp'] = mapinterpreter.ParseMap(env=None,parser=None)
@@ -526,7 +528,7 @@ class TrackControl():
         f.write(output_file)
         f.close()
         print(otmap_path)
-        
+
         ot_interp = mapinterpreter.ParseMap(env=None,parser=None)
         self.ot_map_source = ot_interp.load_files(otmap_path)
         if self.conf.track_data[self.conf.general['owntrack']]['endpoint'] > max(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp):
@@ -542,7 +544,10 @@ class TrackControl():
                                                      z0 = self.conf.track_data[self.conf.general['owntrack']]['y'],\
                                                      theta0 = np.deg2rad(self.conf.track_data[self.conf.general['owntrack']]['angle']))
         self.ot_map_source.owntrack_pos = self.ot_data_ownt.generate_owntrack()
+
+        self.generated_othertrack = {}
         for key in self.ot_map_source.othertrack.data.keys():
             generator = trackgenerator.OtherTrackGenerator(self.ot_map_source,key)
-            data = generator.generate()
-            ax.plot(data[:,1],data[:,2],color='black',alpha=0.5)
+            self.generated_othertrack[key] = generator.generate()
+            #data = generator.generate()
+            #ax.plot(data[:,1],data[:,2],color='black',alpha=0.5)

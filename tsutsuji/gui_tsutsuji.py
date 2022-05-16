@@ -330,6 +330,7 @@ class mainwindow(ttk.Frame):
     def get_othertrack(self, event=None):
         self.trackcontrol.generate_otdata(self.ax_plane)
         self.fig_canvas.draw()
+        self.trackwindow.reset_treevalue()
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa

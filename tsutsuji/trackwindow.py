@@ -95,6 +95,17 @@ class TrackWindow(ttk.Frame):
                                    tags=(i,))
             self.track_tree.tag_configure(i,foreground=self.mainwindow.trackcontrol.conf.track_data[i]['color'])
             self.track_tree.change_state(i, 'checked' if self.mainwindow.trackcontrol.track[i]['toshow'] else 'unchecked')
+
+        if self.track_tree.exists('generated'):
+            self.track_tree.delete('generated')
+        self.track_tree.insert("", "end", 'generated', text='generated', open=True)
+        if self.mainwindow.trackcontrol.generated_othertrack is not None and False:
+            for i in self.mainwindow.trackcontrol.generated_othertrack.keys():
+                self.track_tree.insert("generated", "end", '@'+i, text='@'+i,\
+                                       values=('■■■'),\
+                                       tags=('@'+i,))
+                #self.track_tree.tag_configure(i,foreground=self.mainwindow.trackcontrol.conf.track_data[i]['color'])
+                self.track_tree.change_state('@'+i, 'checked' if self.mainwindow.trackcontrol.track[i]['toshow'] else 'unchecked')
     def reset_treevalue(self):
         if hasattr(self,'master'):
             if self.master.winfo_exists():
