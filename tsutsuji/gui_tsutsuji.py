@@ -349,6 +349,12 @@ def main():
     args = argparser.parse_args()
 
     if args.nogui:
+        if __debug__:
+            def errorcatcher(type, value, tb):
+                #print(type, value, tb,file=sys.stderr)
+                print(value, file=sys.stderr)
+                exit
+            sys.excepthook = errorcatcher
         if args.filepath is None:
             raise Exception('no cfg file')
         trackcontrol = track_control.TrackControl()
