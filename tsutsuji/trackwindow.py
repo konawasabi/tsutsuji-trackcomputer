@@ -72,17 +72,24 @@ class TrackWindow(ttk.Frame):
             if clicked_zone == 'image': #チェックボックスをクリックしたか
                 #ischecked = self.track_tree.get_checked()
                 #print(ischecked)
-                for tkey in self.mainwindow.trackcontrol.track.keys():
-                    self.mainwindow.trackcontrol.track[tkey]['toshow'] = False
-                for tkey in self.track_tree.get_checked():
-                    self.mainwindow.trackcontrol.track[tkey]['toshow'] = True
+                if '@' not in clicked_track:
+                    for tkey in self.mainwindow.trackcontrol.track.keys():
+                        self.mainwindow.trackcontrol.track[tkey]['toshow'] = False
+                    for tkey in self.track_tree.get_checked():
+                        self.mainwindow.trackcontrol.track[tkey]['toshow'] = True
             elif clicked_zone == 'text':
                 if clicked_column == '#1': #ラインカラーをクリックしたか
-                    nowcolor = self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color']
+                    if '@' not in clicked_track:
+                        nowcolor = self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color']
+                    else:
+                        nowcolor = '#000000'
                     inputdata = colorchooser.askcolor(color=nowcolor)
                     if inputdata[1] != None:
-                        self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color'] = inputdata[1]
-                        self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
+                        if '@' not in clicked_track:
+                            self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color'] = inputdata[1]
+                            self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
+                        else:
+                            self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
                 
     def set_treevalue(self):
         if self.track_tree.exists('root'):
@@ -99,9 +106,9 @@ class TrackWindow(ttk.Frame):
         if self.track_tree.exists('generated'):
             self.track_tree.delete('generated')
         self.track_tree.insert("", "end", 'generated', text='generated', open=True)
-        if self.mainwindow.trackcontrol.generated_othertrack is not None and False:
+        if self.mainwindow.trackcontrol.generated_othertrack is not None:
             for i in self.mainwindow.trackcontrol.generated_othertrack.keys():
-                self.track_tree.insert("generated", "end", '@'+i, text='@'+i,\
+                self.track_tree.insert("generated", "end", '@'+i, text=i,\
                                        values=('■■■'),\
                                        tags=('@'+i,))
                 #self.track_tree.tag_configure(i,foreground=self.mainwindow.trackcontrol.conf.track_data[i]['color'])
