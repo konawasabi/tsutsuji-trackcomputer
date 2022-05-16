@@ -204,6 +204,9 @@ class mainwindow(ttk.Frame):
 
             self.printpos_btn = ttk.Button(self.button_frame, text="P. Pos", command = self.draw_tracks_cp)
             self.printpos_btn.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E))
+
+            self.othertrack_btn = ttk.Button(self.button_frame, text="OtherTrack", command = self.get_othertrack)
+            self.othertrack_btn.grid(column=0, row=6, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
@@ -324,7 +327,9 @@ class mainwindow(ttk.Frame):
     def sendtopmost(self,event=None):
         self.master.lift()
         self.master.focus_force()
-    
+    def get_othertrack(self, event=None):
+        self.trackcontrol.generate_otdata(self.ax_plane)
+        self.fig_canvas.draw()
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
