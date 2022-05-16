@@ -475,6 +475,8 @@ class TrackControl():
             f.write(output_file)
             f.close()
             print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))
+
+        self.generate_otdata()
     def convert_cant_with_relativecp(self, tr, cp_dist):
         ''' trで指定した軌道について、対応する距離程でのカントを求める 
         '''
@@ -505,4 +507,40 @@ class TrackControl():
                 else:
                     pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
                 ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75)
+    def generate_otdata(self):
+        
+        if True:
+            import pdb
+            pdb.set_trace()
+        output_file = ''
+        output_file += 'BveTs Map 2.02:utf-8\n\n'
+
+        path = self.conf.track_data[self.conf.general['owntrack']]['file']
+        output_file += 'include \'{:s}\';\n'.format(str(path))
+
+        for tr_l in [i for i in self.conf.track_keys if i!= self.conf.general['owntrack']]:
+            path = self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr_l)))
+            output_file += 'include \'{:s}\';\n'.format(str(path))
+
+        otmap_path = self.conf.general['output_path'].joinpath(pathlib.Path('tmpmap.txt'))
+        f = open(otmap_path,'w')
+        f.write(output_file)
+        f.close()
+        print(otmap_path)
+        
+        ot_interp = mapinterpreter.ParseMap(env=None,parser=None)
+        ot_map_source = ot_interp.load_files(otmap_path)
+        if self.conf.track_data[self.conf.general['owntrack']]['endpoint'] > max(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp):
+            endkp = self.conf.track_data[self.conf.general['owntrack']]['endpoint']
+        else:
+            endkp = max(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp)
+        ot_map_source.cp_arbdistribution = [min(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp),\
+                                            endkp + self.conf.general['unit_length'],\
+                                            self.conf.general['unit_length']]
+        self.ot_data = trackgenerator.TrackGenerator(ot_map_source,\
+                                                     x0 = self.conf.track_data[self.conf.general['owntrack']]['z'],\
+                                                     y0 = self.conf.track_data[self.conf.general['owntrack']]['x'],\
+                                                     z0 = self.conf.track_data[self.conf.general['owntrack']]['y'],\
+                                                     theta0 = np.deg2rad(self.conf.track_data[self.conf.general['owntrack']]['angle']))
+        #print(self.ot_data)
         
