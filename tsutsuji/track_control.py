@@ -519,7 +519,7 @@ class TrackControl():
             import pdb
             pdb.set_trace()
         output_file = ''
-        output_file += 'BveTs Map 2.02:utf-8\n\n'
+        #output_file += 'BveTs Map 2.02:utf-8\n\n'
 
         path = self.conf.track_data[self.conf.general['owntrack']]['file']
         output_file += 'include \'{:s}\';\n'.format(str(path))
@@ -529,13 +529,24 @@ class TrackControl():
             output_file += 'include \'{:s}\';\n'.format(str(path))
 
         otmap_path = self.conf.general['output_path'].joinpath(pathlib.Path('tmpmap.txt'))
-        f = open(otmap_path,'w')
-        f.write(output_file)
-        f.close()
-        print(otmap_path)
 
+        '''
+        f = open(otmap_path,'w')
+        f.write('BveTs Map 2.02:utf-8\n\n'+output_file)
+        f.close()
+        #print(otmap_path)
+        '''
+        
         ot_interp = mapinterpreter.ParseMap(env=None,parser=None)
+        '''
         self.ot_map_source = ot_interp.load_files(otmap_path)
+        os.remove(otmap_path)
+        '''
+        self.ot_map_source = ot_interp.load_files(None,\
+                                                  datastring = output_file,\
+                                                  virtualroot = pathlib.Path(self.conf.general['output_path']),\
+                                                  virtualfilename = otmap_path)
+        
         if self.conf.track_data[self.conf.general['owntrack']]['endpoint'] > max(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp):
             endkp = self.conf.track_data[self.conf.general['owntrack']]['endpoint']
         else:
@@ -554,5 +565,3 @@ class TrackControl():
         for key in self.ot_map_source.othertrack.data.keys():
             generator = trackgenerator.OtherTrackGenerator(self.ot_map_source,key)
             self.generated_othertrack[key]={'data':generator.generate(), 'toshow':True, 'color':'#000000'}
-            #data = generator.generate()
-            #ax.plot(data[:,1],data[:,2],color='black',alpha=0.5)
