@@ -17,6 +17,8 @@
 '''
 '''
 
+import re
+
 import tkinter as tk
 from tkinter import ttk
 import tkinter.simpledialog as simpledialog
@@ -68,27 +70,40 @@ class TrackWindow(ttk.Frame):
         if event != None:
             clicked_column = self.track_tree.identify_column(event.x)
             clicked_track = self.track_tree.identify_row(event.y)
+            clicked_track_rematt = re.sub('@','',clicked_track)
             clicked_zone = getattr(event, 'widget').identify("element", event.x, event.y)
             if clicked_zone == 'image': #チェックボックスをクリックしたか
                 #ischecked = self.track_tree.get_checked()
                 #print(ischecked)
-                if '@' not in clicked_track:
+                if clicked_track == 'root':
                     for tkey in self.mainwindow.trackcontrol.track.keys():
                         self.mainwindow.trackcontrol.track[tkey]['toshow'] = False
                     for tkey in self.track_tree.get_checked():
-                        self.mainwindow.trackcontrol.track[tkey]['toshow'] = True
+                        if '@' not in tkey:
+                            self.mainwindow.trackcontrol.track[tkey]['toshow'] = True
+                elif clicked_track == 'generated':
+                    for tkey in self.mainwindow.trackcontrol.generated_othertrack.keys():
+                        self.mainwindow.trackcontrol.generated_othertrack[tkey]['toshow'] = False
+                    for tkey in self.track_tree.get_checked():
+                        if '@' in tkey:
+                            self.mainwindow.trackcontrol.generated_othertrack[re.sub('@','',tkey)]['toshow'] = True
+                elif '@' not in clicked_track:
+                    self.mainwindow.trackcontrol.track[clicked_track]['toshow'] = not self.mainwindow.trackcontrol.track[clicked_track]['toshow']
+                else:
+                    self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['toshow'] = not self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['toshow']
             elif clicked_zone == 'text':
                 if clicked_column == '#1': #ラインカラーをクリックしたか
                     if '@' not in clicked_track:
                         nowcolor = self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color']
                     else:
-                        nowcolor = '#000000'
+                        nowcolor = self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['color']
                     inputdata = colorchooser.askcolor(color=nowcolor)
                     if inputdata[1] != None:
                         if '@' not in clicked_track:
                             self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color'] = inputdata[1]
                             self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
                         else:
+                            self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['color'] = inputdata[1]
                             self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
                 
     def set_treevalue(self):
@@ -111,8 +126,8 @@ class TrackWindow(ttk.Frame):
                 self.track_tree.insert("generated", "end", '@'+i, text=i,\
                                        values=('■■■'),\
                                        tags=('@'+i,))
-                #self.track_tree.tag_configure(i,foreground=self.mainwindow.trackcontrol.conf.track_data[i]['color'])
-                self.track_tree.change_state('@'+i, 'checked' if self.mainwindow.trackcontrol.track[i]['toshow'] else 'unchecked')
+                self.track_tree.tag_configure('@'+i,foreground=self.mainwindow.trackcontrol.generated_othertrack[i]['color'])
+                self.track_tree.change_state('@'+i, 'checked' if self.mainwindow.trackcontrol.generated_othertrack[i]['toshow'] else 'unchecked')
     def reset_treevalue(self):
         if hasattr(self,'master'):
             if self.master.winfo_exists():

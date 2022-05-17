@@ -269,6 +269,11 @@ class TrackControl():
                     ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
+        if self.generated_othertrack is not None:
+            for otrack in self.generated_othertrack.keys():
+                if self.generated_othertrack[otrack]['toshow']:
+                    tmp = self.generated_othertrack[otrack]['data']
+                    ax.plot(tmp[:,1],tmp[:,2],color=self.generated_othertrack[otrack]['color'])
     def drawarea(self, extent_input = None):
         extent = [0,0,0,0] if extent_input == None else extent_input
         if len(self.track) > 0:
@@ -548,6 +553,6 @@ class TrackControl():
         self.generated_othertrack = {}
         for key in self.ot_map_source.othertrack.data.keys():
             generator = trackgenerator.OtherTrackGenerator(self.ot_map_source,key)
-            self.generated_othertrack[key] = generator.generate()
+            self.generated_othertrack[key]={'data':generator.generate(), 'toshow':True, 'color':'#000000'}
             #data = generator.generate()
             #ax.plot(data[:,1],data[:,2],color='black',alpha=0.5)
