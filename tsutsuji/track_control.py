@@ -513,13 +513,16 @@ class TrackControl():
                 else:
                     pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
                 ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75)
-    def generate_otdata(self,ax):
+    def generate_otdata(self):
+        ''' generate結果から他軌道座標データを生成する
+        '''
         
         if False:
             import pdb
             pdb.set_trace()
+
+        # generate結果をincludeする擬似マップファイルを生成
         output_file = ''
-        #output_file += 'BveTs Map 2.02:utf-8\n\n'
 
         path = self.conf.track_data[self.conf.general['owntrack']]['file']
         output_file += 'include \'{:s}\';\n'.format(str(path))
@@ -530,23 +533,14 @@ class TrackControl():
 
         otmap_path = self.conf.general['output_path'].joinpath(pathlib.Path('tmpmap.txt'))
 
-        '''
-        f = open(otmap_path,'w')
-        f.write('BveTs Map 2.02:utf-8\n\n'+output_file)
-        f.close()
-        #print(otmap_path)
-        '''
-        
+        # kobushi-trackviewerのマップパーサーへoutput_fileを渡す
         ot_interp = mapinterpreter.ParseMap(env=None,parser=None)
-        '''
-        self.ot_map_source = ot_interp.load_files(otmap_path)
-        os.remove(otmap_path)
-        '''
         self.ot_map_source = ot_interp.load_files(None,\
                                                   datastring = output_file,\
                                                   virtualroot = pathlib.Path(self.conf.general['output_path']),\
                                                   virtualfilename = otmap_path)
-        
+
+        # 座標生成する距離程範囲を設定
         if self.conf.track_data[self.conf.general['owntrack']]['endpoint'] > max(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp):
             endkp = self.conf.track_data[self.conf.general['owntrack']]['endpoint']
         else:
@@ -554,6 +548,8 @@ class TrackControl():
         self.ot_map_source.cp_arbdistribution = [min(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp),\
                                             endkp + self.conf.general['unit_length'],\
                                             self.conf.general['unit_length']]
+
+        # kobushi-trackviewerの軌道ジェネレータで自軌道座標を生成
         self.ot_data_ownt = trackgenerator.TrackGenerator(self.ot_map_source,\
                                                      x0 = self.conf.track_data[self.conf.general['owntrack']]['z'],\
                                                      y0 = self.conf.track_data[self.conf.general['owntrack']]['x'],\
@@ -561,6 +557,7 @@ class TrackControl():
                                                      theta0 = np.deg2rad(self.conf.track_data[self.conf.general['owntrack']]['angle']))
         self.ot_map_source.owntrack_pos = self.ot_data_ownt.generate_owntrack()
 
+        # 他軌道座標、プロット制御パラメータを生成
         self.generated_othertrack = {}
         for key in self.ot_map_source.othertrack.data.keys():
             generator = trackgenerator.OtherTrackGenerator(self.ot_map_source,key)

@@ -329,7 +329,7 @@ class mainwindow(ttk.Frame):
         self.master.lift()
         self.master.focus_force()
     def get_othertrack(self, event=None):
-        self.trackcontrol.generate_otdata(self.ax_plane)
+        self.trackcontrol.generate_otdata()
         self.trackwindow.reset_treevalue()
         self.drawall()
 def main():
