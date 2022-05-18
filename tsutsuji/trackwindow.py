@@ -100,7 +100,7 @@ class TrackWindow(ttk.Frame):
                         else:
                             self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['color'] = inputdata[1]
                             self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
-                
+            self.mainwindow.drawall()
     def set_treevalue(self):
         ''' 軌道データをツリーリストに表示する
         '''
