@@ -352,7 +352,7 @@ def main():
         print('Debug mode')
 
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('-f', '--filepath', type=str, help='map cfg')
+    argparser.add_argument('filepath', metavar='F', type=str, help='input cfg file', nargs='?')
     argparser.add_argument('-n', '--nogui', help='no gui mode', action='store_true')
     args = argparser.parse_args()
 
