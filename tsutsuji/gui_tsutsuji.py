@@ -195,7 +195,7 @@ class mainwindow(ttk.Frame):
         self.measure_btn = ttk.Button(self.button_frame, text="Measure", command = self.measure)
         self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
 
-        self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.get_relativepos_rad)
+        self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
         self.getrelrad_btn.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E))
 
         if not __debug__:
@@ -313,8 +313,9 @@ class mainwindow(ttk.Frame):
     def draw_tracks_cp(self):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
-    def get_relativepos_rad(self):
+    def generate_output(self):
         self.trackcontrol.generate_mapdata()
+        self.get_othertrack()
     def aboutwindow(self, event=None):
         msg  = 'Tsutsuji trackcomputer\n'
         msg += 'Version '+__version__+'\n\n'
