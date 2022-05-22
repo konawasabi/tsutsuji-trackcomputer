@@ -78,6 +78,15 @@ tsutsuji.track\_control module
    :undoc-members:
    :show-inheritance:
 
+tsutsuji.trackwindow module
+------------------------------
+
+.. automodule:: tsutsuji.trackwindow
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 Module contents
 ---------------
 
