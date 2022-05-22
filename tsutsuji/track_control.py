@@ -273,6 +273,7 @@ class TrackControl():
             for otrack in self.generated_othertrack.keys():
                 if self.generated_othertrack[otrack]['toshow']:
                     tmp = self.generated_othertrack[otrack]['data']
+                    tmp = tmp[tmp[:,0]<=self.generated_othertrack[otrack]['distrange']['max']]
                     ax.plot(tmp[:,1],tmp[:,2],color=self.generated_othertrack[otrack]['color'])
     def drawarea(self, extent_input = None):
         extent = [0,0,0,0] if extent_input == None else extent_input
@@ -561,4 +562,8 @@ class TrackControl():
         self.generated_othertrack = {}
         for key in self.ot_map_source.othertrack.data.keys():
             generator = trackgenerator.OtherTrackGenerator(self.ot_map_source,key)
-            self.generated_othertrack[key]={'data':generator.generate(), 'toshow':True, 'color':'#000000'}
+            self.generated_othertrack[key]={'data':generator.generate(),\
+                                            'toshow':True,\
+                                            'color':'#000000',\
+                                            #'controlpoints':[i['distance'] for i in self.ot_map_source.othertrack.data[key]],\
+                                            'distrange':generator.distrange}
