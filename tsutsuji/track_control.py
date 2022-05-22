@@ -37,6 +37,7 @@ class TrackControl():
         self.rel_track_radius_cp = {}
         self.conf = None
         self.path = None
+        self.generated_othertrack = None
     def loadcfg(self,path):
         '''cfgファイルの読み込み
         '''
@@ -55,6 +56,7 @@ class TrackControl():
             self.rel_track = {}
             self.rel_track_radius = {}
             self.rel_track_radius_cp = {}
+            self.generated_othertrack = None
             for i in self.conf.track_keys:
                 self.track[i] = {}
                 self.track[i]['interp'] = mapinterpreter.ParseMap(env=None,parser=None)
@@ -92,6 +94,9 @@ class TrackControl():
                                                                     z0 = self.conf.track_data[i]['y'] + pos_origin_abs[3],\
                                                                     theta0 = np.deg2rad(self.conf.track_data[i]['angle']) + pos_origin_abs[4])
                 self.track[i]['result'] = self.track[i]['tgen'].generate_owntrack()
+                self.track[i]['cplist_symbol'] = self.take_cp_by_types(self.track[i]['data'].own_track.data)
+                self.track[i]['toshow'] = True
+                self.track[i]['output_mapfile'] = None
     def relativepoint_single(self,to_calc,owntrack=None):
         '''owntrackを基準とした相対座標への変換
 
@@ -259,10 +264,17 @@ class TrackControl():
     def plot2d(self, ax):
         if len(self.track) > 0:
             for i in self.conf.track_keys:
-                tmp = self.track[i]['result']
-                ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
+                if self.track[i]['toshow']:
+                    tmp = self.track[i]['result']
+                    ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
+        if self.generated_othertrack is not None:
+            for otrack in self.generated_othertrack.keys():
+                if self.generated_othertrack[otrack]['toshow']:
+                    tmp = self.generated_othertrack[otrack]['data']
+                    tmp = tmp[tmp[:,0]<=self.generated_othertrack[otrack]['distrange']['max']]
+                    ax.plot(tmp[:,1],tmp[:,2],color=self.generated_othertrack[otrack]['color'])
     def drawarea(self, extent_input = None):
         extent = [0,0,0,0] if extent_input == None else extent_input
         if len(self.track) > 0:
@@ -463,30 +475,15 @@ class TrackControl():
             output_file += '# Track[\'{:s}\'].Cant.SetGauge\n'.format(tr)
             output_file += output_map['gauge']+'\n'
 
+            self.track[tr]['output_mapfile'] = output_file
+            
             #print(output_file)
             os.makedirs(self.conf.general['output_path'], exist_ok=True)
             f = open(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))),'w')
             f.write(output_file)
             f.close()
-            print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))            
-    '''
-    def interpolate_with_dist(self, element, tr, cp_dist):
-        def interpolate(aroundzero,ix,typ,cp_dist,base=0):
-            return (aroundzero[:,typ][ix+1]-aroundzero[:,typ][ix])/(aroundzero[:,base][ix+1]-aroundzero[:,base][ix])*(cp_dist-aroundzero[:,base][ix])+aroundzero[:,typ][ix]
-        min_ix = np.argmin(np.abs(self.rel_track[tr][:,0] - cp_dist))
-        
-        if min_ix > 0 and min_ix < len(self.rel_track[tr])-1:
-            aroundzero = self.rel_track[tr][min_ix-1:min_ix+2]
-            sign_dist = np.sign(aroundzero[:,0] - cp_dist)
-            if sign_dist[0] != sign_dist[1]:
-                result = interpolate(aroundzero,0,element,cp_dist)
-            else:
-                result = interpolate(aroundzero,1,element,cp_dist)
-            #result = self.rel_track[tr][pos_ix][element]
-        else:
-            result = self.rel_track[tr][min_ix][element]
-        return result
-    '''
+            print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))
+
     def convert_cant_with_relativecp(self, tr, cp_dist):
         ''' trで指定した軌道について、対応する距離程でのカントを求める 
         '''
@@ -496,5 +493,77 @@ class TrackControl():
             result.append([cp, math.interpolate_with_dist(self.rel_track[tr],8,cp)])
         
         return result
+    def take_cp_by_types(self, source, types=None):
+        '''軌道要素が存在する距離程を要素毎にリスト化する
+        '''
+        cplist = {}
+        for typ in ['radius', 'gradient', 'interpolate_func', 'cant', 'center', 'gauge']:
+            cplist[typ] = []
+        for data in source:
+            if data['key'] in ['radius', 'gradient', 'interpolate_func', 'cant', 'center', 'gauge']:
+                cplist[data['key']].append(data['distance'])
+        return cplist
+    def plot_symbols(self, ax, symboltype):
+        ''' 制御点座標をプロットする
+        '''
+        symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x'}
+        for tr_l in self.conf.track_keys:
+            if self.track[tr_l]['toshow']:
+                if symboltype == 'supplemental_cp':
+                    pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
+                else:
+                    pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
+                ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75)
+    def generate_otdata(self):
+        ''' generate結果から他軌道座標データを生成する
+        '''
         
-        
+        if False:
+            import pdb
+            pdb.set_trace()
+
+        # generate結果をincludeする擬似マップファイルを生成
+        output_file = ''
+
+        path = self.conf.track_data[self.conf.general['owntrack']]['file']
+        output_file += 'include \'{:s}\';\n'.format(str(path))
+
+        for tr_l in [i for i in self.conf.track_keys if i!= self.conf.general['owntrack']]:
+            path = self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr_l)))
+            output_file += 'include \'{:s}\';\n'.format(str(path))
+
+        otmap_path = self.conf.general['output_path'].joinpath(pathlib.Path('tmpmap.txt'))
+
+        # kobushi-trackviewerのマップパーサーへoutput_fileを渡す
+        ot_interp = mapinterpreter.ParseMap(env=None,parser=None)
+        self.ot_map_source = ot_interp.load_files(None,\
+                                                  datastring = output_file,\
+                                                  virtualroot = pathlib.Path(self.conf.general['output_path']),\
+                                                  virtualfilename = otmap_path)
+
+        # 座標生成する距離程範囲を設定
+        if self.conf.track_data[self.conf.general['owntrack']]['endpoint'] > max(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp):
+            endkp = self.conf.track_data[self.conf.general['owntrack']]['endpoint']
+        else:
+            endkp = max(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp)
+        self.ot_map_source.cp_arbdistribution = [min(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp),\
+                                            endkp + self.conf.general['unit_length'],\
+                                            self.conf.general['unit_length']]
+
+        # kobushi-trackviewerの軌道ジェネレータで自軌道座標を生成
+        self.ot_data_ownt = trackgenerator.TrackGenerator(self.ot_map_source,\
+                                                     x0 = self.conf.track_data[self.conf.general['owntrack']]['z'],\
+                                                     y0 = self.conf.track_data[self.conf.general['owntrack']]['x'],\
+                                                     z0 = self.conf.track_data[self.conf.general['owntrack']]['y'],\
+                                                     theta0 = np.deg2rad(self.conf.track_data[self.conf.general['owntrack']]['angle']))
+        self.ot_map_source.owntrack_pos = self.ot_data_ownt.generate_owntrack()
+
+        # 他軌道座標、プロット制御パラメータを生成
+        self.generated_othertrack = {}
+        for key in self.ot_map_source.othertrack.data.keys():
+            generator = trackgenerator.OtherTrackGenerator(self.ot_map_source,key)
+            self.generated_othertrack[key]={'data':generator.generate(),\
+                                            'toshow':True,\
+                                            'color':'#000000',\
+                                            #'controlpoints':[i['distance'] for i in self.ot_map_source.othertrack.data[key]],\
+                                            'distrange':generator.distrange}

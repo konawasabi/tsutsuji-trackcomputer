@@ -21,6 +21,7 @@ import sys
 import pathlib
 import os
 import webbrowser
+import argparse
 
 import tkinter as tk
 from tkinter import ttk
@@ -44,6 +45,7 @@ from . import drawcursor
 from . import backimg
 from . import measure
 from ._version import __version__
+from . import trackwindow
 
 class Catcher: # tkinter内で起きた例外をキャッチする
     def __init__(self, func, subst, widget):
@@ -65,6 +67,7 @@ class Catcher: # tkinter内で起きた例外をキャッチする
 
 class mainwindow(ttk.Frame):
     def __init__(self, master):
+        self.parent = master
         super().__init__(master, padding='3 3 3 3')
         self.master.title('Tsutsuji')
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -76,6 +79,7 @@ class mainwindow(ttk.Frame):
         self.backimgctrl = backimg.BackImgControl(self)
         self.cursor = drawcursor.cursor(self)
         self.measurewindow = measure.interface(self)
+        self.trackwindow = trackwindow.TrackWindow(self)
 
         self.trackcontrol = track_control.TrackControl()
         
@@ -124,7 +128,7 @@ class mainwindow(ttk.Frame):
         self.replot_btn = ttk.Button(self.button_frame, text="Replot", command = self.drawall)
         self.replot_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
         
-        self.plotarea_frame = ttk.Frame(self.button_frame, padding='3 3 3 3')
+        self.plotarea_frame = ttk.Labelframe(self.button_frame, padding='3 3 3 3', text = 'Plot control')
         self.plotarea_frame.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
 
         self.plotarea_val_frame = ttk.Frame(self.plotarea_frame, padding='3 3 3 3')
@@ -173,12 +177,25 @@ class mainwindow(ttk.Frame):
         self.plotmove_btn_left.grid(column=0, row=1, sticky=(tk.E,tk.W))
         self.plotmove_btn_right.grid(column=2, row=1, sticky=(tk.E,tk.W))
 
-        # --- 
+        # ---
+
+        self.plotarea_symbol_frame = ttk.Labelframe(self.plotarea_frame, padding='3 3 3 3', text = 'Symbols')
+        self.plotarea_symbol_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
+        self.plot_marker_ctrl = {}
+        position = 0
+        for val in ['radius','gradient','supplemental_cp']:
+            self.plot_marker_ctrl[val] = {}
+            self.plot_marker_ctrl[val]['variable'] = tk.BooleanVar(value=False)
+            self.plot_marker_ctrl[val]['widget'] = ttk.Checkbutton(self.plotarea_symbol_frame, text=val, variable=self.plot_marker_ctrl[val]['variable'], onvalue=True, offvalue=False)
+            self.plot_marker_ctrl[val]['widget'].grid(column=0, row=position, sticky=(tk.E,tk.W))
+            position +=1
+
+        # ---
         
         self.measure_btn = ttk.Button(self.button_frame, text="Measure", command = self.measure)
         self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
 
-        self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.get_relativepos_rad)
+        self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
         self.getrelrad_btn.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E))
 
         if not __debug__:
@@ -187,6 +204,9 @@ class mainwindow(ttk.Frame):
 
             self.printpos_btn = ttk.Button(self.button_frame, text="P. Pos", command = self.draw_tracks_cp)
             self.printpos_btn.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E))
+
+            self.othertrack_btn = ttk.Button(self.button_frame, text="OtherTrack", command = self.get_othertrack)
+            self.othertrack_btn.grid(column=0, row=6, sticky=(tk.N, tk.W, tk.E))
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)
@@ -198,11 +218,11 @@ class mainwindow(ttk.Frame):
         self.menubar = tk.Menu(self.master)
         
         self.menu_file = tk.Menu(self.menubar)
-        self.menu_backimg = tk.Menu(self.menubar)
+        self.menu_option = tk.Menu(self.menubar)
         self.menu_help = tk.Menu(self.menubar)
         
         self.menubar.add_cascade(menu=self.menu_file, label='ファイル')
-        self.menubar.add_cascade(menu=self.menu_backimg, label='背景画像')
+        self.menubar.add_cascade(menu=self.menu_option, label='オプション')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
         self.menu_file.add_command(label='開く...', command=self.opencfg, accelerator='Control+O')
@@ -210,11 +230,11 @@ class mainwindow(ttk.Frame):
         self.menu_file.add_separator()
         self.menu_file.add_command(label='終了', command=self.ask_quit, accelerator='Alt+F4')
         
-        self.menu_backimg.add_command(label='Window...', command=self.backimgctrl.create_window)
-        
-        self.menu_backimg.add_separator()
-        self.menu_backimg.add_command(label='Load...', command=self.backimgctrl.load_setting)
-        self.menu_backimg.add_command(label='Save...', command=self.backimgctrl.save_setting)
+        self.menu_option.add_command(label='Backimg...', command=self.backimgctrl.create_window)
+        self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
+        self.menu_option.add_command(label='Save Backimg...', command=self.backimgctrl.save_setting)
+        self.menu_option.add_separator()
+        self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
         
         self.menu_help.add_command(label='ヘルプ...', command=self.open_webdocument)
         self.menu_help.add_command(label='Tsutsujiについて...', command=self.aboutwindow)
@@ -239,6 +259,7 @@ class mainwindow(ttk.Frame):
             self.backimgctrl.load_setting(path = self.trackcontrol.conf.general['backimg'])
         elif self.backimgctrl.conf_path is not None:
             self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
+        self.trackwindow.reset_treevalue()
         self.measurewindow.reload_trackkeys()
         self.drawall()
     def reloadcfg(self, event=None):
@@ -251,6 +272,9 @@ class mainwindow(ttk.Frame):
     def drawall(self):
         self.ax_plane.cla()
         self.trackcontrol.plot2d(self.ax_plane)
+        for key in self.plot_marker_ctrl.keys():
+            if self.plot_marker_ctrl[key]['variable'].get():
+                self.trackcontrol.plot_symbols(self.ax_plane,key)
         
         self.measurewindow.drawall()
             
@@ -289,8 +313,9 @@ class mainwindow(ttk.Frame):
     def draw_tracks_cp(self):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
-    def get_relativepos_rad(self):
+    def generate_output(self):
         self.trackcontrol.generate_mapdata()
+        self.get_othertrack()
     def aboutwindow(self, event=None):
         msg  = 'Tsutsuji trackcomputer\n'
         msg += 'Version '+__version__+'\n\n'
@@ -303,7 +328,10 @@ class mainwindow(ttk.Frame):
     def sendtopmost(self,event=None):
         self.master.lift()
         self.master.focus_force()
-    
+    def get_othertrack(self, event=None):
+        self.trackcontrol.generate_otdata()
+        self.trackwindow.reset_treevalue()
+        self.drawall()
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
@@ -321,10 +349,31 @@ def main():
                 pdb.pm()
         sys.excepthook = info
         print('Debug mode')
-    
-    tk.CallWrapper = Catcher
-    root = tk.Tk()
-    app = mainwindow(master=root)
-    if len(sys.argv)>1:
-        app.opencfg(in_dir=sys.argv[1])
-    app.mainloop()
+
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('filepath', metavar='F', type=str, help='input cfg file', nargs='?')
+    argparser.add_argument('-n', '--nogui', help='no gui mode', action='store_true')
+    args = argparser.parse_args()
+
+    if args.nogui:
+        if __debug__:
+            def errorcatcher(type, value, tb):
+                #print(type, value, tb,file=sys.stderr)
+                print(value, file=sys.stderr)
+                exit
+            sys.excepthook = errorcatcher
+        if args.filepath is None:
+            raise Exception('no cfg file')
+        trackcontrol = track_control.TrackControl()
+        trackcontrol.loadcfg(args.filepath)
+        trackcontrol.loadmap()
+        trackcontrol.generate_mapdata()
+    else:
+        tk.CallWrapper = Catcher
+        root = tk.Tk()
+        app = mainwindow(master=root)
+        #if len(sys.argv)>1:
+        #    app.opencfg(in_dir=sys.argv[1])
+        if args.filepath is not None:
+            app.opencfg(in_dir=args.filepath)
+        app.mainloop()

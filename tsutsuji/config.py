@@ -28,7 +28,12 @@ class Config():
         sections = cp.sections()
         self.track_keys = [i for i in sections if i != '@TSUTSUJI_GENERAL']
         
-        self.general = {'origin_distance':0, 'offset_variable':None, 'unit_length':1, 'owntrack':None, 'output_path':'./result', 'backimg':None}
+        self.general = {'origin_distance':0,\
+                        'offset_variable':None,\
+                        'unit_length':1,\
+                        'owntrack':None,\
+                        'output_path':'./result',\
+                        'backimg':None}
         if '@TSUTSUJI_GENERAL' in sections:
             for k in cp.options('@TSUTSUJI_GENERAL'):
                 self.general[k] = cp['@TSUTSUJI_GENERAL'][k] if k not in ['origin_distance', 'unit_length'] else float(cp['@TSUTSUJI_GENERAL'][k])

@@ -345,15 +345,10 @@ class interface():
         self.master = None
     def drawall(self):
         if self.master != None:
-            self.cursor_A.marker.setmarkerobj(pos=True)
-            self.cursor_B.marker.setmarkerobj(pos=True)
-            self.cursor_C.marker.setmarkerobj(pos=True)
-            self.cursor_D.marker.setmarkerobj(pos=True)
-            
-            self.cursor_A.arrow.setobj(None,reset=True)
-            self.cursor_B.arrow.setobj(None,reset=True)
-            self.cursor_C.arrow.setobj(None,reset=True)
-            self.cursor_D.arrow.setobj(None,reset=True)
+            for cursorobj in [self.cursor_A, self.cursor_B, self.cursor_C, self.cursor_D]:
+                cursorobj.marker.setmarkerobj(pos=True)
+                cursorobj.arrow.setobj(None,reset=True)
+                cursorobj.arrow.settangent(None,reset=True)
 
             self.alongcursor_marker.setobj()
     def setdistance(self):
@@ -517,10 +512,10 @@ class interface():
             print('Results:')
             if fitmode == self.curve_fitmode_box['values'][3]:
                 print('   endpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
-                print('   Δφ:       {:f}'.format(np.rad2deg(phi_end-phiA)))
+                print('   phi_end:  {:f}'.format(np.rad2deg(phi_end)))
             else:
                 print('   startpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
-                print('   Δφ:         {:f}'.format(np.rad2deg(phiB-phi_end)))
+                print('   phi_start:  {:f}'.format(np.rad2deg(phi_end)))
             
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
