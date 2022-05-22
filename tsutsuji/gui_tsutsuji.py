@@ -218,11 +218,11 @@ class mainwindow(ttk.Frame):
         self.menubar = tk.Menu(self.master)
         
         self.menu_file = tk.Menu(self.menubar)
-        self.menu_setting = tk.Menu(self.menubar)
+        self.menu_option = tk.Menu(self.menubar)
         self.menu_help = tk.Menu(self.menubar)
         
         self.menubar.add_cascade(menu=self.menu_file, label='ファイル')
-        self.menubar.add_cascade(menu=self.menu_setting, label='設定')
+        self.menubar.add_cascade(menu=self.menu_option, label='オプション')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
         self.menu_file.add_command(label='開く...', command=self.opencfg, accelerator='Control+O')
@@ -230,11 +230,11 @@ class mainwindow(ttk.Frame):
         self.menu_file.add_separator()
         self.menu_file.add_command(label='終了', command=self.ask_quit, accelerator='Alt+F4')
         
-        self.menu_setting.add_command(label='Backimg...', command=self.backimgctrl.create_window)
-        self.menu_setting.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
-        self.menu_setting.add_command(label='Save Backimg...', command=self.backimgctrl.save_setting)
-        self.menu_setting.add_separator()
-        self.menu_setting.add_command(label='Track...', command=self.trackwindow.create_window)
+        self.menu_option.add_command(label='Backimg...', command=self.backimgctrl.create_window)
+        self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
+        self.menu_option.add_command(label='Save Backimg...', command=self.backimgctrl.save_setting)
+        self.menu_option.add_separator()
+        self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
         
         self.menu_help.add_command(label='ヘルプ...', command=self.open_webdocument)
         self.menu_help.add_command(label='Tsutsujiについて...', command=self.aboutwindow)
