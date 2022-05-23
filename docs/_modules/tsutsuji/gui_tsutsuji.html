@@ -66,10 +66,7 @@
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">webbrowser</span>
-<<<<<<< HEAD
-=======
 <span class="kn">import</span> <span class="nn">argparse</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 
 <span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
 <span class="kn">from</span> <span class="nn">tkinter</span> <span class="kn">import</span> <span class="n">ttk</span>
@@ -93,10 +90,7 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">backimg</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">measure</span>
 <span class="kn">from</span> <span class="nn">._version</span> <span class="kn">import</span> <span class="n">__version__</span>
-<<<<<<< HEAD
-=======
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">trackwindow</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 
 <div class="viewcode-block" id="Catcher"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.Catcher">[docs]</a><span class="k">class</span> <span class="nc">Catcher</span><span class="p">:</span> <span class="c1"># tkinter内で起きた例外をキャッチする</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">subst</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
@@ -118,10 +112,7 @@
 
 <div class="viewcode-block" id="mainwindow"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow">[docs]</a><span class="k">class</span> <span class="nc">mainwindow</span><span class="p">(</span><span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master</span><span class="p">):</span>
-<<<<<<< HEAD
-=======
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">master</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">master</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;3 3 3 3&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Tsutsuji&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">S</span><span class="p">))</span>
@@ -133,10 +124,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span> <span class="o">=</span> <span class="n">backimg</span><span class="o">.</span><span class="n">BackImgControl</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">drawcursor</span><span class="o">.</span><span class="n">cursor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">measurewindow</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">interface</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-<<<<<<< HEAD
-=======
         <span class="bp">self</span><span class="o">.</span><span class="n">trackwindow</span> <span class="o">=</span> <span class="n">trackwindow</span><span class="o">.</span><span class="n">TrackWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span> <span class="o">=</span> <span class="n">track_control</span><span class="o">.</span><span class="n">TrackControl</span><span class="p">()</span>
         
@@ -185,11 +173,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">replot_btn</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Replot&quot;</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">replot_btn</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">))</span>
         
-<<<<<<< HEAD
-        <span class="bp">self</span><span class="o">.</span><span class="n">plotarea_frame</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_frame</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;3 3 3 3&#39;</span><span class="p">)</span>
-=======
         <span class="bp">self</span><span class="o">.</span><span class="n">plotarea_frame</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Labelframe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_frame</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;3 3 3 3&#39;</span><span class="p">,</span> <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Plot control&#39;</span><span class="p">)</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
         <span class="bp">self</span><span class="o">.</span><span class="n">plotarea_frame</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">S</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plotarea_val_frame</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotarea_frame</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;3 3 3 3&#39;</span><span class="p">)</span>
@@ -238,9 +222,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">plotmove_btn_left</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">,</span><span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plotmove_btn_right</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">,</span><span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">))</span>
 
-<<<<<<< HEAD
-        <span class="c1"># --- </span>
-=======
         <span class="c1"># ---</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plotarea_symbol_frame</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Labelframe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotarea_frame</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;3 3 3 3&#39;</span><span class="p">,</span> <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Symbols&#39;</span><span class="p">)</span>
@@ -255,16 +236,11 @@
             <span class="n">position</span> <span class="o">+=</span><span class="mi">1</span>
 
         <span class="c1"># ---</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
         
         <span class="bp">self</span><span class="o">.</span><span class="n">measure_btn</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Measure&quot;</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">measure</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">measure_btn</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">))</span>
 
-<<<<<<< HEAD
-        <span class="bp">self</span><span class="o">.</span><span class="n">getrelrad_btn</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Generate&quot;</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_relativepos_rad</span><span class="p">)</span>
-=======
         <span class="bp">self</span><span class="o">.</span><span class="n">getrelrad_btn</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Generate&quot;</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_output</span><span class="p">)</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
         <span class="bp">self</span><span class="o">.</span><span class="n">getrelrad_btn</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">__debug__</span><span class="p">:</span>
@@ -273,12 +249,9 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">printpos_btn</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;P. Pos&quot;</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw_tracks_cp</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">printpos_btn</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">))</span>
-<<<<<<< HEAD
-=======
 
             <span class="bp">self</span><span class="o">.</span><span class="n">othertrack_btn</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;OtherTrack&quot;</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_othertrack</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">othertrack_btn</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">))</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
         
         <span class="c1"># ウィンドウリサイズに対する設定</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">columnconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -290,19 +263,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
-<<<<<<< HEAD
-        <span class="bp">self</span><span class="o">.</span><span class="n">menu_backimg</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">menu_help</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ファイル&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_backimg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;背景画像&#39;</span><span class="p">)</span>
-=======
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_help</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ファイル&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;オプション&#39;</span><span class="p">)</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
         <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_help</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ヘルプ&#39;</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;開く...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opencfg</span><span class="p">,</span> <span class="n">accelerator</span><span class="o">=</span><span class="s1">&#39;Control+O&#39;</span><span class="p">)</span>
@@ -310,19 +275,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">add_separator</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;終了&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ask_quit</span><span class="p">,</span> <span class="n">accelerator</span><span class="o">=</span><span class="s1">&#39;Alt+F4&#39;</span><span class="p">)</span>
         
-<<<<<<< HEAD
-        <span class="bp">self</span><span class="o">.</span><span class="n">menu_backimg</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Window...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">create_window</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">menu_backimg</span><span class="o">.</span><span class="n">add_separator</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">menu_backimg</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Load...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">load_setting</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">menu_backimg</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Save...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">save_setting</span><span class="p">)</span>
-=======
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Backimg...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">create_window</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Load Backimg...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">load_setting</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Save Backimg...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">save_setting</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_separator</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Track...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">trackwindow</span><span class="o">.</span><span class="n">create_window</span><span class="p">)</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
         
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_help</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;ヘルプ...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">open_webdocument</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_help</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tsutsujiについて...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aboutwindow</span><span class="p">)</span>
@@ -347,10 +304,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">load_setting</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;backimg&#39;</span><span class="p">])</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">conf_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">load_setting</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">conf_path</span><span class="p">)</span>
-<<<<<<< HEAD
-=======
         <span class="bp">self</span><span class="o">.</span><span class="n">trackwindow</span><span class="o">.</span><span class="n">reset_treevalue</span><span class="p">()</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
         <span class="bp">self</span><span class="o">.</span><span class="n">measurewindow</span><span class="o">.</span><span class="n">reload_trackkeys</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
 <div class="viewcode-block" id="mainwindow.reloadcfg"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.reloadcfg">[docs]</a>    <span class="k">def</span> <span class="nf">reloadcfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -363,12 +317,9 @@
 <div class="viewcode-block" id="mainwindow.drawall"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.drawall">[docs]</a>    <span class="k">def</span> <span class="nf">drawall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">plot2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="p">)</span>
-<<<<<<< HEAD
-=======
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_marker_ctrl</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_marker_ctrl</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;variable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">plot_symbols</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="p">,</span><span class="n">key</span><span class="p">)</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
         
         <span class="bp">self</span><span class="o">.</span><span class="n">measurewindow</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span>
             
@@ -407,14 +358,9 @@
 <div class="viewcode-block" id="mainwindow.draw_tracks_cp"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.draw_tracks_cp">[docs]</a>    <span class="k">def</span> <span class="nf">draw_tracks_cp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">plot_controlpoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig_canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
-<<<<<<< HEAD
-<div class="viewcode-block" id="mainwindow.get_relativepos_rad"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.get_relativepos_rad">[docs]</a>    <span class="k">def</span> <span class="nf">get_relativepos_rad</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">generate_mapdata</span><span class="p">()</span></div>
-=======
 <div class="viewcode-block" id="mainwindow.generate_output"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.generate_output">[docs]</a>    <span class="k">def</span> <span class="nf">generate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">generate_mapdata</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_othertrack</span><span class="p">()</span></div>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 <div class="viewcode-block" id="mainwindow.aboutwindow"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.aboutwindow">[docs]</a>    <span class="k">def</span> <span class="nf">aboutwindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">msg</span>  <span class="o">=</span> <span class="s1">&#39;Tsutsuji trackcomputer</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;Version &#39;</span><span class="o">+</span><span class="n">__version__</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
@@ -426,16 +372,11 @@
         <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;https://konawasabi.github.io/tsutsuji-trackcomputer/&#39;</span><span class="p">)</span></div>
 <div class="viewcode-block" id="mainwindow.sendtopmost"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.sendtopmost">[docs]</a>    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">lift</span><span class="p">()</span>
-<<<<<<< HEAD
-        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_force</span><span class="p">()</span></div></div>
-    
-=======
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_force</span><span class="p">()</span></div>
 <div class="viewcode-block" id="mainwindow.get_othertrack"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.get_othertrack">[docs]</a>    <span class="k">def</span> <span class="nf">get_othertrack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">generate_otdata</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackwindow</span><span class="o">.</span><span class="n">reset_treevalue</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div></div>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">__debug__</span><span class="p">:</span>
         <span class="c1"># エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa</span>
@@ -453,15 +394,6 @@
                 <span class="n">pdb</span><span class="o">.</span><span class="n">pm</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">=</span> <span class="n">info</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Debug mode&#39;</span><span class="p">)</span>
-<<<<<<< HEAD
-    
-    <span class="n">tk</span><span class="o">.</span><span class="n">CallWrapper</span> <span class="o">=</span> <span class="n">Catcher</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Tk</span><span class="p">()</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">mainwindow</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">opencfg</span><span class="p">(</span><span class="n">in_dir</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span></div>
-=======
 
     <span class="n">argparser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">argparser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;filepath&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;input cfg file&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">)</span>
@@ -490,7 +422,6 @@
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">app</span><span class="o">.</span><span class="n">opencfg</span><span class="p">(</span><span class="n">in_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
         <span class="n">app</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span></div>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 </pre></div>
 
             <div class="clearer"></div>

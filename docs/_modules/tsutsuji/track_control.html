@@ -82,10 +82,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">rel_track_radius_cp</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
-<<<<<<< HEAD
-=======
         <span class="bp">self</span><span class="o">.</span><span class="n">generated_othertrack</span> <span class="o">=</span> <span class="kc">None</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 <div class="viewcode-block" id="TrackControl.loadcfg"><a class="viewcode-back" href="../../tsutsuji.track_control.html#tsutsuji.track_control.TrackControl.loadcfg">[docs]</a>    <span class="k">def</span> <span class="nf">loadcfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;cfgファイルの読み込み</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -104,10 +101,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">rel_track</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rel_track_radius</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rel_track_radius_cp</span> <span class="o">=</span> <span class="p">{}</span>
-<<<<<<< HEAD
-=======
             <span class="bp">self</span><span class="o">.</span><span class="n">generated_othertrack</span> <span class="o">=</span> <span class="kc">None</span>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">track_keys</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;interp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapinterpreter</span><span class="o">.</span><span class="n">ParseMap</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">parser</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -144,14 +138,10 @@
                                                                     <span class="n">y0</span> <span class="o">=</span> <span class="n">pos_origin_rot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">pos_origin_abs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>\
                                                                     <span class="n">z0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">track_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">pos_origin_abs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>\
                                                                     <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">track_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;angle&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">pos_origin_abs</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
-<<<<<<< HEAD
-                <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;tgen&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">generate_owntrack</span><span class="p">()</span></div>
-=======
                 <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;tgen&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">generate_owntrack</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;cplist_symbol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">take_cp_by_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">own_track</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;toshow&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;output_mapfile&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 <div class="viewcode-block" id="TrackControl.relativepoint_single"><a class="viewcode-back" href="../../tsutsuji.track_control.html#tsutsuji.track_control.TrackControl.relativepoint_single">[docs]</a>    <span class="k">def</span> <span class="nf">relativepoint_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">to_calc</span><span class="p">,</span><span class="n">owntrack</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;owntrackを基準とした相対座標への変換</span>
 
@@ -319,12 +309,6 @@
 <div class="viewcode-block" id="TrackControl.plot2d"><a class="viewcode-back" href="../../tsutsuji.track_control.html#tsutsuji.track_control.TrackControl.plot2d">[docs]</a>    <span class="k">def</span> <span class="nf">plot2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">track_keys</span><span class="p">:</span>
-<<<<<<< HEAD
-                <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">i</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">track_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">])</span></div>
-            <span class="c1">#ax.invert_yaxis()</span>
-            <span class="c1">#ax.set_aspect(&#39;equal&#39;)</span>
-=======
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;toshow&#39;</span><span class="p">]:</span>
                     <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
                     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">i</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">track_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">])</span>
@@ -336,7 +320,6 @@
                     <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generated_othertrack</span><span class="p">[</span><span class="n">otrack</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
                     <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;=</span><span class="bp">self</span><span class="o">.</span><span class="n">generated_othertrack</span><span class="p">[</span><span class="n">otrack</span><span class="p">][</span><span class="s1">&#39;distrange&#39;</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">]]</span>
                     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">tmp</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generated_othertrack</span><span class="p">[</span><span class="n">otrack</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">])</span></div>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 <div class="viewcode-block" id="TrackControl.drawarea"><a class="viewcode-back" href="../../tsutsuji.track_control.html#tsutsuji.track_control.TrackControl.drawarea">[docs]</a>    <span class="k">def</span> <span class="nf">drawarea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extent_input</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">extent_input</span> <span class="o">==</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">extent_input</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -537,40 +520,15 @@
             <span class="n">output_file</span> <span class="o">+=</span> <span class="s1">&#39;# Track[</span><span class="se">\&#39;</span><span class="si">{:s}</span><span class="se">\&#39;</span><span class="s1">].Cant.SetGauge</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span>
             <span class="n">output_file</span> <span class="o">+=</span> <span class="n">output_map</span><span class="p">[</span><span class="s1">&#39;gauge&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
 
-<<<<<<< HEAD
-=======
             <span class="bp">self</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">tr</span><span class="p">][</span><span class="s1">&#39;output_mapfile&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_file</span>
             
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
             <span class="c1">#print(output_file)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;output_path&#39;</span><span class="p">],</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;output_path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:s}</span><span class="s1">_converted.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tr</span><span class="p">))),</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<<<<<<< HEAD
-            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;output_path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:s}</span><span class="s1">_converted.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tr</span><span class="p">))))</span>            </div>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    def interpolate_with_dist(self, element, tr, cp_dist):</span>
-<span class="sd">        def interpolate(aroundzero,ix,typ,cp_dist,base=0):</span>
-<span class="sd">            return (aroundzero[:,typ][ix+1]-aroundzero[:,typ][ix])/(aroundzero[:,base][ix+1]-aroundzero[:,base][ix])*(cp_dist-aroundzero[:,base][ix])+aroundzero[:,typ][ix]</span>
-<span class="sd">        min_ix = np.argmin(np.abs(self.rel_track[tr][:,0] - cp_dist))</span>
-<span class="sd">        </span>
-<span class="sd">        if min_ix &gt; 0 and min_ix &lt; len(self.rel_track[tr])-1:</span>
-<span class="sd">            aroundzero = self.rel_track[tr][min_ix-1:min_ix+2]</span>
-<span class="sd">            sign_dist = np.sign(aroundzero[:,0] - cp_dist)</span>
-<span class="sd">            if sign_dist[0] != sign_dist[1]:</span>
-<span class="sd">                result = interpolate(aroundzero,0,element,cp_dist)</span>
-<span class="sd">            else:</span>
-<span class="sd">                result = interpolate(aroundzero,1,element,cp_dist)</span>
-<span class="sd">            #result = self.rel_track[tr][pos_ix][element]</span>
-<span class="sd">        else:</span>
-<span class="sd">            result = self.rel_track[tr][min_ix][element]</span>
-<span class="sd">        return result</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-=======
             <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;output_path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:s}</span><span class="s1">_converted.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tr</span><span class="p">))))</span></div>
 
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 <div class="viewcode-block" id="TrackControl.convert_cant_with_relativecp"><a class="viewcode-back" href="../../tsutsuji.track_control.html#tsutsuji.track_control.TrackControl.convert_cant_with_relativecp">[docs]</a>    <span class="k">def</span> <span class="nf">convert_cant_with_relativecp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">cp_dist</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39; trで指定した軌道について、対応する距離程でのカントを求める </span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -579,11 +537,6 @@
             <span class="c1">#result.append([cp, self.interpolate_with_dist(8,tr,cp)])</span>
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">cp</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">interpolate_with_dist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rel_track</span><span class="p">[</span><span class="n">tr</span><span class="p">],</span><span class="mi">8</span><span class="p">,</span><span class="n">cp</span><span class="p">)])</span>
         
-<<<<<<< HEAD
-        <span class="k">return</span> <span class="n">result</span></div></div>
-        
-        
-=======
         <span class="k">return</span> <span class="n">result</span></div>
 <div class="viewcode-block" id="TrackControl.take_cp_by_types"><a class="viewcode-back" href="../../tsutsuji.track_control.html#tsutsuji.track_control.TrackControl.take_cp_by_types">[docs]</a>    <span class="k">def</span> <span class="nf">take_cp_by_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;軌道要素が存在する距離程を要素毎にリスト化する</span>
@@ -659,7 +612,6 @@
                                             <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span>\
                                             <span class="c1">#&#39;controlpoints&#39;:[i[&#39;distance&#39;] for i in self.ot_map_source.othertrack.data[key]],\</span>
                                             <span class="s1">&#39;distrange&#39;</span><span class="p">:</span><span class="n">generator</span><span class="o">.</span><span class="n">distrange</span><span class="p">}</span></div></div>
->>>>>>> dc64bbbe1502d3e75acf3931e9cb2354b6f25c0e
 </pre></div>
 
             <div class="clearer"></div>
