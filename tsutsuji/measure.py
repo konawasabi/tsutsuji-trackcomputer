@@ -295,6 +295,9 @@ class interface():
                 pos+=1
             self.curvetrack_cursor['v']['α'].set('A')
             self.curvetrack_cursor['v']['β'].set('B')
+            self.curvetrack_cursor_assignresult_v = tk.BooleanVar(value=False)
+            self.curvetrack_cursor_assignresult_btn = ttk.Checkbutton(self.curvetrack_cursor_f, text='Assign',variable=self.curvetrack_cursor_assignresult_v,onvalue=True,offvalue=False)
+            self.curvetrack_cursor_assignresult_btn.grid(column=4, row=0, sticky=(tk.E,tk.W))
             
             self.curvetrack_value_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
             self.curvetrack_value_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -519,20 +522,21 @@ class interface():
                 print('   phi_start:  {:f}'.format(np.rad2deg(phi_end)))
 
         # 演算結果をカーソルに設定 (mode4, 5のみ)
-        if fitmode == self.curve_fitmode_box['values'][3]:
-            tmp_cursor = cursor_t
-            tmp_cursor.values[0].set(trackp.result[:,0][-1])
-            tmp_cursor.values[1].set(trackp.result[:,1][-1])
-            tmp_cursor.values[2].set(np.rad2deg(phi_end))
-            tmp_cursor.marker.set_direct()
-            tmp_cursor.arrow.set_direct()
-        elif fitmode == self.curve_fitmode_box['values'][4]:
-            tmp_cursor = cursor_f
-            tmp_cursor.values[0].set(trackp.result[:,0][-1])
-            tmp_cursor.values[1].set(trackp.result[:,1][-1])
-            tmp_cursor.values[2].set(np.rad2deg(phi_end))
-            tmp_cursor.marker.set_direct()
-            tmp_cursor.arrow.set_direct()
+        if self.curvetrack_cursor_assignresult_v.get():
+            if fitmode == self.curve_fitmode_box['values'][3]:
+                tmp_cursor = cursor_t
+                tmp_cursor.values[0].set(trackp.result[:,0][-1])
+                tmp_cursor.values[1].set(trackp.result[:,1][-1])
+                tmp_cursor.values[2].set(np.rad2deg(phi_end))
+                tmp_cursor.marker.set_direct()
+                tmp_cursor.arrow.set_direct()
+            elif fitmode == self.curve_fitmode_box['values'][4]:
+                tmp_cursor = cursor_f
+                tmp_cursor.values[0].set(trackp.result[:,0][-1])
+                tmp_cursor.values[1].set(trackp.result[:,1][-1])
+                tmp_cursor.values[2].set(np.rad2deg(phi_end))
+                tmp_cursor.marker.set_direct()
+                tmp_cursor.arrow.set_direct()
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
             print()
