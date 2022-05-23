@@ -513,10 +513,26 @@ class interface():
             if fitmode == self.curve_fitmode_box['values'][3]:
                 print('   endpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
                 print('   phi_end:  {:f}'.format(np.rad2deg(phi_end)))
+                
             else:
                 print('   startpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
                 print('   phi_start:  {:f}'.format(np.rad2deg(phi_end)))
-            
+
+        # 演算結果をカーソルに設定 (mode4, 5のみ)
+        if fitmode == self.curve_fitmode_box['values'][3]:
+            tmp_cursor = cursor_t
+            tmp_cursor.values[0].set(trackp.result[:,0][-1])
+            tmp_cursor.values[1].set(trackp.result[:,1][-1])
+            tmp_cursor.values[2].set(np.rad2deg(phi_end))
+            tmp_cursor.marker.set_direct()
+            tmp_cursor.arrow.set_direct()
+        elif fitmode == self.curve_fitmode_box['values'][4]:
+            tmp_cursor = cursor_f
+            tmp_cursor.values[0].set(trackp.result[:,0][-1])
+            tmp_cursor.values[1].set(trackp.result[:,1][-1])
+            tmp_cursor.values[2].set(np.rad2deg(phi_end))
+            tmp_cursor.marker.set_direct()
+            tmp_cursor.arrow.set_direct()
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
             print()
