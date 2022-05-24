@@ -296,7 +296,7 @@ class interface():
             self.curvetrack_cursor['v']['α'].set('A')
             self.curvetrack_cursor['v']['β'].set('B')
             self.curvetrack_cursor_assignresult_v = tk.BooleanVar(value=False)
-            self.curvetrack_cursor_assignresult_btn = ttk.Checkbutton(self.curvetrack_cursor_f, text='Assign',variable=self.curvetrack_cursor_assignresult_v,onvalue=True,offvalue=False)
+            self.curvetrack_cursor_assignresult_btn = ttk.Checkbutton(self.curvetrack_cursor_f, text='Assign results to cursor',variable=self.curvetrack_cursor_assignresult_v,onvalue=True,offvalue=False)
             self.curvetrack_cursor_assignresult_btn.grid(column=4, row=0, sticky=(tk.E,tk.W))
             
             self.curvetrack_value_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
