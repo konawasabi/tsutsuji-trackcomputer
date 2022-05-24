@@ -503,7 +503,7 @@ class TrackControl():
             if data['key'] in ['radius', 'gradient', 'interpolate_func', 'cant', 'center', 'gauge']:
                 cplist[data['key']].append(data['distance'])
         return cplist
-    def plot_symbols(self, ax, symboltype):
+    def plot_symbols(self, ax, symboltype, size=20):
         ''' 制御点座標をプロットする
         '''
         symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x'}
@@ -513,7 +513,7 @@ class TrackControl():
                     pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
                 else:
                     pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
-                ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75)
+                ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
     def generate_otdata(self):
         ''' generate結果から他軌道座標データを生成する
         '''
