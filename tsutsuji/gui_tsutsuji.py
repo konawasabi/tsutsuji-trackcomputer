@@ -244,7 +244,11 @@ class mainwindow(ttk.Frame):
         self.master.bind("<Control-o>", self.opencfg)
         self.master.bind("<F5>", self.reloadcfg)
         self.master.bind("<Alt-F4>", self.ask_quit)
-        self.master.bind("<Return>", self.press_enter)
+        self.master.bind("<Return>", self.press_return)
+        self.master.bind("<Shift-Left>", self.press_arrowkey)
+        self.master.bind("<Shift-Right>", self.press_arrowkey)
+        self.master.bind("<Shift-Up>", self.press_arrowkey)
+        self.master.bind("<Shift-Down>", self.press_arrowkey)
     def ask_quit(self, event=None, ask=True):
         if ask:
             if tk.messagebox.askyesno(message='Tsutsuji を終了しますか？'):
@@ -333,8 +337,18 @@ class mainwindow(ttk.Frame):
         self.trackcontrol.generate_otdata()
         self.trackwindow.reset_treevalue()
         self.drawall()
-    def press_enter(self, event=None):
+    def press_return(self, event=None):
         self.drawall()
+        self.master.focus_force()
+    def press_arrowkey(self, event=None):
+        if event.keysym == 'Left':
+            self.move_xy(-1,0)
+        elif event.keysym == 'Right':
+            self.move_xy(1,0)
+        elif event.keysym == 'Up':
+            self.move_xy(0,-1)
+        elif event.keysym == 'Down':
+            self.move_xy(0,1)
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
