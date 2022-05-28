@@ -241,9 +241,10 @@ class mainwindow(ttk.Frame):
         
         self.master['menu'] = self.menubar
     def bind_keyevent(self):
-        self.bind_all("<Control-o>", self.opencfg)
-        self.bind_all("<F5>", self.reloadcfg)
-        self.bind_all("<Alt-F4>", self.ask_quit)
+        self.master.bind("<Control-o>", self.opencfg)
+        self.master.bind("<F5>", self.reloadcfg)
+        self.master.bind("<Alt-F4>", self.ask_quit)
+        self.master.bind("<Return>", self.press_enter)
     def ask_quit(self, event=None, ask=True):
         if ask:
             if tk.messagebox.askyesno(message='Tsutsuji を終了しますか？'):
@@ -331,6 +332,8 @@ class mainwindow(ttk.Frame):
     def get_othertrack(self, event=None):
         self.trackcontrol.generate_otdata()
         self.trackwindow.reset_treevalue()
+        self.drawall()
+    def press_enter(self, event=None):
         self.drawall()
 def main():
     if not __debug__:
