@@ -8,7 +8,7 @@ Bve trainsim 5/6向けマップファイルの制作支援Pythonスクリプト�
 
 動作に必要な環境
 
-- Python 3.x
+- [Python 3](https://www.python.org/downloads/)
 - [Kobushi trackviewer](https://github.com/konawasabi/kobushi-trackviewer) Ver1.1.3以降
 - [numpy](https://numpy.org)
 - [matplotlib](https://matplotlib.org)
@@ -16,7 +16,7 @@ Bve trainsim 5/6向けマップファイルの制作支援Pythonスクリプト�
 - [lark](https://lark-parser.readthedocs.io/en/latest/)
 - [ttkwidgets](https://ttkwidgets.readthedocs.io/en/latest/)
 
-インストールするには、Python3をインストールしてからPowershellで次のコマンドを実行してください。
+インストールするには、Python 3をインストールしてからPowershellで次のコマンドを実行してください。
 Tsutsuji本体と、動作に必要なパッケージが自動でインストールされます。
 
 ```
@@ -33,11 +33,11 @@ Tsutsujiは次のコマンドで起動できます。
 python -m tsutsuji
 ```
 
-### ファイル名を指定して実行
+読み込むcfgファイルを予め指定するときは、以下のコマンドを実行します。
 
-読み込ませるcfgファイルを指定して実行することもできます。
-
-`python -m tsutsuji hoge.cfg`
+```
+python -m tsutsuji hoge.cfg
+```
 
 ### 非対話モード
 
