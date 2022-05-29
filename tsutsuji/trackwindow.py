@@ -29,38 +29,41 @@ class TrackWindow(ttk.Frame):
     def __init__(self, mainwindow):
         self.mainwindow = mainwindow
         #self.parent = master
+        self.master = None
     def create_window(self):
         #super().__init__(self.parent, padding='3 3 3 3')
-        self.master = tk.Toplevel(self.mainwindow)
-        
-        self.mainwindow.tk.eval("""
-            ttk::style map Treeview \
-            -foreground {disabled SystemGrayText \
-                         selected SystemHighlightText} \
-            -background {disabled SystemButtonFace \
-                         selected SystemHighlight}
-        """)
+        if self.master is None:
+            self.master = tk.Toplevel(self.mainwindow)
 
-        self.master.title('Tracks')
+            self.mainwindow.tk.eval("""
+                ttk::style map Treeview \
+                -foreground {disabled SystemGrayText \
+                             selected SystemHighlightText} \
+                -background {disabled SystemButtonFace \
+                             selected SystemHighlight}
+            """)
 
-        self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
-        self.mainframe.columnconfigure(0,weight=1)
-        self.mainframe.rowconfigure(0,weight=1)
-        self.mainframe.grid(column=0, row=0,sticky=(tk.N, tk.W, tk.E, tk.S))
-        self.master.geometry('+1100+0')
-        self.track_tree = CheckboxTreeview(self.mainframe, show='tree headings', columns=['linecolor'],selectmode='browse')
-        self.track_tree.bind("<ButtonRelease>", self.click_tracklist)
-        self.track_tree.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
-        self.track_tree.column('#0', width=200)
-        self.track_tree.column('linecolor', width=50)
-        self.track_tree.heading('#0', text='track key')
-        self.track_tree.heading('linecolor', text='Color')
-        
-        self.tree_scrollbar = ttk.Scrollbar(self.mainframe, orient=tk.VERTICAL, command=self.track_tree.yview)
-        self.tree_scrollbar.grid(column=1, row=0, sticky=(tk.N, tk.S, tk.E))
-        self.track_tree.configure(yscrollcommand=self.tree_scrollbar.set)
+            self.master.title('Tracks')
+            self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
 
-        self.set_treevalue()
+            self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
+            self.mainframe.columnconfigure(0,weight=1)
+            self.mainframe.rowconfigure(0,weight=1)
+            self.mainframe.grid(column=0, row=0,sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.master.geometry('+1100+0')
+            self.track_tree = CheckboxTreeview(self.mainframe, show='tree headings', columns=['linecolor'],selectmode='browse')
+            self.track_tree.bind("<ButtonRelease>", self.click_tracklist)
+            self.track_tree.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+            self.track_tree.column('#0', width=200)
+            self.track_tree.column('linecolor', width=50)
+            self.track_tree.heading('#0', text='track key')
+            self.track_tree.heading('linecolor', text='Color')
+
+            self.tree_scrollbar = ttk.Scrollbar(self.mainframe, orient=tk.VERTICAL, command=self.track_tree.yview)
+            self.tree_scrollbar.grid(column=1, row=0, sticky=(tk.N, tk.S, tk.E))
+            self.track_tree.configure(yscrollcommand=self.tree_scrollbar.set)
+
+            self.set_treevalue()
     def click_tracklist(self, event=None):
         '''軌道リストをクリックしたときのイベント処理
         '''
@@ -132,6 +135,8 @@ class TrackWindow(ttk.Frame):
         '''
 
         # track windowが表示されている場合にのみ再構築
-        if hasattr(self,'master'):
-            if self.master.winfo_exists():
-                self.set_treevalue()
+        if self.master is not None:
+            self.set_treevalue()
+    def closewindow(self):
+        self.master.withdraw()
+        self.master = None

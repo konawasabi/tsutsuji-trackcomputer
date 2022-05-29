@@ -218,10 +218,12 @@ class mainwindow(ttk.Frame):
         self.menubar = tk.Menu(self.master)
         
         self.menu_file = tk.Menu(self.menubar)
+        self.menu_compute = tk.Menu(self.menubar)
         self.menu_option = tk.Menu(self.menubar)
         self.menu_help = tk.Menu(self.menubar)
         
         self.menubar.add_cascade(menu=self.menu_file, label='ファイル')
+        self.menubar.add_cascade(menu=self.menu_compute, label='メイン処理')
         self.menubar.add_cascade(menu=self.menu_option, label='オプション')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
@@ -229,6 +231,11 @@ class mainwindow(ttk.Frame):
         self.menu_file.add_command(label='リロード', command=self.reloadcfg, accelerator='F5')
         self.menu_file.add_separator()
         self.menu_file.add_command(label='終了', command=self.ask_quit, accelerator='Alt+F4')
+
+        self.menu_compute.add_command(label='Measure...', command=self.measure, accelerator='Control+M')
+        self.menu_compute.add_command(label='Generate', command=self.generate_output, accelerator='Control+G')
+        self.menu_compute.add_separator()
+        self.menu_compute.add_command(label='Replot', command=self.drawall, accelerator='Return')
         
         self.menu_option.add_command(label='Backimg...', command=self.backimgctrl.create_window)
         self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
@@ -241,9 +248,16 @@ class mainwindow(ttk.Frame):
         
         self.master['menu'] = self.menubar
     def bind_keyevent(self):
-        self.bind_all("<Control-o>", self.opencfg)
-        self.bind_all("<F5>", self.reloadcfg)
-        self.bind_all("<Alt-F4>", self.ask_quit)
+        self.master.bind("<Control-o>", self.opencfg)
+        self.master.bind("<Control-m>", self.measure)
+        self.master.bind("<Control-g>", self.generate_output)
+        self.master.bind("<F5>", self.reloadcfg)
+        self.master.bind("<Alt-F4>", self.ask_quit)
+        self.master.bind("<Return>", self.press_return)
+        self.master.bind("<Shift-Left>", self.press_arrowkey)
+        self.master.bind("<Shift-Right>", self.press_arrowkey)
+        self.master.bind("<Shift-Up>", self.press_arrowkey)
+        self.master.bind("<Shift-Down>", self.press_arrowkey)
     def ask_quit(self, event=None, ask=True):
         if ask:
             if tk.messagebox.askyesno(message='Tsutsuji を終了しますか？'):
@@ -308,12 +322,12 @@ class mainwindow(ttk.Frame):
         self.viewpos_v[0].set(nowpos[0] + x*scalex/5)
         self.viewpos_v[1].set(nowpos[1] + y*scaley/5)
         self.drawall()
-    def measure(self):
+    def measure(self, event=None):
         self.measurewindow.create_widgets()
     def draw_tracks_cp(self):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
-    def generate_output(self):
+    def generate_output(self, event=None):
         self.trackcontrol.generate_mapdata()
         self.get_othertrack()
     def aboutwindow(self, event=None):
@@ -332,6 +346,18 @@ class mainwindow(ttk.Frame):
         self.trackcontrol.generate_otdata()
         self.trackwindow.reset_treevalue()
         self.drawall()
+    def press_return(self, event=None):
+        self.drawall()
+        self.master.focus_force()
+    def press_arrowkey(self, event=None):
+        if event.keysym == 'Left':
+            self.move_xy(-1,0)
+        elif event.keysym == 'Right':
+            self.move_xy(1,0)
+        elif event.keysym == 'Up':
+            self.move_xy(0,-1)
+        elif event.keysym == 'Down':
+            self.move_xy(0,1)
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
