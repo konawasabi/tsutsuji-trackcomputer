@@ -507,13 +507,14 @@ class TrackControl():
         ''' 制御点座標をプロットする
         '''
         symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x'}
-        for tr_l in self.conf.track_keys:
-            if self.track[tr_l]['toshow']:
-                if symboltype == 'supplemental_cp':
-                    pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
-                else:
-                    pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
-                ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
+        if len(self.track.keys()) > 0:
+            for tr_l in self.conf.track_keys:
+                if self.track[tr_l]['toshow']:
+                    if symboltype == 'supplemental_cp':
+                        pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
+                    else:
+                        pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
+                    ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
     def generate_otdata(self):
         ''' generate結果から他軌道座標データを生成する
         '''
