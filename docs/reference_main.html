@@ -18,7 +18,7 @@
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Measure ウィンドウ" href="reference_measure.html" />
+    <link rel="next" title="メニュー" href="reference_menu.html" />
     <link rel="prev" title="Reference Guide" href="referenceguide.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!--[if lt IE 9]>
@@ -35,7 +35,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference_measure.html" title="Measure ウィンドウ"
+          <a href="reference_menu.html" title="メニュー"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="referenceguide.html" title="Reference Guide"
@@ -53,9 +53,14 @@
             
   <section id="id1">
 <h1>メインウィンドウ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<a class="reference internal image-reference" href="_images/mainwindow.png"><img alt="_images/mainwindow.png" src="_images/mainwindow.png" style="width: 698.4px; height: 460.79999999999995px;" /></a>
-<section id="id2">
-<h2>プロット制御パネル<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/mainwindow.png"><img alt="_images/mainwindow.png" src="_images/mainwindow.png" style="width: 700.8px; height: 460.79999999999995px;" /></a>
+<section id="replot">
+<h2>Replotボタン<a class="headerlink" href="#replot" title="Permalink to this headline">¶</a></h2>
+<p>プロットウィンドウの再描画を行います。</p>
+<p>Plot controlセクションの設定を変更した場合、Replotを実行すると変更がプロットウィンドウに反映されます。</p>
+</section>
+<section id="plot-control">
+<h2>Plot control<a class="headerlink" href="#plot-control" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p>x, y</p>
 <ul class="simple">
@@ -83,10 +88,23 @@
 <li><p>矢印の方向に表示範囲を移動する</p></li>
 </ul>
 </li>
-<li><p>Replotボタン</p>
+<li><p>Symbols</p>
 <ul class="simple">
-<li><p>プロットウィンドウの再描画を行う</p></li>
-<li><p>x, y, scale, Y. Magの値を変更した場合、Replotを実行するまで反映されない</p></li>
+<li><p>radius</p>
+<ul>
+<li><p>Curve要素が指定されている座標にマーカー(●)を描画する</p></li>
+</ul>
+</li>
+<li><p>gradient</p>
+<ul>
+<li><p>Gradient要素が指定されている座標にマーカー(▲)を描画する</p></li>
+</ul>
+</li>
+<li><p>supplemental_cp</p>
+<ul>
+<li><p>supplemental_cpが指定されている座標にマーカー(✖)を描画する</p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -95,96 +113,16 @@
 <h2>Measureボタン<a class="headerlink" href="#measure" title="Permalink to this headline">¶</a></h2>
 <p>Measureウィンドウを開きます。
 詳細は <a class="reference internal" href="reference_measure.html"><span class="doc">Measure ウィンドウ</span></a> を参照。</p>
-<a class="reference internal image-reference" href="_images/measure.png"><img alt="_images/measure.png" src="_images/measure.png" style="width: 273.0px; height: 203.4px;" /></a>
+<a class="reference internal image-reference" href="_images/measure.png"><img alt="_images/measure.png" src="_images/measure.png" style="width: 305.4px; height: 203.4px;" /></a>
 </section>
 <section id="generate">
 <h2>Generateボタン<a class="headerlink" href="#generate" title="Permalink to this headline">¶</a></h2>
-<p>cfgファイルの設定に従い、他軌道構文データを出力します。
-デフォルトではcfgファイルと同じ階層のresultディレクトリに結果を保存します。</p>
-<section id="id3">
-<h3>メニュー<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-</section>
-</section>
-<section id="id4">
-<h2>ファイル<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>cfgファイルを指定するファイルダイアログを表示します。
-指定したcfgファイルに基づいて各mapファイルを読み込み、各軌道毎の座標データをプロットウィンドウに表示します。
-cfgファイルの詳細については、 <a class="reference internal" href="cfgfileformat.html"><span class="doc">CFG file format</span></a> を参照してください。</p>
-<p>一旦開いたcfgファイルを再読み込みします。
-cfgファイルで指定された各mapファイルも全て再読み込みされ、軌道座標データを再構築します。</p>
-<p>Tsutsujiを終了します。</p>
-</section>
-<section id="id5">
-<h2>背景画像<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<a class="reference internal image-reference" href="_images/backimg.png"><img alt="_images/backimg.png" src="_images/backimg.png" style="width: 306.59999999999997px; height: 159.6px;" /></a>
-<p>プロットウィンドウの背景に表示する画像を管理するBackground imagesウィンドウを開きます。</p>
-<ul class="simple">
-<li><p>Add</p>
-<ul>
-<li><p>ファイルダイアログを開き、表示したい画像ファイルを選択する</p></li>
-<li><p>選択した画像ファイルはfilepathリストに表示される</p></li>
-</ul>
-</li>
-<li><p>Delete</p>
-<ul>
-<li><p>filepathリストで選択した画像を削除する</p></li>
-</ul>
-</li>
-<li><p>Refresh</p>
-<ul>
-<li><p>変更した下記パラメータを反映する</p></li>
-</ul>
-</li>
-</ul>
-<p>filepathリストで選択した画像毎に下記のパラメータを設定できます。</p>
-<ul class="simple">
-<li><p>x0, y0</p>
-<ul>
-<li><p>画像中心となる座標を指定</p></li>
-<li><p>単位は[pixel]</p></li>
-</ul>
-</li>
-<li><p>xshift, yshift</p>
-<ul>
-<li><p>画像を配置する座標を指定</p></li>
-<li><p>単位は[m]</p></li>
-</ul>
-</li>
-<li><p>rotation</p>
-<ul>
-<li><p>回転角度を指定</p></li>
-<li><p>単位は[°]</p></li>
-<li><p>x0, y0で指定した座標を中心に回転する</p></li>
-</ul>
-</li>
-<li><p>alpha</p>
-<ul>
-<li><p>透過率を0~1で指定</p></li>
-</ul>
-</li>
-<li><p>scale</p>
-<ul>
-<li><p>拡大率を指定</p></li>
-<li><p>単位は [m/pixel]</p>
-<ul>
-<li><p>例: 画像ファイル上での106 pixelを20 mとして表示したいときは、20/106 = 0.188を指定する</p></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>Show</p>
-<ul>
-<li><p>画像を表示するかどうか</p></li>
-</ul>
-</li>
-</ul>
-<p>save...で書き出した設定ファイルを読み込みます。</p>
-<p>現在読み込まれている背景画像の設定を書き出します。</p>
-</section>
-<section id="id6">
-<h2>ヘルプ<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
-<p>システム規定のwebブラウザで <a class="reference external" href="https://konawasabi.github.io/tsutsuji-trackcomputer/">https://konawasabi.github.io/tsutsuji-trackcomputer/</a> を表示します。</p>
-<p>バージョン情報を表示します。</p>
+<p>cfgファイルの設定に従い、他軌道構文データを計算します。
+計算結果は、cfgファイル[&#64;TSUTSUJI_GENERAL]セクションのoutput_pathで指定したディレクトリに出力されます。
+デフォルトでは、cfgファイルと同じ階層のresultディレクトリへ保存されます。</p>
+<p>これと同時に、計算した他軌道の線形をプロットウィンドウに表示します。
+計算結果は黒線でプロットされます。
+軌道カラーはTrackウィンドウで変更できます。</p>
 </section>
 </section>
 
@@ -199,15 +137,10 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">メインウィンドウ</a><ul>
-<li><a class="reference internal" href="#id2">プロット制御パネル</a></li>
+<li><a class="reference internal" href="#replot">Replotボタン</a></li>
+<li><a class="reference internal" href="#plot-control">Plot control</a></li>
 <li><a class="reference internal" href="#measure">Measureボタン</a></li>
-<li><a class="reference internal" href="#generate">Generateボタン</a><ul>
-<li><a class="reference internal" href="#id3">メニュー</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#id4">ファイル</a></li>
-<li><a class="reference internal" href="#id5">背景画像</a></li>
-<li><a class="reference internal" href="#id6">ヘルプ</a></li>
+<li><a class="reference internal" href="#generate">Generateボタン</a></li>
 </ul>
 </li>
 </ul>
@@ -220,8 +153,8 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="reference_measure.html"
-                          title="next chapter">Measure ウィンドウ</a></p>
+    <p class="topless"><a href="reference_menu.html"
+                          title="next chapter">メニュー</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -254,7 +187,7 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference_measure.html" title="Measure ウィンドウ"
+          <a href="reference_menu.html" title="メニュー"
              >next</a> |</li>
         <li class="right" >
           <a href="referenceguide.html" title="Reference Guide"
