@@ -218,10 +218,12 @@ class mainwindow(ttk.Frame):
         self.menubar = tk.Menu(self.master)
         
         self.menu_file = tk.Menu(self.menubar)
+        self.menu_compute = tk.Menu(self.menubar)
         self.menu_option = tk.Menu(self.menubar)
         self.menu_help = tk.Menu(self.menubar)
         
         self.menubar.add_cascade(menu=self.menu_file, label='ファイル')
+        self.menubar.add_cascade(menu=self.menu_compute, label='メイン処理')
         self.menubar.add_cascade(menu=self.menu_option, label='オプション')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
@@ -229,6 +231,11 @@ class mainwindow(ttk.Frame):
         self.menu_file.add_command(label='リロード', command=self.reloadcfg, accelerator='F5')
         self.menu_file.add_separator()
         self.menu_file.add_command(label='終了', command=self.ask_quit, accelerator='Alt+F4')
+
+        self.menu_compute.add_command(label='Measure...', command=self.measure, accelerator='Control+M')
+        self.menu_compute.add_command(label='Generate', command=self.generate_output, accelerator='Control+G')
+        self.menu_compute.add_separator()
+        self.menu_compute.add_command(label='Replot', command=self.drawall, accelerator='Return')
         
         self.menu_option.add_command(label='Backimg...', command=self.backimgctrl.create_window)
         self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
@@ -242,6 +249,8 @@ class mainwindow(ttk.Frame):
         self.master['menu'] = self.menubar
     def bind_keyevent(self):
         self.master.bind("<Control-o>", self.opencfg)
+        self.master.bind("<Control-m>", self.measure)
+        self.master.bind("<Control-g>", self.generate_output)
         self.master.bind("<F5>", self.reloadcfg)
         self.master.bind("<Alt-F4>", self.ask_quit)
         self.master.bind("<Return>", self.press_return)
@@ -313,12 +322,12 @@ class mainwindow(ttk.Frame):
         self.viewpos_v[0].set(nowpos[0] + x*scalex/5)
         self.viewpos_v[1].set(nowpos[1] + y*scaley/5)
         self.drawall()
-    def measure(self):
+    def measure(self, event=None):
         self.measurewindow.create_widgets()
     def draw_tracks_cp(self):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
-    def generate_output(self):
+    def generate_output(self, event=None):
         self.trackcontrol.generate_mapdata()
         self.get_othertrack()
     def aboutwindow(self, event=None):
