@@ -541,5 +541,9 @@ Track構文を増設するには、tutorial.cfgの[down]セクションに :code
 
 .. image:: ./files/tutorial/result_withsupcp.png
 	   :scale: 50%
+.. note::
+   
+   キツめに拡大しているせいか、プロットウィンドウ上で比較するとあんまり軽減されていないようにも見えます。
+   この辺は厳密に追い込まずに、BVE本体で見たときに違和感がない程度に調整すれば十分なのかもしれません。
 
 [おわり]

@@ -156,7 +156,7 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 </li>
 <li><p>Show</p>
 <ul>
-<li><p>画像を表示するかどうか</p></li>
+<li><p>チェックした画像を表示する</p></li>
 </ul>
 </li>
 </ul>
@@ -174,16 +174,28 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 <h3>Track...<a class="headerlink" href="#track" title="Permalink to this headline">¶</a></h3>
 <a class="reference internal image-reference" href="_images/trackwindow.png"><img alt="_images/trackwindow.png" src="_images/trackwindow.png" style="width: 166.79999999999998px; height: 159.0px;" /></a>
 <p>軌道の描画設定を行うTrackウィンドウを開きます。</p>
-<p>左端のチェックボックスは、対応する軌道をプロットするかどうかを表します。
-「■■■」をクリックすると、カラーピッカーで軌道カラーを設定できます。</p>
-<p>rootツリーには、cfgファイルで指定したmapファイルを表示します。</p>
-<p>generatedツリーには、Generateボタンを実行した結果を表示します。</p>
-</section>
-</section>
 <section id="id10">
-<h2>ヘルプ<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<h4>ツリー構成<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
+<p>rootツリーには、cfgファイルで指定したmapファイルを表示します。</p>
+<p>generatedツリーには、Generateボタンで生成された他軌道データを表示します。</p>
+</section>
 <section id="id11">
-<h3>ヘルプ...<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<h4>チェックボックス<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<p>チェックされた軌道をプロットウィンドウに描画します。
+最上段(root, generated)で全てのチェックを一括してOn/Offできます。
+デフォルトでは全てOnです。</p>
+</section>
+<section id="color">
+<h4>Color<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h4>
+<p>各軌道に割り当てられた色を表示します。
+■■■をクリックするとカラーピッカーが表示され、割り当てる色を変更できます。</p>
+</section>
+</section>
+</section>
+<section id="id12">
+<h2>ヘルプ<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<section id="id13">
+<h3>ヘルプ...<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p>システム規定のwebブラウザで <a class="reference external" href="https://konawasabi.github.io/tsutsuji-trackcomputer/">https://konawasabi.github.io/tsutsuji-trackcomputer/</a> を表示します。</p>
 </section>
 <section id="tsutsuji">
@@ -224,11 +236,16 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 </li>
 <li><a class="reference internal" href="#load-backimg">Load Backimg...</a></li>
 <li><a class="reference internal" href="#save-backimg">Save Backimg...</a></li>
-<li><a class="reference internal" href="#track">Track...</a></li>
+<li><a class="reference internal" href="#track">Track...</a><ul>
+<li><a class="reference internal" href="#id10">ツリー構成</a></li>
+<li><a class="reference internal" href="#id11">チェックボックス</a></li>
+<li><a class="reference internal" href="#color">Color</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id10">ヘルプ</a><ul>
-<li><a class="reference internal" href="#id11">ヘルプ...</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id12">ヘルプ</a><ul>
+<li><a class="reference internal" href="#id13">ヘルプ...</a></li>
 <li><a class="reference internal" href="#tsutsuji">Tsutsujiについて...</a></li>
 </ul>
 </li>
