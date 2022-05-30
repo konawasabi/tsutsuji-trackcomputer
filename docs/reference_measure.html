@@ -124,7 +124,7 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 <p>緩和曲線つきの曲線軌道を計算する場合は、TCL α, TCL βフィールドに曲線前後の緩和曲線長を入力し、逓減関数をline/sinラジオボタンで選択しておきます。</p>
 <section id="mode">
 <h3>Mode<a class="headerlink" href="#mode" title="Permalink to this headline">¶</a></h3>
-<p>計算Modeは次の3種類から選べます。</p>
+<p>計算Modeは次の5種類から選べます。</p>
 <ul>
 <li><ol class="arabic simple">
 <li><p>α(fix)-&gt;β(free), R(free)</p></li>
@@ -148,8 +148,25 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 <li><p>求めた軌道について、軌道始点とカーソルαとの距離を出力する</p></li>
 </ul>
 </li>
+<li><ol class="arabic simple" start="4">
+<li><p>α(fix), R(fix), CCL(fix)</p></li>
+</ol>
+<ul class="simple">
+<li><p>カーソルαを起点とする半径R, 円曲線長CCLの曲線軌道について、終点座標を求める</p></li>
+<li><p>Assign results to cursorをチェックしている場合は、カーソルβを求めた終点座標に設定する</p></li>
+</ul>
+</li>
+<li><ol class="arabic simple" start="5">
+<li><p>β(fix), R(fix), CCL(fix)</p></li>
+</ol>
+<ul class="simple">
+<li><p>カーソルβを終点とする半径R, 円曲線長CCLの曲線軌道について、起点座標を求める</p></li>
+<li><p>Assign results to cursorをチェックしている場合は、カーソルαを求めた起点座標に設定する</p></li>
+</ul>
+</li>
 </ul>
 <img alt="_images/curvetracksolver.png" src="_images/curvetracksolver.png" />
+<img alt="_images/curvetracksolver_4_5.png" src="_images/curvetracksolver_4_5.png" />
 </section>
 <section id="id8">
 <h3>計算結果の出力例<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>

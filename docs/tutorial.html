@@ -59,7 +59,7 @@
 <a class="reference internal image-reference" href="_images/tutorial_plane_an.png"><img alt="_images/tutorial_plane_an.png" src="_images/tutorial_plane_an.png" style="width: 483.20000000000005px; height: 376.40000000000003px;" /></a>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>本Tutorialで用いるサンプルファイルは全て <a class="reference download internal" download="" href="_downloads/acdce8fd1b61af09f942d4b22917ca3a/tsutsuji_tutorial_material.zip"><code class="xref download docutils literal notranslate"><span class="pre">tsutsuji_tutorial_material.zip</span> <span class="pre">(1.0</span> <span class="pre">MB)</span></code></a> からダウンロードできます。</p>
+<p>本Tutorialで用いるサンプルファイルは全て <a class="reference download internal" download="" href="_downloads/73f719996d3303aa2e9456826f9baf04/tsutsuji_tutorial_material.zip"><code class="xref download docutils literal notranslate"><span class="pre">tsutsuji_tutorial_material.zip</span> <span class="pre">(1.0</span> <span class="pre">MB)</span></code></a> からダウンロードできます。</p>
 <p>このzipファイルには、本Tutorialのデータを元に作成したサンプルシナリオが入っています。
 サンプルシナリオ用のストラクチャーデータとして、<a class="reference external" href="https://bvets.net/jp/edit/tutorial/putstructs.html">https://bvets.net/jp/edit/tutorial/putstructs.html</a> で公開されている strpack1.zipの内容物を同梱しています。
 strpack1.zipを公開いただいたmackoy氏に感謝いたします。</p>
@@ -321,7 +321,7 @@ endpoint = 1500
 <p>Tsutsujiを起動します。
 コマンドラインで <code class="code docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">tsutsuji</span></code> を実行して、メニューの「開く」コマンドでtutorial.cfgを選択すれば、以下のウィンドウが現れます。</p>
 <p><code class="code docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">tsutsuji</span> <span class="pre">tutorial.cfg</span></code> として、起動時に開くファイルを直接指定することも可能です。</p>
-<a class="reference internal image-reference" href="_images/screenshot2.png"><img alt="_images/screenshot2.png" src="_images/screenshot2.png" style="width: 582.0px; height: 384.0px;" /></a>
+<a class="reference internal image-reference" href="_images/screenshot3.png"><img alt="_images/screenshot3.png" src="_images/screenshot3.png" style="width: 584.0px; height: 384.0px;" /></a>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>次の手順で、軌道平面プロットの表示範囲を変更できます。</p>
@@ -551,11 +551,16 @@ Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線�
 <a class="reference internal image-reference" href="_images/screenshot_scenario_tele1.jpg"><img alt="_images/screenshot_scenario_tele1.jpg" src="_images/screenshot_scenario_tele1.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
 <p>上図は、サンプルシナリオ出発点にてdown軌道上を7倍にズームしたときのスクリーンショットです。
 直線であるはずのdown軌道が左右に歪んでいるのがわかります。</p>
+<a class="reference internal image-reference" href="_images/result_nosupcp.png"><img alt="_images/result_nosupcp.png" src="_images/result_nosupcp.png" style="width: 584.0px; height: 384.0px;" /></a>
+<p>この歪みはTsutsujiのプロットウィンドウ上でも確認できます。
+上図の黒い軌道が他軌道に変換した結果を表していますが、直線であるオレンジ色の軌道に対して上下に歪んでいることがわかります。
+（ここでは歪みを強調するため、プロットのy軸方向を50倍に拡大しています）</p>
 <p>これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因で、改善するにはTrack構文を適当な箇所に増設する必要があります。
 ここでは、down軌道基準の距離程で60m, 85m, 112m, 137m, 177m, 203m, 228m, 250mの位置にTrack構文を増設してみます。（これで、おおむね10m間隔でTrack構文が設置されます）</p>
 <p>Track構文を増設するには、tutorial.cfgの[down]セクションに <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span></code> 要素を追加します。
 <code class="code docutils literal notranslate"><span class="pre">supplemental_cp</span> <span class="pre">=</span> <span class="pre">60,85,112,137,177,203,228,250</span></code> をtutorial.cfgの[down]セクションに追加し、Tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。</p>
 <a class="reference internal image-reference" href="_images/screenshot_scenario_tele2.jpg"><img alt="_images/screenshot_scenario_tele2.jpg" src="_images/screenshot_scenario_tele2.jpg" style="width: 384.59999999999997px; height: 309.59999999999997px;" /></a>
+<a class="reference internal image-reference" href="_images/result_withsupcp.png"><img alt="_images/result_withsupcp.png" src="_images/result_withsupcp.png" style="width: 584.0px; height: 384.0px;" /></a>
 <p>[おわり]</p>
 </section>
 </section>

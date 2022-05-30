@@ -8,12 +8,12 @@ Tutorial
 ここでは以下のような路線の制作を例に、Tsutsuji Trackcomputerの基本的な使い方を説明します。
 以下、黒線: up, 青線: downとして、upを自軌道としてdownを他軌道に変換する手順を見ていきます。
 
-.. image:: ./files/tutorial_plane_an.png
+.. image:: ./files/tutorial/tutorial_plane_an.png
 	   :scale: 40%
 
 .. note::
    
-   本Tutorialで用いるサンプルファイルは全て :download:`tsutsuji_tutorial_material.zip (1.0 MB) <./files/tsutsuji_tutorial_material.zip>` からダウンロードできます。
+   本Tutorialで用いるサンプルファイルは全て :download:`tsutsuji_tutorial_material.zip (1.0 MB) <./files/tutorial/tsutsuji_tutorial_material.zip>` からダウンロードできます。
 
    このzipファイルには、本Tutorialのデータを元に作成したサンプルシナリオが入っています。
    サンプルシナリオ用のストラクチャーデータとして、https://bvets.net/jp/edit/tutorial/putstructs.html で公開されている strpack1.zipの内容物を同梱しています。
@@ -281,7 +281,7 @@ Tsutsujiを起動します。
 
 :code:`python -m tsutsuji tutorial.cfg` として、起動時に開くファイルを直接指定することも可能です。
 
-.. image:: ./files/screenshot2.png
+.. image:: ./files/tutorial/screenshot3.png
 	   :scale: 50%
 
 .. note::
@@ -509,7 +509,7 @@ down_converted.txt
 始点付近でのスクリーンショットは以下の通りです。
 Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線を含むマップがそれらしく変換されていることを見ていただけるかと思います。
 
-.. image:: ./files/screenshot_scenario.jpg
+.. image:: ./files/tutorial/screenshot_scenario.jpg
 	   :scale: 30%
 
 もう少し手を加える
@@ -517,11 +517,18 @@ Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線�
 
 さて、運転台からは「それらしく」見えているサンプルシナリオですが、望遠ズームしてみると粗が目立ってきます。
 
-.. image:: ./files/screenshot_scenario_tele1.jpg
+.. image:: ./files/tutorial/screenshot_scenario_tele1.jpg
 	   :scale: 30%
 
 上図は、サンプルシナリオ出発点にてdown軌道上を7倍にズームしたときのスクリーンショットです。
 直線であるはずのdown軌道が左右に歪んでいるのがわかります。
+
+.. image:: ./files/tutorial/result_nosupcp.png
+	   :scale: 50%
+
+この歪みはTsutsujiのプロットウィンドウ上でも確認できます。
+上図の黒い軌道が他軌道に変換した結果を表していますが、直線であるオレンジ色の軌道に対して上下に歪んでいることがわかります。
+（ここでは歪みを強調するため、プロットのy軸方向を50倍に拡大しています）
 
 これは、down軌道を指定するTrack構文の設置間隔が、down軌道の相対曲率半径の変化に対して少なすぎることが原因で、改善するにはTrack構文を適当な箇所に増設する必要があります。
 ここでは、down軌道基準の距離程で60m, 85m, 112m, 137m, 177m, 203m, 228m, 250mの位置にTrack構文を増設してみます。（これで、おおむね10m間隔でTrack構文が設置されます）
@@ -529,7 +536,10 @@ Bve trainsimで読み込めば、緩和曲線や勾配導入部での縦曲線�
 Track構文を増設するには、tutorial.cfgの[down]セクションに :code:`supplemental_cp` 要素を追加します。
 :code:`supplemental_cp = 60,85,112,137,177,203,228,250` をtutorial.cfgの[down]セクションに追加し、Tsutsujiの出力ファイルをBve trainsimで読み込むと、下図のとおり歪みが軽減されたdown軌道が得られます。
 
-.. image:: ./files/screenshot_scenario_tele2.jpg
+.. image:: ./files/tutorial/screenshot_scenario_tele2.jpg
 	   :scale: 30%
+
+.. image:: ./files/tutorial/result_withsupcp.png
+	   :scale: 50%
 
 [おわり]
