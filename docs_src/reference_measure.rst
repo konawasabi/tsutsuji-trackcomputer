@@ -108,7 +108,7 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 Mode
 -----
 
-計算Modeは次の3種類から選べます。
+計算Modeは次の5種類から選べます。
 
 * 1. α(fix)->β(free), R(free)
 
@@ -123,7 +123,20 @@ Mode
   * Rフィールドに入力された半径Rの曲線軌道について、カーソルα, βの延長線上に始点, 終点を持つものを求める
   * 求めた軌道について、軌道始点とカーソルαとの距離を出力する
 
+* 4. α(fix), R(fix), CCL(fix)
+
+  * カーソルαを起点とする半径R, 円曲線長CCLの曲線軌道について、終点座標を求める
+  * Assign results to cursorをチェックしている場合は、カーソルβを求めた終点座標に設定する
+
+  
+* 5. β(fix), R(fix), CCL(fix)
+
+  * カーソルβを終点とする半径R, 円曲線長CCLの曲線軌道について、起点座標を求める
+  * Assign results to cursorをチェックしている場合は、カーソルαを求めた起点座標に設定する
+
 .. image:: ./files/curvetracksolver.png
+
+.. image:: ./files/curvetracksolver_4_5.png
 
 計算結果の出力例
 ---------------
