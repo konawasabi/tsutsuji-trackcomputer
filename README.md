@@ -16,13 +16,9 @@ Bve trainsim 5/6向けマップファイルの制作支援Pythonスクリプト�
 - [lark](https://lark-parser.readthedocs.io/en/latest/)
 - [ttkwidgets](https://ttkwidgets.readthedocs.io/en/latest/)
 
-インストールするには、Python 3をインストールしてからPowershellで次のコマンドを実行してください。
+インストールするには、Python 3をインストールしてからPowershellで`pip install tsutsuji-trackcomputer`を実行してください。
 Tsutsuji本体と、動作に必要なパッケージが自動でインストールされます。
-詳細なインストール手順を、https://konawasabi.riceball.jp/2022/06/01/tsutsuji-kobushi-installguide/ にて説明しています。
-
-```
-pip install tsutsuji-trackcomputer
-```
+なお、https://konawasabi.riceball.jp/2022/06/01/tsutsuji-kobushi-installguide/ にて、Python3のセットアップを含めたインストール手順の説明をしていますので、参考にしてもらえればと思います。
 
 インストール済みのTsutsujiをバージョンアップする際は、`pip install --upgrade tsutsuji-trackcomputer`を実行してください。
 
