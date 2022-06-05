@@ -6,4 +6,4 @@ Tutorial
 
    ./tutorial_first
    ./tutorial_backimg
-   ./tutorial_measure
+   ./tutorial_ctsolver
