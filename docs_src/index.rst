@@ -19,7 +19,7 @@ Tsutsuji trackcomputerは、Bve Trainsim 5/6向けマップファイルの制作
   
 の変換も行います。
 
-まずは :doc:`tutorial` をご覧ください。
+まずは :doc:`tutorial_first` をご覧ください。
 
 .. toctree::
    :maxdepth: 2
