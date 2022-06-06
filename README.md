@@ -2,7 +2,7 @@
 
 Bve trainsim 5/6向けマップファイルの制作支援Pythonスクリプトです。
 全ての軌道を自軌道構文で記述し、一つの軌道を基準とした他軌道構文に変換するのが主な機能です。
-まだ未完成ですが、軌道データ作成に役立つ測量機能も付属しています。
+まだ開発途上ですが、軌道データ作成に役立つ測量機能も付属しています。
 
 ## インストール
 
@@ -18,12 +18,16 @@ Bve trainsim 5/6向けマップファイルの制作支援Pythonスクリプト�
 
 インストールするには、Python 3をインストールしてからPowershellで次のコマンドを実行してください。
 Tsutsuji本体と、動作に必要なパッケージが自動でインストールされます。
-
 ```
 pip install tsutsuji-trackcomputer
 ```
 
-インストール済みのTsutsujiをバージョンアップする際は、`pip install --upgrade tsutsuji-trackcomputer`を実行してください。
+なお、https://konawasabi.riceball.jp/2022/06/01/tsutsuji-kobushi-installguide/ にて、Python3のセットアップを含めたインストール手順の説明をしていますので、参考にしてもらえればと思います。
+
+インストール済みのTsutsujiをバージョンアップする際は、次のコマンドを実行してください。
+```
+pip install --upgrade tsutsuji-trackcomputer
+```
 
 ## 起動
 
