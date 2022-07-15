@@ -91,6 +91,8 @@ Cursorボックスで選択したカーソルに対して、方角カーソル�
 .. image:: ./files/cursor_along_across.png
 
 
+.. _ref_measure_ctsolver:
+
 CurveTrack Solver
 ===================
 
