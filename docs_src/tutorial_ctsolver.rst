@@ -7,6 +7,12 @@ CurveTrack Solver
 
 このセクションでは、Measureウィンドウの機能の一つである :ref:`CurveTrack Solver <ref_measure_ctsolver>` について、いくつかの使用シーンごとに使用手順を紹介します。
 
+.. note::
+
+   文章作成環境の都合上、tsutsuji trackcomputerのスクリーンショットをmacOS上で撮影しています。
+   Windows上で動作させた場合と若干インターフェースの見た目が異なることをあらかじめご了承ください。
+   動作はmacOS/Windowsで全く変わりません。
+
 
 航空写真から曲線半径・曲線長を求める
 ==================================
@@ -22,7 +28,7 @@ CurveTrack Solver
    2. α(free)->β(fix), R(free)
 
 .. image:: ./files/tutorial/ctsolver_fitradius.png
-	   :scale: 50%
+	   :scale: 60%
 
 これで、カーソルA, B間を結ぶ最適な曲線軌道の曲線半径・曲線長が計算されます。
 計算結果はプロットウィンドウに図示され、同時に、計算に用いた各種パラメータと、Curve構文で表した計算結果がターミナルに表示されます。
@@ -166,6 +172,54 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
    
 他の軌道への合流
 ===============
+
+下図の様に、右に向かって近づきつつある2つの軌道を、(A) 一つの軌道に合流させる、(B) 一定の間隔を保って並走させる場合の手順を説明します。
+ここで、上側の軌道を `up` 、下側の軌道を `down` とします。
+
+.. image:: ./files/tutorial/ctsolver_merging.png
+	   :scale: 50%
+
+1. カーソルAを軌道 `up` の左端に合わせる
+   
+   i. カーソルAのTrackリストから `up` を選択する
+      
+      * .. image:: ./files/tutorial/ctsolver_trackmenu.png
+	           :scale: 60%
+		
+      * これで、カーソルは軌道 `up` 上の点のみを移動できる様になる
+      
+   ii. Pos.をクリックしてカーソルAの位置を指定する
+
+2. カーソルBを軌道 `down` の適当な位置に合わせる
+
+   i. カーソルBのTrackリストから `down` を選択する
+   ii. Pos.をクリックしてカーソルBの位置を指定する
+
+       * 合流地点の距離程が分かっている場合は、次の手順を使う
+
+	 I. カーソルBのkilopostフィールドに距離程の値を入力する
+	 II. Val.をクリックする
+
+3. カーソルBの位置を平行移動する
+
+   * (B)一定の間隔を保って並走させる場合のみ実行する
+   i. カーソルBのRel.にチェックを入れる
+   ii. Val.をクリックする
+   iii. 表示されたset offsetウィンドウのyフィールドに、カーソルを平行移動させる距離を入力する
+
+	* ここではy = -3.8 [m]とする
+	* .. image:: ./files/tutorial/ctsolver_val.png
+	             :scale: 60%
+	* set offsetでは以下の座標系を使うことに注意する
+
+	  * .. image:: ./files/cursor_setoffset_coordinate.png
+	  * 詳細は :doc:`reference_measure` を参照
+	
+   iv. カーソルBが複線間隔分平行移動する
+
+       * .. image:: ./files/tutorial/ctsolver_cursoroffset.png
+
+4. CurveTrack Solverの適当なModeを選択して、Do Itをクリックする
 
 
 
