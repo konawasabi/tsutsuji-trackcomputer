@@ -107,6 +107,8 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 
 緩和曲線つきの曲線軌道を計算する場合は、TCL α, TCL βフィールドに曲線前後の緩和曲線長を入力し、逓減関数をline/sinラジオボタンで選択しておきます。
 
+.. _ref_measure_ctsolver_mode:
+
 Mode
 -----
 
