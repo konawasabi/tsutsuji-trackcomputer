@@ -91,6 +91,8 @@ Cursorボックスで選択したカーソルに対して、方角カーソル�
 .. image:: ./files/cursor_along_across.png
 
 
+.. _ref_measure_ctsolver:
+
 CurveTrack Solver
 ===================
 
@@ -104,6 +106,8 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 プロット画面の曲線軌道計算結果は、メインウィンドウのReplotボタンを押すと消去されます。
 
 緩和曲線つきの曲線軌道を計算する場合は、TCL α, TCL βフィールドに曲線前後の緩和曲線長を入力し、逓減関数をline/sinラジオボタンで選択しておきます。
+
+.. _ref_measure_ctsolver_mode:
 
 Mode
 -----
