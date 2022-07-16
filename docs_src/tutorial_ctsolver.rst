@@ -189,6 +189,7 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
       * これで、カーソルは軌道 `up` 上の点のみを移動できる様になる
       
    ii. Pos.をクリックしてカーソルAの位置を指定する
+   iii. dir.をクリックしてカーソルAを右向きに設定する
 
 2. カーソルBを軌道 `down` の適当な位置に合わせる
 
@@ -199,6 +200,8 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
 
 	 I. カーソルBのkilopostフィールドに距離程の値を入力する
 	 II. Val.をクリックする
+
+   iii. dir.をクリックしてカーソルBを右向きに設定する
 
 3. カーソルBの位置を平行移動する
 
@@ -239,7 +242,143 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
 渡り線
 ========
 
+下図の様に、複線軌道に片渡り線を追加する手順を説明します。
+ここでは、上側軌道: `up`, 下側軌道: `down`, 渡り線: `cross` とします。
+また、複線間隔は3.8mとし、分岐器として狭軌の8番分岐器を想定しています。
 
+.. image:: ./files/tutorial/ctsolver_crossover.png
+	   :scale: 50%
+
+1. 渡り線の始点にカーソルAをセットする
+
+   i. カーソルAのTrackリストから `up` を選択してpos.をクリックし、位置をセットする
+   ii. dir.をクリックしてカーソルAを右向きにセットする
+
+2. 1つ目の分岐器を計算する
+   
+   * .. image:: ./files/tutorial/ctsolver_crossover_switch1.png
+                :scale: 60%
+			
+   i. カーソルα, βにA, Bが指定されていることを確認する
+   ii. **Assign results to cursorにチェックを入れる**
+   iii. TCLα = 0, TCLβ = 0, CCL = 14.73, R = 118.0 を入力
+   iv. Modeとして **4. α(fix), R(fix), CCL(fix)** を選択してDo Itをクリック
+   v. カーソルAを起点とした曲線軌道が計算され、軌道終点にカーソルBがセットされる
+       
+      * .. image:: ./files/tutorial/ctsolver_crossover_switch1_result.png
+                   :scale: 60%
+
+3. 2つ目の分岐器を計算する
+
+   i. **カーソルα, βにC, Bをセットする**
+   ii. TCLα = 0, TCLβ = 0, CCL = 14.73, R = **-118.0** を入力
+   iii. **カーソルC** を軌道 `down` の適当な位置にセットする
+   iv. Modeとして **3. α(free)->β(free), R(fix)** を選択してDo Itをクリック
+   v. カーソルB, Cを接線とする曲線軌道が計算される
+       
+      * .. image:: ./files/tutorial/ctsolver_crossover_switch2_result.png
+                   :scale: 60%
+      
+
+       
+.. code-block:: text
+
+   [Curve fitting]
+   Inputs:
+      Fitmode:          4. α(fix), R(fix), CCL(fix)
+      Cursor α:         A
+      Ponint α:         (100.000000, -3.800000)
+      Direction α:      0.000000
+      Transition func.: line
+      TCL α:            0.000000
+      TCL β:            0.000000
+      CCL:              14.730000
+      R:                118.000000
+   Results:
+      endpoint: (114.691774, -2.881817)
+      phi_end:  7.152261
+
+   [Distance between Point A and B]
+   Inputs:
+      Ponint A: (100.000000, -3.800000), kp = 100.000000
+      Ponint B: (114.691774, -2.881817), kp = 0.000000
+   Result:
+      distance: 14.7
+
+   [Direction toward Point A to B]
+   Inputs:
+      Dircection A: 0.000000
+      Dircection B: 7.152261
+   Result:
+      direction:    7.2
+
+   $pt_a +0.000000;
+   Curve.SetFunction(1);
+   Curve.Interpolate(0.000000,0.000000);
+   $pt_a +0.000000;
+   Curve.Interpolate(118.000000,0.000000);
+   $pt_a +14.730000;
+   Curve.Interpolate(118.000000,0.000000);
+   $pt_a +14.730000;
+   Curve.Interpolate(0.000000,0.000000);
+
+.. code-block:: text
+
+   [Curve fitting]
+   Inputs:
+      Fitmode:          3. α(free)->β(free), R(fix)
+      Cursor α,β:       B,C
+      Ponint α:         (114.691774, -2.881817)
+      Ponint β:         (150.000000, 0.000000)
+      Direction α:     7.152261
+      Direction β:     0.000000
+      Transition func.: line
+      TCL α:            0.000000
+      TCL β:            0.000000
+      R:                -118.000000
+   Results:
+      CCL:        14.730000
+      startpoint: (130.340376, -0.918183)
+      shift:      15.771322
+
+   $pt_a +15.771322;
+   Curve.SetFunction(1);
+   Curve.Interpolate(0.000000,0.000000);
+   $pt_a +15.771322;
+   Curve.Interpolate(-118.000000,0.000000);
+   $pt_a +30.501322;
+   Curve.Interpolate(-118.000000,0.000000);
+   $pt_a +30.501322;
+   Curve.Interpolate(0.000000,0.000000);
+
+.. code-block:: text
+		
+   BveTs Map 2.02:utf-8
+
+   $pt_a = 0;
+
+   $pt_a +0.000000;
+   Curve.SetFunction(1);
+   Curve.Interpolate(0.000000,0.000000);
+   $pt_a +0.000000;
+   Curve.Interpolate(118.000000,0.000000);
+   $pt_a +14.730000;
+   Curve.Interpolate(118.000000,0.000000);
+   $pt_a +14.730000;
+   Curve.Interpolate(0.000000,0.000000);
+
+   $pt_a = 14.73;
+
+   $pt_a +15.771322;
+   Curve.SetFunction(1);
+   Curve.Interpolate(0.000000,0.000000);
+   $pt_a +15.771322;
+   Curve.Interpolate(-118.000000,0.000000);
+   $pt_a +30.501322;
+   Curve.Interpolate(-118.000000,0.000000);
+   $pt_a +30.501322;
+   Curve.Interpolate(0.000000,0.000000);
+   
 ..
    待避線
    =======
