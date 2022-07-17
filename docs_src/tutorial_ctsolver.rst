@@ -246,6 +246,9 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
 ここでは、上側軌道: `up`, 下側軌道: `down`, 渡り線: `cross` とします。
 また、複線間隔は3.8mとし、分岐器として狭軌の8番分岐器を想定しています。
 
+サンプルデータを :download:`tutorial_ctsolver_cross_sample.zip (3.0 KB) <./files/tutorial/tutorial_ctsolver_cross_sample.zip>` からダウンロードできます。
+tsutsujiでco.cfgファイルを読み込むと、下図右側の線形が表示されます。
+
 .. image:: ./files/tutorial/ctsolver_crossover.png
 	   :scale: 50%
 
@@ -268,6 +271,8 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
       * .. image:: ./files/tutorial/ctsolver_crossover_switch1_result.png
                    :scale: 60%
 
+      * ターミナル出力は :ref:`こちら<tut_ctsolver_co_sw1>`
+
 3. 2つ目の分岐器を計算する
 
    i. **カーソルα, βにC, Bをセットする**
@@ -278,9 +283,48 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
        
       * .. image:: ./files/tutorial/ctsolver_crossover_switch2_result.png
                    :scale: 60%
-      
 
-       
+      * ターミナル出力は :ref:`こちら<tut_ctsolver_co_sw2>`
+      * ここで、shift = 15.77 m は、1つ目の分岐器終点(カーソルB)から2つ目の分岐器始点までの距離を表す
+
+4. 計算結果をもとにして渡り線のマップファイルを作成する
+
+   * .. code-block:: text
+		
+	BveTs Map 2.02:utf-8
+
+	$pt_a = 0;
+
+	$pt_a +0.000000;
+	Curve.SetFunction(1);
+	Curve.Interpolate(0.000000,0.000000);
+	$pt_a +0.000000;
+	Curve.Interpolate(118.000000,0.000000);
+	$pt_a +14.730000;
+	Curve.Interpolate(118.000000,0.000000);
+	$pt_a +14.730000;
+	Curve.Interpolate(0.000000,0.000000);
+
+	$pt_a = 14.73;
+
+	$pt_a +15.771322;
+	Curve.SetFunction(1);
+	Curve.Interpolate(0.000000,0.000000);
+	$pt_a +15.771322;
+	Curve.Interpolate(-118.000000,0.000000);
+	$pt_a +30.501322;
+	Curve.Interpolate(-118.000000,0.000000);
+	$pt_a +30.501322;
+	Curve.Interpolate(0.000000,0.000000);
+
+
+ターミナル出力例
+---------------
+      
+.. _tut_ctsolver_co_sw1:
+
+分岐器1つ目
+
 .. code-block:: text
 
    [Curve fitting]
@@ -322,6 +366,10 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
    $pt_a +14.730000;
    Curve.Interpolate(0.000000,0.000000);
 
+.. _tut_ctsolver_co_sw2:
+
+分岐器2つ目
+
 .. code-block:: text
 
    [Curve fitting]
@@ -351,33 +399,6 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
    $pt_a +30.501322;
    Curve.Interpolate(0.000000,0.000000);
 
-.. code-block:: text
-		
-   BveTs Map 2.02:utf-8
-
-   $pt_a = 0;
-
-   $pt_a +0.000000;
-   Curve.SetFunction(1);
-   Curve.Interpolate(0.000000,0.000000);
-   $pt_a +0.000000;
-   Curve.Interpolate(118.000000,0.000000);
-   $pt_a +14.730000;
-   Curve.Interpolate(118.000000,0.000000);
-   $pt_a +14.730000;
-   Curve.Interpolate(0.000000,0.000000);
-
-   $pt_a = 14.73;
-
-   $pt_a +15.771322;
-   Curve.SetFunction(1);
-   Curve.Interpolate(0.000000,0.000000);
-   $pt_a +15.771322;
-   Curve.Interpolate(-118.000000,0.000000);
-   $pt_a +30.501322;
-   Curve.Interpolate(-118.000000,0.000000);
-   $pt_a +30.501322;
-   Curve.Interpolate(0.000000,0.000000);
    
 ..
    待避線
