@@ -5,7 +5,7 @@
 <html lang="jp">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>CFG file format &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -14,6 +14,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -52,18 +53,18 @@
           <div class="body" role="main">
             
   <section id="cfg-file-format">
-<h1>CFG file format<a class="headerlink" href="#cfg-file-format" title="Permalink to this headline">¶</a></h1>
+<h1>CFG file format<a class="headerlink" href="#cfg-file-format" title="Permalink to this heading">¶</a></h1>
 <section id="tsutsuji-general">
-<h2>[&#64;TSUTSUJI_GENERAL]<a class="headerlink" href="#tsutsuji-general" title="Permalink to this headline">¶</a></h2>
+<h2>[&#64;TSUTSUJI_GENERAL]<a class="headerlink" href="#tsutsuji-general" title="Permalink to this heading">¶</a></h2>
 <section id="owntrack">
-<h3>owntrack<a class="headerlink" href="#owntrack" title="Permalink to this headline">¶</a></h3>
+<h3>owntrack<a class="headerlink" href="#owntrack" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: string</p></li>
 <li><p>自軌道として扱うtrackkey</p></li>
 </ul>
 </section>
 <section id="unit-length">
-<h3>unit_length<a class="headerlink" href="#unit-length" title="Permalink to this headline">¶</a></h3>
+<h3>unit_length<a class="headerlink" href="#unit-length" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
 <li><p>各軌道について軌道座標を計算する間隔 [m]</p>
@@ -79,7 +80,7 @@
 </ul>
 </section>
 <section id="offset-variable">
-<h3>offset_variable<a class="headerlink" href="#offset-variable" title="Permalink to this headline">¶</a></h3>
+<h3>offset_variable<a class="headerlink" href="#offset-variable" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: string</p></li>
 <li><p>変換結果の距離程を <code class="code docutils literal notranslate"><span class="pre">$offset_variable</span> <span class="pre">+</span> <span class="pre">distance;</span></code> の形で表すときの変数名。</p>
@@ -90,7 +91,7 @@
 </ul>
 </section>
 <section id="origin-distance">
-<h3>origin_distance<a class="headerlink" href="#origin-distance" title="Permalink to this headline">¶</a></h3>
+<h3>origin_distance<a class="headerlink" href="#origin-distance" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p>
 <ul>
@@ -100,7 +101,7 @@
 </ul>
 </section>
 <section id="output-path">
-<h3>output_path<a class="headerlink" href="#output-path" title="Permalink to this headline">¶</a></h3>
+<h3>output_path<a class="headerlink" href="#output-path" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: filepath</p></li>
 <li><p>変換結果を保存するディレクトリへのパス</p>
@@ -112,7 +113,7 @@
 </ul>
 </section>
 <section id="backimg">
-<h3>backimg<a class="headerlink" href="#backimg" title="Permalink to this headline">¶</a></h3>
+<h3>backimg<a class="headerlink" href="#backimg" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: filepath</p></li>
 <li><p>線形データ読み込み時に表示する背景画像設定ファイルへのパス</p>
@@ -124,12 +125,12 @@
 </section>
 </section>
 <section id="trackkey">
-<h2>[<em>trackkey</em>]<a class="headerlink" href="#trackkey" title="Permalink to this headline">¶</a></h2>
+<h2>[<em>trackkey</em>]<a class="headerlink" href="#trackkey" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><em>trackkey</em> : 読み込む軌道データに与える軌道キー</p></li>
 </ul>
 <section id="file">
-<h3>file<a class="headerlink" href="#file" title="Permalink to this headline">¶</a></h3>
+<h3>file<a class="headerlink" href="#file" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: filepath</p></li>
 <li><p><em>trackkey</em> として読み込むmapファイルパス</p></li>
@@ -137,7 +138,7 @@
 </ul>
 </section>
 <section id="absolute-coordinate">
-<h3>absolute_coordinate<a class="headerlink" href="#absolute-coordinate" title="Permalink to this headline">¶</a></h3>
+<h3>absolute_coordinate<a class="headerlink" href="#absolute-coordinate" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: bool</p></li>
 <li><p>軌道始点座標の指定方法</p>
@@ -153,7 +154,7 @@
 </ul>
 </section>
 <section id="parent-track">
-<h3>parent_track<a class="headerlink" href="#parent-track" title="Permalink to this headline">¶</a></h3>
+<h3>parent_track<a class="headerlink" href="#parent-track" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: string</p></li>
 <li><p>座標系の原点となる軌道のtrackkey</p></li>
@@ -161,7 +162,7 @@
 </ul>
 </section>
 <section id="origin-kilopost">
-<h3>origin_kilopost<a class="headerlink" href="#origin-kilopost" title="Permalink to this headline">¶</a></h3>
+<h3>origin_kilopost<a class="headerlink" href="#origin-kilopost" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
 <li><p>座標系の原点となる距離程</p></li>
@@ -169,28 +170,28 @@
 </ul>
 </section>
 <section id="x">
-<h3>x<a class="headerlink" href="#x" title="Permalink to this headline">¶</a></h3>
+<h3>x<a class="headerlink" href="#x" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
 <li><p>軌道始端座標のx成分 [m]</p></li>
 </ul>
 </section>
 <section id="y">
-<h3>y<a class="headerlink" href="#y" title="Permalink to this headline">¶</a></h3>
+<h3>y<a class="headerlink" href="#y" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
 <li><p>軌道始端座標のy成分 [m]</p></li>
 </ul>
 </section>
 <section id="z">
-<h3>z<a class="headerlink" href="#z" title="Permalink to this headline">¶</a></h3>
+<h3>z<a class="headerlink" href="#z" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
 <li><p>軌道始端座標のz成分 [m]</p></li>
 </ul>
 </section>
 <section id="angle">
-<h3>angle<a class="headerlink" href="#angle" title="Permalink to this headline">¶</a></h3>
+<h3>angle<a class="headerlink" href="#angle" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
 <li><p>軌道始端における進行方向 [°]</p></li>
@@ -210,7 +211,7 @@
 <img alt="_images/coordinate.png" src="_images/coordinate.png" />
 </section>
 <section id="isowntrack">
-<h3>isowntrack<a class="headerlink" href="#isowntrack" title="Permalink to this headline">¶</a></h3>
+<h3>isowntrack<a class="headerlink" href="#isowntrack" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: bool</p></li>
 <li><p>この軌道を自軌道とする場合にTrue</p>
@@ -222,14 +223,14 @@
 </ul>
 </section>
 <section id="endpoint">
-<h3>endpoint<a class="headerlink" href="#endpoint" title="Permalink to this headline">¶</a></h3>
+<h3>endpoint<a class="headerlink" href="#endpoint" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
 <li><p>軌道終点の距離程 [m]</p></li>
 </ul>
 </section>
 <section id="supplemental-cp">
-<h3>supplemental_cp<a class="headerlink" href="#supplemental-cp" title="Permalink to this headline">¶</a></h3>
+<h3>supplemental_cp<a class="headerlink" href="#supplemental-cp" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float, float, ..., float</p></li>
 <li><p>制御点として追加する距離程</p>
@@ -241,7 +242,7 @@
 </ul>
 </section>
 <section id="color">
-<h3>color<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h3>
+<h3>color<a class="headerlink" href="#color" title="Permalink to this heading">¶</a></h3>
 <ul>
 <li><p>type: string</p></li>
 <li><p>軌道プロット時の線色</p>
@@ -333,7 +334,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -360,7 +361,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>

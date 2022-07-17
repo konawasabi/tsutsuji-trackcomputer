@@ -5,7 +5,7 @@
 <html lang="jp">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>背景画像 &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -14,6 +14,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -52,15 +53,15 @@
           <div class="body" role="main">
             
   <section id="id1">
-<h1>背景画像<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h1>背景画像<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h1>
 <section id="id2">
-<h2>はじめに<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2>はじめに<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
 <p>このセクションでは、以下の画像をプロットウィンドウの背景(backimg)に表示し、表示倍率と回転角度を調整する手順を説明します。
 この機能は、航空写真や配線図を基にして軌道データを調整することを意図しています。</p>
 <a class="reference internal image-reference" href="_images/backimg_sample.png"><img alt="_images/backimg_sample.png" src="_images/backimg_sample.png" style="width: 473.75px; height: 195.75px;" /></a>
 </section>
 <section id="id3">
-<h2>画像の読み込み<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2>画像の読み込み<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
 <p>オプションメニューからBackimg... を実行して、Background imagesウィンドウ(下記画像)を開きます。
 Addボタンを押して表示したい画像ファイルを選択すると、その画像がプロットウィンドウに表示されます。</p>
 <a class="reference internal image-reference" href="_images/backimg.png"><img alt="_images/backimg.png" src="_images/backimg.png" style="width: 383.25px; height: 199.5px;" /></a>
@@ -74,7 +75,7 @@ matplotlibが扱えるフォーマットならば、これ以外の形式も読�
 </div>
 </section>
 <section id="id4">
-<h2>基準座標の測定<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<h2>基準座標の測定<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
 <p>読み込んだ画像について、十字マーク(オレンジ色)を座標原点として、軌道の方向をx軸正の向きに合わせるため、該当部分の画像上での座標と方角を測定します。</p>
 <p>メインウィンドウのMeasureボタンを押して、Measureウィンドウを開きます。</p>
 <p>カーソルAのPos. を実行して、出てきたx印カーソルを十字マークの中心に合わせてクリックします。
@@ -84,11 +85,6 @@ matplotlibが扱えるフォーマットならば、これ以外の形式も読�
 <p>測定結果を背景画像に反映させます。
 Background imagesウィンドウを開いて、Filepathリストから先ほど読み込んだファイルを選択し、各パラメータを次の表のように設定してRefreshをクリックします。</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>パラメータ</p></th>
 <th class="head"><p>設定値</p></th>
@@ -119,7 +115,7 @@ Background imagesウィンドウを開いて、Filepathリストから先ほど�
 </div>
 </section>
 <section id="id5">
-<h2>スケールの調整<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<h2>スケールの調整<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
 <p>背景画像を読み込んだ時点では、<strong>画像上の1pixel = プロットウィンドウ上の1m</strong> として扱われます。
 軌道データの調整に用いるためには、<strong>画像上の1m = プロットウィンドウ上の1m</strong> となるように画像の表示スケールを調整しなければなりません。</p>
 <p>このチュートリアルで用いているサンプル画像では、スケールバーとして使えるように左下に20m分の線路を配置してあります。
@@ -182,7 +178,7 @@ Background imagesウィンドウを開いて、Filepathリストから先ほど�
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -209,7 +205,7 @@ Background imagesウィンドウを開いて、Filepathリストから先ほど�
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>
