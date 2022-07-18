@@ -179,7 +179,7 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
 .. image:: ./files/tutorial/ctsolver_merging.png
 	   :scale: 50%
 
-1. カーソルAを軌道 `up` の左端に合わせる
+1. カーソルAを軌道 `up` の右端に合わせる
    
    i. カーソルAのTrackリストから `up` を選択する
       
@@ -247,7 +247,7 @@ Curve構文による出力では `shift` の値を考慮して距離程が決め
 また、複線間隔は3.8mとし、分岐器として狭軌の8番分岐器を想定しています。
 
 サンプルデータを :download:`tutorial_ctsolver_cross_sample.zip (3.0 KB) <./files/tutorial/tutorial_ctsolver_cross_sample.zip>` からダウンロードできます。
-tsutsujiでco.cfgファイルを読み込むと、下図右側の線形が表示されます。
+tsutsujiでco.cfgファイルを読み込むと、下図下側の線形が表示されます。
 
 .. image:: ./files/tutorial/ctsolver_crossover.png
 	   :scale: 50%
