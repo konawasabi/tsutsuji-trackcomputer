@@ -216,7 +216,7 @@ class arrow():
             self.pointerdir.remove()
             self.pointerdir = None
         self.setobj(None,reset=True)
-        self.p.parent.printdirection()
+        #self.p.parent.printdirection()
         self.canvas.draw()
 
 class marker_simple():
@@ -353,4 +353,4 @@ class marker_pos():
         self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get(),direct=True)
         if not replot:
             self.p.parent.setdistance()
-            self.p.parent.printdistance()
+            #self.p.parent.printdistance()
