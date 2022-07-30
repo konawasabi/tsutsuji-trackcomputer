@@ -28,6 +28,7 @@ from kobushi import trackgenerator
 
 from . import config
 from . import math
+from . import kml2track
 
 class TrackControl():
     def __init__(self):
@@ -38,6 +39,7 @@ class TrackControl():
         self.conf = None
         self.path = None
         self.generated_othertrack = None
+        self.pointsequence_track = kml2track.Kml2track()
     def loadcfg(self,path):
         '''cfgファイルの読み込み
         '''
@@ -57,6 +59,8 @@ class TrackControl():
             self.rel_track_radius = {}
             self.rel_track_radius_cp = {}
             self.generated_othertrack = None
+            self.pointsequence_track.initialize_variables()
+
             for i in self.conf.track_keys:
                 self.track[i] = {}
                 self.track[i]['interp'] = mapinterpreter.ParseMap(env=None,parser=None)
@@ -85,9 +89,11 @@ class TrackControl():
 
                     pos_origin_abs = []
                     for j in range(0,5):
-                        pos_origin_abs.append(math.interpolate_with_dist(self.track[self.conf.track_data[i]['parent_track']]['result'],j,self.conf.track_data[i]['origin_kilopost']))
+                        pos_origin_abs.append(math.interpolate_with_dist(self.track[self.conf.track_data[i]['parent_track']]['result'],\
+                                                                         j,self.conf.track_data[i]['origin_kilopost']))
 
-                    pos_origin_rot = np.dot(math.rotate(pos_origin_abs[4]), np.array([self.conf.track_data[i]['z'],self.conf.track_data[i]['x']]))
+                    pos_origin_rot = np.dot(math.rotate(pos_origin_abs[4]),\
+                                            np.array([self.conf.track_data[i]['z'],self.conf.track_data[i]['x']]))
                     self.track[i]['tgen'] = trackgenerator.TrackGenerator(self.track[i]['data'],\
                                                                     x0 = pos_origin_rot[0] + pos_origin_abs[1],\
                                                                     y0 = pos_origin_rot[1] + pos_origin_abs[2],\
@@ -97,6 +103,10 @@ class TrackControl():
                 self.track[i]['cplist_symbol'] = self.take_cp_by_types(self.track[i]['data'].own_track.data)
                 self.track[i]['toshow'] = True
                 self.track[i]['output_mapfile'] = None
+
+        self.pointsequence_track.load_files(self.conf)
+            
+            
     def relativepoint_single(self,to_calc,owntrack=None):
         '''owntrackを基準とした相対座標への変換
 
@@ -269,6 +279,7 @@ class TrackControl():
                     ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
+            self.pointsequence_track.plot2d(ax)
         if self.generated_othertrack is not None:
             for otrack in self.generated_othertrack.keys():
                 if self.generated_othertrack[otrack]['toshow']:
@@ -285,6 +296,7 @@ class TrackControl():
                 extent[1] = tmp_result[1] if tmp_result[1] > extent[1] else extent[1]
                 extent[2] = tmp_result[2] if tmp_result[2] < extent[2] else extent[2]
                 extent[3] = tmp_result[3] if tmp_result[3] > extent[3] else extent[3]
+            extent = self.pointsequence_track.drawarea(extent)
         return extent
     def dump_trackdata(self):
         for key in self.conf.track_keys:
