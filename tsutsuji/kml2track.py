@@ -48,7 +48,7 @@ class Kml2track():
         output = []
         for i in range(1,len(data)):
             tmp = math.calc_pl2xy(data[i][1],data[i][0],data[0][1],data[0][0])
-            output.append([tmp[1],tmp[0],data[i][2]])
+            output.append([tmp[0],tmp[1],data[i][2]])
 
         output = np.array(output)
         return output
@@ -59,9 +59,11 @@ class Kml2track():
         for key in conf.kml_keys:
             self.track[key] = {}
             self.track[key]['data'] = self.loadkml(conf.kml_track[key]['file'])
+            self.track[key]['color'] = conf.kml_track[key]['color']
         for key in conf.csv_keys:
             self.track[key] = {}
             self.track[key]['data'] = self.loadcsv(conf.csv_track[key]['file'])
+            self.track[key]['color'] = conf.csv_track[key]['color']
         for key in self.track.keys():
             self.track[key]['interp'] = None
             self.track[key]['tgen'] = None
@@ -93,7 +95,7 @@ class Kml2track():
         for key in self.track.keys():
             if self.track[key]['toshow']:
                 tmp = self.track[key]['result']
-                ax.plot(tmp[:,1],tmp[:,2],label=key,color='black')
+                ax.plot(tmp[:,1],tmp[:,2],label=key,color=self.track[key]['color'])
     def drawarea(self, extent_orig):
         extent = extent_orig
         for key in self.track.keys():
