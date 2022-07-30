@@ -63,7 +63,7 @@ backimg
 file
 ===========
 * type: filepath
-* *trackkey* として読み込むmapファイルパス
+* *trackkey* として読み込むファイルパス
 * **省略不可**
 
 absolute_coordinate

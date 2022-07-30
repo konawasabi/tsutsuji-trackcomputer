@@ -70,6 +70,11 @@ https://konawasabi.github.io/tsutsuji-trackcomputer/
 
 Apache Licence, Version 2.0に従う限り、本ソフトウェアの改変、再配布を自由に行うことができます。
 
+## Acknowledgements
+
+* 緯度経度->直交座標への変換ルーチンとして、下記URLにて公開されているsw1227氏のコードを使用させていただきました
+  * https://qiita.com/sw1227/items/e7a590994ad7dcd0e8ab
+
 ## Contact
 
 Author: Konawasabi
