@@ -78,14 +78,21 @@ class Kml2track():
         distance = 0
         theta = 0
         result = []
-        for element in data:
-            #[[distance,xpos,ypos,zpos,theta,radius,gradient,interpolate_func,cant,center,gauge],[d.,x.,y.,...],[...],...]
+        data_rot = []
+        for ix in range(0,len(data)):
             elem_rot = np.dot(math.rotate(conf['angle']),\
-                              np.array([element[0],element[1]]))
+                              np.array([data[ix][0],data[ix][1]]))
+            data_rot.append([elem_rot[0]+conf['x'],elem_rot[1]+conf['y'],data[ix][2]+conf['z']])
+        for ix in range(0,len(data)):
+            #[[distance,xpos,ypos,zpos,theta,radius,gradient,interpolate_func,cant,center,gauge],[d.,x.,y.,...],[...],...]
+            if ix < len(data_rot)-1:
+                theta = np.arctan((data_rot[ix+1][1]-data_rot[ix][1])/((data_rot[ix+1][0]-data_rot[ix][0])))
+            if ix > 0:
+                distance += np.sqrt((data_rot[ix][0]-data_rot[ix-1][0])**2+(data_rot[ix][1]-data_rot[ix-1][1])**2)
             result.append([distance,\
-                           elem_rot[0]+conf['x'],\
-                           elem_rot[1]+conf['y'],\
-                           element[2]+conf['z'],\
+                           data_rot[ix][0],\
+                           data_rot[ix][1],\
+                           data_rot[ix][2],\
                            theta,\
                            0,\
                            0,\
@@ -93,7 +100,6 @@ class Kml2track():
                            0,\
                            0,\
                            0])
-            distance += np.sqrt(element[0]**2+element[1]**2)
         result_np = np.array(result)
         
         return result_np
