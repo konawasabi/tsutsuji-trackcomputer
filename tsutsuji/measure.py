@@ -157,7 +157,9 @@ class interface():
             self.arrow.set_direct()
         def make_trackkeylist(self):
             currentval = self.values[3].get()
-            self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
+            self.track_e['values'] = tuple(['@absolute'])\
+                +tuple(self.parent.mainwindow.trackcontrol.track.keys())\
+                +tuple(self.parent.mainwindow.trackcontrol.pointsequence_track.track.keys())
             if currentval not in self.track_e['values']:
                 self.values[3].set('@absolute')
     def __init__(self,mainwindow):

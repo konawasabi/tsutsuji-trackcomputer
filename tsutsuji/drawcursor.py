@@ -270,8 +270,10 @@ class marker_pos():
         self.markerobj.pressfunc = lambda p:self.pressfunc(p)
     def start(self):
         self.track_key = self.p.values[3].get()
-        if self.track_key != '@absolute':
+        if '@' not in self.track_key:
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:,1:3]
+        elif '@KML_' in self.track_key or '@CSV_' in self.track_key:
+            self.track_data = self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result'][:,1:3]
         else:
             self.track_data = None
         self.markerobj.start(lambda x,y:self.posfunc(x,y),lambda p:self.pressfunc(p))
@@ -283,7 +285,11 @@ class marker_pos():
         inputpos = np.array([x,y])
         distance = (self.track_data - inputpos)**2
         min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
-        return self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][min_dist_ix]
+        if '@' not in self.track_key:
+            result = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][min_dist_ix]
+        else:
+            result = self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result'][min_dist_ix]
+        return result
     def setmarkerobj(self,pos=False):
         self.markerobj.setobj()
         if pos:
@@ -319,11 +325,17 @@ class marker_pos():
             kp = None
         else:
             kp = self.p.values[4].get()
-            self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result']
+            if '@' not in self.track_key:
+                self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result']
+            else:
+                self.track_data = self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result']
 
             pos_kp = []
             for i in range(0,5):
-                pos_kp.append(math.interpolate_with_dist(self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'],i,kp))
+                if '@' not in self.track_key:
+                    pos_kp.append(math.interpolate_with_dist(self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'],i,kp))
+                else:
+                    pos_kp.append(math.interpolate_with_dist(self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result'],i,kp))
             #pos_kp = self.track_data[self.track_data[:,0] == kp][-1]
            
             if self.p.coordinate_v.get() == 'abs':
@@ -348,7 +360,10 @@ class marker_pos():
             self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(pos_kp[4]+offs_angle)))
 
             self.prev_trackpos = pos_kp
-            self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:1,3]
+            if '@' not in self.track_key:
+                self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:1,3]
+            else:
+                self.track_data = self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result'][:1,3]
                 
         self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get(),direct=True)
         if not replot:
