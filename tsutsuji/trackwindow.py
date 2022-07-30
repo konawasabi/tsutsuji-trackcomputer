@@ -99,14 +99,19 @@ class TrackWindow(ttk.Frame):
                     self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['toshow'] = not self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['toshow']
             elif clicked_zone == 'text':
                 if clicked_column == '#1': #ラインカラーをクリックしたら、カラーピッカーを開く
-                    if '@OT_' not in clicked_track:
+                    if '@' not in clicked_track:
                         nowcolor = self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color']
+                    elif '@KML_' in clicked_track or '@CSV_' in clicked_track:
+                        nowcolor = self.mainwindow.trackcontrol.pointsequence_track.track[clicked_track]['color']
                     else:
                         nowcolor = self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['color']
                     inputdata = colorchooser.askcolor(color=nowcolor)
                     if inputdata[1] != None: # カラーピッカーでキャンセルされなかった場合、当該軌道に色を指定
-                        if '@OT_' not in clicked_track:
+                        if '@' not in clicked_track:
                             self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color'] = inputdata[1]
+                            self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
+                        elif '@KML_' in clicked_track or '@CSV_' in clicked_track:
+                            self.mainwindow.trackcontrol.pointsequence_track.track[clicked_track]['color'] = inputdata[1]
                             self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
                         else:
                             self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['color'] = inputdata[1]
