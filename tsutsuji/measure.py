@@ -232,7 +232,8 @@ class interface():
             self.nearesttrack_sel_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
             self.nearesttrack_sel_v = tk.StringVar(value='')
             self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
-            self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())
+            self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())\
+                +tuple(self.mainwindow.trackcontrol.pointsequence_track.track.keys())
             self.nearesttrack_sel_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
             self.nearesttrack_sel_e.state(["readonly"])
             
@@ -574,7 +575,11 @@ class interface():
         cursor_obj = {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
         
         inputpos = np.array([cursor_obj[cursor].values[0].get(),cursor_obj[cursor].values[1].get()])
-        track = self.mainwindow.trackcontrol.track[self.nearesttrack_sel_v.get()]['result']
+        trackkey = self.nearesttrack_sel_v.get()
+        if '@' not in trackkey:
+            track = self.mainwindow.trackcontrol.track[trackkey]['result']
+        else:
+            track = self.mainwindow.trackcontrol.pointsequence_track.track[trackkey]['result']
         track_pos = track[:,1:3]
 
         result = math.minimumdist(track_pos, inputpos)
