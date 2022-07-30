@@ -60,10 +60,12 @@ class Kml2track():
             self.track[key] = {}
             self.track[key]['data'] = self.loadkml(conf.kml_track[key]['file'])
             self.track[key]['color'] = conf.kml_track[key]['color']
+            self.track[key]['conf'] = conf.kml_track[key]
         for key in conf.csv_keys:
             self.track[key] = {}
             self.track[key]['data'] = self.loadcsv(conf.csv_track[key]['file'])
             self.track[key]['color'] = conf.csv_track[key]['color']
+            self.track[key]['conf'] = conf.csv_track[key]
         for key in self.track.keys():
             self.track[key]['interp'] = None
             self.track[key]['tgen'] = None
@@ -71,17 +73,19 @@ class Kml2track():
             self.track[key]['output_mapfile'] = None
             
             self.track[key]['toshow'] = True
-            self.track[key]['result'] = self.generate_trackdata(self.track[key]['data'])
-    def generate_trackdata(self, data):
+            self.track[key]['result'] = self.generate_trackdata(self.track[key]['data'], self.track[key]['conf'])
+    def generate_trackdata(self, data, conf):
         distance = 0
         theta = 0
         result = []
         for element in data:
             #[[distance,xpos,ypos,zpos,theta,radius,gradient,interpolate_func,cant,center,gauge],[d.,x.,y.,...],[...],...]
+            elem_rot = np.dot(math.rotate(conf['angle']),\
+                              np.array([element[0],element[1]]))
             result.append([distance,\
-                           element[0],\
-                           element[1],\
-                           element[2],\
+                           elem_rot[0]+conf['x'],\
+                           elem_rot[1]+conf['y'],\
+                           element[2]+conf['z'],\
                            theta,\
                            0,\
                            0,\
@@ -90,7 +94,9 @@ class Kml2track():
                            0,\
                            0])
             distance += np.sqrt(element[0]**2+element[1]**2)
-        return np.array(result)
+        result_np = np.array(result)
+        
+        return result_np
     def plot2d(self, ax):
         for key in self.track.keys():
             if self.track[key]['toshow']:
