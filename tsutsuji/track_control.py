@@ -122,7 +122,10 @@ class TrackControl():
         def interpolate(aroundzero,ix,typ,base='x_tr'):
             return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        tgt = self.track[to_calc]['result']
+        if '@' not in to_calc:
+            tgt = self.track[to_calc]['result']
+        else:
+            tgt = self.pointsequence_track.track[to_calc]['result']
         src = self.track[owntrack]['result']
         len_tr = len(tgt)
         result = []
@@ -179,12 +182,12 @@ class TrackControl():
 
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        calc_track = [i for i in self.conf.track_keys if i != owntrack]
+        calc_track = [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != owntrack]
         for tr in calc_track:
             self.rel_track[tr]=self.relativepoint_single(tr,owntrack)
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
+        calc_track = [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != owntrack] if to_calc == None else [to_calc]
         for tr in calc_track:
             self.rel_track_radius[tr] = []
 
@@ -361,18 +364,25 @@ class TrackControl():
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         cp_dist = []
-        for dat in self.track[trackkey]['data'].own_track.data: # 軌道要素が存在する距離程を抽出
-            if elem == None or dat['key'] == elem:
-                cp_dist.append(dat['distance'])
-        
-        cp_dist.append(self.conf.track_data[trackkey]['endpoint'])
-        cp_dist.append(0)
 
-        if supplemental:
-            for dat in self.conf.track_data[trackkey]['supplemental_cp']: # supplemental_cpの追加
-                cp_dist.append(dat)
-        cp_dist = sorted(set(cp_dist))
-        pos_cp = self.track[trackkey]['result'][np.isin(self.track[trackkey]['result'][:,0],cp_dist)]
+        if '@' not in trackkey:
+            for dat in self.track[trackkey]['data'].own_track.data: # 軌道要素が存在する距離程を抽出
+                if elem == None or dat['key'] == elem:
+                    cp_dist.append(dat['distance'])
+            cp_dist.append(self.conf.track_data[trackkey]['endpoint'])
+            cp_dist.append(0)
+            if supplemental:
+                for dat in self.conf.track_data[trackkey]['supplemental_cp']: # supplemental_cpの追加
+                    cp_dist.append(dat)
+            cp_dist = sorted(set(cp_dist))
+            pos_cp = self.track[trackkey]['result'][np.isin(self.track[trackkey]['result'][:,0],cp_dist)]
+        else:
+            for dat in self.pointsequence_track.track[trackkey]['result']:
+                cp_dist.append(dat[0])
+            cp_dist.append(0)
+            cp_dist = sorted(set(cp_dist))
+            pos_cp = self.pointsequence_track.track[trackkey]['result'][np.isin(self.pointsequence_track.track[trackkey]['result'][:,0],cp_dist)]
+        
         return cp_dist, pos_cp
     def convert_relativecp(self,trackkey,pos_cp,owntrack = None):
         ''' 抽出した制御点を自軌道座標に変換
@@ -411,7 +421,7 @@ class TrackControl():
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
 
         # owntrack以外の各軌道について処理する
-        for tr in [i for i in self.conf.track_keys if i != self.conf.owntrack]:
+        for tr in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != self.conf.owntrack]:
             _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
             relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
             cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3]) and i>min(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点のうち注目軌道が含まれる点と、自軌道基準に変換した注目軌道距離程の和をとる
@@ -419,7 +429,8 @@ class TrackControl():
             
             self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
 
-            # 他軌道構文生成
+        # 他軌道構文生成
+        for tr in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != self.conf.owntrack]:
             output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
             if self.conf.general['offset_variable'] is not None:
                 kp_val = '$'+self.conf.general['offset_variable']+' + '
@@ -487,7 +498,10 @@ class TrackControl():
             output_file += '# Track[\'{:s}\'].Cant.SetGauge\n'.format(tr)
             output_file += output_map['gauge']+'\n'
 
-            self.track[tr]['output_mapfile'] = output_file
+            if '@' not in tr:
+                self.track[tr]['output_mapfile'] = output_file
+            else:
+                self.pointsequence_track.track[tr]['conf']['output_mapfile'] = output_file
             
             #print(output_file)
             os.makedirs(self.conf.general['output_path'], exist_ok=True)
@@ -541,7 +555,7 @@ class TrackControl():
         path = self.conf.track_data[self.conf.general['owntrack']]['file']
         output_file += 'include \'{:s}\';\n'.format(str(path))
 
-        for tr_l in [i for i in self.conf.track_keys if i!= self.conf.general['owntrack']]:
+        for tr_l in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i!= self.conf.general['owntrack']]:
             path = self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr_l)))
             output_file += 'include \'{:s}\';\n'.format(str(path))
 
