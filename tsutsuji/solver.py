@@ -20,10 +20,45 @@
 import numpy as np
 from kobushi import trackcoordinate as tc
 from . import math
+from . import curvetrackplot
 
 class solver():
     def __init__(self):
         self.ci = tc.curve_intermediate()
+        self.cgen = tc.curve()
+    def temporal_trackparam(self,Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,tranfunc):
+        delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
+            
+        if(lenTC1>0):
+            tc1_tmp = self.ci.transition_curve(lenTC1,\
+                                          0,\
+                                          Rtmp,\
+                                          phiA,\
+                                          tranfunc,\
+                                          lenTC1) # 入口側の緩和曲線
+        else:
+            tc1_tmp=(np.array([0,0]),0,0)
+
+        if(lenTC2>0):
+            tc2_tmp = self.ci.transition_curve(lenTC2,\
+                                          Rtmp,\
+                                          0,\
+                                          0,\
+                                          tranfunc,\
+                                          lenTC2) # 出口側の緩和曲線
+        else:
+            tc2_tmp=(np.array([0,0]),0,0)
+
+        phi_circular = delta_phi - tc1_tmp[1]-tc2_tmp[1] # 円軌道での方位角変化
+
+        cc_tmp = self.ci.circular_curve(Rtmp*phi_circular,\
+                                   Rtmp,\
+                                   tc1_tmp[1]+phiA,\
+                                   Rtmp*phi_circular) # 円軌道
+
+        phi_tc2 = phiA + tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
+
+        return tc1_tmp, tc2_tmp, cc_tmp, phi_circular, phi_tc2
     
     def curvetrack_relocation (self,A,phiA,B,phiB,lenTC1,lenTC2,tranfunc,R,dx=0.1,error=0.01):
         ''' A,Bを通る直線を結ぶ曲線軌道の始点を返す
@@ -40,38 +75,8 @@ class solver():
         '''
 
         def func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,x):
-            delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
+            tc1_tmp, tc2_tmp, cc_tmp, phi_circular, phi_tc2 = self.temporal_trackparam(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,tranfunc)
             
-            if(lenTC1>0):
-                tc1_tmp = self.ci.transition_curve(lenTC1,\
-                                              0,\
-                                              Rtmp,\
-                                              phiA,\
-                                              tranfunc,\
-                                              lenTC1) # 入口側の緩和曲線
-            else:
-                tc1_tmp=(np.array([0,0]),0,0)
-                
-            if(lenTC2>0):
-                tc2_tmp = self.ci.transition_curve(lenTC2,\
-                                              Rtmp,\
-                                              0,\
-                                              0,\
-                                              tranfunc,\
-                                              lenTC2) # 出口側の緩和曲線
-            else:
-                tc2_tmp=(np.array([0,0]),0,0)
-
-            phi_circular = delta_phi - tc1_tmp[1]-tc2_tmp[1] # 円軌道での方位角変化
-            
-            cc_tmp = self.ci.circular_curve(Rtmp*phi_circular,\
-                                       Rtmp,\
-                                       tc1_tmp[1]+phiA,\
-                                       Rtmp*phi_circular) # 円軌道
-
-            phi_tc2 = phiA + tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
-            
-
             res_tmp = A+np.array([np.cos(phiA),np.sin(phiA)])*x + tc1_tmp[0] + cc_tmp[0] + np.dot(self.ci.rotate(phi_tc2),tc2_tmp[0]) # 与えられたR, lenTC, delta_phiから計算した着点座標
 
             # 点Bを通る直線の一般形 ax+by+c=0
@@ -108,37 +113,7 @@ class solver():
         '''
 
         def func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB):
-            delta_phi = math.angle_twov(phiA,phiB)
-            
-            if(lenTC1>0):
-                tc1_tmp = self.ci.transition_curve(lenTC1,\
-                                              0,\
-                                              Rtmp,\
-                                              phiA,\
-                                              tranfunc,\
-                                              lenTC1) # 入口側の緩和曲線
-            else:
-                tc1_tmp=(np.array([0,0]),0,0)
-                
-            if(lenTC2>0):
-                tc2_tmp = self.ci.transition_curve(lenTC2,\
-                                              Rtmp,\
-                                              0,\
-                                              0,\
-                                              tranfunc,\
-                                              lenTC2) # 出口側の緩和曲線
-            else:
-                tc2_tmp=(np.array([0,0]),0,0)
-
-            phi_circular = delta_phi - tc1_tmp[1]-tc2_tmp[1] # 円軌道での方位角変化
-            
-            cc_tmp = self.ci.circular_curve(Rtmp*phi_circular,\
-                                       Rtmp,\
-                                       tc1_tmp[1]+phiA,\
-                                       Rtmp*phi_circular) # 円軌道
-
-            phi_tc2 = phiA + tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
-            
+            tc1_tmp, tc2_tmp, cc_tmp, phi_circular, phi_tc2 = self.temporal_trackparam(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,tranfunc)
 
             res_tmp = A + tc1_tmp[0] + cc_tmp[0] + np.dot(self.ci.rotate(phi_tc2),tc2_tmp[0]) # 与えられたR, lenTC, delta_phiから計算した着点座標
 
@@ -160,3 +135,34 @@ class solver():
             Rtmp = Rtmp - f1[1]/df
             num +=1
         return (Rtmp,f1,num)
+    def shift_by_TCL(self,A,phiA,B,phiB,C,tranfunc,TCLtmp=0,dl=0.1,error=0.01):
+        ''' AB間を結び、Cに最も近い点を通過する曲線軌道の半径、TCL, CCLを返す。
+        始点: A、終点: Bの延長線上となる曲線軌道について、点Cとの距離が最小となるR, TCLをニュートン法で求める。
+        A:        始点座標
+        phiA:     始点での軌道方位
+        B:        終点座標
+        phiB:     終点での軌道方位
+        C:        経由点
+        tranfunc: 逓減関数 'line' or 'sin'
+        TCLtmp:   緩和曲線長の初期値
+        dl:       残差の微分で使う
+        error:    許容誤差
+        '''
+        def func(lenTC,A,B,phiA,phiB,C,tranfunc):
+           Rtmp, f1, num = self.curvetrack_fit(A,phiA,B,phiB,lenTC,lenTC,tranfunc)
+           ctplot = curvetrackplot.trackplot()
+           ctplot.generate(A,phiA,phiB,Rtmp,lenTC,lenTC,tranfunc)
+           mindist, crosspt, min_ix, second_min_ix = math.minimumdist(ctplot.result, C)
+           ccl = ctplot.ccl(A,phiA,phiB,Rtmp,lenTC,lenTC,tranfunc)[0]
+           return (mindist, ccl)
+
+       num = 0
+       f1 = (error*100, 1000)
+       transCL = TCLtmp
+       while (f1[0] > error and num<1e3 and f1[1]>=0):
+           f1 = func(transCL,A,B,phiA,phiB,C,tranfunc)
+           df = (func(transCL,A,B,phiA,phiB,C,tranfunc)[0]-func(transCL+dl,A,B,phiA,phiB,C,tranfunc)[0])/dl
+
+           transCL = transCL - f1[0]/df
+           num +=1
+       return (transCL,f1,num)
