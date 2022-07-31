@@ -43,7 +43,10 @@ class Kml2track():
             if line.tag == '{http://www.opengis.net/kml/2.2}coordinates':
                 for i in line.text.strip().split(' '):
                     tmp = i.split(',')
-                    data.append([float(tmp[0]),float(tmp[1]),float(tmp[2])])
+                    if len(tmp)==3:
+                        data.append([float(tmp[0]),float(tmp[1]),float(tmp[2])])
+                    else:
+                        data.append([float(tmp[0]),float(tmp[1]),float(0)])
 
         output = []
         for i in range(1,len(data)):
