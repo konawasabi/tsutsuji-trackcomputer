@@ -438,10 +438,16 @@ class TrackControl():
                 kp_val = ''
 
             for data in self.rel_track_radius_cp[tr]:
-                output_map['x'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
-                output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],data[2])
-                output_map['y'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
-                output_map['y'] += 'Track[\'{:s}\'].Y.Interpolate({:.2f},{:.2f});\n'.format(tr,data[6],data[5])
+                if '@' not in tr or ('@' in tr and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
+                    output_map['x'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
+                    output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],data[2])
+                    output_map['y'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
+                    output_map['y'] += 'Track[\'{:s}\'].Y.Interpolate({:.2f},{:.2f});\n'.format(tr,data[6],data[5])
+                else:
+                    output_map['x'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
+                    output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],0)
+                    output_map['y'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
+                    output_map['y'] += 'Track[\'{:s}\'].Y.Interpolate({:.2f},{:.2f});\n'.format(tr,data[6],0)
 
             cp_dist = {}
             pos_cp = {}

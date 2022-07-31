@@ -163,3 +163,13 @@ color
     * https://matplotlib.org/2.0.2/examples/color/named_colors.html をもとに作成
     * .. image:: ./files/namedcolor.png
 	   :scale: 75%
+
+calc_relrad
+=============
+* type: bool
+* 相対半径を出力するかどうか設定する
+* デフォルトではFalse
+  
+  * 出力されるTrack構文の相対半径は全て0となる
+    
+* **kml/csvファイルに対する軌道のみ有効**
