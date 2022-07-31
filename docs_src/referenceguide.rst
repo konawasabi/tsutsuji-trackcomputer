@@ -9,3 +9,4 @@ Reference Guide
    ./reference_menu
    ./reference_measure
    ./cfgfileformat
+   ./trackfileformat

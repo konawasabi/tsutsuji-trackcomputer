@@ -64,6 +64,7 @@ file
 ===========
 * type: filepath
 * *trackkey* として読み込むファイルパス
+* 指定できるファイルのフォーマットについては :doc:`trackfileformat` を参照
 * **省略不可**
 
 absolute_coordinate
