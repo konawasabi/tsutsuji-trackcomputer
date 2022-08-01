@@ -261,7 +261,8 @@ class interface():
                                                 '2. α(free)->β(fix), R(free)',\
                                                 '3. α(free)->β(free), R(fix)',\
                                                 '4. α(fix), R(fix), CCL(fix)',\
-                                                '5. β(fix), R(fix), CCL(fix)')
+                                                '5. β(fix), R(fix), CCL(fix)',\
+                                                '6. α(fix)->β(free) via γ, R(free)')
             self.curve_fitmode_box.state(["readonly"])
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
@@ -384,6 +385,20 @@ class interface():
             R_result = R_input
             CCL_result = lenCC
             shift_result = 0
+        elif fitmode == self.curve_fitmode_box['values'][5]: #'6. α(fix)->β(free) via γ, R(free)'
+            if False:
+                import pdb
+                pdb.set_trace()
+            cursor_via = cursor_obj['C']
+            C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
+            result = sv.shift_by_TCL(A,phiA,B,phiB,C,tranfunc)
+            trackp.generate(A,phiA,phiB,result[1][2],result[0],result[0],tranfunc)
+            R_result = result[1][2]
+            CCL_result = result[1][1]
+            TCL_result = result[0]
+            shift_result = np.linalg.norm(result[1][0] - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),result[1][0] - B))
+            #print(R_result, CCL_result, TCL_result)
+            print(result)
         else:
             raise Exception('invalid fitmode')
 

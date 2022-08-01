@@ -154,15 +154,20 @@ class solver():
            ctplot.generate(A,phiA,phiB,Rtmp,lenTC,lenTC,tranfunc)
            mindist, crosspt, min_ix, second_min_ix = math.minimumdist(ctplot.result, C)
            ccl = ctplot.ccl(A,phiA,phiB,Rtmp,lenTC,lenTC,tranfunc)[0]
-           return (mindist, ccl)
+           return (mindist, ccl, Rtmp)
 
-       num = 0
-       f1 = (error*100, 1000)
-       transCL = TCLtmp
-       while (f1[0] > error and num<1e3 and f1[1]>=0):
+        num = 0
+        f1 = (error*100, 1000, 1000)
+        transCL = TCLtmp
+        while (f1[0] > error and num<1e2):# and abs(f1[2])>50 and transCL >=0 and f1[1]>=0):
+           f1_old = f1 
            f1 = func(transCL,A,B,phiA,phiB,C,tranfunc)
-           df = (func(transCL,A,B,phiA,phiB,C,tranfunc)[0]-func(transCL+dl,A,B,phiA,phiB,C,tranfunc)[0])/dl
+           df = (func(transCL+dl,A,B,phiA,phiB,C,tranfunc)[0]-func(transCL,A,B,phiA,phiB,C,tranfunc)[0])/dl
 
+           #if not (f1[0] > error and num<1e2 and np.abs(f1[2])>50):
+           #    break
+
+           transCL_old = transCL
            transCL = transCL - f1[0]/df
            num +=1
-       return (transCL,f1,num)
+        return (transCL,f1,num)
