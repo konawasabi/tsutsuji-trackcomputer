@@ -212,6 +212,9 @@ class mainwindow(ttk.Frame):
         self.columnconfigure(0, weight=1)
         #self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
+
+        # プロットウィンドウ描画
+        self.drawall()
     def create_menubar(self):
         self.master.option_add('*tearOff', False)
         
