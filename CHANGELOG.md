@@ -4,13 +4,14 @@
 
 - solver
   - 渡り線フィッティング
-  - 緩和曲線長の最適化モードを追加
 
 ## [1.3.0] - not released yet
 
 - kml/csvファイルから軌道データを読み込む
   - Measure機能による各種測定
   - 他軌道としてgenerate
+- Curvetrack Solver
+  - 緩和曲線長の最適化モードを追加(Mode 6)
 
 ## [1.2.0] - 2022-05-30
 
