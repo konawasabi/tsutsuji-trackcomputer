@@ -516,8 +516,9 @@ class interface():
             else:
                 shift = shift_result
                 print('$pt_a {:s}{:f};'.format('+' if shift>=0 else '',shift))
+            print('$cant = 0;')
             print('Curve.SetFunction({:d});'.format(0 if tranfunc == 'sin' else 1))
-            print('Curve.Interpolate({:f},{:f});'.format(0,0))
+            print('Curve.Interpolate({:f},0);'.format(0))
             if fitmode == self.curve_fitmode_box['values'][5]:
                 lenTC_result = {'1':TCL_result, '2':TCL_result}
             else:
@@ -525,14 +526,14 @@ class interface():
             if lenTC_result['1'] != 0 or True:
                 tmp = shift + lenTC_result['1']
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
+            print('Curve.Interpolate({:f}, $cant);'.format(R_result))
             tmp = (shift + lenTC_result['1'] + CCL_result)
             print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
+            print('Curve.Interpolate({:f}, $cant);'.format(R_result))
             if lenTC_result['2'] != 0 or True:
                 tmp = (shift + lenTC_result['1'] + CCL_result + lenTC_result['2'])
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            print('Curve.Interpolate({:f},{:f});'.format(0,0))
+            print('Curve.Interpolate({:f},0);'.format(0))
             
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])
