@@ -156,9 +156,18 @@ class solver():
            ccl = ctplot.ccl(A,phiA,phiB,Rtmp,lenTC,lenTC,tranfunc)[0]
            return (mindist, ccl, Rtmp)
 
+        circular_tr = func(0,A,B,phiA,phiB,C,tranfunc)
+        origin_pt = A + np.array([np.cos(phiA+np.pi/2),np.sin(phiA+np.pi/2)])*circular_tr[2]
+        len_OC = np.linalg.norm(C - origin_pt)
+
+        print(circular_tr, origin_pt, len_OC)
+
+        if abs(len_OC) <= abs(circular_tr[2]):
+            raise Exception('Unreachable waypoint')
         num = 0
         f1 = (error*100, 1000, 1000)
         transCL = TCLtmp
+
         while (f1[0] > error and num<1e2):# and abs(f1[2])>50 and transCL >=0 and f1[1]>=0):
            f1_old = f1 
            f1 = func(transCL,A,B,phiA,phiB,C,tranfunc)
