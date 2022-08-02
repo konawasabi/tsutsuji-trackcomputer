@@ -135,7 +135,7 @@ class solver():
             Rtmp = Rtmp - f1[1]/df
             num +=1
         return (Rtmp,f1,num)
-    def shift_by_TCL(self,A,phiA,B,phiB,C,tranfunc,TCLtmp=0,dl=0.1,error=0.01):
+    def shift_by_TCL(self,A,phiA,B,phiB,C,tranfunc,TCLtmp=0,dl=0.1,error=0.001):
         ''' AB間を結び、Cに最も近い点を通過する曲線軌道の半径、TCL, CCLを返す。
         始点: A、終点: Bの延長線上となる曲線軌道について、点Cとの距離が最小となるR, TCLをニュートン法で求める。
         A:        始点座標
@@ -157,12 +157,9 @@ class solver():
            return (mindist, ccl, Rtmp)
 
         # 点Cが円軌道の内側かどうか判断するため、円軌道の中心点を求める
-
         circular_tr = func(0,A,B,phiA,phiB,C,tranfunc)
         origin_pt = A + np.array([np.cos(phiA+np.pi/2),np.sin(phiA+np.pi/2)])*circular_tr[2]
         len_OC = np.linalg.norm(C - origin_pt)
-
-        #print(circular_tr, origin_pt, len_OC)
 
         # 点Cが円軌道の内側にある場合のエラー処理
         if abs(len_OC) <= abs(circular_tr[2]):
@@ -172,7 +169,7 @@ class solver():
         f1 = (error*100, 1000, 1000)
         transCL = TCLtmp
 
-        while (f1[0] > error and num<50):
+        while (f1[0] > error and num<20):
            f1 = func(transCL,A,B,phiA,phiB,C,tranfunc)
            df = (func(transCL+dl,A,B,phiA,phiB,C,tranfunc)[0]-func(transCL,A,B,phiA,phiB,C,tranfunc)[0])/dl
 
@@ -183,10 +180,10 @@ class solver():
         if transCL < 0 or f1[1] < 0:
             print('CCL=0 mode')
             num = 0
-            f1 =  (error*100, 1000, 1000)
+            f1 =  (1000, error*100, 1000)
             transCL = TCLtmp
 
-            while (f1[0] > error and num<50):
+            while (abs(f1[1]) > error and num<20):
                f1 = func(transCL,A,B,phiA,phiB,C,tranfunc)
                df = (func(transCL+dl,A,B,phiA,phiB,C,tranfunc)[1]-func(transCL,A,B,phiA,phiB,C,tranfunc)[1])/dl
 
