@@ -160,15 +160,15 @@ class solver():
         origin_pt = A + np.array([np.cos(phiA+np.pi/2),np.sin(phiA+np.pi/2)])*circular_tr[2]
         len_OC = np.linalg.norm(C - origin_pt)
 
-        print(circular_tr, origin_pt, len_OC)
+        #print(circular_tr, origin_pt, len_OC)
 
         if abs(len_OC) <= abs(circular_tr[2]):
-            raise Exception('Unreachable waypoint')
+            raise Exception('Unreachable waypoint.\n ({:.1f}, {:.1f})'.format(C[0],C[1]))
         num = 0
         f1 = (error*100, 1000, 1000)
         transCL = TCLtmp
 
-        while (f1[0] > error and num<1e2):# and abs(f1[2])>50 and transCL >=0 and f1[1]>=0):
+        while (f1[0] > error and num<50):# and abs(f1[2])>50 and transCL >=0 and f1[1]>=0):
            f1_old = f1 
            f1 = func(transCL,A,B,phiA,phiB,C,tranfunc)
            df = (func(transCL+dl,A,B,phiA,phiB,C,tranfunc)[0]-func(transCL,A,B,phiA,phiB,C,tranfunc)[0])/dl
@@ -179,4 +179,19 @@ class solver():
            transCL_old = transCL
            transCL = transCL - f1[0]/df
            num +=1
+
+        if transCL < 0 or f1[1] < 0:
+            print('CCL=0 mode')
+            num = 0
+            f1 =  (error*100, 1000, 1000)
+            transCL = TCLtmp
+
+            while (f1[0] > error and num<50):
+               f1 = func(transCL,A,B,phiA,phiB,C,tranfunc)
+               df = (func(transCL+dl,A,B,phiA,phiB,C,tranfunc)[1]-func(transCL,A,B,phiA,phiB,C,tranfunc)[1])/dl
+
+               transCL_old = transCL
+               transCL = transCL - f1[1]/df
+               num +=1
+            
         return (transCL,f1,num)

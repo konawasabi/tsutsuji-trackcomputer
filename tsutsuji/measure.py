@@ -398,7 +398,7 @@ class interface():
             TCL_result = result[0]
             shift_result = np.linalg.norm(result[1][0] - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),result[1][0] - B))
             #print(R_result, CCL_result, TCL_result)
-            print(result)
+            print('transCL: {:f}, mindist: {:f}, CCL: {:f}, Rtmp: {:f}, num: {:f}'.format(result[0],result[1][0],result[1][1],result[1][2],result[2]))
         else:
             raise Exception('invalid fitmode')
 
