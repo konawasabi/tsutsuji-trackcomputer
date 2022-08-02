@@ -390,15 +390,17 @@ class interface():
                 import pdb
                 pdb.set_trace()
             cursor_via = cursor_obj['C']
+            cursor_via_name = 'C'
             C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
             result = sv.shift_by_TCL(A,phiA,B,phiB,C,tranfunc)
             trackp.generate(A,phiA,phiB,result[1][2],result[0],result[0],tranfunc)
             R_result = result[1][2]
             CCL_result = result[1][1]
             TCL_result = result[0]
-            shift_result = np.linalg.norm(result[1][0] - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),result[1][0] - B))
+            endpoint = trackp.result[-1]
+            shift_result = np.linalg.norm(endpoint - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),endpoint - B))
             #print(R_result, CCL_result, TCL_result)
-            print('transCL: {:f}, mindist: {:f}, CCL: {:f}, Rtmp: {:f}, num: {:f}'.format(result[0],result[1][0],result[1][1],result[1][2],result[2]))
+            #print('transCL: {:f}, mindist: {:f}, CCL: {:f}, Rtmp: {:f}, num: {:f}'.format(result[0],result[1][0],result[1][1],result[1][2],result[2]))
         else:
             raise Exception('invalid fitmode')
 
@@ -465,6 +467,29 @@ class interface():
             else:
                 print('   startpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
                 print('   phi_start:  {:f}'.format(np.rad2deg(phi_end)))
+        elif fitmode == self.curve_fitmode_box['values'][5]: #'6'
+            print()
+            print('[Curve fitting]')
+            print('Inputs:')
+            print('   Fitmode:          {:s}'.format(fitmode))
+            print('   Cursor α,β,γ:     {:s},{:s},{:s}'.format(cursor_f_name,cursor_t_name,cursor_via_name))
+            print('   Ponint α:         ({:f}, {:f})'.format(A[0],A[1]))
+            print('   Ponint β:         ({:f}, {:f})'.format(B[0],B[1]))
+            print('   Ponint γ:         ({:f}, {:f})'.format(C[0],C[1]))
+            print('   Direction α:     {:f}'.format(cursor_f.values[2].get()))
+            print('   Direction β:     {:f}'.format(cursor_t.values[2].get()))
+            print('   Transition func.: {:s}'.format(tranfunc))          
+            print('Results:')
+            print('   R:   {:f}'.format(R_result))
+            print('   CCL: {:f}'.format(CCL_result))
+            print('   TCL: {:f}'.format(TCL_result))
+            if fitmode == self.curve_fitmode_box['values'][5]:
+                endpoint = trackp.result[-1]
+                print('   endpt:            ({:f}, {:f})'.format(endpoint[0],endpoint[1]))
+                print('   shift from pt. β: {:f}'.format(shift_result))
+            else:
+                print('   startpt:          ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
+                print('   shift from pt. α: {:f}'.format(shift_result))
 
         # 演算結果をカーソルに設定 (mode4, 5のみ)
         if self.curvetrack_cursor_assignresult_v.get():
@@ -485,7 +510,7 @@ class interface():
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
             print()
-            if fitmode == self.curve_fitmode_box['values'][0]:
+            if fitmode == self.curve_fitmode_box['values'][0] or fitmode == self.curve_fitmode_box['values'][5]:
                 shift = 0
                 print('$pt_a;')
             else:
@@ -493,22 +518,28 @@ class interface():
                 print('$pt_a {:s}{:f};'.format('+' if shift>=0 else '',shift))
             print('Curve.SetFunction({:d});'.format(0 if tranfunc == 'sin' else 1))
             print('Curve.Interpolate({:f},{:f});'.format(0,0))
-            if lenTC1 != 0 or True:
-                tmp = shift + lenTC1
+            if fitmode == self.curve_fitmode_box['values'][5]:
+                lenTC_result = {'1':TCL_result, '2':TCL_result}
+            else:
+                lenTC_result = {'1':lenTC1, '2':lenTC2}
+            if lenTC_result['1'] != 0 or True:
+                tmp = shift + lenTC_result['1']
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
             print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
-            tmp = (shift + lenTC1 + CCL_result)
+            tmp = (shift + lenTC_result['1'] + CCL_result)
             print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
             print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
-            if lenTC2 != 0 or True:
-                tmp = (shift + lenTC1 + CCL_result + lenTC2)
+            if lenTC_result['2'] != 0 or True:
+                tmp = (shift + lenTC_result['1'] + CCL_result + lenTC_result['2'])
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
             print('Curve.Interpolate({:f},{:f});'.format(0,0))
             
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])
+        '''
         if not __debug__:
             ax.scatter(result[1][0][0],result[1][0][1])
+        '''
         self.mainwindow.fig_canvas.draw()
     def nearesttrack(self):
         '''指定した軌道上のカーソルAに最も近い点を求める
