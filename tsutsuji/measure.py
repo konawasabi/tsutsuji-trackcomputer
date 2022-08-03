@@ -413,7 +413,7 @@ class interface():
             result = sv.shift_by_TCL(B,phiB_inv,A,phiA_inv,C,tranfunc)
             trackp.generate(B,phiB_inv,phiA_inv,result[1][2],result[0],result[0],tranfunc)
             R_result = -result[1][2]
-            CCL_result = -result[1][1]
+            CCL_result = result[1][1]
             TCL_result = result[0]
             endpoint = trackp.result[-1]
             shift_result = np.linalg.norm(endpoint - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),endpoint - A))

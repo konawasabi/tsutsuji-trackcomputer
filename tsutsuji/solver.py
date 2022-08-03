@@ -178,7 +178,7 @@ class solver():
 
         # 求めたTCL, CCL, Rが異常な値をとる場合、CCL=0となるTCLをニュートン法で求めるモードに切り替える
         if transCL < 0 or f1[1] < 0 or np.isnan(transCL) or np.isnan(f1[1]) or np.isnan(f1[2]):
-            print('CCL=0 mode')
+            #print('CCL=0 mode')
             num = 0
             f1 =  (1000, error*100, 1000)
             transCL = TCLtmp
