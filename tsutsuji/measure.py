@@ -263,7 +263,8 @@ class interface():
                                                 '3. α(free)->β(free), R(fix)',\
                                                 '4. α(fix), R(fix), CCL(fix)',\
                                                 '5. β(fix), R(fix), CCL(fix)',\
-                                                '6. α(fix)->β(free) via γ, R(free)')
+                                                '6. α(fix)->β(free) via γ, R(free)',\
+                                                '7. α(free)->β(fix) via γ, R(free)')
             self.curve_fitmode_box.state(["readonly"])
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
@@ -402,6 +403,20 @@ class interface():
             shift_result = np.linalg.norm(endpoint - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),endpoint - B))
             #print(R_result, CCL_result, TCL_result)
             #print('transCL: {:f}, mindist: {:f}, CCL: {:f}, Rtmp: {:f}, num: {:f}'.format(result[0],result[1][0],result[1][1],result[1][2],result[2]))
+        elif fitmode == self.curve_fitmode_box['values'][6]: #'7. α(free)->β(fix) via γ, R(free)'
+            if False:
+                import pdb
+                pdb.set_trace()
+            phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
+            phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
+            C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
+            result = sv.shift_by_TCL(B,phiB_inv,A,phiA_inv,C,tranfunc)
+            trackp.generate(B,phiB_inv,phiA_inv,result[1][2],result[0],result[0],tranfunc)
+            R_result = -result[1][2]
+            CCL_result = -result[1][1]
+            TCL_result = result[0]
+            endpoint = trackp.result[-1]
+            shift_result = np.linalg.norm(endpoint - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),endpoint - A))
         else:
             raise Exception('invalid fitmode')
 
@@ -468,7 +483,7 @@ class interface():
             else:
                 print('   startpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
                 print('   phi_start:  {:f}'.format(np.rad2deg(phi_end)))
-        elif fitmode == self.curve_fitmode_box['values'][5]: #'6'
+        elif fitmode == self.curve_fitmode_box['values'][5] or fitmode == self.curve_fitmode_box['values'][6]: #'6'
             print()
             print('[Curve fitting]')
             print('Inputs:')
@@ -489,7 +504,7 @@ class interface():
                 print('   endpt:            ({:f}, {:f})'.format(endpoint[0],endpoint[1]))
                 print('   shift from pt. β: {:f}'.format(shift_result))
             else:
-                print('   startpt:          ({:f}, {:f})'.format(result[1][0][0],result[1][0][1]))
+                print('   startpt:          ({:f}, {:f})'.format(endpoint[0],endpoint[1]))
                 print('   shift from pt. α: {:f}'.format(shift_result))
 
         # 演算結果をカーソルに設定 (mode4, 5のみ)
