@@ -214,20 +214,21 @@ class interface():
             self.curvetrack_cursor_f.grid(column=3, row=0, sticky=(tk.E,tk.W))
             self.curvetrack_cursor = {'l':{}, 'e':{}, 'v':{}}
             pos=0
-            for i in ['α','β']:
+            for i in ['α','β','γ']:
                 self.curvetrack_cursor['l'][i] = ttk.Label(self.curvetrack_cursor_f, text=i)
                 self.curvetrack_cursor['l'][i].grid(column=pos*2, row=0, sticky=(tk.E,tk.W))
                 self.curvetrack_cursor['v'][i] = tk.StringVar()
-                self.curvetrack_cursor['e'][i] = ttk.Combobox(self.curvetrack_cursor_f, textvariable=self.curvetrack_cursor['v'][i],width=4)
+                self.curvetrack_cursor['e'][i] = ttk.Combobox(self.curvetrack_cursor_f, textvariable=self.curvetrack_cursor['v'][i],width=2)
                 self.curvetrack_cursor['e'][i]['values'] = ('A','B','C','D')
                 self.curvetrack_cursor['e'][i].grid(column=pos*2+1, row=0, sticky=(tk.E,tk.W))
                 self.curvetrack_cursor['e'][i].state(["readonly"])
                 pos+=1
             self.curvetrack_cursor['v']['α'].set('A')
             self.curvetrack_cursor['v']['β'].set('B')
+            self.curvetrack_cursor['v']['γ'].set('C')
             self.curvetrack_cursor_assignresult_v = tk.BooleanVar(value=False)
             self.curvetrack_cursor_assignresult_btn = ttk.Checkbutton(self.curvetrack_cursor_f, text='Assign results to cursor',variable=self.curvetrack_cursor_assignresult_v,onvalue=True,offvalue=False)
-            self.curvetrack_cursor_assignresult_btn.grid(column=4, row=0, sticky=(tk.E,tk.W))
+            self.curvetrack_cursor_assignresult_btn.grid(column=pos*2+1, row=0, sticky=(tk.E,tk.W))
             
             self.curvetrack_value_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
             self.curvetrack_value_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -331,8 +332,10 @@ class interface():
         cursor_obj =  {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
         cursor_f_name = self.curvetrack_cursor['v']['α'].get()
         cursor_t_name = self.curvetrack_cursor['v']['β'].get()
+        cursor_via_name = self.curvetrack_cursor['v']['γ'].get()
         cursor_f = cursor_obj[cursor_f_name]
         cursor_t = cursor_obj[cursor_t_name]
+        cursor_via = cursor_obj[cursor_via_name]
         
         sv = solver.solver()
         A = np.array([cursor_f.values[0].get(),cursor_f.values[1].get()])
@@ -389,8 +392,6 @@ class interface():
             if False:
                 import pdb
                 pdb.set_trace()
-            cursor_via = cursor_obj['C']
-            cursor_via_name = 'C'
             C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
             result = sv.shift_by_TCL(A,phiA,B,phiB,C,tranfunc)
             trackp.generate(A,phiA,phiB,result[1][2],result[0],result[0],tranfunc)
