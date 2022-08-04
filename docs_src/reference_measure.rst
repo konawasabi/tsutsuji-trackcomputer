@@ -191,12 +191,13 @@ Mode
    
    # ここからCurve構文の出力
    $pt_a -102.484127;                       # $pt_aはカーソルαの位置の距離程を想定
+   $cant = 0;                               # $cantはカント設定値を想定
    Curve.SetFunction(1);
    Curve.Interpolate(0.000000,0.000000);
    $pt_a -102.484127;
-   Curve.Interpolate(-400.000000,0.000000);
+   Curve.Interpolate(-400.000000, $cant);
    $pt_a +408.631384;
-   Curve.Interpolate(-400.000000,0.000000);
+   Curve.Interpolate(-400.000000, $cant);
    $pt_a +408.631384;
    Curve.Interpolate(0.000000,0.000000);
 
