@@ -27,81 +27,8 @@ from kobushi import trackcoordinate
 from . import drawcursor
 from . import solver
 from . import math
+from . import curvetrackplot
 
-class trackplot():
-    def __init__(self):
-        self.curvegen = trackcoordinate.curve()
-        self.result=np.array([[0,0]])
-    def generate(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
-        delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
-        
-        if(lenTC1>0):
-            tc1_tmp = self.curvegen.transition_curve(lenTC1,\
-                                          0,\
-                                          Radius,\
-                                          0,\
-                                          tranfunc,n=10) # 入口側の緩和曲線
-        else:
-            tc1_tmp=(np.array([[0,0]]),0,0)
-            
-        if(lenTC2>0):
-            tc2_tmp = self.curvegen.transition_curve(lenTC2,\
-                                          Radius,\
-                                          0,\
-                                          0,\
-                                          tranfunc,n=10) # 出口側の緩和曲線
-        else:
-            tc2_tmp=(np.array([[0,0]]),0,0)
-
-        phi_circular = delta_phi - tc1_tmp[1] - tc2_tmp[1] # 円軌道での方位角変化
-        
-        cc_tmp = self.curvegen.circular_curve(Radius*phi_circular,\
-                                   Radius,\
-                                   tc1_tmp[1]) # 円軌道
-
-        phi_tc2 = tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
-        
-        self.result = tc1_tmp[0]
-        self.result = np.vstack((self.result,self.result[-1] + cc_tmp[0]))
-        self.result = np.vstack((self.result,self.result[-1] + np.dot(self.curvegen.rotate(phi_tc2), tc2_tmp[0].T).T))
-        
-        self.result = np.dot(self.curvegen.rotate(phiA), self.result.T).T
-        self.result += A
-    def ccl(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
-        ''' 円軌道の長さ(CCL), 円軌道での方位角変化を求める
-        '''
-        delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
-        
-        if(lenTC1>0):
-            tc1_tmp = self.curvegen.transition_curve(lenTC1,\
-                                          0,\
-                                          Radius,\
-                                          0,\
-                                          tranfunc) # 入口側の緩和曲線
-        else:
-            tc1_tmp=(np.array([[0,0]]),0,0)
-            
-        if(lenTC2>0):
-            tc2_tmp = self.curvegen.transition_curve(lenTC2,\
-                                          Radius,\
-                                          0,\
-                                          0,\
-                                          tranfunc) # 出口側の緩和曲線
-        else:
-            tc2_tmp=(np.array([[0,0]]),0,0)
-
-        phi_circul = delta_phi - tc1_tmp[1] - tc2_tmp[1] # 円軌道での方位角変化
-        return (Radius*phi_circul, phi_circul)
-    def phi_TC(self,lenTC1, Radius, tranfunc):
-        if lenTC1>0:
-            tc1_tmp = self.curvegen.transition_curve(lenTC1,\
-                                              0,\
-                                              Radius,\
-                                              0,\
-                                              tranfunc) # 入口側の緩和曲線
-        else:
-            tc1_tmp=(np.array([[0,0]]),0,0)    
-        return tc1_tmp[1]
 class interface():
     class unit():
         def __init__(self,name,parentwindow,frame,parent,row,color):
@@ -157,7 +84,9 @@ class interface():
             self.arrow.set_direct()
         def make_trackkeylist(self):
             currentval = self.values[3].get()
-            self.track_e['values'] = tuple(['@absolute'])+tuple(self.parent.mainwindow.trackcontrol.track.keys())
+            self.track_e['values'] = tuple(['@absolute'])\
+                +tuple(self.parent.mainwindow.trackcontrol.track.keys())\
+                +tuple(self.parent.mainwindow.trackcontrol.pointsequence_track.track.keys())
             if currentval not in self.track_e['values']:
                 self.values[3].set('@absolute')
     def __init__(self,mainwindow):
@@ -230,7 +159,8 @@ class interface():
             self.nearesttrack_sel_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
             self.nearesttrack_sel_v = tk.StringVar(value='')
             self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
-            self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())
+            self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())\
+                +tuple(self.mainwindow.trackcontrol.pointsequence_track.track.keys())
             self.nearesttrack_sel_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
             self.nearesttrack_sel_e.state(["readonly"])
             
@@ -284,20 +214,21 @@ class interface():
             self.curvetrack_cursor_f.grid(column=3, row=0, sticky=(tk.E,tk.W))
             self.curvetrack_cursor = {'l':{}, 'e':{}, 'v':{}}
             pos=0
-            for i in ['α','β']:
+            for i in ['α','β','γ']:
                 self.curvetrack_cursor['l'][i] = ttk.Label(self.curvetrack_cursor_f, text=i)
                 self.curvetrack_cursor['l'][i].grid(column=pos*2, row=0, sticky=(tk.E,tk.W))
                 self.curvetrack_cursor['v'][i] = tk.StringVar()
-                self.curvetrack_cursor['e'][i] = ttk.Combobox(self.curvetrack_cursor_f, textvariable=self.curvetrack_cursor['v'][i],width=4)
+                self.curvetrack_cursor['e'][i] = ttk.Combobox(self.curvetrack_cursor_f, textvariable=self.curvetrack_cursor['v'][i],width=2)
                 self.curvetrack_cursor['e'][i]['values'] = ('A','B','C','D')
                 self.curvetrack_cursor['e'][i].grid(column=pos*2+1, row=0, sticky=(tk.E,tk.W))
                 self.curvetrack_cursor['e'][i].state(["readonly"])
                 pos+=1
             self.curvetrack_cursor['v']['α'].set('A')
             self.curvetrack_cursor['v']['β'].set('B')
+            self.curvetrack_cursor['v']['γ'].set('C')
             self.curvetrack_cursor_assignresult_v = tk.BooleanVar(value=False)
             self.curvetrack_cursor_assignresult_btn = ttk.Checkbutton(self.curvetrack_cursor_f, text='Assign results to cursor',variable=self.curvetrack_cursor_assignresult_v,onvalue=True,offvalue=False)
-            self.curvetrack_cursor_assignresult_btn.grid(column=4, row=0, sticky=(tk.E,tk.W))
+            self.curvetrack_cursor_assignresult_btn.grid(column=pos*2+1, row=0, sticky=(tk.E,tk.W))
             
             self.curvetrack_value_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
             self.curvetrack_value_f.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -331,7 +262,9 @@ class interface():
                                                 '2. α(free)->β(fix), R(free)',\
                                                 '3. α(free)->β(free), R(fix)',\
                                                 '4. α(fix), R(fix), CCL(fix)',\
-                                                '5. β(fix), R(fix), CCL(fix)')
+                                                '5. β(fix), R(fix), CCL(fix)',\
+                                                '6. α(fix)->β(free) via γ, R(free)',\
+                                                '7. α(free)->β(fix) via γ, R(free)')
             self.curve_fitmode_box.state(["readonly"])
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
@@ -400,8 +333,10 @@ class interface():
         cursor_obj =  {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
         cursor_f_name = self.curvetrack_cursor['v']['α'].get()
         cursor_t_name = self.curvetrack_cursor['v']['β'].get()
+        cursor_via_name = self.curvetrack_cursor['v']['γ'].get()
         cursor_f = cursor_obj[cursor_f_name]
         cursor_t = cursor_obj[cursor_t_name]
+        cursor_via = cursor_obj[cursor_via_name]
         
         sv = solver.solver()
         A = np.array([cursor_f.values[0].get(),cursor_f.values[1].get()])
@@ -416,7 +351,7 @@ class interface():
 
         fitmode = self.curve_fitmode_v.get()
 
-        trackp = trackplot()
+        trackp = curvetrackplot.trackplot()
         if fitmode == self.curve_fitmode_box['values'][0]: #'1. α(fix)->β(free), R(free)'
             result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
             trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
@@ -454,6 +389,34 @@ class interface():
             R_result = R_input
             CCL_result = lenCC
             shift_result = 0
+        elif fitmode == self.curve_fitmode_box['values'][5]: #'6. α(fix)->β(free) via γ, R(free)'
+            if False:
+                import pdb
+                pdb.set_trace()
+            C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
+            result = sv.shift_by_TCL(A,phiA,B,phiB,C,tranfunc)
+            trackp.generate(A,phiA,phiB,result[1][2],result[0],result[0],tranfunc)
+            R_result = result[1][2]
+            CCL_result = result[1][1]
+            TCL_result = result[0]
+            endpoint = trackp.result[-1]
+            shift_result = np.linalg.norm(endpoint - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),endpoint - B))
+            #print(R_result, CCL_result, TCL_result)
+            #print('transCL: {:f}, mindist: {:f}, CCL: {:f}, Rtmp: {:f}, num: {:f}'.format(result[0],result[1][0],result[1][1],result[1][2],result[2]))
+        elif fitmode == self.curve_fitmode_box['values'][6]: #'7. α(free)->β(fix) via γ, R(free)'
+            if False:
+                import pdb
+                pdb.set_trace()
+            phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
+            phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
+            C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
+            result = sv.shift_by_TCL(B,phiB_inv,A,phiA_inv,C,tranfunc)
+            trackp.generate(B,phiB_inv,phiA_inv,result[1][2],result[0],result[0],tranfunc)
+            R_result = -result[1][2]
+            CCL_result = result[1][1]
+            TCL_result = result[0]
+            endpoint = trackp.result[-1]
+            shift_result = np.linalg.norm(endpoint - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),endpoint - A))
         else:
             raise Exception('invalid fitmode')
 
@@ -520,6 +483,29 @@ class interface():
             else:
                 print('   startpoint: ({:f}, {:f})'.format(trackp.result[:,0][-1],trackp.result[:,1][-1]))
                 print('   phi_start:  {:f}'.format(np.rad2deg(phi_end)))
+        elif fitmode == self.curve_fitmode_box['values'][5] or fitmode == self.curve_fitmode_box['values'][6]: #'6'
+            print()
+            print('[Curve fitting]')
+            print('Inputs:')
+            print('   Fitmode:          {:s}'.format(fitmode))
+            print('   Cursor α,β,γ:     {:s},{:s},{:s}'.format(cursor_f_name,cursor_t_name,cursor_via_name))
+            print('   Ponint α:         ({:f}, {:f})'.format(A[0],A[1]))
+            print('   Ponint β:         ({:f}, {:f})'.format(B[0],B[1]))
+            print('   Ponint γ:         ({:f}, {:f})'.format(C[0],C[1]))
+            print('   Direction α:     {:f}'.format(cursor_f.values[2].get()))
+            print('   Direction β:     {:f}'.format(cursor_t.values[2].get()))
+            print('   Transition func.: {:s}'.format(tranfunc))          
+            print('Results:')
+            print('   R:   {:f}'.format(R_result))
+            print('   CCL: {:f}'.format(CCL_result))
+            print('   TCL: {:f}'.format(TCL_result))
+            if fitmode == self.curve_fitmode_box['values'][5]:
+                endpoint = trackp.result[-1]
+                print('   endpt:            ({:f}, {:f})'.format(endpoint[0],endpoint[1]))
+                print('   shift from pt. β: {:f}'.format(shift_result))
+            else:
+                print('   startpt:          ({:f}, {:f})'.format(endpoint[0],endpoint[1]))
+                print('   shift from pt. α: {:f}'.format(shift_result))
 
         # 演算結果をカーソルに設定 (mode4, 5のみ)
         if self.curvetrack_cursor_assignresult_v.get():
@@ -540,30 +526,37 @@ class interface():
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
             print()
-            if fitmode == self.curve_fitmode_box['values'][0]:
+            if fitmode == self.curve_fitmode_box['values'][0] or fitmode == self.curve_fitmode_box['values'][5]:
                 shift = 0
                 print('$pt_a;')
             else:
                 shift = shift_result
                 print('$pt_a {:s}{:f};'.format('+' if shift>=0 else '',shift))
+            print('$cant = 0;')
             print('Curve.SetFunction({:d});'.format(0 if tranfunc == 'sin' else 1))
-            print('Curve.Interpolate({:f},{:f});'.format(0,0))
-            if lenTC1 != 0 or True:
-                tmp = shift + lenTC1
+            print('Curve.Interpolate({:f},0);'.format(0))
+            if fitmode == self.curve_fitmode_box['values'][5]:
+                lenTC_result = {'1':TCL_result, '2':TCL_result}
+            else:
+                lenTC_result = {'1':lenTC1, '2':lenTC2}
+            if lenTC_result['1'] != 0 or True:
+                tmp = shift + lenTC_result['1']
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
-            tmp = (shift + lenTC1 + CCL_result)
+            print('Curve.Interpolate({:f}, $cant);'.format(R_result))
+            tmp = (shift + lenTC_result['1'] + CCL_result)
             print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            print('Curve.Interpolate({:f},{:f});'.format(R_result,0))
-            if lenTC2 != 0 or True:
-                tmp = (shift + lenTC1 + CCL_result + lenTC2)
+            print('Curve.Interpolate({:f}, $cant);'.format(R_result))
+            if lenTC_result['2'] != 0 or True:
+                tmp = (shift + lenTC_result['1'] + CCL_result + lenTC_result['2'])
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
-            print('Curve.Interpolate({:f},{:f});'.format(0,0))
+            print('Curve.Interpolate({:f},0);'.format(0))
             
         ax = self.mainwindow.ax_plane
         ax.plot(trackp.result[:,0],trackp.result[:,1])
+        '''
         if not __debug__:
             ax.scatter(result[1][0][0],result[1][0][1])
+        '''
         self.mainwindow.fig_canvas.draw()
     def nearesttrack(self):
         '''指定した軌道上のカーソルAに最も近い点を求める
@@ -572,7 +565,11 @@ class interface():
         cursor_obj = {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
         
         inputpos = np.array([cursor_obj[cursor].values[0].get(),cursor_obj[cursor].values[1].get()])
-        track = self.mainwindow.trackcontrol.track[self.nearesttrack_sel_v.get()]['result']
+        trackkey = self.nearesttrack_sel_v.get()
+        if '@' not in trackkey:
+            track = self.mainwindow.trackcontrol.track[trackkey]['result']
+        else:
+            track = self.mainwindow.trackcontrol.pointsequence_track.track[trackkey]['result']
         track_pos = track[:,1:3]
 
         result = math.minimumdist(track_pos, inputpos)

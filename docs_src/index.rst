@@ -3,8 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+====================================
 Documents for Tsutsuji trackcomputer
 ====================================
+
+Introduction
+-------------
 
 Tsutsuji trackcomputerは、Bve Trainsim 5/6向けマップファイルの制作を支援するPythonスクリプトです。
 
@@ -21,15 +25,26 @@ Tsutsuji trackcomputerは、Bve Trainsim 5/6向けマップファイルの制作
 
 まずは :doc:`Tutorial 基本機能 <tutorial_first>` をご覧ください。
 
+Contents
+---------
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    tutorial
    referenceguide
    tsutsuji API (Under construction) <tsutsuji>
 
-Repository:
+Repository
+-----------
   
 * https://github.com/konawasabi/tsutsuji-trackcomputer
+
+
+Acknowledgements
+-----------------
+
+* 緯度経度->直交座標への変換ルーチンとして、下記URLにて公開されているsw1227氏のコードを使用させていただいています
+  
+  * https://qiita.com/sw1227/items/e7a590994ad7dcd0e8ab
 

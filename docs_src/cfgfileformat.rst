@@ -56,10 +56,15 @@ backimg
 
 * *trackkey* : 読み込む軌道データに与える軌道キー
 
+  * `@KML_` で始まる文字列を指定した場合、 `file` で指定したkmlファイルから座標データを読み込む
+  * `@CSV_` で始まる文字列を指定した場合、 `file` で指定したcsvファイルから座標データを読み込む
+  * mapファイルから軌道データを読み込む場合、軌道キーの先頭に `@` は使用できない
+
 file
 ===========
 * type: filepath
-* *trackkey* として読み込むmapファイルパス
+* *trackkey* として読み込むファイルパス
+* 指定できるファイルのフォーマットについては :doc:`trackfileformat` を参照
 * **省略不可**
 
 absolute_coordinate
@@ -71,6 +76,8 @@ absolute_coordinate
   * False: 別軌道のある距離程を基準とした座標系
 
     * `parent_track` で指定した軌道の距離程\ `origin_kilopost` の座標を原点として、\ `x` ,\ `y` ,\ `z`  で指定した距離オフセットした位置を軌道始点とする
+
+* kml/csvファイルから読み込んだ軌道に対しては `True` のみ有効
 
 parent_track
 ============
@@ -125,6 +132,7 @@ isowntrack
 
   * [@TSUTSUJI_GENERAL]のowntrackを設定した場合は記述不要
   * 両方を記述した場合は最後に記述したものが反映される
+  * kml/csvファイルから読み込んだ軌道に対しては無効
 
 endpoint
 ===========
@@ -155,3 +163,13 @@ color
     * https://matplotlib.org/2.0.2/examples/color/named_colors.html をもとに作成
     * .. image:: ./files/namedcolor.png
 	   :scale: 75%
+
+calc_relrad
+=============
+* type: bool
+* 相対半径を出力するかどうか設定する
+* デフォルトではFalse
+  
+  * 出力されるTrack構文の相対半径は全て0となる
+    
+* **kml/csvファイルに対する軌道のみ有効**
