@@ -1,0 +1,390 @@
+
+
+<!doctype html>
+
+<html lang="jp">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>CFG file format &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="軌道データ形式" href="trackfileformat.html" />
+    <link rel="prev" title="Measure ウィンドウ" href="reference_measure.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trackfileformat.html" title="軌道データ形式"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reference_measure.html" title="Measure ウィンドウ"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" accesskey="U">Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CFG file format</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="cfg-file-format">
+<h1>CFG file format<a class="headerlink" href="#cfg-file-format" title="Permalink to this heading">¶</a></h1>
+<section id="tsutsuji-general">
+<h2>[&#64;TSUTSUJI_GENERAL]<a class="headerlink" href="#tsutsuji-general" title="Permalink to this heading">¶</a></h2>
+<section id="owntrack">
+<h3>owntrack<a class="headerlink" href="#owntrack" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: string</p></li>
+<li><p>自軌道として扱うtrackkey</p></li>
+</ul>
+</section>
+<section id="unit-length">
+<h3>unit_length<a class="headerlink" href="#unit-length" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>各軌道について軌道座標を計算する間隔 [m]</p>
+<ul>
+<li><p>デフォルトでは1 [m]</p></li>
+</ul>
+</li>
+<li><p>この数値によって軌道位置の計算精度が決まる</p>
+<ul>
+<li><p>極端に小さな値を設定すると、計算に必要なメモリ、時間が大幅に増えるので注意</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="offset-variable">
+<h3>offset_variable<a class="headerlink" href="#offset-variable" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: string</p></li>
+<li><p>変換結果の距離程を <code class="code docutils literal notranslate"><span class="pre">$offset_variable</span> <span class="pre">+</span> <span class="pre">distance;</span></code> の形で表すときの変数名。</p>
+<ul>
+<li><p>省略した場合はdistanceのみで表す。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="origin-distance">
+<h3>origin_distance<a class="headerlink" href="#origin-distance" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p>
+<ul>
+<li><p>offset_variableで指定した変数に代入する数値</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="output-path">
+<h3>output_path<a class="headerlink" href="#output-path" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: filepath</p></li>
+<li><p>変換結果を保存するディレクトリへのパス</p>
+<ul>
+<li><p>cfgファイルが置かれた場所からの相対パスで記述する</p></li>
+<li><p>省略した場合は <code class="code docutils literal notranslate"><span class="pre">./result</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="backimg">
+<h3>backimg<a class="headerlink" href="#backimg" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: filepath</p></li>
+<li><p>線形データ読み込み時に表示する背景画像設定ファイルへのパス</p>
+<ul>
+<li><p>オプションメニュー -&gt; Save Backimg... で出力されるファイルを指定する</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="trackkey">
+<h2>[<em>trackkey</em>]<a class="headerlink" href="#trackkey" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><em>trackkey</em> : 読み込む軌道データに与える軌道キー</p>
+<ul>
+<li><p><cite>&#64;KML_</cite> で始まる文字列を指定した場合、 <cite>file</cite> で指定したkmlファイルから座標データを読み込む</p></li>
+<li><p><cite>&#64;CSV_</cite> で始まる文字列を指定した場合、 <cite>file</cite> で指定したcsvファイルから座標データを読み込む</p></li>
+<li><p>mapファイルから軌道データを読み込む場合、軌道キーの先頭に <cite>&#64;</cite> は使用できない</p></li>
+</ul>
+</li>
+</ul>
+<section id="file">
+<h3>file<a class="headerlink" href="#file" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: filepath</p></li>
+<li><p><em>trackkey</em> として読み込むファイルパス</p></li>
+<li><p>指定できるファイルのフォーマットについては <a class="reference internal" href="trackfileformat.html"><span class="doc">軌道データ形式</span></a> を参照</p></li>
+<li><p><strong>省略不可</strong></p></li>
+</ul>
+</section>
+<section id="absolute-coordinate">
+<h3>absolute_coordinate<a class="headerlink" href="#absolute-coordinate" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: bool</p></li>
+<li><p>軌道始点座標の指定方法</p>
+<ul>
+<li><p>True: 絶対座標系</p></li>
+<li><p>False: 別軌道のある距離程を基準とした座標系</p>
+<ul>
+<li><p><cite>parent_track</cite> で指定した軌道の距離程<cite>origin_kilopost</cite> の座標を原点として、<cite>x</cite> ,<cite>y</cite> ,<cite>z</cite>  で指定した距離オフセットした位置を軌道始点とする</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>kml/csvファイルから読み込んだ軌道に対しては <cite>True</cite> のみ有効</p></li>
+</ul>
+</section>
+<section id="parent-track">
+<h3>parent_track<a class="headerlink" href="#parent-track" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: string</p></li>
+<li><p>座標系の原点となる軌道のtrackkey</p></li>
+<li><p><strong>absolute_coordinate == Falseの場合にのみ有効</strong></p></li>
+</ul>
+</section>
+<section id="origin-kilopost">
+<h3>origin_kilopost<a class="headerlink" href="#origin-kilopost" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>座標系の原点となる距離程</p></li>
+<li><p><strong>absolute_coordinate == Falseの場合にのみ有効</strong></p></li>
+</ul>
+</section>
+<section id="x">
+<h3>x<a class="headerlink" href="#x" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>軌道始端座標のx成分 [m]</p></li>
+</ul>
+</section>
+<section id="y">
+<h3>y<a class="headerlink" href="#y" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>軌道始端座標のy成分 [m]</p></li>
+</ul>
+</section>
+<section id="z">
+<h3>z<a class="headerlink" href="#z" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>軌道始端座標のz成分 [m]</p></li>
+</ul>
+</section>
+<section id="angle">
+<h3>angle<a class="headerlink" href="#angle" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>軌道始端における進行方向 [°]</p></li>
+<li><p><cite>absolute_coordinate = True</cite> の場合、絶対座標系のz軸方向を0とする</p></li>
+<li><p><cite>absolute_coordinate = False</cite> の場合、相対座標系のz軸方向(指定された距離程での軌道の向き)を0とする</p></li>
+<li><p>x, y, z, angle については下図を参照</p>
+<ul>
+<li><p>下図のTrack A, B始端座標について</p>
+<ul>
+<li><p>Track Aの(x, y, z, φ) = (0, y<sub>0</sub>, z<sub>0</sub>, 0)</p></li>
+<li><p>Track Bの(x, y, z, φ) = (x<sub>0</sub>, y<sub>0</sub>, z<sub>0</sub>, φ<sub>0</sub>)</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img alt="_images/coordinate.png" src="_images/coordinate.png" />
+</section>
+<section id="isowntrack">
+<h3>isowntrack<a class="headerlink" href="#isowntrack" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: bool</p></li>
+<li><p>この軌道を自軌道とする場合にTrue</p>
+<ul>
+<li><p>[&#64;TSUTSUJI_GENERAL]のowntrackを設定した場合は記述不要</p></li>
+<li><p>両方を記述した場合は最後に記述したものが反映される</p></li>
+<li><p>kml/csvファイルから読み込んだ軌道に対しては無効</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="endpoint">
+<h3>endpoint<a class="headerlink" href="#endpoint" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>軌道終点の距離程 [m]</p></li>
+</ul>
+</section>
+<section id="supplemental-cp">
+<h3>supplemental_cp<a class="headerlink" href="#supplemental-cp" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float, float, ..., float</p></li>
+<li><p>制御点として追加する距離程</p>
+<ul>
+<li><p>コンマ区切りリストで記述する</p></li>
+<li><p>注目している軌道基準での該当する距離程でTrack構文を出力する</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="color">
+<h3>color<a class="headerlink" href="#color" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>type: string</p></li>
+<li><p>軌道プロット時の線色</p>
+<ul>
+<li><p>16進数カラーコード('#rrggbb')または色名で指定</p></li>
+<li><p>デフォルトでは読み込んだ軌道ごとに下記の順序で設定</p>
+<ul>
+<li><a class="reference internal image-reference" href="_images/color_default.png"><img alt="_images/color_default.png" src="_images/color_default.png" style="width: 121.0px; height: 100.0px;" /></a>
+</li>
+</ul>
+</li>
+<li><p>指定できる色名</p>
+<ul>
+<li><p><a class="reference external" href="https://matplotlib.org/2.0.2/examples/color/named_colors.html">https://matplotlib.org/2.0.2/examples/color/named_colors.html</a> をもとに作成</p></li>
+<li><a class="reference internal image-reference" href="_images/namedcolor.png"><img alt="_images/namedcolor.png" src="_images/namedcolor.png" style="width: 600.0px; height: 375.0px;" /></a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="calc-relrad">
+<h3>calc_relrad<a class="headerlink" href="#calc-relrad" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: bool</p></li>
+<li><p>相対半径を出力するかどうか設定する</p></li>
+<li><p>デフォルトではFalse</p>
+<ul>
+<li><p>出力されるTrack構文の相対半径は全て0となる</p></li>
+</ul>
+</li>
+<li><p><strong>kml/csvファイルに対する軌道のみ有効</strong></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">CFG file format</a><ul>
+<li><a class="reference internal" href="#tsutsuji-general">[&#64;TSUTSUJI_GENERAL]</a><ul>
+<li><a class="reference internal" href="#owntrack">owntrack</a></li>
+<li><a class="reference internal" href="#unit-length">unit_length</a></li>
+<li><a class="reference internal" href="#offset-variable">offset_variable</a></li>
+<li><a class="reference internal" href="#origin-distance">origin_distance</a></li>
+<li><a class="reference internal" href="#output-path">output_path</a></li>
+<li><a class="reference internal" href="#backimg">backimg</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#trackkey">[<em>trackkey</em>]</a><ul>
+<li><a class="reference internal" href="#file">file</a></li>
+<li><a class="reference internal" href="#absolute-coordinate">absolute_coordinate</a></li>
+<li><a class="reference internal" href="#parent-track">parent_track</a></li>
+<li><a class="reference internal" href="#origin-kilopost">origin_kilopost</a></li>
+<li><a class="reference internal" href="#x">x</a></li>
+<li><a class="reference internal" href="#y">y</a></li>
+<li><a class="reference internal" href="#z">z</a></li>
+<li><a class="reference internal" href="#angle">angle</a></li>
+<li><a class="reference internal" href="#isowntrack">isowntrack</a></li>
+<li><a class="reference internal" href="#endpoint">endpoint</a></li>
+<li><a class="reference internal" href="#supplemental-cp">supplemental_cp</a></li>
+<li><a class="reference internal" href="#color">color</a></li>
+<li><a class="reference internal" href="#calc-relrad">calc_relrad</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="reference_measure.html"
+                          title="previous chapter">Measure ウィンドウ</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="trackfileformat.html"
+                          title="next chapter">軌道データ形式</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cfgfileformat.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trackfileformat.html" title="軌道データ形式"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reference_measure.html" title="Measure ウィンドウ"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" >Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CFG file format</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

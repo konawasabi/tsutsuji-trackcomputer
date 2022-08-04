@@ -1,0 +1,175 @@
+
+
+<!doctype html>
+
+<html lang="jp">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Tutorial &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="基本機能" href="tutorial_first.html" />
+    <link rel="prev" title="Documents for Tsutsuji trackcomputer" href="index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial_first.html" title="基本機能"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Documents for Tsutsuji trackcomputer"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tutorial</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_first.html">基本機能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_first.html#id2">はじめに</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_first.html#id3">軌道毎のマップファイル作成</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_first.html#up-txt">up.txt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_first.html#down-txt">down.txt</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_first.html#cfg">cfgファイルの作成</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_first.html#tutorial-cfg">tutorial.cfg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_first.html#id4">各セクションの説明</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorial_first.html#tsutsuji-general">[&#64;TSUTSUJI_GENERAL]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial_first.html#up-down">[up], [down]</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_first.html#tsutsuji">Tsutsujiの起動〜マップファイルの出力</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_first.html#id5">変換実行</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorial_first.html#down-converted-txt">down_converted.txt</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_first.html#id6">サンプルシナリオについて</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_first.html#id7">もう少し手を加える</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_backimg.html">背景画像</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_backimg.html#id2">はじめに</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_backimg.html#id3">画像の読み込み</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_backimg.html#id4">基準座標の測定</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_backimg.html#id5">スケールの調整</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_ctsolver.html">CurveTrack Solver</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_ctsolver.html#id1">はじめに</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_ctsolver.html#id2">航空写真から曲線半径・曲線長を求める</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_ctsolver.html#mode">計算Modeについて</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_ctsolver.html#id3">緩和曲線の扱い</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_ctsolver.html#id4">曲線軌道の始点・曲線長を求める</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_ctsolver.html#id5">他の軌道への合流</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_ctsolver.html#id6">渡り線</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_ctsolver.html#id7">ターミナル出力例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Documents for Tsutsuji trackcomputer</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tutorial_first.html"
+                          title="next chapter">基本機能</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial_first.html" title="基本機能"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Documents for Tsutsuji trackcomputer"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tutorial</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>
