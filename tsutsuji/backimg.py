@@ -72,109 +72,114 @@ class BackImgControl():
         self.mainwindow = mainwindow
         self.imgs = {}
         self.conf_path = None
+        self.master = None
     def create_window(self):
-        self.master = tk.Toplevel(self.mainwindow)
-        self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
-        self.mainframe.columnconfigure(0, weight=1)
-        self.mainframe.rowconfigure(0, weight=1)
-        self.mainframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
-        
-        self.master.title('Background images')
-        
-        #self.imglist_val_list = list(self.imgs.keys())
-        #self.imglist_val = tk.StringVar(value=self.imglist_val_list)
-            
-        self.imglist_sb = ttk.Treeview(self.mainframe,selectmode='browse',height = 4)
-        self.imglist_sb.column('#0',width=500)
-        self.imglist_sb.heading('#0',text='Filepath')
-        for i in list(self.imgs.keys()):
-            self.imglist_sb.insert('',tk.END, i, text=i)
-        self.imglist_sb.grid(column=0, row=0, sticky=(tk.S))
-        self.imglist_sb.bind('<<TreeviewSelect>>', self.clickimglist)
-        
-        self.input_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.input_frame.grid(column=0, row=1, sticky=(tk.E,tk.W))
+        if self.master == None:
+            self.master = tk.Toplevel(self.mainwindow)
+            self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
+            self.mainframe.columnconfigure(0, weight=1)
+            self.mainframe.rowconfigure(0, weight=1)
+            self.mainframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
 
-        '''
-        self.xmin_l = ttk.Label(self.input_frame, text='xmin')
-        self.xmax_l = ttk.Label(self.input_frame, text='xmax')
-        self.ymin_l = ttk.Label(self.input_frame, text='ymin')
-        self.ymax_l = ttk.Label(self.input_frame, text='ymax')
-        '''
-        self.rot_l = ttk.Label(self.input_frame, text='rotation')
-        self.alpha_l = ttk.Label(self.input_frame, text='alpha')
-        self.xo_l = ttk.Label(self.input_frame, text='x0')
-        self.yo_l = ttk.Label(self.input_frame, text='y0')
-        self.xsh_l = ttk.Label(self.input_frame, text='xshift')
-        self.ysh_l = ttk.Label(self.input_frame, text='yshift')
-        self.scale_l = ttk.Label(self.input_frame, text='scale')
+            self.master.title('Background images')
+            self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
 
-        '''
-        self.xmin_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
-        self.xmax_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
-        self.ymin_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
-        self.ymax_l.grid(column=2, row=1, sticky=(tk.E,tk.W))
-        '''
-        self.rot_l.grid(column=0, row=4, sticky=(tk.E,tk.W))
-        self.alpha_l.grid(column=2, row=4, sticky=(tk.E,tk.W))
-        self.xo_l.grid(column=0, row=2, sticky=(tk.E,tk.W))
-        self.yo_l.grid(column=2, row=2, sticky=(tk.E,tk.W))
-        self.xsh_l.grid(column=0, row=3, sticky=(tk.E,tk.W))
-        self.ysh_l.grid(column=2, row=3, sticky=(tk.E,tk.W))
-        self.scale_l.grid(column=0, row=5, sticky=(tk.E,tk.W))
-        
-        self.extent = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
-        self.rot_v = tk.DoubleVar(value=0)
-        self.alpha_v = tk.DoubleVar(value=0)
-        self.toshow_v = tk.BooleanVar(value=False)
-        self.origin = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
-        self.shift = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
-        self.scale_v = tk.DoubleVar(value=1)
+            #self.imglist_val_list = list(self.imgs.keys())
+            #self.imglist_val = tk.StringVar(value=self.imglist_val_list)
 
-        '''
-        self.xmin_e = ttk.Entry(self.input_frame, textvariable=self.extent[0],width=5)
-        self.xmax_e = ttk.Entry(self.input_frame, textvariable=self.extent[1],width=5)
-        self.ymin_e = ttk.Entry(self.input_frame, textvariable=self.extent[2],width=5)
-        self.ymax_e = ttk.Entry(self.input_frame, textvariable=self.extent[3],width=5)
-        '''
-        self.rot_e = ttk.Entry(self.input_frame, textvariable=self.rot_v,width=5)
-        self.alpha_e = ttk.Entry(self.input_frame, textvariable=self.alpha_v,width=5)
-        self.show_chk = ttk.Checkbutton(self.input_frame, text='Show', variable=self.toshow_v)
-        self.xo_e = ttk.Entry(self.input_frame, textvariable=self.origin[0],width=5)
-        self.yo_e = ttk.Entry(self.input_frame, textvariable=self.origin[1],width=5)
-        self.xsh_e = ttk.Entry(self.input_frame, textvariable=self.shift[0],width=5)
-        self.ysh_e = ttk.Entry(self.input_frame, textvariable=self.shift[1],width=5)
-        self.scale_e = ttk.Entry(self.input_frame, textvariable=self.scale_v,width=5)
+            self.imglist_sb = ttk.Treeview(self.mainframe,selectmode='browse',height = 4)
+            self.imglist_sb.column('#0',width=500)
+            self.imglist_sb.heading('#0',text='Filepath')
+            for i in list(self.imgs.keys()):
+                self.imglist_sb.insert('',tk.END, i, text=i)
+            self.imglist_sb.grid(column=0, row=0, sticky=(tk.S))
+            self.imglist_sb.bind('<<TreeviewSelect>>', self.clickimglist)
 
-        '''
-        self.xmin_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
-        self.xmax_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
-        self.ymin_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
-        self.ymax_e.grid(column=3, row=1, sticky=(tk.E,tk.W))
-        '''
-        self.rot_e.grid(column=1, row=4, sticky=(tk.E,tk.W))
-        self.alpha_e.grid(column=3, row=4, sticky=(tk.E,tk.W))
-        self.show_chk.grid(column=3, row=5, sticky=(tk.E,tk.W))
-        self.xo_e.grid(column=1, row=2, sticky=(tk.E,tk.W))
-        self.yo_e.grid(column=3, row=2, sticky=(tk.E,tk.W))
-        self.xsh_e.grid(column=1, row=3, sticky=(tk.E,tk.W))
-        self.ysh_e.grid(column=3, row=3, sticky=(tk.E,tk.W))
-        self.scale_e.grid(column=1, row=5, sticky=(tk.E,tk.W))
-        
-        self.button_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.button_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
-        self.button_add = ttk.Button(self.button_frame, text="Add", command=self.newimg)
-        self.button_add.grid(column=0, row=0, sticky=(tk.S))
-        self.button_delete = ttk.Button(self.button_frame, text="Delete", command=self.deleteimg)
-        self.button_delete.grid(column=1, row=0, sticky=(tk.S))
-        self.button_show = ttk.Button(self.button_frame, text="Refresh", command=self.showimg)
-        self.button_show.grid(column=2, row=0, sticky=(tk.S))
-        '''
-        self.button_close = ttk.Button(self.button_frame, text="Close", command=self.master.destroy)
-        self.button_close.grid(column=0, row=1, sticky=(tk.S))
-        '''
-        
-        self.master.focus_set()
+            self.input_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.input_frame.grid(column=0, row=1, sticky=(tk.E,tk.W))
+
+            '''
+            self.xmin_l = ttk.Label(self.input_frame, text='xmin')
+            self.xmax_l = ttk.Label(self.input_frame, text='xmax')
+            self.ymin_l = ttk.Label(self.input_frame, text='ymin')
+            self.ymax_l = ttk.Label(self.input_frame, text='ymax')
+            '''
+            self.rot_l = ttk.Label(self.input_frame, text='rotation')
+            self.alpha_l = ttk.Label(self.input_frame, text='alpha')
+            self.xo_l = ttk.Label(self.input_frame, text='x0')
+            self.yo_l = ttk.Label(self.input_frame, text='y0')
+            self.xsh_l = ttk.Label(self.input_frame, text='xshift')
+            self.ysh_l = ttk.Label(self.input_frame, text='yshift')
+            self.scale_l = ttk.Label(self.input_frame, text='scale')
+
+            '''
+            self.xmin_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
+            self.xmax_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
+            self.ymin_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
+            self.ymax_l.grid(column=2, row=1, sticky=(tk.E,tk.W))
+            '''
+            self.rot_l.grid(column=0, row=4, sticky=(tk.E,tk.W))
+            self.alpha_l.grid(column=2, row=4, sticky=(tk.E,tk.W))
+            self.xo_l.grid(column=0, row=2, sticky=(tk.E,tk.W))
+            self.yo_l.grid(column=2, row=2, sticky=(tk.E,tk.W))
+            self.xsh_l.grid(column=0, row=3, sticky=(tk.E,tk.W))
+            self.ysh_l.grid(column=2, row=3, sticky=(tk.E,tk.W))
+            self.scale_l.grid(column=0, row=5, sticky=(tk.E,tk.W))
+
+            self.extent = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+            self.rot_v = tk.DoubleVar(value=0)
+            self.alpha_v = tk.DoubleVar(value=0)
+            self.toshow_v = tk.BooleanVar(value=False)
+            self.origin = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+            self.shift = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+            self.scale_v = tk.DoubleVar(value=1)
+
+            '''
+            self.xmin_e = ttk.Entry(self.input_frame, textvariable=self.extent[0],width=5)
+            self.xmax_e = ttk.Entry(self.input_frame, textvariable=self.extent[1],width=5)
+            self.ymin_e = ttk.Entry(self.input_frame, textvariable=self.extent[2],width=5)
+            self.ymax_e = ttk.Entry(self.input_frame, textvariable=self.extent[3],width=5)
+            '''
+            self.rot_e = ttk.Entry(self.input_frame, textvariable=self.rot_v,width=5)
+            self.alpha_e = ttk.Entry(self.input_frame, textvariable=self.alpha_v,width=5)
+            self.show_chk = ttk.Checkbutton(self.input_frame, text='Show', variable=self.toshow_v)
+            self.xo_e = ttk.Entry(self.input_frame, textvariable=self.origin[0],width=5)
+            self.yo_e = ttk.Entry(self.input_frame, textvariable=self.origin[1],width=5)
+            self.xsh_e = ttk.Entry(self.input_frame, textvariable=self.shift[0],width=5)
+            self.ysh_e = ttk.Entry(self.input_frame, textvariable=self.shift[1],width=5)
+            self.scale_e = ttk.Entry(self.input_frame, textvariable=self.scale_v,width=5)
+
+            '''
+            self.xmin_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
+            self.xmax_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
+            self.ymin_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
+            self.ymax_e.grid(column=3, row=1, sticky=(tk.E,tk.W))
+            '''
+            self.rot_e.grid(column=1, row=4, sticky=(tk.E,tk.W))
+            self.alpha_e.grid(column=3, row=4, sticky=(tk.E,tk.W))
+            self.show_chk.grid(column=3, row=5, sticky=(tk.E,tk.W))
+            self.xo_e.grid(column=1, row=2, sticky=(tk.E,tk.W))
+            self.yo_e.grid(column=3, row=2, sticky=(tk.E,tk.W))
+            self.xsh_e.grid(column=1, row=3, sticky=(tk.E,tk.W))
+            self.ysh_e.grid(column=3, row=3, sticky=(tk.E,tk.W))
+            self.scale_e.grid(column=1, row=5, sticky=(tk.E,tk.W))
+
+            self.button_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.button_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
+            self.button_add = ttk.Button(self.button_frame, text="Add", command=self.newimg)
+            self.button_add.grid(column=0, row=0, sticky=(tk.S))
+            self.button_delete = ttk.Button(self.button_frame, text="Delete", command=self.deleteimg)
+            self.button_delete.grid(column=1, row=0, sticky=(tk.S))
+            self.button_show = ttk.Button(self.button_frame, text="Refresh", command=self.showimg)
+            self.button_show.grid(column=2, row=0, sticky=(tk.S))
+            '''
+            self.button_close = ttk.Button(self.button_frame, text="Close", command=self.master.destroy)
+            self.button_close.grid(column=0, row=1, sticky=(tk.S))
+            '''
+
+            self.master.focus_set()
+        else:
+            self.sendtopmost()
     def newimg(self):
         inputdir = filedialog.askopenfilename()
         if inputdir != '':
@@ -264,3 +269,9 @@ class BackImgControl():
             self.imgs[sections].alpha = float(conf[sections]['alpha'])
             self.imgs[sections].scale = float(conf[sections]['scale'])
         self.mainwindow.drawall()
+    def sendtopmost(self,event=None):
+        self.master.lift()
+        self.master.focus_force()
+    def closewindow(self):
+        self.master.withdraw()
+        self.master = None
