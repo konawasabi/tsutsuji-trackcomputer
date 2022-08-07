@@ -526,6 +526,7 @@ class interface():
         # 自軌道構文の印字
         if self.calc_mapsyntax_v.get():
             print()
+            print('$pt_a = {:f};'.format(cursor_f.values[4].get()))
             if fitmode == self.curve_fitmode_box['values'][0] or fitmode == self.curve_fitmode_box['values'][5]:
                 shift = 0
                 print('$pt_a;')
