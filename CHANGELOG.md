@@ -3,9 +3,15 @@
 ## to be implemented
 
 - solver
-  - 渡り線フィッティング
+  - 渡り線・S字カーブMode
+- 地理院地図との連携
+  
+## [1.3.1] - not released yet
 
-## [1.3.0] - not released yet
+- Curvetrack Solver
+  - 始点マーカーの距離程を印字
+
+## [1.3.0] - 2022-08-04
 
 - kml/csvファイルから軌道データを読み込む
   - Measure機能による各種測定
