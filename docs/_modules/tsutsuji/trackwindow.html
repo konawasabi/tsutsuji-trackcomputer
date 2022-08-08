@@ -109,7 +109,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">tree_scrollbar</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">track_tree</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">yscrollcommand</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_scrollbar</span><span class="o">.</span><span class="n">set</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_treevalue</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_treevalue</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sendtopmost</span><span class="p">()</span></div>
 <div class="viewcode-block" id="TrackWindow.click_tracklist"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.click_tracklist">[docs]</a>    <span class="k">def</span> <span class="nf">click_tracklist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;軌道リストをクリックしたときのイベント処理</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -210,7 +212,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">set_treevalue</span><span class="p">()</span></div>
 <div class="viewcode-block" id="TrackWindow.closewindow"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.closewindow">[docs]</a>    <span class="k">def</span> <span class="nf">closewindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="TrackWindow.sendtopmost"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.sendtopmost">[docs]</a>    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">lift</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_force</span><span class="p">()</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>

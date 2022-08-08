@@ -200,3 +200,21 @@ Mode
    Curve.Interpolate(0.000000,0.000000);
 
 
+カーソルαが軌道上の点を示している場合（trackボックス != `@absolute` の場合）、Curve構文の先頭にカーソルαが示す地点の距離程を出力します。
+上の例で、カーソルαが距離程1234mの地点を示していた場合の出力例は次の通りです。
+この機能はversion 1.3.1以降で有効です。
+
+.. code-block:: text
+
+   # ここからCurve構文の出力
+   $pt_a = 1234;         # $pt_aが示す地点の距離程 (ver. 1.3.1より)
+   $pt_a -102.484127;    # カーソルαから曲線始点までのオフセット
+   $cant = 0;            # $cantはカント設定値を想定
+   Curve.SetFunction(1);
+   Curve.Interpolate(0.000000,0.000000);
+   $pt_a -102.484127;
+   Curve.Interpolate(-400.000000, $cant);
+   $pt_a +408.631384;
+   Curve.Interpolate(-400.000000, $cant);
+   $pt_a +408.631384;
+   Curve.Interpolate(0.000000,0.000000);
