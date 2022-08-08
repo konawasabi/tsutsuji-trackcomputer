@@ -5,13 +5,16 @@
 - solver
   - 渡り線・S字カーブMode
 - 地理院地図との連携
-- Measure, Generateボタンの配置を改善
   
-## [1.3.1] - not released yet
+## [1.3.1] - 2022-08-08
 
 - Curvetrack Solver
   - 始点マーカーの距離程を印字
-- backimgウィンドウの多重オープン防止
+- UI関係
+  - backimg
+    - ウィンドウの多重オープン防止
+	- タブフォーカス移動順序の修正
+  - Generateボタンの配置を改善
 
 ## [1.3.0] - 2022-08-04
 
