@@ -140,14 +140,15 @@ class BackImgControl():
             self.ymin_e = ttk.Entry(self.input_frame, textvariable=self.extent[2],width=5)
             self.ymax_e = ttk.Entry(self.input_frame, textvariable=self.extent[3],width=5)
             '''
-            self.rot_e = ttk.Entry(self.input_frame, textvariable=self.rot_v,width=5)
-            self.alpha_e = ttk.Entry(self.input_frame, textvariable=self.alpha_v,width=5)
-            self.show_chk = ttk.Checkbutton(self.input_frame, text='Show', variable=self.toshow_v)
+            
             self.xo_e = ttk.Entry(self.input_frame, textvariable=self.origin[0],width=5)
             self.yo_e = ttk.Entry(self.input_frame, textvariable=self.origin[1],width=5)
             self.xsh_e = ttk.Entry(self.input_frame, textvariable=self.shift[0],width=5)
             self.ysh_e = ttk.Entry(self.input_frame, textvariable=self.shift[1],width=5)
+            self.rot_e = ttk.Entry(self.input_frame, textvariable=self.rot_v,width=5)
+            self.alpha_e = ttk.Entry(self.input_frame, textvariable=self.alpha_v,width=5)
             self.scale_e = ttk.Entry(self.input_frame, textvariable=self.scale_v,width=5)
+            self.show_chk = ttk.Checkbutton(self.input_frame, text='Show', variable=self.toshow_v)
 
             '''
             self.xmin_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
