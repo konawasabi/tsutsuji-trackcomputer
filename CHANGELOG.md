@@ -96,6 +96,7 @@
 
 - 1st release
 
+[1.3.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.0...ver1.3.1
 [1.3.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.2.0...ver1.3.0
 [1.2.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.3...ver1.2.0
 [1.1.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.2...ver1.1.3
