@@ -3,9 +3,20 @@
 ## to be implemented
 
 - solver
-  - 渡り線フィッティング
+  - 渡り線・S字カーブMode
+- 地理院地図との連携
+  
+## [1.3.1] - 2022-08-08
 
-## [1.3.0] - not released yet
+- Curvetrack Solver
+  - 始点マーカーの距離程を印字
+- UI関係
+  - backimg
+    - ウィンドウの多重オープン防止
+	- タブフォーカス移動順序の修正
+  - Generateボタンの配置を改善
+
+## [1.3.0] - 2022-08-04
 
 - kml/csvファイルから軌道データを読み込む
   - Measure機能による各種測定
@@ -85,6 +96,7 @@
 
 - 1st release
 
+[1.3.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.0...ver1.3.1
 [1.3.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.2.0...ver1.3.0
 [1.2.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.3...ver1.2.0
 [1.1.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.2...ver1.1.3

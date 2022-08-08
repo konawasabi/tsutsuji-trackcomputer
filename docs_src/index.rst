@@ -33,6 +33,7 @@ Contents
 
    tutorial
    referenceguide
+   keyshortcut
    tsutsuji API (Under construction) <tsutsuji>
 
 Repository

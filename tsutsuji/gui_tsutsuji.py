@@ -193,10 +193,7 @@ class mainwindow(ttk.Frame):
         # ---
         
         self.measure_btn = ttk.Button(self.button_frame, text="Measure", command = self.measure)
-        self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E))
-
-        self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
-        self.getrelrad_btn.grid(column=0, row=3, sticky=(tk.N, tk.W, tk.E))
+        self.measure_btn.grid(column=0, row=2, sticky=(tk.N, tk.W, tk.E, tk.S))
 
         if not __debug__:
             self.printtracks_btn = ttk.Button(self.button_frame, text="P. Tracks", command = self.trackcontrol.dump_trackdata)
@@ -207,6 +204,10 @@ class mainwindow(ttk.Frame):
 
             self.othertrack_btn = ttk.Button(self.button_frame, text="OtherTrack", command = self.get_othertrack)
             self.othertrack_btn.grid(column=0, row=6, sticky=(tk.N, tk.W, tk.E))
+
+        self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
+        self.getrelrad_btn.grid(column=0, row=10, sticky=(tk.E, tk.W, tk.S))
+        self.button_frame.rowconfigure(10, weight=1)
         
         # ウィンドウリサイズに対する設定
         self.columnconfigure(0, weight=1)

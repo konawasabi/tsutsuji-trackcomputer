@@ -64,6 +64,8 @@ class TrackWindow(ttk.Frame):
             self.track_tree.configure(yscrollcommand=self.tree_scrollbar.set)
 
             self.set_treevalue()
+        else:
+            self.sendtopmost()
     def click_tracklist(self, event=None):
         '''軌道リストをクリックしたときのイベント処理
         '''
@@ -165,3 +167,6 @@ class TrackWindow(ttk.Frame):
     def closewindow(self):
         self.master.withdraw()
         self.master = None
+    def sendtopmost(self,event=None):
+        self.master.lift()
+        self.master.focus_force()
