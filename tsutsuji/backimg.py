@@ -24,6 +24,9 @@ import tkinter.simpledialog as simpledialog
 import matplotlib.pyplot as plt
 from PIL import Image
 import numpy as np
+import staticmap
+
+from kobushi import dialog_multifields
 
 import configparser
 
@@ -276,3 +279,50 @@ class BackImgControl():
     def closewindow(self):
         self.master.withdraw()
         self.master = None
+
+class StaticMapControl():
+    def __init__(self, mainwindow):
+        self.mainwindow = mainwindow
+
+
+        self.toshow = False
+        #width  = self.output_data.shape[1]
+        #height = self.output_data.shape[0]
+        self.origin = [0,0]
+        self.shift = [0,0]
+        self.rotrad = 0
+        self.alpha = 0.5
+        self.extent = [-900/2,900/2,-700/2,700/2]
+        self.scale = 1
+
+        self.map = None
+        self.img = None
+        self.origin_longlat = [139.7413, 35.6580] #longitude: 経度[deg]、latitude: 緯度[deg]
+        self.template_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'#'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'
+        self.set_baseurl(self.template_url)
+        
+    def set_baseurl(self, url):
+        self.map = staticmap.StaticMap(800, 600, url_template=url)
+    def canvas_size(self):
+        print(self.mainwindow.ax_plane.get_position())
+        print(self.mainwindow.ax_plane.figure.get_size_inches())
+    def setparamdialog(self):
+        inputvals = dialog_multifields.dialog_multifields(self.mainwindow,\
+                                                          [{'name':'origin_longitude', 'type':'Double', 'label':'原点 東経', 'default':self.origin_longlat[0]},\
+                                                           {'name':'origin_latitude', 'type':'Double', 'label':'原点 北緯', 'default':self.origin_longlat[1]},\
+                                                           {'name':'template_url', 'type':'str', 'label':'template URL', 'default':self.template_url}])
+        if inputvals.result == 'OK':
+            for i in inputvals.variables.keys():
+                print(i, inputvals.variables[i].get())
+            self.origin_longlat = [inputvals.variables['origin_longitude'].get(), inputvals.variables['origin_latitude'].get()]
+            self.template_url = inputvals.variables['template_url'].get()
+            self.set_baseurl(self.template_url)
+    def getimg(self):
+        self.img = self.map.render(zoom=14, center=self.origin_longlat)
+        self.toshow = True
+        print(self.img)
+    def showimg(self,ax,as_ratio=1,ymag=1):
+        if self.toshow:
+            #self.rotate(self.rotrad)
+            #as_ratio_mod = (self.extent[1]-self.extent[0])/(self.extent[3]-self.extent[2])*as_ratio
+            ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)

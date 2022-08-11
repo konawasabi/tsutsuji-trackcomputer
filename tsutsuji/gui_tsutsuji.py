@@ -82,6 +82,8 @@ class mainwindow(ttk.Frame):
         self.trackwindow = trackwindow.TrackWindow(self)
 
         self.trackcontrol = track_control.TrackControl()
+
+        self.staticmapctrl = backimg.StaticMapControl(self)
         
         self.create_widgets()
         self.create_menubar()
@@ -205,6 +207,9 @@ class mainwindow(ttk.Frame):
             self.othertrack_btn = ttk.Button(self.button_frame, text="OtherTrack", command = self.get_othertrack)
             self.othertrack_btn.grid(column=0, row=6, sticky=(tk.N, tk.W, tk.E))
 
+            self.statmap1_btn = ttk.Button(self.button_frame, text="statmap1", command = self.staticmapctrl.getimg)
+            self.statmap1_btn.grid(column=0, row=7, sticky=(tk.N, tk.W, tk.E))
+
         self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
         self.getrelrad_btn.grid(column=0, row=10, sticky=(tk.E, tk.W, tk.S))
         self.button_frame.rowconfigure(10, weight=1)
@@ -244,6 +249,8 @@ class mainwindow(ttk.Frame):
         self.menu_option.add_command(label='Backimg...', command=self.backimgctrl.create_window)
         self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
         self.menu_option.add_command(label='Save Backimg...', command=self.backimgctrl.save_setting)
+        self.menu_option.add_separator()
+        self.menu_option.add_command(label='StaticMap...', command=self.staticmapctrl.setparamdialog)
         self.menu_option.add_separator()
         self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
         
@@ -293,7 +300,7 @@ class mainwindow(ttk.Frame):
         for key in self.plot_marker_ctrl.keys():
             if self.plot_marker_ctrl[key]['variable'].get():
                 self.trackcontrol.plot_symbols(self.ax_plane,key)
-        
+
         self.measurewindow.drawall()
             
         if self.view_whole_v.get() == 'True':
@@ -314,6 +321,8 @@ class mainwindow(ttk.Frame):
 
         for i in self.backimgctrl.imgs.keys():
             self.backimgctrl.imgs[i].show(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
+        
+        self.staticmapctrl.showimg(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
 
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
