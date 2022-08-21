@@ -207,7 +207,7 @@ class mainwindow(ttk.Frame):
             self.othertrack_btn = ttk.Button(self.button_frame, text="OtherTrack", command = self.get_othertrack)
             self.othertrack_btn.grid(column=0, row=6, sticky=(tk.N, tk.W, tk.E))
 
-            self.statmap1_btn = ttk.Button(self.button_frame, text="statmap1", command = self.staticmapctrl.getimg)
+            self.statmap1_btn = ttk.Button(self.button_frame, text="statmap1", command = self.getmaptile)
             self.statmap1_btn.grid(column=0, row=7, sticky=(tk.N, tk.W, tk.E))
 
         self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
@@ -371,6 +371,9 @@ class mainwindow(ttk.Frame):
             self.move_xy(0,-1)
         elif event.keysym == 'Down':
             self.move_xy(0,1)
+    def getmaptile(self, event=None):
+        self.staticmapctrl.getimg()
+        self.drawall()
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
