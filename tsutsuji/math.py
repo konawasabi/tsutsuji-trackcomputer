@@ -148,6 +148,7 @@ def calc_pl2xy(phi_deg, lambda_deg, phi0_deg, lambda0_deg):
     - output:
         x: 変換後の平面直角座標[m]
         y: 変換後の平面直角座標[m]
+        * x軸正方向は北、y軸正方向は東を指すことに注意
         
         原典
         https://qiita.com/sw1227/items/e7a590994ad7dcd0e8ab
@@ -218,6 +219,7 @@ def calc_xy2pl(x, y, phi0_deg, lambda0_deg):
     - input:
         (x, y): 変換したいx, y座標[m]
         (phi0_deg, lambda0_deg): 平面直角座標系原点の緯度・経度[度]（分・秒でなく小数であることに注意）
+        * x軸正方向は北、y軸正方向は東を指すことに注意
     - output:
         latitude:  緯度[度]
         longitude: 経度[度]
@@ -295,3 +297,45 @@ def calc_xy2pl(x, y, phi0_deg, lambda0_deg):
 
     # ラジアンを度になおしてreturn
     return np.rad2deg(latitude), np.rad2deg(longitude) # [deg]
+
+def long2px(l, z):
+    '''経度をマップタイルのピクセル座標に変換する
+    - input:
+        l: 変換したい経度(longitude) [deg]
+        z: ズームレベル (0-18)
+    - output:
+        x: ピクセル座標x成分 (256で割るとタイル座標になる)
+    '''
+    return 2**(z+7)*(l/180+1)
+
+def lat2py(l, z, L=85.05112878):
+    '''緯度をマップタイルのピクセル座標に変換する
+    - input:
+        l: 変換したい緯度(latitude) [deg]
+        z: ズームレベル (0-18)
+        L: 緯度の上限値 [deg]
+    - output:
+        y: ピクセル座標y成分 (256で割るとタイル座標になる)
+    '''
+    return (2**(z+7)/np.pi)*(-np.arctanh(np.sin(np.pi/180*l))+np.arctanh(np.sin(np.pi/180*L)))
+
+def px2long(x, z):
+    '''ピクセル座標を経度に変換する
+    - input:
+        x: 変換したいピクセル座標x成分 
+        z: ズームレベル (0-18)
+    - output:
+        l: 経度 [deg]
+    '''
+    return 180*(x/(2**(z+7))-1)
+
+def py2lat(y, z, L=85.05112878):
+    '''ピクセル座標を経度に変換する
+    - input:
+        y: 変換したいピクセル座標y成分
+        z: ズームレベル (0-18)
+        L: 緯度の上限値 [deg]
+    - output:
+        l: 緯度 [deg]
+    '''
+    return 180/np.pi*(np.arcsin(np.tanh(-np.pi/(2**(z+7))*y+np.arctanh(np.sin(np.pi/180*L)))))

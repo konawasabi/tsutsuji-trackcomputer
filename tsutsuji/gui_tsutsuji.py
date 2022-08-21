@@ -83,7 +83,7 @@ class mainwindow(ttk.Frame):
 
         self.trackcontrol = track_control.TrackControl()
 
-        self.staticmapctrl = backimg.StaticMapControl(self)
+        self.staticmapctrl = backimg.TileMapControl(self)
         
         self.create_widgets()
         self.create_menubar()

@@ -25,8 +25,11 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import numpy as np
 import staticmap
+import io
+import requests
 
 from kobushi import dialog_multifields
+from tsutsuji import math
 
 import configparser
 
@@ -291,7 +294,7 @@ class StaticMapControl():
         self.origin = [0,0]
         self.shift = [0,0]
         self.rotrad = 0
-        self.alpha = 0.5
+        self.alpha = 0.8
         self.extent = [-900/2,900/2,-700/2,700/2]
         self.scale = 1
 
@@ -302,7 +305,9 @@ class StaticMapControl():
         self.set_baseurl(self.template_url)
         
     def set_baseurl(self, url):
+        self.map = None
         self.map = staticmap.StaticMap(800, 600, url_template=url)
+        self.map.request_timeout = 10
     def canvas_size(self):
         print(self.mainwindow.ax_plane.get_position())
         print(self.mainwindow.ax_plane.figure.get_size_inches())
@@ -317,10 +322,131 @@ class StaticMapControl():
             self.origin_longlat = [inputvals.variables['origin_longitude'].get(), inputvals.variables['origin_latitude'].get()]
             self.template_url = inputvals.variables['template_url'].get()
             self.set_baseurl(self.template_url)
+            if False:
+                import pdb
+                pdb.set_trace()
     def getimg(self):
-        self.img = self.map.render(zoom=14, center=self.origin_longlat)
+        if False:
+            import pdb
+            pdb.set_trace()
+        self.img = None
+        self.img = self.map.render(zoom=16, center=self.origin_longlat)
         self.toshow = True
         print(self.img)
+    def showimg(self,ax,as_ratio=1,ymag=1):
+        if self.toshow:
+            #self.rotate(self.rotrad)
+            #as_ratio_mod = (self.extent[1]-self.extent[0])/(self.extent[3]-self.extent[2])*as_ratio
+            ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)
+
+class TileMapControl():
+    def __init__(self, mainwindow):
+        self.mainwindow = mainwindow
+
+
+        self.toshow = False
+        #width  = self.output_data.shape[1]
+        #height = self.output_data.shape[0]
+        self.origin = [0,0]
+        self.shift = [0,0]
+        self.rotrad = 0
+        self.alpha = 0.8
+        self.extent = [-900/2,900/2,-700/2,700/2]
+        self.scale = 1
+
+        self.map = None
+        self.img = None
+        self.origin_longlat = [139.7413, 35.6580] #longitude: 経度[deg]、latitude: 緯度[deg]
+        self.position = [0, 0]
+        self.zoom = 16
+        self.template_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'#'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'
+        
+    def set_baseurl(self, url):
+        pass
+    def canvas_size(self):
+        print(self.mainwindow.ax_plane.get_position())
+        print(self.mainwindow.ax_plane.figure.get_size_inches())
+    def setparamdialog(self):
+        inputvals = dialog_multifields.dialog_multifields(self.mainwindow,\
+                                                          [{'name':'origin_longitude', 'type':'Double', 'label':'原点 東経', 'default':self.origin_longlat[0]},\
+                                                           {'name':'origin_latitude', 'type':'Double', 'label':'原点 北緯', 'default':self.origin_longlat[1]},\
+                                                           {'name':'pos_x', 'type':'Double', 'label':'中心座標x', 'default':self.position[0]},\
+                                                           {'name':'pos_y', 'type':'Double', 'label':'中心座標y', 'default':self.position[1]},\
+                                                           {'name':'zoom', 'type':'Integer', 'label':'原点 北緯', 'default':self.zoom},\
+                                                           {'name':'template_url', 'type':'str', 'label':'template URL', 'default':self.template_url}])
+        if inputvals.result == 'OK':
+            for i in inputvals.variables.keys():
+                print(i, inputvals.variables[i].get())
+            self.origin_longlat = [inputvals.variables['origin_longitude'].get(), inputvals.variables['origin_latitude'].get()]
+            self.position = [inputvals.variables['pos_x'].get(), inputvals.variables['pos_y'].get()]
+            self.zoom = int(inputvals.variables['zoom'].get())
+            self.template_url = inputvals.variables['template_url'].get()
+    def getimg(self):
+        if False:
+            import pdb
+            pdb.set_trace()
+        self.img = None
+
+        width = 900
+        height = 700
+        zoom = self.zoom
+        origin = self.origin_longlat
+
+        origin_pixel = [math.long2px(origin[0], zoom), math.lat2py(origin[1],zoom)]
+        tile = [int(origin_pixel[0]/256), int(origin_pixel[1]/256)]
+
+        border_lu = math.calc_xy2pl(height/2, -width/2, origin[1], origin[0])
+        border_rd = math.calc_xy2pl(-height/2, width/2, origin[1], origin[0])
+
+        px_lu = [math.long2px(border_lu[1],zoom), math.lat2py(border_lu[0],zoom)]
+        tile_lu =[int(px_lu[0]/256), int(px_lu[1]/256)]
+        rel_lu = [px_lu[0]%256, px_lu[1]%256]
+
+        px_rd = [math.long2px(border_rd[1],zoom), math.lat2py(border_rd[0],zoom)]
+        tile_rd =[int(px_rd[0]/256), int(px_rd[1]/256)]
+        rel_rd = [px_rd[0]%256, px_rd[1]%256]
+
+        x_min = min(tile_lu[0], tile_rd[0])
+        y_min = min(tile_lu[1], tile_rd[1])
+        x_max = max(tile_lu[0], tile_rd[0])
+        y_max = max(tile_lu[1], tile_rd[1])
+
+        pos_lu_bd = [(tile_lu[0]-x_min)*256 + rel_lu[0], (tile_lu[1]-y_min)*256 + rel_lu[1]]
+        pos_rd_bd = [(tile_rd[0]-x_min)*256 + rel_rd[0], (tile_rd[1]-y_min)*256 + rel_rd[1]]
+
+        bd_line = [[-width/2, -height/2],\
+                   [width/2, -height/2],\
+                   [width/2, height/2],\
+                   [-width/2, height/2],\
+                   [-width/2, -height/2]]
+
+        pos_tile_corner = {}
+        pos_tile_corner['lu'] = math.calc_pl2xy(math.py2lat(tile_lu[1]*256, zoom), math.px2long((tile_lu[0])*256, zoom), origin[1],origin[0])
+        pos_tile_corner['rd'] = math.calc_pl2xy(math.py2lat((tile_rd[1]+1)*256, zoom), math.px2long((tile_rd[0]+1)*256, zoom), origin[1],origin[0])
+
+        extent = [pos_tile_corner['lu'][1],\
+                  pos_tile_corner['rd'][1], \
+                  pos_tile_corner['rd'][0],\
+                  pos_tile_corner['lu'][0]]
+
+        x_num = x_max-x_min +1
+        y_num = y_max-y_min +1
+
+        result = Image.new('RGB', (256*x_num, 256*y_num), (0,0,0))
+        for i in range(0,x_num):
+            for j in range(0,y_num):
+                a_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{:d}/{:d}/{:d}.png'.format(zoom,x_min+i,y_min+j)
+                print(a_url)
+
+                # core
+                a_img = Image.open(io.BytesIO(requests.get(a_url).content))
+
+                result.paste(a_img, (256*i, 256*j))
+
+        print('Done')
+        self.img = result
+        self.extent = extent
+        self.toshow = True
     def showimg(self,ax,as_ratio=1,ymag=1):
         if self.toshow:
             #self.rotate(self.rotrad)
