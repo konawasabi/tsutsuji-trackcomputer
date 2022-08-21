@@ -391,6 +391,11 @@ class TileMapControl():
         height = 700
         zoom = self.zoom
         origin = self.origin_longlat
+        if '{z}' not in self.template_url or '{x}' not in self.template_url or '{y}' not in self.template_url:
+            raise Exception('Invalid template_url')
+        else:
+            url_base = self.template_url.replace('{z}', '{:d}').replace('{x}', '{:d}').replace('{y}', '{:d}')
+            
 
         origin_pixel = [math.long2px(origin[0], zoom), math.lat2py(origin[1],zoom)]
         tile = [int(origin_pixel[0]/256), int(origin_pixel[1]/256)]
@@ -435,13 +440,13 @@ class TileMapControl():
         result = Image.new('RGB', (256*x_num, 256*y_num), (0,0,0))
         for i in range(0,x_num):
             for j in range(0,y_num):
-                a_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{:d}/{:d}/{:d}.png'.format(zoom,x_min+i,y_min+j)
-                print(a_url)
+                url_toget = url_base.format(zoom,x_min+i,y_min+j)
+                print(url_toget)
 
                 # core
-                a_img = Image.open(io.BytesIO(requests.get(a_url).content))
+                img_piece = Image.open(io.BytesIO(requests.get(url_toget).content))
 
-                result.paste(a_img, (256*i, 256*j))
+                result.paste(img_piece, (256*i, 256*j))
 
         print('Done')
         self.img = result
