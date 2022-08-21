@@ -358,7 +358,7 @@ class TileMapControl():
         self.img = None
         self.origin_longlat = [139.7413, 35.6580] #longitude: 経度[deg]、latitude: 緯度[deg]
         self.position = [0, 0]
-        self.zoom = 16
+        self.zoom = 15
         self.template_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'#'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'
         
     def set_baseurl(self, url):
@@ -386,22 +386,21 @@ class TileMapControl():
             import pdb
             pdb.set_trace()
         self.img = None
-
-        width = 900
-        height = 700
-        zoom = self.zoom
-        origin = self.origin_longlat
+        
         if '{z}' not in self.template_url or '{x}' not in self.template_url or '{y}' not in self.template_url:
             raise Exception('Invalid template_url')
         else:
             url_base = self.template_url.replace('{z}', '{:d}').replace('{x}', '{:d}').replace('{y}', '{:d}')
-            
 
-        origin_pixel = [math.long2px(origin[0], zoom), math.lat2py(origin[1],zoom)]
-        tile = [int(origin_pixel[0]/256), int(origin_pixel[1]/256)]
+        width = 900
+        height = 700
+        zoom = self.zoom
 
-        border_lu = math.calc_xy2pl(height/2, -width/2, origin[1], origin[0])
-        border_rd = math.calc_xy2pl(-height/2, width/2, origin[1], origin[0])
+        origin = self.origin_longlat
+        canvas_center = [self.mainwindow.viewpos_v[0].get(), self.mainwindow.viewpos_v[1].get()]
+        
+        border_lu = math.calc_xy2pl(-(-height/2 + canvas_center[1]), (-width/2 + canvas_center[0]), origin[1], origin[0])
+        border_rd = math.calc_xy2pl(-(height/2 + canvas_center[1]), (width/2 + canvas_center[0]), origin[1], origin[0])
 
         px_lu = [math.long2px(border_lu[1],zoom), math.lat2py(border_lu[0],zoom)]
         tile_lu =[int(px_lu[0]/256), int(px_lu[1]/256)]
@@ -411,19 +410,10 @@ class TileMapControl():
         tile_rd =[int(px_rd[0]/256), int(px_rd[1]/256)]
         rel_rd = [px_rd[0]%256, px_rd[1]%256]
 
-        x_min = min(tile_lu[0], tile_rd[0])
-        y_min = min(tile_lu[1], tile_rd[1])
-        x_max = max(tile_lu[0], tile_rd[0])
-        y_max = max(tile_lu[1], tile_rd[1])
-
-        pos_lu_bd = [(tile_lu[0]-x_min)*256 + rel_lu[0], (tile_lu[1]-y_min)*256 + rel_lu[1]]
-        pos_rd_bd = [(tile_rd[0]-x_min)*256 + rel_rd[0], (tile_rd[1]-y_min)*256 + rel_rd[1]]
-
-        bd_line = [[-width/2, -height/2],\
-                   [width/2, -height/2],\
-                   [width/2, height/2],\
-                   [-width/2, height/2],\
-                   [-width/2, -height/2]]
+        x_min = tile_lu[0]
+        x_max = tile_rd[0]
+        y_min = tile_lu[1]
+        y_max = tile_rd[1]
 
         pos_tile_corner = {}
         pos_tile_corner['lu'] = math.calc_pl2xy(math.py2lat(tile_lu[1]*256, zoom), math.px2long((tile_lu[0])*256, zoom), origin[1],origin[0])
@@ -431,8 +421,8 @@ class TileMapControl():
 
         extent = [pos_tile_corner['lu'][1],\
                   pos_tile_corner['rd'][1], \
-                  pos_tile_corner['rd'][0],\
-                  pos_tile_corner['lu'][0]]
+                  -pos_tile_corner['lu'][0],\
+                  -pos_tile_corner['rd'][0]]
 
         x_num = x_max-x_min +1
         y_num = y_max-y_min +1
@@ -447,6 +437,8 @@ class TileMapControl():
                 img_piece = Image.open(io.BytesIO(requests.get(url_toget).content))
 
                 result.paste(img_piece, (256*i, 256*j))
+
+        #print(extent, border_lu, border_rd)
 
         print('Done')
         self.img = result
