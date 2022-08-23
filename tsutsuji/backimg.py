@@ -287,17 +287,14 @@ class TileMapControl():
         self.mainwindow = mainwindow
 
         self.toshow = False
-        self.origin = [0,0]
-        self.shift = [0,0]
         self.rotrad = 0
         self.alpha = 0.8
         self.extent = [-900/2,900/2,-700/2,700/2]
         self.scale = 1
 
         self.img = None
-        self.origin_longlat = [139.741357472222222, 35.6580992222222222]
-        # longitude: 経度[deg]、latitude: 緯度[deg]
-        self.position = [0, 0]
+        self.origin_longlat = [139.741357472222222, 35.6580992222222222] # longitude: 経度[deg]、latitude: 緯度[deg]
+        self.origin_metric = [0,0] # tsutsuji座標系でorigin_longlatが相当する座標
         self.zoom = 15
         self.template_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'
 
@@ -306,15 +303,17 @@ class TileMapControl():
         inputvals = dialog_multifields.dialog_multifields(self.mainwindow,\
                                                           [{'name':'origin_longitude', 'type':'Double', 'label':'原点 東経', 'default':self.origin_longlat[0]},\
                                                            {'name':'origin_latitude', 'type':'Double', 'label':'原点 北緯', 'default':self.origin_longlat[1]},\
-                                                           {'name':'pos_x', 'type':'Double', 'label':'中心座標x', 'default':self.position[0]},\
-                                                           {'name':'pos_y', 'type':'Double', 'label':'中心座標y', 'default':self.position[1]},\
-                                                           {'name':'zoom', 'type':'Integer', 'label':'原点 北緯', 'default':self.zoom},\
+                                                           {'name':'origin_mx', 'type':'Double', 'label':'原点 x [m]', 'default':self.origin_metric[0]},\
+                                                           {'name':'origin_my', 'type':'Double', 'label':'原点 y [m]', 'default':self.origin_metric[1]},\
+                                                           {'name':'zoom', 'type':'Integer', 'label':'ズームレベル', 'default':self.zoom},\
                                                            {'name':'template_url', 'type':'str', 'label':'template URL', 'default':self.template_url}])
         if inputvals.result == 'OK':
             for i in inputvals.variables.keys():
                 print(i, inputvals.variables[i].get())
-            self.origin_longlat = [inputvals.variables['origin_longitude'].get(), inputvals.variables['origin_latitude'].get()]
-            self.position = [inputvals.variables['pos_x'].get(), inputvals.variables['pos_y'].get()]
+            self.origin_longlat = [inputvals.variables['origin_longitude'].get(),\
+                                   inputvals.variables['origin_latitude'].get()]
+            self.origin_metric = [inputvals.variables['origin_mx'].get(),\
+                                  inputvals.variables['origin_my'].get()]
             self.zoom = int(inputvals.variables['zoom'].get())
             self.template_url = inputvals.variables['template_url'].get()
     def getimg(self, scalex, as_ratio):
@@ -324,7 +323,9 @@ class TileMapControl():
             
         self.img = None
         
-        if '{z}' not in self.template_url or '{x}' not in self.template_url or '{y}' not in self.template_url:
+        if '{z}' not in self.template_url or \
+           '{x}' not in self.template_url or \
+           '{y}' not in self.template_url:
             raise Exception('Invalid template_url')
         else:
             url_base = self.template_url.replace('{z}', '{:d}').replace('{x}', '{:d}').replace('{y}', '{:d}')
@@ -333,12 +334,25 @@ class TileMapControl():
         height = scalex*as_ratio
         zoom = self.zoom
 
-        origin = self.origin_longlat
-        canvas_center = [self.mainwindow.viewpos_v[0].get(), self.mainwindow.viewpos_v[1].get()]
+        # 基準となる緯度経度をorigin_metricだけオフセット
+        origin = math.calc_xy2pl(-self.origin_metric[1],\
+                                 self.origin_metric[0],\
+                                 self.origin_longlat[1],\
+                                 self.origin_longlat[0])
+        origin = [origin[1],origin[0]]
+        
+        canvas_center = [self.mainwindow.viewpos_v[0].get(),\
+                         self.mainwindow.viewpos_v[1].get()]
 
         # プロット画面の左上(lu)、右下(rd)座標を求め、緯度経度に変換する
-        border_lu = math.calc_xy2pl(-(-height/2 + canvas_center[1]), (-width/2 + canvas_center[0]), origin[1], origin[0])
-        border_rd = math.calc_xy2pl(-(height/2 + canvas_center[1]), (width/2 + canvas_center[0]), origin[1], origin[0])
+        border_lu = math.calc_xy2pl(-(-height/2 + canvas_center[1]),\
+                                    (-width/2 + canvas_center[0]),\
+                                    origin[1],\
+                                    origin[0])
+        border_rd = math.calc_xy2pl(-(height/2 + canvas_center[1]),\
+                                    (width/2 + canvas_center[0]),\
+                                    origin[1],\
+                                    origin[0])
 
         # プロット画面の左上、右下を含むマップタイル座標を求める
         # (1)座標を緯度経度->ピクセル座標に変換、(2)タイル座標に変換、(3)タイル内での相対位置を求める
@@ -352,8 +366,14 @@ class TileMapControl():
 
         # 右上、左下を含むタイルの端点座標をm単位で求める
         pos_tile_corner = {}
-        pos_tile_corner['lu'] = math.calc_pl2xy(math.py2lat(tile_lu[1]*256, zoom), math.px2long((tile_lu[0])*256, zoom), origin[1],origin[0])
-        pos_tile_corner['rd'] = math.calc_pl2xy(math.py2lat((tile_rd[1]+1)*256, zoom), math.px2long((tile_rd[0]+1)*256, zoom), origin[1],origin[0])
+        pos_tile_corner['lu'] = math.calc_pl2xy(math.py2lat(tile_lu[1]*256, zoom),\
+                                                math.px2long((tile_lu[0])*256, zoom),\
+                                                origin[1],\
+                                                origin[0])
+        pos_tile_corner['rd'] = math.calc_pl2xy(math.py2lat((tile_rd[1]+1)*256, zoom),\
+                                                math.px2long((tile_rd[0]+1)*256, zoom),\
+                                                origin[1],\
+                                                origin[0])
 
         # 取得するマップタイルの表示範囲
         extent = [pos_tile_corner['lu'][1],\
