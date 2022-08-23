@@ -24,7 +24,6 @@ import tkinter.simpledialog as simpledialog
 import matplotlib.pyplot as plt
 from PIL import Image
 import numpy as np
-import staticmap
 import io
 import requests
 
@@ -283,70 +282,12 @@ class BackImgControl():
         self.master.withdraw()
         self.master = None
 
-class StaticMapControl():
-    def __init__(self, mainwindow):
-        self.mainwindow = mainwindow
-
-
-        self.toshow = False
-        #width  = self.output_data.shape[1]
-        #height = self.output_data.shape[0]
-        self.origin = [0,0]
-        self.shift = [0,0]
-        self.rotrad = 0
-        self.alpha = 0.8
-        self.extent = [-900/2,900/2,-700/2,700/2]
-        self.scale = 1
-
-        self.map = None
-        self.img = None
-        self.origin_longlat = [139.7413, 35.6580] #longitude: 経度[deg]、latitude: 緯度[deg]
-        self.template_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'#'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'
-        self.set_baseurl(self.template_url)
-        
-    def set_baseurl(self, url):
-        self.map = None
-        self.map = staticmap.StaticMap(800, 600, url_template=url)
-        self.map.request_timeout = 10
-    def canvas_size(self):
-        print(self.mainwindow.ax_plane.get_position())
-        print(self.mainwindow.ax_plane.figure.get_size_inches())
-    def setparamdialog(self):
-        inputvals = dialog_multifields.dialog_multifields(self.mainwindow,\
-                                                          [{'name':'origin_longitude', 'type':'Double', 'label':'原点 東経', 'default':self.origin_longlat[0]},\
-                                                           {'name':'origin_latitude', 'type':'Double', 'label':'原点 北緯', 'default':self.origin_longlat[1]},\
-                                                           {'name':'template_url', 'type':'str', 'label':'template URL', 'default':self.template_url}])
-        if inputvals.result == 'OK':
-            for i in inputvals.variables.keys():
-                print(i, inputvals.variables[i].get())
-            self.origin_longlat = [inputvals.variables['origin_longitude'].get(), inputvals.variables['origin_latitude'].get()]
-            self.template_url = inputvals.variables['template_url'].get()
-            self.set_baseurl(self.template_url)
-            if False:
-                import pdb
-                pdb.set_trace()
-    def getimg(self):
-        if False:
-            import pdb
-            pdb.set_trace()
-        self.img = None
-        self.img = self.map.render(zoom=16, center=self.origin_longlat)
-        self.toshow = True
-        print(self.img)
-    def showimg(self,ax,as_ratio=1,ymag=1):
-        if self.toshow:
-            #self.rotate(self.rotrad)
-            #as_ratio_mod = (self.extent[1]-self.extent[0])/(self.extent[3]-self.extent[2])*as_ratio
-            ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)
-
 class TileMapControl():
     def __init__(self, mainwindow):
         self.mainwindow = mainwindow
 
 
         self.toshow = False
-        #width  = self.output_data.shape[1]
-        #height = self.output_data.shape[0]
         self.origin = [0,0]
         self.shift = [0,0]
         self.rotrad = 0
@@ -356,16 +297,13 @@ class TileMapControl():
 
         self.map = None
         self.img = None
-        self.origin_longlat = [139.7413, 35.6580] #longitude: 経度[deg]、latitude: 緯度[deg]
+        self.origin_longlat = [139.741357472222222, 35.6580992222222222]
+        # longitude: 経度[deg]、latitude: 緯度[deg]
         self.position = [0, 0]
         self.zoom = 15
-        self.template_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'#'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'
-        
-    def set_baseurl(self, url):
-        pass
-    def canvas_size(self):
-        print(self.mainwindow.ax_plane.get_position())
-        print(self.mainwindow.ax_plane.figure.get_size_inches())
+        self.template_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'
+
+        self.img_cache = {}
     def setparamdialog(self):
         inputvals = dialog_multifields.dialog_multifields(self.mainwindow,\
                                                           [{'name':'origin_longitude', 'type':'Double', 'label':'原点 東経', 'default':self.origin_longlat[0]},\
@@ -381,7 +319,7 @@ class TileMapControl():
             self.position = [inputvals.variables['pos_x'].get(), inputvals.variables['pos_y'].get()]
             self.zoom = int(inputvals.variables['zoom'].get())
             self.template_url = inputvals.variables['template_url'].get()
-    def getimg(self):
+    def getimg(self, scalex, as_ratio):
         if False:
             import pdb
             pdb.set_trace()
@@ -392,8 +330,8 @@ class TileMapControl():
         else:
             url_base = self.template_url.replace('{z}', '{:d}').replace('{x}', '{:d}').replace('{y}', '{:d}')
 
-        width = 900
-        height = 700
+        width = scalex
+        height = scalex*as_ratio
         zoom = self.zoom
 
         origin = self.origin_longlat
@@ -428,17 +366,21 @@ class TileMapControl():
         y_num = y_max-y_min +1
 
         result = Image.new('RGB', (256*x_num, 256*y_num), (0,0,0))
+
+        counts = 0
         for i in range(0,x_num):
             for j in range(0,y_num):
                 url_toget = url_base.format(zoom,x_min+i,y_min+j)
-                print(url_toget)
 
-                # core
-                img_piece = Image.open(io.BytesIO(requests.get(url_toget).content))
-
-                result.paste(img_piece, (256*i, 256*j))
-
-        #print(extent, border_lu, border_rd)
+                if url_toget not in self.img_cache.keys():
+                    self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget).content))
+                    cachehit = ''
+                else:
+                    cachehit = 'cached'
+                result.paste(self.img_cache[url_toget], (256*i, 256*j))
+                
+                print('{:d}/{:d}'.format(counts+1,x_num*y_num),url_toget,cachehit)
+                counts +=1
 
         print('Done')
         self.img = result
@@ -446,6 +388,4 @@ class TileMapControl():
         self.toshow = True
     def showimg(self,ax,as_ratio=1,ymag=1):
         if self.toshow:
-            #self.rotate(self.rotrad)
-            #as_ratio_mod = (self.extent[1]-self.extent[0])/(self.extent[3]-self.extent[2])*as_ratio
             ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)

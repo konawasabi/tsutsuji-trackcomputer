@@ -372,7 +372,7 @@ class mainwindow(ttk.Frame):
         elif event.keysym == 'Down':
             self.move_xy(0,1)
     def getmaptile(self, event=None):
-        self.staticmapctrl.getimg()
+        self.staticmapctrl.getimg(self.viewp_scale_v.get(),7/9)
         self.drawall()
 def main():
     if not __debug__:
