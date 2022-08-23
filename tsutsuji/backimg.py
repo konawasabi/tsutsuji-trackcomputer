@@ -286,7 +286,6 @@ class TileMapControl():
     def __init__(self, mainwindow):
         self.mainwindow = mainwindow
 
-
         self.toshow = False
         self.origin = [0,0]
         self.shift = [0,0]
@@ -295,7 +294,6 @@ class TileMapControl():
         self.extent = [-900/2,900/2,-700/2,700/2]
         self.scale = 1
 
-        self.map = None
         self.img = None
         self.origin_longlat = [139.741357472222222, 35.6580992222222222]
         # longitude: 経度[deg]、latitude: 緯度[deg]
@@ -372,20 +370,22 @@ class TileMapControl():
             for j in range(0,y_num):
                 url_toget = url_base.format(zoom,x_min+i,y_min+j)
 
-                if url_toget not in self.img_cache.keys():
-                    self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget).content))
-                    cachehit = ''
-                else:
-                    cachehit = 'cached'
-                result.paste(self.img_cache[url_toget], (256*i, 256*j))
+                try:
+                    if url_toget not in self.img_cache.keys():
+                        self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget).content))
+                        message = ''
+                    else:
+                        message = 'cached'
+                    result.paste(self.img_cache[url_toget], (256*i, 256*j))
+                except Exception as e:
+                    message = e
                 
-                print('{:d}/{:d}'.format(counts+1,x_num*y_num),url_toget,cachehit)
+                print('{:d}/{:d}'.format(counts+1,x_num*y_num),url_toget,message)
                 counts +=1
 
-        print('Done')
         self.img = result
         self.extent = extent
         self.toshow = True
     def showimg(self,ax,as_ratio=1,ymag=1):
         if self.toshow:
-            ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)
+            ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=1)
