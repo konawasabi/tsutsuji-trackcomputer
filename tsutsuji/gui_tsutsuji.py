@@ -207,8 +207,10 @@ class mainwindow(ttk.Frame):
             self.othertrack_btn = ttk.Button(self.button_frame, text="OtherTrack", command = self.get_othertrack)
             self.othertrack_btn.grid(column=0, row=6, sticky=(tk.N, tk.W, tk.E))
 
+            '''
             self.statmap1_btn = ttk.Button(self.button_frame, text="statmap1", command = self.getmaptile)
             self.statmap1_btn.grid(column=0, row=7, sticky=(tk.N, tk.W, tk.E))
+            '''
 
         self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
         self.getrelrad_btn.grid(column=0, row=10, sticky=(tk.E, tk.W, tk.S))
@@ -250,7 +252,8 @@ class mainwindow(ttk.Frame):
         self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
         self.menu_option.add_command(label='Save Backimg...', command=self.backimgctrl.save_setting)
         self.menu_option.add_separator()
-        self.menu_option.add_command(label='StaticMap...', command=self.staticmapctrl.setparamdialog)
+        self.menu_option.add_command(label='Maptile Params...', command=self.staticmapctrl.create_paramwindow)
+        self.menu_option.add_command(label='Refresh Maptile', command=self.getmaptile, accelerator='Control+T')
         self.menu_option.add_separator()
         self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
         
@@ -262,6 +265,7 @@ class mainwindow(ttk.Frame):
         self.master.bind("<Control-o>", self.opencfg)
         self.master.bind("<Control-m>", self.measure)
         self.master.bind("<Control-g>", self.generate_output)
+        self.master.bind("<Control-t>", self.getmaptile)
         self.master.bind("<F5>", self.reloadcfg)
         self.master.bind("<Alt-F4>", self.ask_quit)
         self.master.bind("<Return>", self.press_return)

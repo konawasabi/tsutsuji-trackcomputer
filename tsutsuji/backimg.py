@@ -285,6 +285,7 @@ class BackImgControl():
 class TileMapControl():
     def __init__(self, mainwindow):
         self.mainwindow = mainwindow
+        self.master = None
 
         self.toshow = False
         self.rotrad = 0
@@ -299,23 +300,98 @@ class TileMapControl():
         self.template_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'
 
         self.img_cache = {}
-    def setparamdialog(self):
-        inputvals = dialog_multifields.dialog_multifields(self.mainwindow,\
-                                                          [{'name':'origin_longitude', 'type':'Double', 'label':'原点 東経', 'default':self.origin_longlat[0]},\
-                                                           {'name':'origin_latitude', 'type':'Double', 'label':'原点 北緯', 'default':self.origin_longlat[1]},\
-                                                           {'name':'origin_mx', 'type':'Double', 'label':'原点 x [m]', 'default':self.origin_metric[0]},\
-                                                           {'name':'origin_my', 'type':'Double', 'label':'原点 y [m]', 'default':self.origin_metric[1]},\
-                                                           {'name':'zoom', 'type':'Integer', 'label':'ズームレベル', 'default':self.zoom},\
-                                                           {'name':'template_url', 'type':'str', 'label':'template URL', 'default':self.template_url}])
-        if inputvals.result == 'OK':
-            for i in inputvals.variables.keys():
-                print(i, inputvals.variables[i].get())
-            self.origin_longlat = [inputvals.variables['origin_longitude'].get(),\
-                                   inputvals.variables['origin_latitude'].get()]
-            self.origin_metric = [inputvals.variables['origin_mx'].get(),\
-                                  inputvals.variables['origin_my'].get()]
-            self.zoom = int(inputvals.variables['zoom'].get())
-            self.template_url = inputvals.variables['template_url'].get()
+    def create_paramwindow(self):
+        if self.master is None:
+            self.master = tk.Toplevel(self.mainwindow)
+            self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
+            self.mainframe.columnconfigure(0, weight=1)
+            self.mainframe.rowconfigure(0, weight=1)
+            self.mainframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.master.title('MapTile Parameters')
+            self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
+            self.master.focus_set()
+
+            self.entryframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.entryframe.columnconfigure(1, weight=1)
+            self.entryframe.rowconfigure(0, weight=1)
+            self.entryframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.wd_variable = {}
+            self.wd_label = {}
+            self.wd_entry = {}
+
+            entry_row = 0
+            for name in ['Origin longitude [deg]', 'Origin latitude [deg]', 'Origin X [m]', 'Origin Y [m]', 'zoomlevel [0-18]', 'alpha [0-1]']:
+                self.wd_variable[name] = tk.DoubleVar()
+                self.wd_label[name] = ttk.Label(self.entryframe, text = name)
+                self.wd_entry[name] = ttk.Entry(self.entryframe, textvariable = self.wd_variable[name], width=25)
+                self.wd_label[name].grid(column=0, row=entry_row, sticky=(tk.N, tk.E, tk.S))
+                self.wd_entry[name].grid(column=1, row=entry_row, sticky=(tk.N, tk.W, tk.S))
+                entry_row +=1
+
+            self.wd_variable['Origin longitude [deg]'].set(self.origin_longlat[0])
+            self.wd_variable['Origin latitude [deg]'].set(self.origin_longlat[1])
+            self.wd_variable['Origin X [m]'].set(self.origin_metric[0])
+            self.wd_variable['Origin Y [m]'].set(self.origin_metric[1])
+            self.wd_variable['zoomlevel [0-18]'].set(self.zoom)
+            self.wd_variable['alpha [0-1]'].set(self.alpha)
+
+            name = 'template_url'
+            self.wd_variable[name] = tk.StringVar(value=self.template_url)
+            self.wd_label[name] = ttk.Label(self.entryframe, text = name)
+            self.wd_entry[name] = ttk.Entry(self.entryframe, textvariable = self.wd_variable[name], width=50)
+            self.wd_label[name].grid(column=0, row=entry_row, sticky=(tk.N, tk.E, tk.S))
+            self.wd_entry[name].grid(column=1, row=entry_row, sticky=(tk.N, tk.W, tk.S))
+            entry_row += 1
+            
+            # ---
+
+            self.btnframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.btnframe.columnconfigure(0, weight=1)
+            self.btnframe.rowconfigure(0, weight=1)
+            self.btnframe.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.wd_btn = {}
+            
+            name = 'toshow'
+            self.wd_variable[name] = tk.BooleanVar(value=self.toshow)
+            self.wd_btn[name] = ttk.Checkbutton(self.btnframe, text=name, variable=self.wd_variable[name])
+            
+            name = 'OK'
+            self.wd_btn[name] = ttk.Button(self.btnframe, text=name, command=self.getparameters)
+            name = 'Cancel'
+            self.wd_btn[name] = ttk.Button(self.btnframe, text=name, command=self.closewindow)
+
+            btn_col = 0
+            self.wd_btn['toshow'].grid(column=btn_col, row=0, sticky=(tk.N, tk.W, tk.S))
+            btn_col += 1
+            for name in ['Cancel', 'OK']:
+                self.wd_btn[name].grid(column=btn_col, row=0, sticky=(tk.N, tk.E, tk.S))
+                btn_col+=1
+        else:
+            self.sendtopmost()
+    def getparameters(self):
+        '''
+        for i in self.wd_variable.keys():
+            print(i, self.wd_variable[i].get())
+        '''
+        self.origin_longlat = [self.wd_variable['Origin longitude [deg]'].get(),\
+                               self.wd_variable['Origin latitude [deg]'].get()]
+        self.origin_metric = [self.wd_variable['Origin X [m]'].get(),\
+                              self.wd_variable['Origin Y [m]'].get()]
+        self.zoom = int(self.wd_variable['zoomlevel [0-18]'].get())
+        self.alpha = self.wd_variable['alpha [0-1]'].get()
+        self.template_url = self.wd_variable['template_url'].get()
+        self.toshow = self.wd_variable['toshow'].get()
+        self.closewindow()
+    def sendtopmost(self,event=None):
+        self.master.lift()
+        self.master.focus_force()
+    def closewindow(self):
+        self.master.withdraw()
+        self.master = None
+        self.mainwindow.sendtopmost()
     def getimg(self, scalex, as_ratio):
         if False:
             import pdb
@@ -413,7 +489,6 @@ class TileMapControl():
 
         self.img = result
         self.extent = extent
-        self.toshow = True
     def showimg(self,ax,as_ratio=1,ymag=1):
         if self.toshow:
             ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=1)
