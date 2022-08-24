@@ -396,99 +396,108 @@ class TileMapControl():
         if False:
             import pdb
             pdb.set_trace()
-            
-        self.img = None
-        
-        if '{z}' not in self.template_url or \
-           '{x}' not in self.template_url or \
-           '{y}' not in self.template_url:
-            raise Exception('Invalid template_url')
-        else:
-            url_base = self.template_url.replace('{z}', '{:d}').replace('{x}', '{:d}').replace('{y}', '{:d}')
 
-        width = scalex
-        height = scalex*as_ratio
-        zoom = self.zoom
+        if self.toshow:
+            self.img = None
 
-        # 基準となる緯度経度をorigin_metricだけオフセット
-        origin = math.calc_xy2pl(-self.origin_metric[1],\
-                                 self.origin_metric[0],\
-                                 self.origin_longlat[1],\
-                                 self.origin_longlat[0])
-        origin = [origin[1],origin[0]]
-        
-        canvas_center = [self.mainwindow.viewpos_v[0].get(),\
-                         self.mainwindow.viewpos_v[1].get()]
+            if '{z}' not in self.template_url or \
+               '{x}' not in self.template_url or \
+               '{y}' not in self.template_url:
+                raise Exception('Invalid template_url')
+            else:
+                url_base = self.template_url.replace('{z}', '{:d}').replace('{x}', '{:d}').replace('{y}', '{:d}')
 
-        # プロット画面の左上(lu)、右下(rd)座標を求め、緯度経度に変換する
-        border_lu = math.calc_xy2pl(-(-height/2 + canvas_center[1]),\
-                                    (-width/2 + canvas_center[0]),\
-                                    origin[1],\
-                                    origin[0])
-        border_rd = math.calc_xy2pl(-(height/2 + canvas_center[1]),\
-                                    (width/2 + canvas_center[0]),\
-                                    origin[1],\
-                                    origin[0])
+            width = scalex
+            height = scalex*as_ratio
+            zoom = self.zoom
 
-        # プロット画面の左上、右下を含むマップタイル座標を求める
-        # (1)座標を緯度経度->ピクセル座標に変換、(2)タイル座標に変換、(3)タイル内での相対位置を求める
-        px_lu = [math.long2px(border_lu[1],zoom), math.lat2py(border_lu[0],zoom)]
-        tile_lu =[int(px_lu[0]/256), int(px_lu[1]/256)]
-        rel_lu = [px_lu[0]%256, px_lu[1]%256]
+            # 基準となる緯度経度をorigin_metricだけオフセット
+            origin = math.calc_xy2pl(-self.origin_metric[1],\
+                                     self.origin_metric[0],\
+                                     self.origin_longlat[1],\
+                                     self.origin_longlat[0])
+            origin = [origin[1],origin[0]]
 
-        px_rd = [math.long2px(border_rd[1],zoom), math.lat2py(border_rd[0],zoom)]
-        tile_rd =[int(px_rd[0]/256), int(px_rd[1]/256)]
-        rel_rd = [px_rd[0]%256, px_rd[1]%256]
+            canvas_center = [self.mainwindow.viewpos_v[0].get(),\
+                             self.mainwindow.viewpos_v[1].get()]
 
-        # 右上、左下を含むタイルの端点座標をm単位で求める
-        pos_tile_corner = {}
-        pos_tile_corner['lu'] = math.calc_pl2xy(math.py2lat(tile_lu[1]*256, zoom),\
-                                                math.px2long((tile_lu[0])*256, zoom),\
-                                                origin[1],\
-                                                origin[0])
-        pos_tile_corner['rd'] = math.calc_pl2xy(math.py2lat((tile_rd[1]+1)*256, zoom),\
-                                                math.px2long((tile_rd[0]+1)*256, zoom),\
-                                                origin[1],\
-                                                origin[0])
+            # プロット画面の左上(lu)、右下(rd)座標を求め、緯度経度に変換する
+            border_lu = math.calc_xy2pl(-(-height/2 + canvas_center[1]),\
+                                        (-width/2 + canvas_center[0]),\
+                                        origin[1],\
+                                        origin[0])
+            border_rd = math.calc_xy2pl(-(height/2 + canvas_center[1]),\
+                                        (width/2 + canvas_center[0]),\
+                                        origin[1],\
+                                        origin[0])
 
-        # 取得するマップタイルの表示範囲
-        extent = [pos_tile_corner['lu'][1],\
-                  pos_tile_corner['rd'][1], \
-                  -pos_tile_corner['lu'][0],\
-                  -pos_tile_corner['rd'][0]]
+            # プロット画面の左上、右下を含むマップタイル座標を求める
+            # (1)座標を緯度経度->ピクセル座標に変換、(2)タイル座標に変換、(3)タイル内での相対位置を求める
+            px_lu = [math.long2px(border_lu[1],zoom), math.lat2py(border_lu[0],zoom)]
+            tile_lu =[int(px_lu[0]/256), int(px_lu[1]/256)]
+            rel_lu = [px_lu[0]%256, px_lu[1]%256]
 
-        # マップタイルデータ取得
-        x_min = tile_lu[0]
-        x_max = tile_rd[0]
-        y_min = tile_lu[1]
-        y_max = tile_rd[1]
+            px_rd = [math.long2px(border_rd[1],zoom), math.lat2py(border_rd[0],zoom)]
+            tile_rd =[int(px_rd[0]/256), int(px_rd[1]/256)]
+            rel_rd = [px_rd[0]%256, px_rd[1]%256]
 
-        x_num = x_max-x_min +1
-        y_num = y_max-y_min +1
-        
-        result = Image.new('RGB', (256*x_num, 256*y_num), (0,0,0))
+            # 右上、左下を含むタイルの端点座標をm単位で求める
+            pos_tile_corner = {}
+            pos_tile_corner['lu'] = math.calc_pl2xy(math.py2lat(tile_lu[1]*256, zoom),\
+                                                    math.px2long((tile_lu[0])*256, zoom),\
+                                                    origin[1],\
+                                                    origin[0])
+            pos_tile_corner['rd'] = math.calc_pl2xy(math.py2lat((tile_rd[1]+1)*256, zoom),\
+                                                    math.px2long((tile_rd[0]+1)*256, zoom),\
+                                                    origin[1],\
+                                                    origin[0])
 
-        counts = 0
-        for i in range(0,x_num):
-            for j in range(0,y_num):
-                url_toget = url_base.format(zoom,x_min+i,y_min+j)
+            # 取得するマップタイルの表示範囲
+            extent = [pos_tile_corner['lu'][1],\
+                      pos_tile_corner['rd'][1], \
+                      -pos_tile_corner['lu'][0],\
+                      -pos_tile_corner['rd'][0]]
 
-                try:
-                    if url_toget not in self.img_cache.keys():
-                        self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget).content))
-                        message = ''
-                    else:
-                        message = 'cached'
-                    result.paste(self.img_cache[url_toget], (256*i, 256*j))
-                except Exception as e:
-                    message = e
-                
-                print('{:d}/{:d}'.format(counts+1,x_num*y_num),url_toget,message)
-                counts +=1
-        print('Done')
+            # マップタイルデータ取得
+            x_min = tile_lu[0]
+            x_max = tile_rd[0]
+            y_min = tile_lu[1]
+            y_max = tile_rd[1]
 
-        self.img = result
-        self.extent = extent
+            x_num = x_max-x_min +1
+            y_num = y_max-y_min +1
+
+            result = Image.new('RGB', (256*x_num, 256*y_num), (0,0,0))
+
+            counts = 0
+            for i in range(0,x_num):
+                for j in range(0,y_num):
+                    url_toget = url_base.format(zoom,x_min+i,y_min+j)
+
+                    try:
+                        if url_toget not in self.img_cache.keys():
+                            self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget).content))
+                            message = ''
+                        else:
+                            message = 'cached'
+                        result.paste(self.img_cache[url_toget], (256*i, 256*j))
+                    except Exception as e:
+                        message = 'ERROR' #e
+
+                    print('{:d}/{:d}'.format(counts+1,x_num*y_num),url_toget,message)
+                    counts +=1
+            print('Done')
+
+            self.img = result
+            self.extent = extent
     def showimg(self,ax,as_ratio=1,ymag=1):
         if self.toshow:
             ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=1)
+    def setparams_fromcfg(self, cfgd):
+        self.toshow = cfgd['enabled']
+        self.alpha = cfgd['alpha']
+
+        self.origin_longlat = [cfgd['longitude'], cfgd['latitude']] # longitude: 経度[deg]、latitude: 緯度[deg]
+        self.origin_metric = [cfgd['x0'], cfgd['y0']] # tsutsuji座標系でorigin_longlatが相当する座標
+        self.zoom = cfgd['zoomlevel']
+        self.template_url = cfgd['template_url']
