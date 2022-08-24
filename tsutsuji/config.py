@@ -66,8 +66,11 @@ class Config():
             for key in self.cp.options('@MAPTILE'):
                 self.maptile[key] = self.cp['@MAPTILE'][key]
             for key in ['longitude', 'latitude', 'x0', 'y0', 'alpha']:
-                self.maptile[key] = float(self.maptile[key])
-            self.maptile['zoomlevel'] = int(self.maptile['zoomlevel'])
+                if key in self.cp.options('@MAPTILE'):
+                    self.maptile[key] = float(self.maptile[key])
+            key = 'zoomlevel'
+            if key in  self.cp.options('@MAPTILE'):
+                self.maptile[key] = int(self.maptile[key])
             
     def get_trackdata(self, keys):
         track_data = {}
