@@ -253,7 +253,7 @@ class mainwindow(ttk.Frame):
         self.menu_option.add_command(label='Save Backimg...', command=self.backimgctrl.save_setting)
         self.menu_option.add_separator()
         self.menu_option.add_command(label='Maptile...', command=self.staticmapctrl.create_paramwindow)
-        self.menu_option.add_command(label='Refresh Maptile', command=self.getmaptile, accelerator='F6')
+        self.menu_option.add_command(label='Refresh Maptile', command=self.getmaptile, accelerator='Shift+Return')
         self.menu_option.add_separator()
         self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
         
@@ -265,7 +265,7 @@ class mainwindow(ttk.Frame):
         self.master.bind("<Control-o>", self.opencfg)
         self.master.bind("<Control-m>", self.measure)
         self.master.bind("<Control-g>", self.generate_output)
-        self.master.bind("<F6>", self.getmaptile)
+        self.master.bind("<Shift-Return>", self.getmaptile)
         self.master.bind("<F5>", self.reloadcfg)
         self.master.bind("<Alt-F4>", self.ask_quit)
         self.master.bind("<Return>", self.press_return)
