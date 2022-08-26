@@ -322,7 +322,7 @@ class TileMapControl():
             self.wd_entry = {}
 
             entry_row = 0
-            for name in ['Origin longitude [deg]', 'Origin latitude [deg]', 'Origin X [m]', 'Origin Y [m]', 'zoomlevel [0-18]', 'alpha [0-1]']:
+            for name in ['longitude [deg]', 'latitude [deg]', 'x0 [m]', 'y0 [m]', 'zoomlevel [0-18]', 'alpha [0-1]']:
                 self.wd_variable[name] = tk.DoubleVar()
                 self.wd_label[name] = ttk.Label(self.entryframe, text = name)
                 self.wd_entry[name] = ttk.Entry(self.entryframe, textvariable = self.wd_variable[name], width=25)
@@ -376,10 +376,10 @@ class TileMapControl():
         for i in self.wd_variable.keys():
             print(i, self.wd_variable[i].get())
         '''
-        self.origin_longlat = [self.wd_variable['Origin longitude [deg]'].get(),\
-                               self.wd_variable['Origin latitude [deg]'].get()]
-        self.origin_metric = [self.wd_variable['Origin X [m]'].get(),\
-                              self.wd_variable['Origin Y [m]'].get()]
+        self.origin_longlat = [self.wd_variable['longitude [deg]'].get(),\
+                               self.wd_variable['latitude [deg]'].get()]
+        self.origin_metric = [self.wd_variable['x0 [m]'].get(),\
+                              self.wd_variable['y0 [m]'].get()]
         self.zoom = int(self.wd_variable['zoomlevel [0-18]'].get())
         self.alpha = self.wd_variable['alpha [0-1]'].get()
         self.template_url = self.wd_variable['template_url'].get()
@@ -476,7 +476,7 @@ class TileMapControl():
 
                     try:
                         if url_toget not in self.img_cache.keys():
-                            self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget, timeout=(3.0,10.0)).content))
+                            self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget, timeout=(10.0,10.0)).content))
                             message = ''
                         else:
                             message = 'cached'
