@@ -330,10 +330,10 @@ class TileMapControl():
                 self.wd_entry[name].grid(column=1, row=entry_row, sticky=(tk.N, tk.W, tk.S))
                 entry_row +=1
 
-            self.wd_variable['Origin longitude [deg]'].set(self.origin_longlat[0])
-            self.wd_variable['Origin latitude [deg]'].set(self.origin_longlat[1])
-            self.wd_variable['Origin X [m]'].set(self.origin_metric[0])
-            self.wd_variable['Origin Y [m]'].set(self.origin_metric[1])
+            self.wd_variable['longitude [deg]'].set(self.origin_longlat[0])
+            self.wd_variable['latitude [deg]'].set(self.origin_longlat[1])
+            self.wd_variable['x0 [m]'].set(self.origin_metric[0])
+            self.wd_variable['y0 [m]'].set(self.origin_metric[1])
             self.wd_variable['zoomlevel [0-18]'].set(self.zoom)
             self.wd_variable['alpha [0-1]'].set(self.alpha)
 
@@ -412,8 +412,8 @@ class TileMapControl():
             zoom = self.zoom
 
             # 基準となる緯度経度をorigin_metricだけオフセット
-            origin = math.calc_xy2pl(-self.origin_metric[1],\
-                                     self.origin_metric[0],\
+            origin = math.calc_xy2pl(self.origin_metric[1],\
+                                     -self.origin_metric[0],\
                                      self.origin_longlat[1],\
                                      self.origin_longlat[0])
             origin = [origin[1],origin[0]]
