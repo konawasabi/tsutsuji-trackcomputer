@@ -24,6 +24,11 @@ import tkinter.simpledialog as simpledialog
 import matplotlib.pyplot as plt
 from PIL import Image
 import numpy as np
+import io
+import requests
+
+from kobushi import dialog_multifields
+from . import math
 
 import configparser
 
@@ -276,3 +281,223 @@ class BackImgControl():
     def closewindow(self):
         self.master.withdraw()
         self.master = None
+
+class TileMapControl():
+    def __init__(self, mainwindow):
+        self.mainwindow = mainwindow
+        self.master = None
+
+        self.toshow = False
+        self.rotrad = 0
+        self.alpha = 0.8
+        self.extent = [-900/2,900/2,-700/2,700/2]
+        self.scale = 1
+
+        self.img = None
+        self.origin_longlat = [139.741357472222222, 35.6580992222222222] # longitude: 経度[deg]、latitude: 緯度[deg]
+        self.origin_metric = [0,0] # tsutsuji座標系でorigin_longlatが相当する座標
+        self.zoom = 15
+        self.template_url = ''
+
+        self.img_cache = {}
+    def create_paramwindow(self):
+        if self.master is None:
+            self.master = tk.Toplevel(self.mainwindow)
+            self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
+            self.mainframe.columnconfigure(0, weight=1)
+            self.mainframe.rowconfigure(0, weight=1)
+            self.mainframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.master.title('MapTile Parameters')
+            self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
+            self.master.focus_set()
+
+            self.entryframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.entryframe.columnconfigure(1, weight=1)
+            self.entryframe.rowconfigure(0, weight=1)
+            self.entryframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.wd_variable = {}
+            self.wd_label = {}
+            self.wd_entry = {}
+
+            entry_row = 0
+            for name in ['longitude [deg]', 'latitude [deg]', 'x0 [m]', 'y0 [m]', 'zoomlevel [0-18]', 'alpha [0-1]']:
+                self.wd_variable[name] = tk.DoubleVar()
+                self.wd_label[name] = ttk.Label(self.entryframe, text = name)
+                self.wd_entry[name] = ttk.Entry(self.entryframe, textvariable = self.wd_variable[name], width=25)
+                self.wd_label[name].grid(column=0, row=entry_row, sticky=(tk.N, tk.E, tk.S))
+                self.wd_entry[name].grid(column=1, row=entry_row, sticky=(tk.N, tk.W, tk.S))
+                entry_row +=1
+
+            self.wd_variable['longitude [deg]'].set(self.origin_longlat[0])
+            self.wd_variable['latitude [deg]'].set(self.origin_longlat[1])
+            self.wd_variable['x0 [m]'].set(self.origin_metric[0])
+            self.wd_variable['y0 [m]'].set(self.origin_metric[1])
+            self.wd_variable['zoomlevel [0-18]'].set(self.zoom)
+            self.wd_variable['alpha [0-1]'].set(self.alpha)
+
+            name = 'template_url'
+            self.wd_variable[name] = tk.StringVar(value=self.template_url)
+            self.wd_label[name] = ttk.Label(self.entryframe, text = name)
+            self.wd_entry[name] = ttk.Entry(self.entryframe, textvariable = self.wd_variable[name], width=50)
+            self.wd_label[name].grid(column=0, row=entry_row, sticky=(tk.N, tk.E, tk.S))
+            self.wd_entry[name].grid(column=1, row=entry_row, sticky=(tk.N, tk.W, tk.S))
+            entry_row += 1
+            
+            # ---
+
+            self.btnframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
+            self.btnframe.columnconfigure(0, weight=1)
+            self.btnframe.rowconfigure(0, weight=1)
+            self.btnframe.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+            self.wd_btn = {}
+            
+            name = 'toshow'
+            self.wd_variable[name] = tk.BooleanVar(value=self.toshow)
+            self.wd_btn[name] = ttk.Checkbutton(self.btnframe, text=name, variable=self.wd_variable[name])
+            
+            name = 'OK'
+            self.wd_btn[name] = ttk.Button(self.btnframe, text=name, command=self.getparameters)
+            name = 'Cancel'
+            self.wd_btn[name] = ttk.Button(self.btnframe, text=name, command=self.closewindow)
+
+            btn_col = 0
+            self.wd_btn['toshow'].grid(column=btn_col, row=0, sticky=(tk.N, tk.W, tk.S))
+            btn_col += 1
+            for name in ['Cancel', 'OK']:
+                self.wd_btn[name].grid(column=btn_col, row=0, sticky=(tk.N, tk.E, tk.S))
+                btn_col+=1
+        else:
+            self.sendtopmost()
+    def getparameters(self):
+        '''
+        for i in self.wd_variable.keys():
+            print(i, self.wd_variable[i].get())
+        '''
+        self.origin_longlat = [self.wd_variable['longitude [deg]'].get(),\
+                               self.wd_variable['latitude [deg]'].get()]
+        self.origin_metric = [self.wd_variable['x0 [m]'].get(),\
+                              self.wd_variable['y0 [m]'].get()]
+        self.zoom = int(self.wd_variable['zoomlevel [0-18]'].get())
+        self.alpha = self.wd_variable['alpha [0-1]'].get()
+        self.template_url = self.wd_variable['template_url'].get()
+        self.toshow = self.wd_variable['toshow'].get()
+        self.closewindow()
+    def sendtopmost(self,event=None):
+        self.master.lift()
+        self.master.focus_force()
+    def closewindow(self):
+        self.master.withdraw()
+        self.master = None
+        self.mainwindow.sendtopmost()
+    def getimg(self, scalex, as_ratio):
+        if False:
+            import pdb
+            pdb.set_trace()
+
+        if self.toshow:
+            self.img = None
+
+            if '{z}' not in self.template_url or \
+               '{x}' not in self.template_url or \
+               '{y}' not in self.template_url:
+                raise Exception('Invalid template_url')
+            else:
+                url_base = self.template_url.replace('{z}', '{:d}').replace('{x}', '{:d}').replace('{y}', '{:d}')
+
+            width = scalex
+            height = scalex*as_ratio
+            zoom = self.zoom
+
+            # 基準となる緯度経度をorigin_metricだけオフセット
+            origin = math.calc_xy2pl(self.origin_metric[1],\
+                                     -self.origin_metric[0],\
+                                     self.origin_longlat[1],\
+                                     self.origin_longlat[0])
+            origin = [origin[1],origin[0]]
+
+            canvas_center = [self.mainwindow.viewpos_v[0].get(),\
+                             self.mainwindow.viewpos_v[1].get()]
+
+            # プロット画面の左上(lu)、右下(rd)座標を求め、緯度経度に変換する
+            border_lu = math.calc_xy2pl(-(-height/2 + canvas_center[1]),\
+                                        (-width/2 + canvas_center[0]),\
+                                        origin[1],\
+                                        origin[0])
+            border_rd = math.calc_xy2pl(-(height/2 + canvas_center[1]),\
+                                        (width/2 + canvas_center[0]),\
+                                        origin[1],\
+                                        origin[0])
+
+            # プロット画面の左上、右下を含むマップタイル座標を求める
+            # (1)座標を緯度経度->ピクセル座標に変換、(2)タイル座標に変換、(3)タイル内での相対位置を求める
+            px_lu = [math.long2px(border_lu[1],zoom), math.lat2py(border_lu[0],zoom)]
+            tile_lu =[int(px_lu[0]/256), int(px_lu[1]/256)]
+            rel_lu = [px_lu[0]%256, px_lu[1]%256]
+
+            px_rd = [math.long2px(border_rd[1],zoom), math.lat2py(border_rd[0],zoom)]
+            tile_rd =[int(px_rd[0]/256), int(px_rd[1]/256)]
+            rel_rd = [px_rd[0]%256, px_rd[1]%256]
+
+            # 右上、左下を含むタイルの端点座標をm単位で求める
+            pos_tile_corner = {}
+            pos_tile_corner['lu'] = math.calc_pl2xy(math.py2lat(tile_lu[1]*256, zoom),\
+                                                    math.px2long((tile_lu[0])*256, zoom),\
+                                                    origin[1],\
+                                                    origin[0])
+            pos_tile_corner['rd'] = math.calc_pl2xy(math.py2lat((tile_rd[1]+1)*256, zoom),\
+                                                    math.px2long((tile_rd[0]+1)*256, zoom),\
+                                                    origin[1],\
+                                                    origin[0])
+
+            # 取得するマップタイルの表示範囲
+            extent = [pos_tile_corner['lu'][1],\
+                      pos_tile_corner['rd'][1], \
+                      -pos_tile_corner['lu'][0],\
+                      -pos_tile_corner['rd'][0]]
+
+            # マップタイルデータ取得
+            x_min = tile_lu[0]
+            x_max = tile_rd[0]
+            y_min = tile_lu[1]
+            y_max = tile_rd[1]
+
+            x_num = x_max-x_min +1
+            y_num = y_max-y_min +1
+
+            result = Image.new('RGB', (256*x_num, 256*y_num), (0,0,0))
+
+            counts = 0
+            for i in range(0,x_num):
+                for j in range(0,y_num):
+                    url_toget = url_base.format(zoom,x_min+i,y_min+j)
+
+                    try:
+                        if url_toget not in self.img_cache.keys():
+                            self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget, timeout=(10.0,10.0)).content))
+                            message = ''
+                        else:
+                            message = 'cached'
+                        result.paste(self.img_cache[url_toget], (256*i, 256*j))
+                    except Exception as e:
+                        message = 'ERROR' #e
+
+                    print('{:d}/{:d}'.format(counts+1,x_num*y_num),url_toget,message)
+                    counts +=1
+            print('Done')
+
+            self.img = result
+            self.extent = extent
+    def showimg(self,ax,as_ratio=1,ymag=1):
+        if self.toshow:
+            ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)
+    def setparams_fromcfg(self, cfgd):
+        self.toshow = cfgd['enabled']
+        self.alpha = cfgd['alpha']
+
+        self.origin_longlat = [cfgd['longitude'], cfgd['latitude']] # longitude: 経度[deg]、latitude: 緯度[deg]
+        self.origin_metric = [cfgd['x0'], cfgd['y0']] # tsutsuji座標系でorigin_longlatが相当する座標
+        self.zoom = cfgd['zoomlevel']
+        self.template_url = cfgd['template_url']

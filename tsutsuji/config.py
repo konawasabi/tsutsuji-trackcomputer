@@ -51,6 +51,27 @@ class Config():
 
         self.kml_track = self.get_trackdata(self.kml_keys)
         self.csv_track = self.get_trackdata(self.csv_keys)
+
+        self.maptile = {'enabled': False,\
+                        'longitude': 139.741357472222222,\
+                        'latitude':  35.6580992222222222,\
+                        'x0': 0,\
+                        'y0': 0,\
+                        'alpha': 1.0,\
+                        'zoomlevel': 15,\
+                        'template_url': 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'}
+                        
+        if '@MAPTILE' in sections:
+            self.maptile['enabled'] = True
+            for key in self.cp.options('@MAPTILE'):
+                self.maptile[key] = self.cp['@MAPTILE'][key]
+            for key in ['longitude', 'latitude', 'x0', 'y0', 'alpha']:
+                if key in self.cp.options('@MAPTILE'):
+                    self.maptile[key] = float(self.maptile[key])
+            key = 'zoomlevel'
+            if key in  self.cp.options('@MAPTILE'):
+                self.maptile[key] = int(self.maptile[key])
+            
     def get_trackdata(self, keys):
         track_data = {}
         linecolor_default = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf']

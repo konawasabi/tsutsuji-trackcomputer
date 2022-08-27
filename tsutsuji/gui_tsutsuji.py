@@ -82,6 +82,8 @@ class mainwindow(ttk.Frame):
         self.trackwindow = trackwindow.TrackWindow(self)
 
         self.trackcontrol = track_control.TrackControl()
+
+        self.staticmapctrl = backimg.TileMapControl(self)
         
         self.create_widgets()
         self.create_menubar()
@@ -205,6 +207,11 @@ class mainwindow(ttk.Frame):
             self.othertrack_btn = ttk.Button(self.button_frame, text="OtherTrack", command = self.get_othertrack)
             self.othertrack_btn.grid(column=0, row=6, sticky=(tk.N, tk.W, tk.E))
 
+            '''
+            self.statmap1_btn = ttk.Button(self.button_frame, text="statmap1", command = self.getmaptile)
+            self.statmap1_btn.grid(column=0, row=7, sticky=(tk.N, tk.W, tk.E))
+            '''
+
         self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
         self.getrelrad_btn.grid(column=0, row=10, sticky=(tk.E, tk.W, tk.S))
         self.button_frame.rowconfigure(10, weight=1)
@@ -245,6 +252,9 @@ class mainwindow(ttk.Frame):
         self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
         self.menu_option.add_command(label='Save Backimg...', command=self.backimgctrl.save_setting)
         self.menu_option.add_separator()
+        self.menu_option.add_command(label='Maptile...', command=self.staticmapctrl.create_paramwindow)
+        self.menu_option.add_command(label='Refresh Maptile', command=self.getmaptile, accelerator='Shift+Return')
+        self.menu_option.add_separator()
         self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
         
         self.menu_help.add_command(label='ヘルプ...', command=self.open_webdocument)
@@ -255,6 +265,7 @@ class mainwindow(ttk.Frame):
         self.master.bind("<Control-o>", self.opencfg)
         self.master.bind("<Control-m>", self.measure)
         self.master.bind("<Control-g>", self.generate_output)
+        self.master.bind("<Shift-Return>", self.getmaptile)
         self.master.bind("<F5>", self.reloadcfg)
         self.master.bind("<Alt-F4>", self.ask_quit)
         self.master.bind("<Return>", self.press_return)
@@ -279,6 +290,10 @@ class mainwindow(ttk.Frame):
             self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
         self.trackwindow.reset_treevalue()
         self.measurewindow.reload_trackkeys()
+        
+        self.staticmapctrl.setparams_fromcfg(self.trackcontrol.conf.maptile)
+        self.staticmapctrl.getimg(self.viewp_scale_v.get(),7/9)
+        
         self.drawall()
     def reloadcfg(self, event=None):
         if self.trackcontrol.path is not None:
@@ -293,7 +308,7 @@ class mainwindow(ttk.Frame):
         for key in self.plot_marker_ctrl.keys():
             if self.plot_marker_ctrl[key]['variable'].get():
                 self.trackcontrol.plot_symbols(self.ax_plane,key)
-        
+
         self.measurewindow.drawall()
             
         if self.view_whole_v.get() == 'True':
@@ -314,6 +329,8 @@ class mainwindow(ttk.Frame):
 
         for i in self.backimgctrl.imgs.keys():
             self.backimgctrl.imgs[i].show(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
+        
+        self.staticmapctrl.showimg(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
 
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
@@ -362,6 +379,9 @@ class mainwindow(ttk.Frame):
             self.move_xy(0,-1)
         elif event.keysym == 'Down':
             self.move_xy(0,1)
+    def getmaptile(self, event=None):
+        self.staticmapctrl.getimg(self.viewp_scale_v.get(),7/9)
+        self.drawall()
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
