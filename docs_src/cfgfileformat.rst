@@ -173,3 +173,70 @@ calc_relrad
   * 出力されるTrack構文の相対半径は全て0となる
     
 * **kml/csvファイルに対する軌道のみ有効**
+
+.. _ref_cfg_maptile:
+
+************
+[@MAPTILE]
+************
+
+longitude
+===========
+* type: float
+* tsutsuji上の座標(x0, y0)に対応するマップタイルの経度 [deg]
+
+  * 東経を正とする
+  
+* default: 139.741357472222222
+
+latitude
+===========
+* type: float
+* tsutsuji上の座標(x0, y0)に対応するマップタイルの緯度 [deg]
+
+  * 北緯を正とする
+
+* default: 35.6580992222222222
+
+.. note::
+
+  * 経度・緯度が度(°), 分(′), 秒(″)で表されている場合は度に変換すること
+  * 変換式: a°b′c″ に対して a + (b + c/60)/60 [deg]
+   
+
+x0
+======
+* type: float
+* マップタイル上の位置(longitude, latitude)に対応するtsutsuji上の座標x成分 [m]
+* default: 0
+
+y0
+=====
+* type: float
+* マップタイル上の位置(longitude, latitude)に対応するtsutsuji上の座標y成分 [m]
+* default: 0
+
+alpha
+=======
+* type: float
+* tsutsuji起動時のマップ透過率 [0-1]
+* default: 1.0
+
+zoomlevel
+=============
+* type: float
+* tsutsuji起動時のズームレベル [0-18]
+* default: 15
+
+template_url
+==============
+* type: string
+* XYZ形式で記述されたマップタイルのテンプレートURL
+
+  * 国土地理院標準地図なら `https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png`
+  * 国土地理院空中写真なら `https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg`
+  * その他の国土地理院タイルについては https://maps.gsi.go.jp/development/ichiran.html を参照
+  * XYZ形式であれば、国土地理院タイル以外の任意のサービスを利用できる(はず)
+    
+* default: なし
+

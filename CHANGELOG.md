@@ -4,7 +4,14 @@
 
 - solver
   - 渡り線・S字カーブMode
+- プロット画面
+  - 任意角度への回転
+
+## [1.4.0] - 2022-08-27
+
 - 地理院地図との連携
+  - 現在のプロット画面を含むマップタイルを取得し表示する
+  - XYZ地図タイル形式であれば、地理院地図に限らず表示可能(のはず)
   
 ## [1.3.1] - 2022-08-08
 
@@ -96,6 +103,7 @@
 
 - 1st release
 
+[1.4.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.1...ver1.4.0
 [1.3.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.0...ver1.3.1
 [1.3.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.2.0...ver1.3.0
 [1.2.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.1.3...ver1.2.0
