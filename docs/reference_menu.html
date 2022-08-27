@@ -171,6 +171,78 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 <h3>Save Backimg...<a class="headerlink" href="#save-backimg" title="Permalink to this heading">¶</a></h3>
 <p>現在読み込まれている背景画像の設定をファイルに書き出します。</p>
 </section>
+<hr class="docutils" />
+<section id="maptile">
+<h3>Maptile...<a class="headerlink" href="#maptile" title="Permalink to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/maptileparamwindow.png"><img alt="_images/maptileparamwindow.png" src="_images/maptileparamwindow.png" style="width: 246.6px; height: 141.6px;" /></a>
+<p>背景画像として取得するマップタイルのパラメータ設定ウィンドウを開きます。</p>
+<p>設定できるパラメータの詳細は <a class="reference internal" href="cfgfileformat.html#ref-cfg-maptile"><span class="std std-ref">[&#64;MAPTILE]</span></a> を参照してください。</p>
+<ul class="simple">
+<li><p>longitude, latitude</p>
+<ul>
+<li><p>tsutsuji上の座標(x0, y0)に対応するマップタイルの経度, 緯度</p></li>
+</ul>
+</li>
+<li><p>x0, y0</p>
+<ul>
+<li><p>longitude, latitudeで指定したマップタイル上の点のtsutsuji上での座標</p></li>
+</ul>
+</li>
+<li><p>zoomlevel</p>
+<ul>
+<li><p>取得するマップタイルのズームレベル</p></li>
+</ul>
+</li>
+<li><p>alpha</p>
+<ul>
+<li><p>マップタイルの透過率</p></li>
+</ul>
+</li>
+<li><p>template_url</p>
+<ul>
+<li><p>マップタイルのテンプレートURL</p></li>
+</ul>
+</li>
+<li><p>toshow</p>
+<ul>
+<li><p>マップタイルを取得・表示するときにチェックする</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="refresh-maptile">
+<h3>Refresh Maptile<a class="headerlink" href="#refresh-maptile" title="Permalink to this heading">¶</a></h3>
+<p>現在プロットウィンドウで表示している範囲に対応するマップタイルを取得し表示します。</p>
+<p>Maptile... にてtoshowがチェックされていない場合は、マップタイルの取得・表示を行いません。</p>
+<p>マップタイルの取得状況は次の要領でターミナルに印字されます。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>num/Total https://url/to/tile/data/z/x/y.png STATUS
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>num: 現在取得したタイル数</p></li>
+<li><p>Total: 取得するタイルの総数</p></li>
+<li><p>STATUS: タイル取得状況の表示</p>
+<ul>
+<li><p>なし</p>
+<ul>
+<li><p>正常に取得完了</p></li>
+</ul>
+</li>
+<li><p>cached</p>
+<ul>
+<li><p>以前に取得したタイルデータを再利用</p></li>
+</ul>
+</li>
+<li><p>ERROR</p>
+<ul>
+<li><p>テンプレートURLに誤りがある、インターネット接続に問題がある、取得した画像データが壊れているなどの理由によりタイル取得に失敗</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
 <section id="track">
 <h3>Track...<a class="headerlink" href="#track" title="Permalink to this heading">¶</a></h3>
 <a class="reference internal image-reference" href="_images/trackwindow.png"><img alt="_images/trackwindow.png" src="_images/trackwindow.png" style="width: 166.79999999999998px; height: 159.0px;" /></a>
@@ -237,6 +309,8 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 </li>
 <li><a class="reference internal" href="#load-backimg">Load Backimg...</a></li>
 <li><a class="reference internal" href="#save-backimg">Save Backimg...</a></li>
+<li><a class="reference internal" href="#maptile">Maptile...</a></li>
+<li><a class="reference internal" href="#refresh-maptile">Refresh Maptile</a></li>
 <li><a class="reference internal" href="#track">Track...</a><ul>
 <li><a class="reference internal" href="#id10">ツリー構成</a></li>
 <li><a class="reference internal" href="#id11">チェックボックス</a></li>

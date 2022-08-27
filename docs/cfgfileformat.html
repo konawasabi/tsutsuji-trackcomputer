@@ -288,6 +288,87 @@
 </ul>
 </section>
 </section>
+<section id="maptile">
+<span id="ref-cfg-maptile"></span><h2>[&#64;MAPTILE]<a class="headerlink" href="#maptile" title="Permalink to this heading">¶</a></h2>
+<section id="longitude">
+<h3>longitude<a class="headerlink" href="#longitude" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>tsutsuji上の座標(x0, y0)に対応するマップタイルの経度 [deg]</p>
+<ul>
+<li><p>東経を正とする</p></li>
+</ul>
+</li>
+<li><p>default: 139.741357472222222</p></li>
+</ul>
+</section>
+<section id="latitude">
+<h3>latitude<a class="headerlink" href="#latitude" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>tsutsuji上の座標(x0, y0)に対応するマップタイルの緯度 [deg]</p>
+<ul>
+<li><p>北緯を正とする</p></li>
+</ul>
+</li>
+<li><p>default: 35.6580992222222222</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>経度・緯度が度(°), 分(′), 秒(″)で表されている場合は度に変換すること</p></li>
+<li><p>変換式: a°b′c″ に対して a + (b + c/60)/60 [deg]</p></li>
+</ul>
+</div>
+</section>
+<section id="x0">
+<h3>x0<a class="headerlink" href="#x0" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>マップタイル上の位置(longitude, latitude)に対応するtsutsuji上の座標x成分 [m]</p></li>
+<li><p>default: 0</p></li>
+</ul>
+</section>
+<section id="y0">
+<h3>y0<a class="headerlink" href="#y0" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>マップタイル上の位置(longitude, latitude)に対応するtsutsuji上の座標y成分 [m]</p></li>
+<li><p>default: 0</p></li>
+</ul>
+</section>
+<section id="alpha">
+<h3>alpha<a class="headerlink" href="#alpha" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>tsutsuji起動時のマップ透過率 [0-1]</p></li>
+<li><p>default: 1.0</p></li>
+</ul>
+</section>
+<section id="zoomlevel">
+<h3>zoomlevel<a class="headerlink" href="#zoomlevel" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p>tsutsuji起動時のズームレベル [0-18]</p></li>
+<li><p>default: 15</p></li>
+</ul>
+</section>
+<section id="template-url">
+<h3>template_url<a class="headerlink" href="#template-url" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: string</p></li>
+<li><p>XYZ形式で記述されたマップタイルのテンプレートURL</p>
+<ul>
+<li><p>国土地理院標準地図なら <cite>https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png</cite></p></li>
+<li><p>国土地理院空中写真なら <cite>https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg</cite></p></li>
+<li><p>その他の国土地理院タイルについては <a class="reference external" href="https://maps.gsi.go.jp/development/ichiran.html">https://maps.gsi.go.jp/development/ichiran.html</a> を参照</p></li>
+<li><p>XYZ形式であれば、国土地理院タイル以外の任意のサービスを利用できる(はず)</p></li>
+</ul>
+</li>
+<li><p>default: なし</p></li>
+</ul>
+</section>
+</section>
 </section>
 
 
@@ -324,6 +405,16 @@
 <li><a class="reference internal" href="#supplemental-cp">supplemental_cp</a></li>
 <li><a class="reference internal" href="#color">color</a></li>
 <li><a class="reference internal" href="#calc-relrad">calc_relrad</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#maptile">[&#64;MAPTILE]</a><ul>
+<li><a class="reference internal" href="#longitude">longitude</a></li>
+<li><a class="reference internal" href="#latitude">latitude</a></li>
+<li><a class="reference internal" href="#x0">x0</a></li>
+<li><a class="reference internal" href="#y0">y0</a></li>
+<li><a class="reference internal" href="#alpha">alpha</a></li>
+<li><a class="reference internal" href="#zoomlevel">zoomlevel</a></li>
+<li><a class="reference internal" href="#template-url">template_url</a></li>
 </ul>
 </li>
 </ul>
