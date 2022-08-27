@@ -47,9 +47,16 @@ cfgファイルの準備
    zoomlevel = 15
    template_url = https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png
 
+.. note::
+
+   「# 経度」、「# 緯度」のコメントは説明のために追加したものです。このままcfgファイルにコピー＆ペーストするとエラーになりますので、適宜削除してください。
+   
 なお、オプションメニューからMaptile...を実行すれば、cfgファイルを編集せずにmaptileパラメータを設定できます。
 この際、toshowチェックボックスを選択することを忘れないでください。
 チェックが入っていない場合、マップタイルが取得・表示されません。
+
+.. image:: ./files/maptileparamwindow.png
+	   :scale: 60%
 
 テンプレートURLについて
 ---------------------
