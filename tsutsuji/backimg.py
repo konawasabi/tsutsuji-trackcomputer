@@ -28,7 +28,7 @@ import io
 import requests
 
 from kobushi import dialog_multifields
-from tsutsuji import math
+from . import math
 
 import configparser
 
@@ -297,7 +297,7 @@ class TileMapControl():
         self.origin_longlat = [139.741357472222222, 35.6580992222222222] # longitude: 経度[deg]、latitude: 緯度[deg]
         self.origin_metric = [0,0] # tsutsuji座標系でorigin_longlatが相当する座標
         self.zoom = 15
-        self.template_url = 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'
+        self.template_url = ''
 
         self.img_cache = {}
     def create_paramwindow(self):
@@ -492,7 +492,7 @@ class TileMapControl():
             self.extent = extent
     def showimg(self,ax,as_ratio=1,ymag=1):
         if self.toshow:
-            ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=1)
+            ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)
     def setparams_fromcfg(self, cfgd):
         self.toshow = cfgd['enabled']
         self.alpha = cfgd['alpha']
