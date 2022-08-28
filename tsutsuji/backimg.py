@@ -298,6 +298,7 @@ class TileMapControl():
         self.origin_metric = [0,0] # tsutsuji座標系でorigin_longlatが相当する座標
         self.zoom = 15
         self.template_url = ''
+        self.autozoom = False
 
         self.img_cache = {}
     def create_paramwindow(self):
@@ -349,6 +350,7 @@ class TileMapControl():
 
             self.btnframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
             self.btnframe.columnconfigure(0, weight=1)
+            self.btnframe.columnconfigure(1, weight=1)
             self.btnframe.rowconfigure(0, weight=1)
             self.btnframe.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
 
@@ -356,6 +358,10 @@ class TileMapControl():
             
             name = 'toshow'
             self.wd_variable[name] = tk.BooleanVar(value=self.toshow)
+            self.wd_btn[name] = ttk.Checkbutton(self.btnframe, text=name, variable=self.wd_variable[name])
+
+            name = 'autozoom'
+            self.wd_variable[name] = tk.BooleanVar(value=self.autozoom)
             self.wd_btn[name] = ttk.Checkbutton(self.btnframe, text=name, variable=self.wd_variable[name])
             
             name = 'OK'
@@ -365,6 +371,9 @@ class TileMapControl():
 
             btn_col = 0
             self.wd_btn['toshow'].grid(column=btn_col, row=0, sticky=(tk.N, tk.W, tk.S))
+            btn_col += 1
+            self.wd_btn['autozoom'].grid(column=btn_col, row=0, sticky=(tk.N, tk.W, tk.S))
+            
             btn_col += 1
             for name in ['Cancel', 'OK']:
                 self.wd_btn[name].grid(column=btn_col, row=0, sticky=(tk.N, tk.E, tk.S))
@@ -384,6 +393,7 @@ class TileMapControl():
         self.alpha = self.wd_variable['alpha [0-1]'].get()
         self.template_url = self.wd_variable['template_url'].get()
         self.toshow = self.wd_variable['toshow'].get()
+        self.autozoom = self.wd_variable['autozoom'].get()
         self.closewindow()
     def sendtopmost(self,event=None):
         self.master.lift()
@@ -409,7 +419,16 @@ class TileMapControl():
 
             width = scalex
             height = scalex*as_ratio
-            zoom = self.zoom
+
+            if self.autozoom:
+                tilenumx = int(height/123)
+                zoom = 18 - int(np.sqrt((tilenumx/2)))
+                if zoom > 18:
+                    zoom = 18
+                if zoom < 0:
+                    zoom = 0
+            else:
+                zoom = self.zoom
 
             # 基準となる緯度経度をorigin_metricだけオフセット
             origin = math.calc_xy2pl(self.origin_metric[1],\
@@ -491,14 +510,15 @@ class TileMapControl():
             self.img = result
             self.extent = extent
     def showimg(self,ax,as_ratio=1,ymag=1):
-        if self.toshow:
+        if self.toshow and self.img is not None:
             ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)
     def setparams_fromcfg(self, cfgd):
-        if cfgd['params']:
+        if cfgd is not None:
             self.toshow = cfgd['toshow']
             self.alpha = cfgd['alpha']
 
             self.origin_longlat = [cfgd['longitude'], cfgd['latitude']] # longitude: 経度[deg]、latitude: 緯度[deg]
             self.origin_metric = [cfgd['x0'], cfgd['y0']] # tsutsuji座標系でorigin_longlatが相当する座標
             self.zoom = cfgd['zoomlevel']
+            self.autozoom = cfgd['autozoom']
             self.template_url = cfgd['template_url']

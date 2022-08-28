@@ -52,8 +52,10 @@ class Config():
         self.kml_track = self.get_trackdata(self.kml_keys)
         self.csv_track = self.get_trackdata(self.csv_keys)
 
-        self.maptile = {'params': False,\
-                        'toshow': False,\
+        self.maptile = None
+                        
+        if '@MAPTILE' in sections:
+            self.maptile = {'toshow': False,\
                         'longitude': 139.741357472222222,\
                         'latitude':  35.6580992222222222,\
                         'x0': 0,\
@@ -62,8 +64,6 @@ class Config():
                         'zoomlevel': 15,\
                         'template_url': '',\
                         'autozoom': False}
-                        
-        if '@MAPTILE' in sections:
             for key in self.cp.options('@MAPTILE'):
                 self.maptile[key] = self.cp['@MAPTILE'][key]
             for key in ['longitude', 'latitude', 'x0', 'y0', 'alpha']:
@@ -75,7 +75,6 @@ class Config():
             for key in ['toshow', 'autozoom']:
                 if key in self.cp.options('@MAPTILE'):
                     self.maptile[key] = True if self.maptile[key]=='True' else False
-            self.maptile['params'] = True
             
     def get_trackdata(self, keys):
         track_data = {}
