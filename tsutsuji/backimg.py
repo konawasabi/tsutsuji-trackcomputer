@@ -299,6 +299,7 @@ class TileMapControl():
         self.zoom = 15
         self.template_url = ''
         self.autozoom = False
+        self.filename = None
 
         self.img_cache = {}
     def create_paramwindow(self):
@@ -509,6 +510,7 @@ class TileMapControl():
 
             self.img = result
             self.extent = extent
+            self.filename = 'x{:d}y{:d}z{:d}'.format(x_min,y_min,zoom)
     def showimg(self,ax,as_ratio=1,ymag=1):
         if self.toshow and self.img is not None:
             ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)
@@ -522,3 +524,19 @@ class TileMapControl():
             self.zoom = cfgd['zoomlevel']
             self.autozoom = cfgd['autozoom']
             self.template_url = cfgd['template_url']
+    def export(self):
+        if self.img is not None:
+            filetype = self.template_url.split('.')[-1]
+            outputpath = filedialog.asksaveasfilename(initialfile=self.filename+'.'+filetype)
+            if outputpath !='':
+                self.img.save(outputpath)
+                
+                fp = open(outputpath.split('.')[0]+'.cfg','w')
+                fp.writelines('[{:s}]\n'.format(outputpath))
+                fp.writelines('rot = {:f}\n'.format(self.rotrad))
+                fp.writelines('alpha = {:f}\n'.format(self.alpha))
+                fp.writelines('scale = {:f}\n'.format(abs((self.extent[1]-self.extent[0])/self.img.width)))
+                fp.writelines('origin = {:f},{:f}\n'.format(0,0))
+                fp.writelines('shift = {:f},{:f}\n'.format(self.extent[0],self.extent[2]))
+                fp.writelines('\n')
+                fp.close()

@@ -254,6 +254,7 @@ class mainwindow(ttk.Frame):
         self.menu_option.add_separator()
         self.menu_option.add_command(label='Maptile...', command=self.staticmapctrl.create_paramwindow)
         self.menu_option.add_command(label='Refresh Maptile', command=self.getmaptile, accelerator='Shift+Return')
+        self.menu_option.add_command(label='Export Maptile...', command=self.staticmapctrl.export)
         self.menu_option.add_separator()
         self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
         
