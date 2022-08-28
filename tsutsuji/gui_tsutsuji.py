@@ -326,11 +326,11 @@ class mainwindow(ttk.Frame):
             
             self.ax_plane.set_xlim(center[0]-scalex/2, center[0]+scalex/2)
             self.ax_plane.set_ylim(center[1]-scaley/2, center[1]+scaley/2)
+        
+        self.staticmapctrl.showimg(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
 
         for i in self.backimgctrl.imgs.keys():
             self.backimgctrl.imgs[i].show(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
-        
-        self.staticmapctrl.showimg(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
 
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()

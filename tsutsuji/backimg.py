@@ -494,10 +494,11 @@ class TileMapControl():
         if self.toshow:
             ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)
     def setparams_fromcfg(self, cfgd):
-        self.toshow = cfgd['enabled']
-        self.alpha = cfgd['alpha']
+        if cfgd['params']:
+            self.toshow = cfgd['toshow']
+            self.alpha = cfgd['alpha']
 
-        self.origin_longlat = [cfgd['longitude'], cfgd['latitude']] # longitude: 経度[deg]、latitude: 緯度[deg]
-        self.origin_metric = [cfgd['x0'], cfgd['y0']] # tsutsuji座標系でorigin_longlatが相当する座標
-        self.zoom = cfgd['zoomlevel']
-        self.template_url = cfgd['template_url']
+            self.origin_longlat = [cfgd['longitude'], cfgd['latitude']] # longitude: 経度[deg]、latitude: 緯度[deg]
+            self.origin_metric = [cfgd['x0'], cfgd['y0']] # tsutsuji座標系でorigin_longlatが相当する座標
+            self.zoom = cfgd['zoomlevel']
+            self.template_url = cfgd['template_url']
