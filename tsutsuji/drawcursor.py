@@ -349,7 +349,7 @@ class marker_pos():
                                                       message = 'set offset')
                 offs_angle =np.deg2rad(float(offset_input.variables['theta'].get()))
                 offset = np.dot(math.rotate(pos_kp[4]+offs_angle), np.array([float(offset_input.variables['x'].get()), float(offset_input.variables['y'].get())]))
-                self.p.coordinate_v.set('abs')
+                
 
             self.p.values[0].set(pos_kp[1]+offset[0])
             self.p.values[1].set(pos_kp[2]+offset[1])
@@ -364,6 +364,11 @@ class marker_pos():
                 self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:1,3]
             else:
                 self.track_data = self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result'][:1,3]
+
+            if self.p.coordinate_v.get() != 'abs':
+                self.track_key = '@absolute'
+                self.p.values[3].set('@absolute')
+                self.p.coordinate_v.set('abs')
                 
         self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get(),direct=True)
         if not replot:
