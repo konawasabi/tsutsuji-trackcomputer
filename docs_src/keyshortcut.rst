@@ -12,6 +12,7 @@
 	    "CFGファイルを再読み込み", "F5"
 	    "Measure", "Ctrl + m"
 	    "Generate", "Ctrl + g"
+	    "Maptile", "Ctrl + t"
 	    "Refresh Maptile", "Shift + Enter"
 	    "Tsutsujiを終了", "Alt + F4"
 

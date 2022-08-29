@@ -302,7 +302,7 @@ class TileMapControl():
         self.filename = None
 
         self.img_cache = {}
-    def create_paramwindow(self):
+    def create_paramwindow(self,event=None):
         if self.master is None:
             self.master = tk.Toplevel(self.mainwindow)
             self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
