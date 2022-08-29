@@ -68,6 +68,7 @@ cfgファイルの準備
 * 空中写真: `https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg`
 
 なお、XYZ形式で表されたマップタイルであれば、国土地理院タイル以外のサービスも利用できるはずです。
+(OpenStreetMapなら `https://tile.openstreetmap.jp/{z}/{x}/{y}.png`)
 
 
 tsutsuji上での操作方法
