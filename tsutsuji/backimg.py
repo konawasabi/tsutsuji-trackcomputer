@@ -422,8 +422,17 @@ class TileMapControl():
             height = scalex*as_ratio
 
             if self.autozoom:
-                tilenumx = int(height/123)
+                
+                tilenumx = int(width/123)
                 zoom = 18 - int(np.sqrt((tilenumx/2)))
+                '''
+                zoom = 18
+                for count in range(1,18):
+                    tilenumx = int(width/(123*count))
+                    if tilenumx**2 <= 8:
+                        zoom = 18-(count-1)
+                        break
+                '''
                 if zoom > 18:
                     zoom = 18
                 if zoom < 0:
