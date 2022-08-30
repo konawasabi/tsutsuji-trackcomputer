@@ -341,7 +341,7 @@
 <h3>alpha<a class="headerlink" href="#alpha" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
-<li><p>tsutsuji起動時のマップ透過率 [0-1]</p></li>
+<li><p>Tsutsuji起動時のマップ透過率 [0-1]</p></li>
 <li><p>default: 1.0</p></li>
 </ul>
 </section>
@@ -349,7 +349,7 @@
 <h3>zoomlevel<a class="headerlink" href="#zoomlevel" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>type: float</p></li>
-<li><p>tsutsuji起動時のズームレベル [0-18]</p></li>
+<li><p>Tsutsuji起動時のズームレベル [0-18]</p></li>
 <li><p>default: 15</p></li>
 </ul>
 </section>
@@ -359,13 +359,34 @@
 <li><p>type: string</p></li>
 <li><p>XYZ形式で記述されたマップタイルのテンプレートURL</p>
 <ul>
-<li><p>国土地理院標準地図なら <cite>https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png</cite></p></li>
-<li><p>国土地理院空中写真なら <cite>https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg</cite></p></li>
+<li><p>国土地理院タイル</p>
+<ul>
+<li><p>標準地図なら <cite>https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png</cite></p></li>
+<li><p>空中写真なら <cite>https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg</cite></p></li>
 <li><p>その他の国土地理院タイルについては <a class="reference external" href="https://maps.gsi.go.jp/development/ichiran.html">https://maps.gsi.go.jp/development/ichiran.html</a> を参照</p></li>
+</ul>
+</li>
+<li><p>OpenStreetMapなら <cite>https://tile.openstreetmap.jp/{z}/{x}/{y}.png</cite></p></li>
 <li><p>XYZ形式であれば、国土地理院タイル以外の任意のサービスを利用できる(はず)</p></li>
 </ul>
 </li>
 <li><p>default: なし</p></li>
+</ul>
+</section>
+<section id="toshow">
+<h3>toshow<a class="headerlink" href="#toshow" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: bool</p></li>
+<li><p>Tsutsuji起動時にMaptileを有効化する場合にTrue</p></li>
+<li><p>default: False</p></li>
+</ul>
+</section>
+<section id="autozoom">
+<h3>autozoom<a class="headerlink" href="#autozoom" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: bool</p></li>
+<li><p>Tsutsuji起動時にautozoomを有効化する場合にTrue</p></li>
+<li><p>default: False</p></li>
 </ul>
 </section>
 </section>
@@ -415,6 +436,8 @@
 <li><a class="reference internal" href="#alpha">alpha</a></li>
 <li><a class="reference internal" href="#zoomlevel">zoomlevel</a></li>
 <li><a class="reference internal" href="#template-url">template_url</a></li>
+<li><a class="reference internal" href="#toshow">toshow</a></li>
+<li><a class="reference internal" href="#autozoom">autozoom</a></li>
 </ul>
 </li>
 </ul>
