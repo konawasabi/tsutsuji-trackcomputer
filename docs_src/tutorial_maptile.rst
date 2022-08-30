@@ -46,6 +46,8 @@ cfgファイルの準備
    alpha = 0.5
    zoomlevel = 15
    template_url = https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png
+   toshow = True
+   autozoom = False
 
 .. note::
 
@@ -109,4 +111,5 @@ Maptile機能では、プロット範囲を埋め尽くすのに必要な複数�
 全てのタイルが表示されるまでに長時間を要する場合もあるので、ズームレベルの設定には注意してください。
 
 途中でズームレベルを変更する場合は、オプションメニューからMaptile...を実行すれば、ズームレベルを含めMaptileに関する全てのパラメータを変更できます。
+
 また、autozoomを有効化すると、現在のプロットウィンドウ表示範囲に合わせてズームレベルを自動で選択します。(ver. 1.4.1より)
