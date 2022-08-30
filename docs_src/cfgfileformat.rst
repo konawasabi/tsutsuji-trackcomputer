@@ -219,13 +219,13 @@ y0
 alpha
 =======
 * type: float
-* tsutsuji起動時のマップ透過率 [0-1]
+* Tsutsuji起動時のマップ透過率 [0-1]
 * default: 1.0
 
 zoomlevel
 =============
 * type: float
-* tsutsuji起動時のズームレベル [0-18]
+* Tsutsuji起動時のズームレベル [0-18]
 * default: 15
 
 template_url
@@ -233,10 +233,25 @@ template_url
 * type: string
 * XYZ形式で記述されたマップタイルのテンプレートURL
 
-  * 国土地理院標準地図なら `https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png`
-  * 国土地理院空中写真なら `https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg`
-  * その他の国土地理院タイルについては https://maps.gsi.go.jp/development/ichiran.html を参照
+  * 国土地理院タイル
+    
+    * 標準地図なら `https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png`
+    * 空中写真なら `https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg`
+    * その他の国土地理院タイルについては https://maps.gsi.go.jp/development/ichiran.html を参照
+      
+  * OpenStreetMapなら `https://tile.openstreetmap.jp/{z}/{x}/{y}.png`
   * XYZ形式であれば、国土地理院タイル以外の任意のサービスを利用できる(はず)
     
 * default: なし
 
+toshow
+=======
+* type: bool
+* Tsutsuji起動時にMaptileを有効化する場合にTrue
+* default: False
+
+autozoom
+=========
+* type: bool
+* Tsutsuji起動時にautozoomを有効化する場合にTrue
+* default: False

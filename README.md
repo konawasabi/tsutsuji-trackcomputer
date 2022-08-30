@@ -15,6 +15,7 @@ Bve trainsim 5/6向けマップファイルの制作支援Pythonスクリプト�
 - [scipy](https://www.scipy.org)
 - [lark](https://lark-parser.readthedocs.io/en/latest/)
 - [ttkwidgets](https://ttkwidgets.readthedocs.io/en/latest/)
+- [requests](https://requests-docs-ja.readthedocs.io/en/latest/)
 
 インストールするには、Python 3をインストールしてからPowershellで次のコマンドを実行してください。
 Tsutsuji本体と、動作に必要なパッケージが自動でインストールされます。

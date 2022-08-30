@@ -6,10 +6,22 @@
   - 渡り線・S字カーブMode
 - プロット画面
   - 任意角度への回転
+  
+## [1.4.1] - 2022-08-30
+
+- Maptile
+  - Backimgの背後にMaptileを描画するように変更
+  - toshowパラメータをcfgファイルで設定可能に変更
+  - オートズームレベル設定の追加
+  - 画像データをbackimgとしてエクスポート
+  - デフォルトパラメータ設定ルーチンの修正
+  - Maptile...メニューにキーショートカット追加(CTRL+T)
+- Measure
+  - 軌道に拘束されているカーソルに対してRel.にチェックしてVal.実行した場合に、ReplotするとVal.実行結果がキャンセルされる挙動を修正
 
 ## [1.4.0] - 2022-08-27
 
-- 地理院地図との連携
+- 地理院地図との連携(Maptile)
   - 現在のプロット画面を含むマップタイルを取得し表示する
   - XYZ地図タイル形式であれば、地理院地図に限らず表示可能(のはず)
   
@@ -103,6 +115,7 @@
 
 - 1st release
 
+[1.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.0...ver1.4.1
 [1.4.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.1...ver1.4.0
 [1.3.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.0...ver1.3.1
 [1.3.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.2.0...ver1.3.0
