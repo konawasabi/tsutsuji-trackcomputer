@@ -35,7 +35,7 @@ def singlefile(filename,offset_label):
     fp.close()
     #print(fbuff)
 
-    output = 'BveTs Map 2.02\n\n'
+    output = 'BveTs Map 2.02\n'
 
     grammer = lgr.loadmapgrammer()
     parser = Lark(grammer, parser='lalr')
@@ -47,18 +47,22 @@ def singlefile(filename,offset_label):
     for item in rem_comm:
         statements = item.split(';')
         for elem in statements:
+            pre_elem = re.match('^\s*',elem).group(0)                
+            elem = re.sub('^\s*','',elem)
             if len(elem)>0:
-                elem = re.sub('\n','',elem)
                 tree = parser.parse(elem+';')
                 if tree.data == 'include_file':
                     singlefile(lhe.joinpath(rootpath,\
                                             re.sub('\'','',tree.children[0].children[0])),\
                                offset_label)
-                    output += elem+';\n'
+                    output += pre_elem + elem + ';'
                 elif tree.data == 'set_distance':
-                    output += offset_label+'+'+elem+';\n'
+                    output += pre_elem + offset_label + '+' + elem + ';'
                 else:
-                    output += elem+';\n'
+                    output += pre_elem + elem + ';'
+            else:
+                output += pre_elem
+        
         if ix_comm < len(comm):
             output += comm[ix_comm]
             ix_comm+=1
