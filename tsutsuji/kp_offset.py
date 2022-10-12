@@ -27,7 +27,7 @@ from lark import Lark, Transformer, v_args
 from kobushi import loadmapgrammer as lgr
 from kobushi import loadheader as lhe
 
-def singlefile(filename,offset_label):
+def singlefile(filename,offset_label, output_root=None, input_root=None, include_file=None):
     path, rootpath, header_enc = lhe.loadheader(filename, 'BveTs Map ',2)
     fp = open(path,'r',encoding=header_enc)
     fp.readline()
@@ -52,9 +52,11 @@ def singlefile(filename,offset_label):
             if len(elem)>0:
                 tree = parser.parse(elem+';')
                 if tree.data == 'include_file':
-                    singlefile(lhe.joinpath(rootpath,\
-                                            re.sub('\'','',tree.children[0].children[0])),\
-                               offset_label)
+                    singlefile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
+                               offset_label,\
+                               output_root=output_root,\
+                               input_root = input_root,\
+                               include_file = re.sub('\'','',tree.children[0].children[0]))
                     output += pre_elem + elem + ';'
                 elif tree.data == 'set_distance':
                     output += pre_elem + offset_label + '+' + elem + ';'
@@ -67,10 +69,12 @@ def singlefile(filename,offset_label):
             output += comm[ix_comm]
             ix_comm+=1
 
-    os.makedirs(lhe.joinpath(rootpath,'results'),exist_ok=True)
-    filename_stem = pathlib.PurePath(filename).stem
-    filename_suffix = pathlib.PurePath(filename).suffix
-    fp = open(lhe.joinpath(lhe.joinpath(rootpath,'results'),str(filename_stem)+'_conv'+str(filename_suffix)),'w')
+    if include_file is None:
+        os.makedirs(output_root,exist_ok=True)
+        fp = open(output_root.joinpath(pathlib.Path(filename).name),'w')
+    else:
+        os.makedirs(output_root.joinpath(pathlib.Path(include_file).parent),exist_ok=True)
+        fp = open(output_root.joinpath(include_file),'w')
     fp.write(output)
     fp.close()
 
@@ -82,4 +86,8 @@ def process(filename):
     
 
 if __name__ == '__main__':
-    singlefile(sys.argv[1],'$hoge')
+    input_path = pathlib.Path(sys.argv[1])
+    inroot = input_path.parent
+    outroot = inroot.joinpath('result')
+    #input_path = sys.argv[1]
+    singlefile(str(input_path),'$hoge',output_root = outroot, input_root = inroot)
