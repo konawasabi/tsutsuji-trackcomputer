@@ -139,10 +139,14 @@ if __name__ == '__main__':
     argp.add_argument('-l', '--label', help='offest label (default: hoge)', type=str, default='hoge')
     argp.add_argument('-d', '--distance', help='offset distance (default: 0.0)', type=float, default=0.0)
     argp.add_argument('-i', '--invert', help='invert the values of kiloposts', action='store_true')
+    argp.add_argument('-o', '--outputdir', help='output directory', type=str)
     args = argp.parse_args()
     
     input_path, inroot = procpath(args.filepath)
-    outroot = inroot.joinpath('result')
+    if args.outputdir is None:
+        outroot = inroot.joinpath('result')
+    else:
+        outroot = pathlib.Path(args.outputdir)
 
     result = []
     readfile(str(input_path), '$'+args.label, args.distance,  result, inroot, inverse_kp = args.invert)
