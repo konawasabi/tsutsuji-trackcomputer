@@ -120,6 +120,7 @@
 
 - 1st release
 
+[1.5.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.1...ver1.5.0
 [1.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.0...ver1.4.1
 [1.4.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.1...ver1.4.0
 [1.3.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.0...ver1.3.1
