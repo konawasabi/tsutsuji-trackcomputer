@@ -27,15 +27,41 @@ from lark import Lark, Transformer, v_args
 from kobushi import loadmapgrammer as lgr
 from kobushi import loadheader as lhe
 
-def readfile(filename,offset_label, result_list, input_root, include_file=None):
+def readfile(filename, offset_label, offset_val, result_list, input_root, include_file=None, inverse_kp = False):
+    '''マップファイルを読み込み、距離程に指定のラベルを加算した文字列を生成する
+    
+    Parameters:
+    -----
+    filename : str
+      読み込むファイルへのパス
+    offset_label : str
+      距離程の先頭へ追加する文字列
+    offset_val : float
+      offset_labelへ代入する値
+    result_list : list
+      結果を格納するリスト。
+    input_root : pathlib.Path
+      読み込むファイルの親ディレクトリへのパス
+    include_file : str
+      マップファイル内include要素の引数を指定する
+    inverse_kp : bool
+      Trueの場合、読み込んだ距離程を-1倍して出力する
+    -----
+
+    result_listのフォーマット
+      [{'filename':str, 'data':str}, ...]
+    
+    '''
     path, rootpath, header_enc = lhe.loadheader(filename, 'BveTs Map ',2)
     fp = open(path,'r',encoding=header_enc)
     fp.readline()
     fbuff = fp.read()
     fp.close()
-    #print(fbuff)
 
     output = 'BveTs Map 2.02\n'
+
+    if offset_val is not None:
+        output += '\n{:s}={:f};\n'.format(offset_label, offset_val)
 
     grammer = lgr.loadmapgrammer()
     parser = Lark(grammer, parser='lalr')
@@ -54,12 +80,16 @@ def readfile(filename,offset_label, result_list, input_root, include_file=None):
                 if tree.data == 'include_file':
                     readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
                                offset_label,\
+                               offset_val,\
                                result_list,\
                                input_root = input_root,\
                                include_file = re.sub('\'','',tree.children[0].children[0]))
                     output += pre_elem + elem + ';'
                 elif tree.data == 'set_distance':
-                    output += pre_elem + offset_label + '+' + elem + ';'
+                    if inverse_kp:
+                        output += pre_elem + offset_label + ' - ({:s})'.format(elem) + ';'
+                    else:
+                        output += pre_elem + offset_label + ' + ' +  elem + ';'
                 else:
                     output += pre_elem + elem + ';'
             else:
@@ -72,27 +102,40 @@ def readfile(filename,offset_label, result_list, input_root, include_file=None):
     result_list.append({'filename':filename, 'include_file':include_file, 'data':output})
 
 def writefile(result, output_root):
+    ''' readfileで生成したresult_listをファイルに出力する
+
+    Parameters:
+    -----
+    result : list
+      readfileが出力するresult_list
+    output_root : pathlib.Path
+      データを出力するディレクトリへのパス
+    '''
     for data in result:
-        include_file = data['include_file']
-        filename = data['filename']
-        output = data['data']
-        if include_file is None:
+        if data['include_file'] is None:
             os.makedirs(output_root,exist_ok=True)
-            fp = open(output_root.joinpath(pathlib.Path(filename).name),'w')
+            fp = open(output_root.joinpath(pathlib.Path(data['filename']).name),'w')
         else:
-            os.makedirs(output_root.joinpath(pathlib.Path(include_file).parent),exist_ok=True)
-            fp = open(output_root.joinpath(include_file),'w')
-        fp.write(output)
+            os.makedirs(output_root.joinpath(pathlib.Path(data['include_file']).parent),exist_ok=True)
+            fp = open(output_root.joinpath(data['include_file']),'w')
+        fp.write(data['data'])
         fp.close()
 
-        print(filename)
-        print(output)
+        if False:
+            print(data['filename'])
+            print(data['data'])
+
+def procpath(pathstr):
+    ''' readfileへ渡すPathオブジェクトを生成する
+    '''
+    input_path = pathlib.Path(pathstr)
+    inroot = input_path.parent
+    return input_path, inroot
 
 if __name__ == '__main__':
-    input_path = pathlib.Path(sys.argv[1])
-    inroot = input_path.parent
+    input_path, inroot = procpath(sys.argv[1])
     outroot = inroot.joinpath('result')
-    #input_path = sys.argv[1]
+
     result = []
-    readfile(str(input_path), '$hoge', result, inroot)
+    readfile(str(input_path), '$hoge', 100,  result, inroot, inverse_kp = False)
     writefile(result, outroot)
