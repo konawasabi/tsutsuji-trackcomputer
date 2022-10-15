@@ -27,7 +27,7 @@ from lark import Lark, Transformer, v_args
 from kobushi import loadmapgrammer as lgr
 from kobushi import loadheader as lhe
 
-def singlefile(filename,offset_label, output_root=None, input_root=None, include_file=None):
+def readfile(filename,offset_label, result_list, input_root, include_file=None):
     path, rootpath, header_enc = lhe.loadheader(filename, 'BveTs Map ',2)
     fp = open(path,'r',encoding=header_enc)
     fp.readline()
@@ -52,9 +52,9 @@ def singlefile(filename,offset_label, output_root=None, input_root=None, include
             if len(elem)>0:
                 tree = parser.parse(elem+';')
                 if tree.data == 'include_file':
-                    singlefile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
+                    readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
                                offset_label,\
-                               output_root=output_root,\
+                               result_list,\
                                input_root = input_root,\
                                include_file = re.sub('\'','',tree.children[0].children[0]))
                     output += pre_elem + elem + ';'
@@ -68,26 +68,31 @@ def singlefile(filename,offset_label, output_root=None, input_root=None, include
         if ix_comm < len(comm):
             output += comm[ix_comm]
             ix_comm+=1
+            
+    result_list.append({'filename':filename, 'include_file':include_file, 'data':output})
 
-    if include_file is None:
-        os.makedirs(output_root,exist_ok=True)
-        fp = open(output_root.joinpath(pathlib.Path(filename).name),'w')
-    else:
-        os.makedirs(output_root.joinpath(pathlib.Path(include_file).parent),exist_ok=True)
-        fp = open(output_root.joinpath(include_file),'w')
-    fp.write(output)
-    fp.close()
+def writefile(result, output_root):
+    for data in result:
+        include_file = data['include_file']
+        filename = data['filename']
+        output = data['data']
+        if include_file is None:
+            os.makedirs(output_root,exist_ok=True)
+            fp = open(output_root.joinpath(pathlib.Path(filename).name),'w')
+        else:
+            os.makedirs(output_root.joinpath(pathlib.Path(include_file).parent),exist_ok=True)
+            fp = open(output_root.joinpath(include_file),'w')
+        fp.write(output)
+        fp.close()
 
-    print(filename)
-    print(output)
-
-def process(filename):
-    pass
-    
+        print(filename)
+        print(output)
 
 if __name__ == '__main__':
     input_path = pathlib.Path(sys.argv[1])
     inroot = input_path.parent
     outroot = inroot.joinpath('result')
     #input_path = sys.argv[1]
-    singlefile(str(input_path),'$hoge',output_root = outroot, input_root = inroot)
+    result = []
+    readfile(str(input_path), '$hoge', result, inroot)
+    writefile(result, outroot)
