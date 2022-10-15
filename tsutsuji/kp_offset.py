@@ -21,6 +21,7 @@ import os
 import sys
 import pathlib
 import re
+import argparse
 
 from lark import Lark, Transformer, v_args
 
@@ -36,8 +37,8 @@ def readfile(filename, offset_label, offset_val, result_list, input_root, includ
       読み込むファイルへのパス
     offset_label : str
       距離程の先頭へ追加する文字列
-    offset_val : float
-      offset_labelへ代入する値
+    offset_val : float or None
+      offset_labelへ代入する値。Noneなら代入構文を出力しない。
     result_list : list
       結果を格納するリスト。
     input_root : pathlib.Path
@@ -61,7 +62,7 @@ def readfile(filename, offset_label, offset_val, result_list, input_root, includ
     output = 'BveTs Map 2.02\n'
 
     if offset_val is not None:
-        output += '\n{:s}={:f};\n'.format(offset_label, offset_val)
+        output += '\n{:s} = {:f};\n'.format(offset_label, offset_val)
 
     grammer = lgr.loadmapgrammer()
     parser = Lark(grammer, parser='lalr')
@@ -133,9 +134,16 @@ def procpath(pathstr):
     return input_path, inroot
 
 if __name__ == '__main__':
-    input_path, inroot = procpath(sys.argv[1])
+    argp = argparse.ArgumentParser()
+    argp.add_argument('filepath', metavar='FILE', type=str, help='input map file', nargs='?')
+    argp.add_argument('-l', '--label', help='offest label (default: hoge)', type=str, default='hoge')
+    argp.add_argument('-d', '--distance', help='offset distance (default: 0.0)', type=float, default=0.0)
+    argp.add_argument('-i', '--invert', help='invert the values of kiloposts', action='store_true')
+    args = argp.parse_args()
+    
+    input_path, inroot = procpath(args.filepath)
     outroot = inroot.joinpath('result')
 
     result = []
-    readfile(str(input_path), '$hoge', 100,  result, inroot, inverse_kp = False)
+    readfile(str(input_path), '$'+args.label, args.distance,  result, inroot, inverse_kp = args.invert)
     writefile(result, outroot)
