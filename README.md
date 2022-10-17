@@ -9,7 +9,7 @@ Bve trainsim 5/6向けマップファイルの制作支援Pythonスクリプト�
 動作に必要な環境
 
 - [Python 3](https://www.python.org/downloads/)
-- [Kobushi trackviewer](https://github.com/konawasabi/kobushi-trackviewer) Ver1.1.3以降
+- [Kobushi trackviewer](https://github.com/konawasabi/kobushi-trackviewer) Ver1.1.4以降
 - [numpy](https://numpy.org)
 - [matplotlib](https://matplotlib.org)
 - [scipy](https://www.scipy.org)
@@ -25,9 +25,9 @@ pip install tsutsuji-trackcomputer
 
 なお、https://konawasabi.riceball.jp/2022/06/01/tsutsuji-kobushi-installguide/ にて、Python3のセットアップを含めたインストール手順の説明をしていますので、参考にしてもらえればと思います。
 
-インストール済みのTsutsujiをバージョンアップする際は、次のコマンドを実行してください。
+インストール済みのTsutsuji, Kobushiをバージョンアップする際は、次のコマンドを実行してください。
 ```
-pip install --upgrade tsutsuji-trackcomputer
+pip install --upgrade tsutsuji-trackcomputer kobushi-trackviewer
 ```
 
 ## 起動
