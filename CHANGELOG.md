@@ -7,6 +7,12 @@
 - プロット画面
   - 任意角度への回転
   
+## [1.5.1] - 2022-11-05
+
+- cfgファイルの読み込み時にエンコーディングを明示
+  - 日本語が含まれている場合にエンコーディングが正しく選択されない問題を修正
+  - デフォルトではutf-8を期待し、デコードに失敗した場合はcp932で再読み込みを試みる
+  
 ## [1.5.0] - 2022-10-16
 
 - 自軌道マップデータに対するoffset_variableの適用
@@ -120,6 +126,7 @@
 
 - 1st release
 
+[1.5.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.0...ver1.5.1
 [1.5.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.1...ver1.5.0
 [1.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.0...ver1.4.1
 [1.4.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.1...ver1.4.0
