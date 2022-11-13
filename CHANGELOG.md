@@ -7,6 +7,10 @@
 - プロット画面
   - 任意角度への回転
   
+## [1.5.2] - 2022-11-xx
+
+- Curvetrack Solver Mode 7にて自軌道構文が正しく出力されない問題を修正
+  
 ## [1.5.1] - 2022-11-05
 
 - cfgファイルの読み込み時にエンコーディングを明示
@@ -126,6 +130,7 @@
 
 - 1st release
 
+[1.5.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.1...ver1.5.2
 [1.5.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.0...ver1.5.1
 [1.5.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.1...ver1.5.0
 [1.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.0...ver1.4.1

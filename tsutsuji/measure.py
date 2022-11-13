@@ -537,7 +537,7 @@ class interface():
             print('$cant = 0;')
             print('Curve.SetFunction({:d});'.format(0 if tranfunc == 'sin' else 1))
             print('Curve.Interpolate({:f},0);'.format(0))
-            if fitmode == self.curve_fitmode_box['values'][5]:
+            if fitmode == self.curve_fitmode_box['values'][5] or fitmode == self.curve_fitmode_box['values'][6]:
                 lenTC_result = {'1':TCL_result, '2':TCL_result}
             else:
                 lenTC_result = {'1':lenTC1, '2':lenTC2}
