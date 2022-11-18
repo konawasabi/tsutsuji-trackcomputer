@@ -161,7 +161,7 @@ tateyama_up の構築
 
    - CCL: 18.53
    - R: -185.5
-   - **α: B, β: C**
+   - α: B, β: C **(要変更)**
    - Assign results to cursor にチェック
    - mapsyntax にチェック
    - Mode: 3. α(free)->β(free), R(fix)
@@ -177,33 +177,33 @@ tateyama_up の構築
 
      - カーソルBを @absolute 設定にしているため
      
-     - .. code-block:: text
-         :caption: tateyama_up.txt (追加分のみ)
-		   
-	 ...
-	 $pt_a = 381.000000;
-	 $pt_a +0.000000;
-	 $cant = 0;
-	 Curve.SetFunction(1);
-	 Curve.Interpolate(0.000000,0);
-	 $pt_a +0.000000; #片渡り線の始点側曲線
-	 Curve.Interpolate(185.500000, $cant);
-	 $pt_a +18.530000;
-	 Curve.Interpolate(185.500000, $cant);
-	 $pt_a +18.530000;
-	 Curve.Interpolate(0.000000,0);
+   - .. code-block:: text
+       :caption: tateyama_up.txt (追加分のみ)
 
-	 $pt_a = 0; #この行要修正
-	 $pt_a +17.473817;
-	 $cant = 0;
-	 Curve.SetFunction(1);
-	 Curve.Interpolate(0.000000,0);
-	 $pt_a +17.473817; #片渡り線の終点側曲線
-	 Curve.Interpolate(-185.500000, $cant);
-	 $pt_a +36.082812;
-	 Curve.Interpolate(-185.500000, $cant);
-	 $pt_a +36.082812;
-	 Curve.Interpolate(0.000000,0);
+       ...
+       $pt_a = 381.000000;
+       $pt_a +0.000000;
+       $cant = 0;
+       Curve.SetFunction(1);
+       Curve.Interpolate(0.000000,0);
+       $pt_a +0.000000; #片渡り線の始点側曲線
+       Curve.Interpolate(185.500000, $cant);
+       $pt_a +18.530000;
+       Curve.Interpolate(185.500000, $cant);
+       $pt_a +18.530000;
+       Curve.Interpolate(0.000000,0);
+
+       $pt_a = 0; #この行要修正
+       $pt_a +17.473817;
+       $cant = 0;
+       Curve.SetFunction(1);
+       Curve.Interpolate(0.000000,0);
+       $pt_a +17.473817; #片渡り線の終点側曲線
+       Curve.Interpolate(-185.500000, $cant);
+       $pt_a +36.082812;
+       Curve.Interpolate(-185.500000, $cant);
+       $pt_a +36.082812;
+       Curve.Interpolate(0.000000,0);
 
 10. 手順9でコピーアンドペーストした構文の距離程を修正する
 
