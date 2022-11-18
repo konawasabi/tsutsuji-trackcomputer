@@ -6,18 +6,18 @@
 ==============
 
 1. `地理院地図 <https://maps.gsi.go.jp/>`_ で `寺田駅付近 <https://maps.gsi.go.jp/#17/36.697311/137.318579/&base=std>`_ を表示する
-2. 画面中央のクロスマークを、Tsutsuji上での座標原点にしたい場所に合わせる
+2. 画面中央のクロスマークをTsutsuji上での座標原点にしたい場所に合わせる
    
    - 今回は立山線立山方に設定
 
-      - 緯度: 137.31857900872157
-      - 経度: 36.69731055253167
+     - 経度: 36.69731055253167
+     - 緯度: 137.31857900872157
      
 3. ウィンドウ左下の↗️アイコンをクリックして、表示された経緯度を読み取る
 
-   - googleマップで調べたい場所を右クリックして、メニュー最上段に表示される経緯度を使ってもよい
+   - googleマップで調べたい場所を右クリックしてメニュー最上段に表示される経緯度を使ってもよい
 
-       - googleマップの方が経緯度の有効数字が大きいので、今回はこちらの値を使用
+     - googleマップの方が経緯度の有効数字が大きいので今回はこちらの値を使用
 
 .. image:: ./files/preparecfg/chiriin_map.png
 	   :scale: 50%
@@ -30,16 +30,13 @@ CFGファイルの作成
 2. 作成したmain.cfgをTsutsujiで読み込む
 
    - 下図のように空中写真がメインウィンドウ上に表示される
-
    - 座標(0, 0)を起点としてtateyama_up軌道がx正の方向に伸びる
   
 .. image:: ./files/preparecfg/firstload.png
 	   :scale: 50%
 
-main.cfg
----------
-
 .. code-block:: text
+   :caption: main.cfg 
 
    [@TSUTSUJI_GENERAL]
    owntrack = tateyama_up
@@ -67,10 +64,8 @@ main.cfg
    angle = 0
    endpoint = 1500
 
-tateyama_up.txt
-----------------
-
 .. code-block:: text
+   :caption: tateyama_up.txt
 	     
    BveTs Map 2.02:utf-8
 
@@ -84,6 +79,10 @@ tateyama_up.txt
 読み込まれた空中写真の原点付近を拡大すると、下図のように空中写真上の立山線線路が原点を通過していないことが分かる。
 ここでは空中写真の基準座標([@MAPTILE]のx0, y0)を調整して、原点上を線路が通過するように修正する。
 
+
+.. image:: ./files/preparecfg/displacement.png
+	   :scale: 50%
+
 .. note::
 
    - 表示範囲の拡大は、scaleフィールドの値を書き換えてenterキー
@@ -91,10 +90,7 @@ tateyama_up.txt
      - scaleフィールドの値は、プロットウィンドウx軸の表示範囲を表す
 
    - 空中写真の更新は、shift+enterキー
-
-.. image:: ./files/preparecfg/displacement.png
-	   :scale: 50%
-
+     
 1. Measureウィンドウを開く
 2. カーソルAのPos.をクリックする
 3. 表示されたxカーソルで原点を写したい場所をクリックする
@@ -103,14 +99,16 @@ tateyama_up.txt
 
    - 測定した座標をの符号を反転させた値をx0, y0に指定する
    - 指定した距離だけ空中写真を並行移動して表示する
+     
+6. main.cfgを再読み込みすると、空中写真の基準座標が更新される
+
+   - cfgファイル、マップデータの再読み込みはF5キー
 		   
 .. image:: ./files/preparecfg/origin_measure.png
 	   :scale: 50%
-
-main.cfg (修正部分のみ)
----------------
-
+		   
 .. code-block:: text
+    :caption: main.cfg (修正部分のみ)
 		
     [@MAPTILE]
     ...
