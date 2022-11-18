@@ -177,8 +177,9 @@ tateyama_up の構築
 
      - カーソルBを @absolute 設定にしているため
      
-   - .. code-block:: text
+     - .. code-block:: text
          :caption: tateyama_up.txt (追加分のみ)
+		   
 	 ...
 	 $pt_a = 381.000000;
 	 $pt_a +0.000000;
@@ -211,8 +212,7 @@ tateyama_up の構築
      - カーソルAの距離程は381.0m
      - カーソルBは分岐器曲線の終点: 距離程は381.0+18.53m
      - よって下記の通り修正できる
-
-   - :ref:`こちら <tutorial_ctsolver_crossover>` のように、合流側の軌道を予め敷いておくと、上記の手順を省略できる
+       
    - .. code-block:: text
          :caption: tateyama_up.txt (追加分のみ)
 	 :emphasize-lines: 2, 11, 14
@@ -240,6 +240,8 @@ tateyama_up の構築
 	 $pt_a +36.082812;
 	 Curve.Interpolate(-185.500000, $cant);
 	 $pt_a +36.082812;
+
+   - :ref:`こちら <tutorial_ctsolver_crossover>` のように、合流側の軌道を予め敷いておくと、上記の手順を省略できる
 
 11. データ再読み込み(F5)を行い、下記の完成図を得る
     
