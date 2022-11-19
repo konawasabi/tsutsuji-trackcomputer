@@ -162,7 +162,6 @@ tateyama_up の構築
    - CCL: 18.53
    - R: -185.5
    - α: B, β: C **(要変更)**
-   - Assign results to cursor にチェック
    - mapsyntax にチェック
    - Mode: 3. α(free)->β(free), R(fix)
 
