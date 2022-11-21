@@ -24,11 +24,12 @@
 
 
 .. toctree::
+   :numbered:
 
    ./preparecfg
    ./tateyama_up
    ./tateyama_down
-   ./honsen_down
    ./honsen_up
+   ./honsen_down
    ./generatetracks
    
