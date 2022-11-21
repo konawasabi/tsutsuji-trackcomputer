@@ -110,7 +110,7 @@ tateyama_up の構築
 	 $pt_a +165.279457;
 	 Curve.Interpolate(0.000000,0);
 
-11. データ再読み込み(F5)を行うと、下図を得る
+11. データのリロード(F5)を行うと、下図を得る
     
    - .. image:: ./files/tateyama_up/form_final.png
                :scale: 50%
@@ -242,7 +242,7 @@ tateyama_up の構築
 
    - :ref:`こちら <tutorial_ctsolver_crossover>` のように、合流側の軌道を予め敷いておくと、上記の手順を省略できる
 
-11. データ再読み込み(F5)を行い、下記の完成図を得る
+11. データのリロード(F5)を行い、下記の完成図を得る
     
    - .. image:: ./files/tateyama_up/crossover4.png
                :scale: 50%

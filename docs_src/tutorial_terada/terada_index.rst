@@ -29,7 +29,7 @@
    ./preparecfg
    ./tateyama_up
    ./tateyama_down
-   ./honsen_up
    ./honsen_down
+   ./honsen_up
    ./generatetracks
    
