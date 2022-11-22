@@ -44,7 +44,7 @@ tateyama_up の構築
 プラットホーム部
 =================
 
-プラットホームにかかる曲線軌道を求める。
+Measureウィンドウの :ref:`CurveTrack Solver機能 <ref_measure_ctsolver>` を使ってプラットホームにかかる曲線軌道を求める。
 
 1. カーソルAのtrackをtateyama_upに設定する
 2. カーソルAの位置・方向をプラットホームにかかる曲線軌道の始端にセットする
