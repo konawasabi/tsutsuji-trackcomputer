@@ -29,6 +29,7 @@ from kobushi import trackgenerator
 from . import config
 from . import math
 from . import kml2track
+from . import kp_offset
 
 class TrackControl():
     def __init__(self):
@@ -516,6 +517,16 @@ class TrackControl():
             f.close()
             print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))
 
+        # 自軌道データの距離程をoffsetして出力
+        owntrack_kpoffs = []
+        owntrack_input, owntrack_root = kp_offset.procpath(self.conf.track_data[self.conf.owntrack]['file'])
+        kp_offset.readfile(owntrack_input,\
+                           '$'+self.conf.general['offset_variable'],\
+                           self.conf.general['origin_distance'],\
+                           owntrack_kpoffs,\
+                           owntrack_root)
+        kp_offset.writefile(owntrack_kpoffs,\
+                            self.conf.general['output_path'].joinpath('owntrack'))
     def convert_cant_with_relativecp(self, tr, cp_dist):
         ''' trで指定した軌道について、対応する距離程でのカントを求める 
         '''

@@ -7,6 +7,21 @@
 - プロット画面
   - 任意角度への回転
   
+## [1.5.2] - 2022-11-14
+
+- Curvetrack Solver Mode 7にて自軌道構文が正しく出力されない問題を修正
+  
+## [1.5.1] - 2022-11-05
+
+- cfgファイルの読み込み時にエンコーディングを明示
+  - 日本語が含まれている場合にエンコーディングが正しく選択されない問題を修正
+  - デフォルトではutf-8を期待し、デコードに失敗した場合はcp932で再読み込みを試みる
+  
+## [1.5.0] - 2022-10-16
+
+- 自軌道マップデータに対するoffset_variableの適用
+  - generateすると自軌道データの距離程を `$offset_variable + distance;` の形式に変換してファイルへ出力
+  
 ## [1.4.1] - 2022-08-30
 
 - Maptile
@@ -115,6 +130,9 @@
 
 - 1st release
 
+[1.5.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.1...ver1.5.2
+[1.5.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.0...ver1.5.1
+[1.5.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.1...ver1.5.0
 [1.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.0...ver1.4.1
 [1.4.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.1...ver1.4.0
 [1.3.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.3.0...ver1.3.1

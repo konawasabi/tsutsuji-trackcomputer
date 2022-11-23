@@ -23,7 +23,16 @@ import pathlib
 class Config():
     def __init__(self,path):
         self.cp = configparser.ConfigParser()
-        self.cp.read(path)
+
+        try:
+            self.cp.read(path,'utf-8')
+        except UnicodeDecodeError as e:
+            print('Warning: {:s} cannot be decoded with utf-8. Tsutsuji tries to decode with CP932.'.format(str(path)))
+            try:
+                self.cp.read(path,'cp932')
+            except UnicodeDecodeError as e:
+                raise RuntimeError('Unknown encoding: {:s}'.format(str(path)))
+
         self.path_parent = pathlib.Path(path).resolve().parent
         sections = self.cp.sections()
         self.track_keys = [i for i in sections if '@' not in i]
