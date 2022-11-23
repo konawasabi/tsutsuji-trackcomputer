@@ -242,7 +242,7 @@ Measureウィンドウの :ref:`CurveTrack Solver機能 <ref_measure_ctsolver>` 
 
    - :ref:`こちら <tutorial_ctsolver_crossover>` のように、合流側の軌道を予め敷いておくと、上記の手順を省略できる
 
-11. データのリロード(F5)を行い、下記の完成図を得る
+11. 変更したデータをリロード(F5)して完成
     
    - .. image:: ./files/tateyama_up/crossover4.png
                :scale: 50%

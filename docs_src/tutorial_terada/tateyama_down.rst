@@ -75,7 +75,7 @@ tateyama_down軌道の始点座標を求め、main.cfgに[tateyama_down]セク�
 	 $pt_a +18.530000;
 	 Curve.Interpolate(0.000000,0);
 
-5. データ再読み込みする
+5. データをリロードする
 
    - .. image:: ./files/tateyama_down/switch1.png
                :scale: 50%
@@ -208,7 +208,7 @@ main.cfgを修正して、tateyama_down軌道が側線車止めの位置で終�
 	 angle = 0
 	 endpoint = 293
 
-5. データをリロードする
+5. データをリロードして完成
 
    - .. image:: ./files/tateyama_down/final.png
                :scale: 50%
