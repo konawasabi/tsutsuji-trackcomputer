@@ -1,0 +1,204 @@
+
+
+<!doctype html>
+
+<html lang="jp">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>6. 他軌道構文の出力 &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reference Guide" href="../referenceguide.html" />
+    <link rel="prev" title="5. honsen_up の構築" href="honsen_up.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../referenceguide.html" title="Reference Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="honsen_up.html" title="5. honsen_up の構築"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" >Tutorial</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="terada_index.html" accesskey="U">寺田駅を作る</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">6. </span>他軌道構文の出力</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1><span class="section-number">6. </span>他軌道構文の出力<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h1>
+<p>メインウィンドウ右下の <strong>Generate</strong> ボタンをクリックすると、tateyama_up軌道を自軌道として各軌道を他軌道構文(Track)に変換する。</p>
+<p>他軌道への変換結果はmain.cfgと同じディレクトリのresult以下に保存され、同時にプロットウィンドウに黒線で表示される。</p>
+<a class="reference internal image-reference" href="../_images/gen1.png"><img alt="../_images/gen1.png" src="../_images/gen1.png" style="width: 444.5px; height: 344.0px;" /></a>
+<ul class="simple">
+<li><p>出力ファイル一覧</p>
+<ul>
+<li><p>result/</p>
+<ul>
+<li><p>tateyama_down_converted.txt</p></li>
+<li><p>honsen_down_converted.txt</p></li>
+<li><p>honsen_up_converted.txt</p></li>
+<li><p>owntrack/</p>
+<ul>
+<li><p>tateyama_up.txt</p>
+<ul>
+<li><p>入力ファイルのtateyama_up.txtに対して、各々の距離程を[&#64;TSUTSUJI_GENERAL]セクションのoffset_distanceだけシフトしたもの</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<section id="supplemental-cp">
+<h2><span class="section-number">6.1. </span>supplemental_cpの設定<a class="headerlink" href="#supplemental-cp" title="Permalink to this heading">¶</a></h2>
+<p>変換結果を見ると、honsen_up, honsen_down軌道について一部入力データからの乖離が大きい部分がある。</p>
+<p>tsutsujiでは、入力軌道データの自軌道要素(Curve, Gradient)が存在する距離程の座標を抽出して他軌道構文に変換している。
+このため、距離の長い曲線区間では距離程どうしの間隔が開くことがある。
+また、変換しようとしている軌道と自軌道のなす角が開いている場合、相対半径によるTrack要素間の補間がうまく働かない場合が多い。</p>
+<p>このような場合は、main.cfgファイルの該当する軌道セクションにsupplemental_cpを追加する。
+supplemental_cpがセットされると、自軌道要素が存在する距離程に加えて、supplemental_cpで指定した距離程に対する座標を基に他軌道構文への変換を行う。</p>
+<p>main.cfgを下記のように変更して、データリロードののちGenerateを実行すると、下図のように最終的な変換結果が得られる。</p>
+<a class="reference internal image-reference" href="../_images/gen2.png"><img alt="../_images/gen2.png" src="../_images/gen2.png" style="width: 450.5px; height: 346.5px;" /></a>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+[honsen_down]
+file = honsen_down.txt
+absolute_coordinate = False
+parent_track = tateyama_up
+origin_kilopost = 438
+x = 0
+y = 0
+z = 0
+angle = -180
+endpoint = 400
+<span class="hll">supplemental_cp = 200, 250, 300, 350
+</span>
+[honsen_up]
+file = honsen_up.txt
+absolute_coordinate = False
+parent_track = honsen_down
+origin_kilopost = 60
+x = 0
+y = 0
+z = 0
+angle = 0
+endpoint = 300
+<span class="hll">supplemental_cp = 100, 150, 200, 250
+</span></pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>supplemental_cpを追加することで破綻の少ない他軌道データが得られるが、ここにRepeater要素でレールオブジェクトを割り当てると、うまくspan, intervalを調整しない限り、結局は隙間だらけのレールが生まれてしまう。Tsutsuji上での変換結果だけにこだわらず、Bve Trainsim上で満足する結果が表示されるよう、変換結果を活用して欲しいと思う。</p>
+</div>
+<p>このチュートリアルは以上です。</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">6. 他軌道構文の出力</a><ul>
+<li><a class="reference internal" href="#supplemental-cp">6.1. supplemental_cpの設定</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="honsen_up.html"
+                          title="previous chapter"><span class="section-number">5. </span>honsen_up の構築</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../referenceguide.html"
+                          title="next chapter">Reference Guide</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorial_terada/generatetracks.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../referenceguide.html" title="Reference Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="honsen_up.html" title="5. honsen_up の構築"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" >Tutorial</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="terada_index.html" >寺田駅を作る</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">6. </span>他軌道構文の出力</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+  </body>
+</html>

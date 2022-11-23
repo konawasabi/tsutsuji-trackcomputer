@@ -1,0 +1,262 @@
+
+
+<!doctype html>
+
+<html lang="jp">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>1. 空中写真をTsutsujiに表示する &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2. tateyama_up の構築" href="tateyama_up.html" />
+    <link rel="prev" title="寺田駅を作る" href="terada_index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tateyama_up.html" title="2. tateyama_up の構築"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="terada_index.html" title="寺田駅を作る"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" >Tutorial</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="terada_index.html" accesskey="U">寺田駅を作る</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">1. </span>空中写真をTsutsujiに表示する</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="tsutsuji">
+<h1><span class="section-number">1. </span>空中写真をTsutsujiに表示する<a class="headerlink" href="#tsutsuji" title="Permalink to this heading">¶</a></h1>
+<section id="id1">
+<h2><span class="section-number">1.1. </span>経緯度を調べる<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p><a class="reference internal" href="../tutorial_maptile.html"><span class="doc">maptile機能</span></a> を使って空中写真を表示するため、表示したい地点の経緯度を調べる。</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://maps.gsi.go.jp/">地理院地図</a> で <a class="reference external" href="https://maps.gsi.go.jp/#17/36.697311/137.318579/&amp;base=std">寺田駅付近</a> を表示する</p></li>
+<li><p>画面中央のクロスマークをTsutsuji上での座標原点にしたい場所に合わせる</p>
+<ul class="simple">
+<li><p>今回は立山線立山方に設定</p>
+<ul>
+<li><p>経度: 36.69731055253167</p></li>
+<li><p>緯度: 137.31857900872157</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>ウィンドウ左下の↗️アイコンをクリックして、表示された経緯度を読み取る</p>
+<ul class="simple">
+<li><p>googleマップで調べたい場所を右クリックしてメニュー最上段に表示される経緯度を使ってもよい</p>
+<ul>
+<li><p>googleマップの方が経緯度の有効数字が大きいので今回はこちらの値を使用</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<a class="reference internal image-reference" href="../_images/chiriin_map.png"><img alt="../_images/chiriin_map.png" src="../_images/chiriin_map.png" style="width: 430.5px; height: 276.5px;" /></a>
+</section>
+<section id="cfg">
+<h2><span class="section-number">1.2. </span>CFGファイルの作成<a class="headerlink" href="#cfg" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>同じディレクトリに下記の内容でmain.cfg, tateyama_up.txtを作成する</p></li>
+<li><p>作成したmain.cfgをTsutsujiで読み込む</p>
+<ul class="simple">
+<li><p>下図のように空中写真がメインウィンドウ上に表示される</p></li>
+<li><p>座標(0, 0)を起点としてtateyama_up軌道がx正の方向に伸びる</p></li>
+</ul>
+</li>
+</ol>
+<a class="reference internal image-reference" href="../_images/firstload.png"><img alt="../_images/firstload.png" src="../_images/firstload.png" style="width: 611.0px; height: 340.5px;" /></a>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[@TSUTSUJI_GENERAL]
+owntrack = tateyama_up
+unit_length = 1
+origin_distance = 0
+offset_variable = hoge
+
+[@MAPTILE]
+longitude = 137.31857900872157
+latitude = 36.69731055253167
+x0 = 0
+y0 = 0
+alpha = 1
+zoomlevel = 18
+template_url = https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg
+toshow = True
+autozoom = True
+
+[tateyama_up]
+file = tateyama_up.txt
+absolute_coordinate = True
+x = 0
+y = 0
+z = 0
+angle = 0
+endpoint = 1500
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">tateyama_up.txt</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BveTs Map 2.02:utf-8
+
+0;
+Curve.SetGauge(1.067);
+Curve.SetFunction(0);
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h2><span class="section-number">1.3. </span>基準座標の修正<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<p>読み込まれた空中写真の原点付近を拡大すると、下図のように空中写真上の立山線線路が原点を通過していないことが分かる。
+ここでは空中写真の基準座標([&#64;MAPTILE]のx0, y0)を調整して、原点上を線路が通過するように修正する。</p>
+<p>プロットウィンドウ上の座標を調べるために <a class="reference internal" href="../reference_measure.html"><span class="doc">Measure機能</span></a> を使う。</p>
+<a class="reference internal image-reference" href="../_images/displacement.png"><img alt="../_images/displacement.png" src="../_images/displacement.png" style="width: 611.5px; height: 341.0px;" /></a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>表示範囲の拡大は、scaleフィールドの値を書き換えてenterキー</p>
+<ul>
+<li><p>scaleフィールドの値は、プロットウィンドウx軸の表示範囲を表す</p></li>
+</ul>
+</li>
+<li><p>空中写真の更新は、shift+enterキー</p></li>
+</ul>
+</div>
+<ol class="arabic simple">
+<li><p>Measureウィンドウを開く</p></li>
+<li><p>カーソルAのPos.をクリックする</p></li>
+<li><p>表示されたxカーソルで原点を写したい場所をクリックする</p></li>
+<li><p>クリックした位置の座標がカーソルAのx, yフィールドに表示される</p></li>
+<li><p>下記のようにmain.cfgを修正する</p>
+<ul class="simple">
+<li><p>測定した座標をの符号を反転させた値をx0, y0に指定する</p></li>
+<li><p>指定した距離だけ空中写真を並行移動して表示する</p></li>
+</ul>
+</li>
+<li><p>main.cfgをリロードすると、空中写真の基準座標が更新される</p>
+<ul class="simple">
+<li><p>cfgファイル、マップデータのリロードはF5キー</p></li>
+</ul>
+</li>
+</ol>
+<a class="reference internal image-reference" href="../_images/origin_measure.png"><img alt="../_images/origin_measure.png" src="../_images/origin_measure.png" style="width: 610.5px; height: 338.0px;" /></a>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">main.cfg (修正部分のみ)</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[@MAPTILE]
+...
+x0 = 6.4
+y0 = -120.9
+...
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">1. 空中写真をTsutsujiに表示する</a><ul>
+<li><a class="reference internal" href="#id1">1.1. 経緯度を調べる</a></li>
+<li><a class="reference internal" href="#cfg">1.2. CFGファイルの作成</a></li>
+<li><a class="reference internal" href="#id4">1.3. 基準座標の修正</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="terada_index.html"
+                          title="previous chapter">寺田駅を作る</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tateyama_up.html"
+                          title="next chapter"><span class="section-number">2. </span>tateyama_up の構築</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorial_terada/preparecfg.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tateyama_up.html" title="2. tateyama_up の構築"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="terada_index.html" title="寺田駅を作る"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" >Tutorial</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="terada_index.html" >寺田駅を作る</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">1. </span>空中写真をTsutsujiに表示する</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+  </body>
+</html>

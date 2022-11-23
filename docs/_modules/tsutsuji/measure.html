@@ -583,7 +583,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;$cant = 0;&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Curve.SetFunction(</span><span class="si">{:d}</span><span class="s1">);&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="n">tranfunc</span> <span class="o">==</span> <span class="s1">&#39;sin&#39;</span> <span class="k">else</span> <span class="mi">1</span><span class="p">))</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Curve.Interpolate(</span><span class="si">{:f}</span><span class="s1">,0);&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">fitmode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">curve_fitmode_box</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">][</span><span class="mi">5</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">fitmode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">curve_fitmode_box</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">][</span><span class="mi">5</span><span class="p">]</span> <span class="ow">or</span> <span class="n">fitmode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">curve_fitmode_box</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">][</span><span class="mi">6</span><span class="p">]:</span>
                 <span class="n">lenTC_result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span><span class="n">TCL_result</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span><span class="n">TCL_result</span><span class="p">}</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">lenTC_result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span><span class="n">lenTC1</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span><span class="n">lenTC2</span><span class="p">}</span>
@@ -736,7 +736,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
     </div>
   </body>
 </html>

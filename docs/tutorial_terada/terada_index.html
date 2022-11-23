@@ -1,0 +1,192 @@
+
+
+<!doctype html>
+
+<html lang="jp">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>寺田駅を作る &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1. 空中写真をTsutsujiに表示する" href="preparecfg.html" />
+    <link rel="prev" title="Maptile" href="../tutorial_maptile.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="preparecfg.html" title="1. 空中写真をTsutsujiに表示する"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../tutorial_maptile.html" title="Maptile"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" accesskey="U">Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">寺田駅を作る</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1>寺田駅を作る<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h1>
+<section id="id2">
+<h2>はじめに<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>ここでは、 <a class="reference external" href="https://www.chitetsu.co.jp/?station_info=寺田駅">富山地方鉄道 寺田駅</a> を題材として、国土地理院の空中写真(航空写真)から線形データを作成する手順を説明します。</p>
+<p>この作例では、立山線上り線を自軌道として構築し、これを基準に立山線下り線、本線上り・下り線をそれぞれ構築します。マップ平面図は下図の通りです。</p>
+<p>サンプルデータは <a class="reference download internal" download="" href="../_downloads/584835c452c2ece6998a67f3fbf4b379/terada_sample.zip"><code class="xref download docutils literal notranslate"><span class="pre">terada_sample.zip</span> <span class="pre">(3</span> <span class="pre">KB)</span></code></a> よりダウンロードできます。</p>
+<a class="reference internal image-reference" href="../_images/zentai.png"><img alt="../_images/zentai.png" src="../_images/zentai.png" style="width: 337.4px; height: 384.29999999999995px;" /></a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>本文章で掲載している地図・空中写真画像は、国土地理院標準地図、国土地理院シームレス空中写真を基に加工したものです。</p>
+</div>
+</section>
+<section id="id4">
+<h2>目次<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="preparecfg.html">1. 空中写真をTsutsujiに表示する</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preparecfg.html#id1">1.1. 経緯度を調べる</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preparecfg.html#cfg">1.2. CFGファイルの作成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preparecfg.html#id4">1.3. 基準座標の修正</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tateyama_up.html">2. tateyama_up の構築</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tateyama_up.html#id1">2.1. 始点での向き調整</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tateyama_up.html#id2">2.2. プラットホーム部</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tateyama_up.html#id3">2.2.1. 緩和曲線の追加</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tateyama_up.html#id4">2.3. 本線との合流部</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tateyama_down.html">3. tateyama_down の構築</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tateyama_down.html#id1">3.1. 始点を決める</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tateyama_down.html#id2">3.2. 立山寄り分岐器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tateyama_down.html#id3">3.3. プラットホーム部</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tateyama_down.html#id4">3.4. 富山寄り分岐器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tateyama_down.html#id5">3.5. 側線の終点を設定</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="honsen_down.html">4. honsen_down の構築</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="honsen_down.html#id1">4.1. 始点を決める</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honsen_down.html#id2">4.2. 富山寄り分岐器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honsen_down.html#id3">4.3. プラットホーム部</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honsen_down.html#id4">4.4. 宇奈月寄り分岐器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="honsen_up.html">5. honsen_up の構築</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="honsen_up.html#id1">5.1. 始点を決める</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honsen_up.html#id2">5.2. 富山寄り分岐器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honsen_up.html#id3">5.3. プラットホーム部</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honsen_up.html#id4">5.4. 宇奈月寄り分岐器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generatetracks.html">6. 他軌道構文の出力</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generatetracks.html#supplemental-cp">6.1. supplemental_cpの設定</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">寺田駅を作る</a><ul>
+<li><a class="reference internal" href="#id2">はじめに</a></li>
+<li><a class="reference internal" href="#id4">目次</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../tutorial_maptile.html"
+                          title="previous chapter">Maptile</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="preparecfg.html"
+                          title="next chapter"><span class="section-number">1. </span>空中写真をTsutsujiに表示する</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorial_terada/terada_index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="preparecfg.html" title="1. 空中写真をTsutsujiに表示する"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../tutorial_maptile.html" title="Maptile"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" >Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">寺田駅を作る</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+  </body>
+</html>

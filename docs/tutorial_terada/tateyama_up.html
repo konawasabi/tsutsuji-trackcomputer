@@ -1,0 +1,492 @@
+
+
+<!doctype html>
+
+<html lang="jp">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>2. tateyama_up の構築 &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. tateyama_down の構築" href="tateyama_down.html" />
+    <link rel="prev" title="1. 空中写真をTsutsujiに表示する" href="preparecfg.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tateyama_down.html" title="3. tateyama_down の構築"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="preparecfg.html" title="1. 空中写真をTsutsujiに表示する"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" >Tutorial</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="terada_index.html" accesskey="U">寺田駅を作る</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">2. </span>tateyama_up の構築</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="tateyama-up">
+<h1><span class="section-number">2. </span>tateyama_up の構築<a class="headerlink" href="#tateyama-up" title="Permalink to this heading">¶</a></h1>
+<section id="id1">
+<h2><span class="section-number">2.1. </span>始点での向き調整<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>空中写真に対して明後日の方向を向いているtateyama_up軌道の向きを調整する。</p>
+<ol class="arabic simple">
+<li><p>Measureウィンドウを開く</p>
+<ul class="simple">
+<li><p>以下の操作は全てカーソルAに対して行う</p></li>
+</ul>
+</li>
+<li><p>trackメニューからtateyama_upを選択する</p>
+<ul class="simple">
+<li><p>これで、カーソルAの位置と方向はtateyama_up軌道上に限定される</p></li>
+</ul>
+</li>
+<li><p>Pos.をクリックして、カーソルをtateyama_up軌道左端(距離程: 0m)にセットする</p></li>
+<li><p>trackメニューから &#64;absolute を選択する</p>
+<ul class="simple">
+<li><p>これで、カーソルAは任意の位置と方向に設定できる</p></li>
+</ul>
+</li>
+<li><p>Dir.をクリックして、カーソルを空中写真の線路の方向にセットする</p></li>
+<li><p>dirフィールドにカーソルAの向きが表示される</p>
+<ul class="simple">
+<li><p>ここでは-86.1度</p></li>
+</ul>
+</li>
+<li><p>下記のようにmain.cfgを修正し、再読み込みする</p></li>
+<li><p>tateyama_upの方向が空中写真と一致する</p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/setangle.png"><img alt="../_images/setangle.png" src="../_images/setangle.png" style="width: 611.5px; height: 340.0px;" /></a>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+[tateyama_up]
+...
+angle = -86.1
+...
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h2><span class="section-number">2.2. </span>プラットホーム部<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>Measureウィンドウの <a class="reference internal" href="../reference_measure.html#ref-measure-ctsolver"><span class="std std-ref">CurveTrack Solver機能</span></a> を使ってプラットホームにかかる曲線軌道を求める。</p>
+<ol class="arabic">
+<li><p>カーソルAのtrackをtateyama_upに設定する</p></li>
+<li><p>カーソルAの位置・方向をプラットホームにかかる曲線軌道の始端にセットする</p></li>
+<li><p>カーソルBのtrackを &#64;absoluteに設定する</p></li>
+<li><p>カーソルBの位置・方向を曲線軌道の終端にセットする</p></li>
+<li><p>CurveTrack Solverを以下の設定にしてDo Itする</p>
+<ul class="simple">
+<li><p>α: A, β: B</p></li>
+<li><p>mapsyntax にチェック</p></li>
+<li><p>Mode: 1. α(fix)-&gt;β(free), R(free)</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>カーソルAを起点、カーソルBの延長線上を終点とする円軌道を求める</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>下図のようにカーソルA, Bを結ぶ曲線軌道(青)が得られる</p>
+<ul>
+<li><a class="reference internal image-reference" href="../_images/curve_mode1.png"><img alt="../_images/curve_mode1.png" src="../_images/curve_mode1.png" style="width: 418.0px; height: 318.5px;" /></a>
+</li>
+</ul>
+</li>
+</ol>
+<section id="id3">
+<h3><span class="section-number">2.2.1. </span>緩和曲線の追加<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<p>求められた曲線軌道は空中写真上の線路よりもやや左側を通過しているように見える。
+ここでは、緩和曲線を挿入して微調整を試みる。</p>
+<ol class="arabic" start="7">
+<li><p>カーソルCをプラットホーム中心あたりの軌道中心にセットする</p>
+<ul class="simple">
+<li><p>方向は指定しなくてもよい</p></li>
+</ul>
+</li>
+<li><p>CurveTrack Solverを以下の設定にしてDo Itする</p>
+<ul class="simple">
+<li><p>γ: C</p></li>
+<li><p>mapsyntax にチェック</p></li>
+<li><p>Mode: 6. α(fix)-&gt;β(free) via γ, R(free)</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>カーソルAを起点、カーソルBの延長線上を終点とする円軌道に対して、カーソルCに最も近い点を通過するように緩和曲線を追加する</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>下図のようにカーソルCを通過する曲線軌道(オレンジ)が得られる</p>
+<ul>
+<li><a class="reference internal image-reference" href="../_images/curve_mode6.png"><img alt="../_images/curve_mode6.png" src="../_images/curve_mode6.png" style="width: 414.0px; height: 310.5px;" /></a>
+</li>
+</ul>
+</li>
+<li><p>ターミナルに出力された自軌道構文をtateyama_up.txtにコピー＆ペーストする</p></li>
+</ol>
+<blockquote>
+<div><ul>
+<li><div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">tateyama_up.txt (全文)</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BveTs Map 2.02:utf-8
+
+0;
+Curve.SetGauge(1.067);
+Curve.SetFunction(0);
+
+$pt_a = 190.000000;
+$pt_a;
+$cant = 0;
+Curve.SetFunction(1);
+Curve.Interpolate(0.000000,0);
+$pt_a +10.184781;
+Curve.Interpolate(-202.926975, $cant);
+$pt_a +155.094676;
+Curve.Interpolate(-202.926975, $cant);
+$pt_a +165.279457;
+Curve.Interpolate(0.000000,0);
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="11">
+<li><p>データのリロード(F5)を行うと、下図を得る</p></li>
+</ol>
+<blockquote>
+<div><ul>
+<li><a class="reference internal image-reference" href="../_images/form_final.png"><img alt="../_images/form_final.png" src="../_images/form_final.png" style="width: 425.0px; height: 318.5px;" /></a>
+</li>
+</ul>
+</div></blockquote>
+<table class="docutils align-default" id="id7">
+<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>カーソル</p></th>
+<th class="head"><p>x</p></th>
+<th class="head"><p>y</p></th>
+<th class="head"><p>dir</p></th>
+<th class="head"><p>track</p></th>
+<th class="head"><p>kilopost</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A</p></td>
+<td><p>12.9</p></td>
+<td><p>-189.6</p></td>
+<td><p>-86.1</p></td>
+<td><p>tateyama_up</p></td>
+<td><p>190.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>B</p></td>
+<td><p>-37.7</p></td>
+<td><p>-343.6</p></td>
+<td><p>-129.9</p></td>
+<td><p>&#64;absolute</p></td>
+<td><p>/</p></td>
+</tr>
+<tr class="row-even"><td><p>C</p></td>
+<td><p>3.2</p></td>
+<td><p>-272.8</p></td>
+<td><p>/</p></td>
+<td><p>&#64;absolute</p></td>
+<td><p>/</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="id4">
+<h2><span class="section-number">2.3. </span>本線との合流部<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<p>電鉄富山寄りの本線との合流部にある片渡り線を構築する。</p>
+<p>ここで、片渡り線を構成する分岐器は開き角から、下図に示すような10番片開き分岐器と仮定する。
+他の箇所の分岐器も10番分岐器として扱うことにする。
+(参考: <a class="reference external" href="http://bve-edenrailway.seesaa.net/article/444370071.html">分岐器をつくる　第1回-片開き分岐器　導入編-, Eden's BVE works</a>)</p>
+<img alt="../_images/switch_n10.png" src="../_images/switch_n10.png" />
+<ol class="arabic">
+<li><p>カーソルAのtrackをtakayama_upに設定する</p></li>
+<li><p>カーソルAの位置・方向を片渡り線始端にセットする</p>
+<ul>
+<li><a class="reference internal image-reference" href="../_images/crossover1.png"><img alt="../_images/crossover1.png" src="../_images/crossover1.png" style="width: 421.5px; height: 313.0px;" /></a>
+</li>
+</ul>
+</li>
+<li><p>CurveTrack Solverに以下のパラメータをセットしてDo Itする</p>
+<ul class="simple">
+<li><p>CCL: 18.53</p></li>
+<li><p>R: 185.5</p></li>
+<li><p>α: A, β: B</p></li>
+<li><p>Assign results to cursor にチェック</p></li>
+<li><p>mapsyntax にチェック</p></li>
+<li><p>Mode: 4. α(fix), R(fix), CCL(fix)</p></li>
+</ul>
+</li>
+<li><p>カーソルAを始点とした半径185.5m, 全長18.53mの曲線が求められる</p>
+<ul>
+<li><p>カーソルBは曲線終点に移動する</p></li>
+<li><a class="reference internal image-reference" href="../_images/crossover2.png"><img alt="../_images/crossover2.png" src="../_images/crossover2.png" style="width: 416.0px; height: 317.5px;" /></a>
+</li>
+</ul>
+</li>
+<li><p>ターミナルに出力された自軌道構文をtateyama_up.txtにコピーアンドペーストする</p></li>
+<li><p>カーソルCのtrackを &#64;absoluteとして片渡り線の終端にセットする</p></li>
+<li><p>CurveTrack Solverに以下のパラメータをセットしてDo Itする</p>
+<ul class="simple">
+<li><p>CCL: 18.53</p></li>
+<li><p>R: -185.5</p></li>
+<li><p>α: B, β: C <strong>(要変更)</strong></p></li>
+<li><p>mapsyntax にチェック</p></li>
+<li><p>Mode: 3. α(free)-&gt;β(free), R(fix)</p></li>
+</ul>
+</li>
+<li><p>カーソルB, Cを通過する半径-185.5m, 全長18.53mの直線が求められる</p>
+<blockquote>
+<div><ul>
+<li><a class="reference internal image-reference" href="../_images/crossover3.png"><img alt="../_images/crossover3.png" src="../_images/crossover3.png" style="width: 413.0px; height: 314.0px;" /></a>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>ターミナルに出力された自軌道構文をtateyama_up.txtにコピーアンドペーストする</p>
+<ul>
+<li><p>ここでコピーする自軌道構文には、カーソルBに相当する位置の距離程情報が含まれていないので、修正が必要</p>
+<ul class="simple">
+<li><p>カーソルBを &#64;absolute 設定にしているため</p></li>
+</ul>
+</li>
+<li><div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">tateyama_up.txt (追加分のみ)</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+$pt_a = 381.000000;
+$pt_a +0.000000;
+$cant = 0;
+Curve.SetFunction(1);
+Curve.Interpolate(0.000000,0);
+$pt_a +0.000000; #片渡り線の始点側曲線
+Curve.Interpolate(185.500000, $cant);
+$pt_a +18.530000;
+Curve.Interpolate(185.500000, $cant);
+$pt_a +18.530000;
+Curve.Interpolate(0.000000,0);
+
+$pt_a = 0; #この行要修正
+$pt_a +17.473817;
+$cant = 0;
+Curve.SetFunction(1);
+Curve.Interpolate(0.000000,0);
+$pt_a +17.473817; #片渡り線の終点側曲線
+Curve.Interpolate(-185.500000, $cant);
+$pt_a +36.082812;
+Curve.Interpolate(-185.500000, $cant);
+$pt_a +36.082812;
+Curve.Interpolate(0.000000,0);
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>手順9でコピーアンドペーストした構文の距離程を修正する</p></li>
+</ol>
+<blockquote>
+<div><ul>
+<li><p>カーソルBに相当する位置の距離程を手計算する</p>
+<ul class="simple">
+<li><p>カーソルAの距離程は381.0m</p></li>
+<li><p>カーソルBは分岐器曲線の終点: 距離程は381.0+18.53m</p></li>
+<li><p>よって下記の通り修正できる</p></li>
+</ul>
+</li>
+<li><div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">tateyama_up.txt (追加分のみ)</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+<span class="hll">$pt_a = 381.000000;
+</span>$pt_a +0.000000;
+$cant = 0;
+Curve.SetFunction(1);
+Curve.Interpolate(0.000000,0);
+$pt_a +0.000000; #片渡り線の始点側曲線
+Curve.Interpolate(185.500000, $cant);
+$pt_a +18.530000;
+Curve.Interpolate(185.500000, $cant);
+<span class="hll">$pt_a +18.530000;
+</span>Curve.Interpolate(0.000000,0);
+
+<span class="hll">$pt_a = 381 + 18.53; # 修正結果
+</span>$pt_a +17.473817;
+$cant = 0;
+Curve.SetFunction(1);
+Curve.Interpolate(0.000000,0);
+$pt_a +17.473817; #片渡り線の終点側曲線
+Curve.Interpolate(-185.500000, $cant);
+$pt_a +36.082812;
+Curve.Interpolate(-185.500000, $cant);
+$pt_a +36.082812;
+</pre></div>
+</div>
+</div>
+</li>
+<li><p><a class="reference internal" href="../tutorial_ctsolver.html#tutorial-ctsolver-crossover"><span class="std std-ref">こちら</span></a> のように、合流側の軌道を予め敷いておくと、上記の手順を省略できる</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="11">
+<li><p>変更したデータをリロード(F5)して完成</p></li>
+</ol>
+<blockquote>
+<div><ul>
+<li><a class="reference internal image-reference" href="../_images/crossover4.png"><img alt="../_images/crossover4.png" src="../_images/crossover4.png" style="width: 410.5px; height: 315.0px;" /></a>
+</li>
+</ul>
+</div></blockquote>
+<table class="docutils align-default" id="id10">
+<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>カーソル</p></th>
+<th class="head"><p>x</p></th>
+<th class="head"><p>y</p></th>
+<th class="head"><p>dir</p></th>
+<th class="head"><p>track</p></th>
+<th class="head"><p>kilopost</p></th>
+<th class="head"><p>備考</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A</p></td>
+<td><p>-53.3</p></td>
+<td><p>-362.2</p></td>
+<td><p>-129.9</p></td>
+<td><p>tateyama_up</p></td>
+<td><p>381.0</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>B</p></td>
+<td><p>-64.4</p></td>
+<td><p>-377.0</p></td>
+<td><p>-124.2</p></td>
+<td><p>&#64;absolute</p></td>
+<td><p>/</p></td>
+<td><p>Solverによる自動設定(Measureウィンドウには非表示)</p></td>
+</tr>
+<tr class="row-even"><td><p>C</p></td>
+<td><p>-88.2</p></td>
+<td><p>-409.7</p></td>
+<td><p>-129.9</p></td>
+<td><p>&#64;absolute</p></td>
+<td><p>/</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">2. tateyama_up の構築</a><ul>
+<li><a class="reference internal" href="#id1">2.1. 始点での向き調整</a></li>
+<li><a class="reference internal" href="#id2">2.2. プラットホーム部</a><ul>
+<li><a class="reference internal" href="#id3">2.2.1. 緩和曲線の追加</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">2.3. 本線との合流部</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="preparecfg.html"
+                          title="previous chapter"><span class="section-number">1. </span>空中写真をTsutsujiに表示する</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tateyama_down.html"
+                          title="next chapter"><span class="section-number">3. </span>tateyama_down の構築</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorial_terada/tateyama_up.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tateyama_down.html" title="3. tateyama_down の構築"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="preparecfg.html" title="1. 空中写真をTsutsujiに表示する"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" >Tutorial</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="terada_index.html" >寺田駅を作る</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">2. </span>tateyama_up の構築</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,403 @@
+
+
+<!doctype html>
+
+<html lang="jp">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>5. honsen_up の構築 &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6. 他軌道構文の出力" href="generatetracks.html" />
+    <link rel="prev" title="4. honsen_down の構築" href="honsen_down.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generatetracks.html" title="6. 他軌道構文の出力"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="honsen_down.html" title="4. honsen_down の構築"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" >Tutorial</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="terada_index.html" accesskey="U">寺田駅を作る</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">5. </span>honsen_up の構築</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="honsen-up">
+<h1><span class="section-number">5. </span>honsen_up の構築<a class="headerlink" href="#honsen-up" title="Permalink to this heading">¶</a></h1>
+<section id="id1">
+<h2><span class="section-number">5.1. </span>始点を決める<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>honsen_down軌道の始点座標を求め、main.cfgに[honsen_up]セクションを追加する。</p>
+<ol class="arabic">
+<li><p>カーソルAのtrackをhonsen_downにセットする</p></li>
+<li><p>カーソルAを富山寄り分岐器の始端にセットし、その地点の距離程を読む</p>
+<ul class="simple">
+<li><p>ここでは60m</p></li>
+</ul>
+</li>
+<li><p>下記の内容でmain.cfgに[tateyama_down]セクションを追加する</p>
+<ul>
+<li><p>始点はhonsen_down軌道の距離程60m地点での値と同一、向きはtateyama_upと180°反対方向に設定される</p></li>
+<li><div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+[honsen_up]
+file = honsen_up.txt
+absolute_coordinate = False
+parent_track = honsen_down
+origin_kilopost = 60
+x = 0
+y = 0
+z = 0
+angle = 0
+endpoint = 1500
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>main.cfgと同じディレクトリに以下の内容でhonsen_up.txtを作成する</p>
+<ul>
+<li><div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BveTs Map 2.02:utf-8
+
+0;
+Curve.SetGauge(1.067);
+Curve.SetFunction(0);
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="id2">
+<h2><span class="section-number">5.2. </span>富山寄り分岐器<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>カーソルAのtrackをhonsen_upにセットする</p></li>
+<li><p>カーソルAの位置、方向を距離程0mにセットする</p></li>
+<li><p>CurveTrack Solverを以下の設定にしてDo Itする</p>
+<ul class="simple">
+<li><p>CCL: 18.53</p></li>
+<li><p>R: -185.5</p></li>
+<li><p>α: A, β: B <strong>(要確認)</strong></p></li>
+<li><p>Assign results to cursor にチェック</p></li>
+<li><p>mapsyntax にチェック</p></li>
+<li><p>Mode: 4. α(fix), R(fix), CCL(fix)</p></li>
+</ul>
+</li>
+<li><p>ターミナルへの出力をhonsen_up.txtにコピーする</p>
+<ul>
+<li><div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+$pt_a = 0;
+$pt_a +0.000000;
+$cant = 0;
+Curve.SetFunction(1);
+Curve.Interpolate(0.000000,0);
+$pt_a +0.000000;
+Curve.Interpolate(-185.500000, $cant);
+$pt_a +18.500000;
+Curve.Interpolate(-185.500000, $cant);
+$pt_a +18.500000;
+Curve.Interpolate(0.000000,0);
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>データをリロードする</p>
+<ul>
+<li><a class="reference internal image-reference" href="../_images/switch1.png"><img alt="../_images/switch1.png" src="../_images/switch1.png" style="width: 449.0px; height: 347.0px;" /></a>
+</li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="id3">
+<h2><span class="section-number">5.3. </span>プラットホーム部<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<p>honsen_downの場合と同様に、この曲線も現在のtsutsujiの機能では簡単に求めることができない。
+ここでは以下のようにして切り抜ける。</p>
+<ol class="arabic">
+<li><p>カーソルAのtrackをhonsen_upにセットする</p></li>
+<li><p>カーソルAの位置・方向を富山寄り分岐器の終端にセットする</p>
+<ul class="simple">
+<li><p>距離程18.5mに相当する</p></li>
+</ul>
+</li>
+<li><p>カーソルBのtrackを &#64;absoluteにセットする</p></li>
+<li><p>カーソルBの位置・方向をプラットホームにかかる曲線の終点にセットする</p></li>
+<li><p>カーソルCのtrackを &#64;absoluteにセットする</p></li>
+<li><p>カーソルCの位置・方向をプラットホーム中央の軌道中心にセットする</p></li>
+<li><p>CurveTrack Solverを以下の設定にしてDo Itする</p>
+<ul>
+<li><p>α: A, β: B, γ: C</p></li>
+<li><p>mapsyntax にチェック</p></li>
+<li><p>Mode: 6. α(fix)-&gt;β(free) via γ, R(free)</p></li>
+<li><a class="reference internal image-reference" href="../_images/form21.png"><img alt="../_images/form21.png" src="../_images/form21.png" style="width: 447.5px; height: 349.0px;" /></a>
+</li>
+</ul>
+</li>
+<li><p>ターミナルへの出力をhonsen_up.txtにコピーする</p>
+<ul>
+<li><div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+$pt_a = 18.500000;
+$pt_a;
+$cant = 0;
+Curve.SetFunction(1);
+Curve.Interpolate(0.000000,0);
+$pt_a +18.945398;
+Curve.Interpolate(-219.113383, $cant);
+$pt_a +162.131808;
+Curve.Interpolate(-219.113383, $cant);
+$pt_a +181.077207;
+Curve.Interpolate(0.000000,0);
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>データをリロードする</p>
+<ul>
+<li><a class="reference internal image-reference" href="../_images/form3.png"><img alt="../_images/form3.png" src="../_images/form3.png" style="width: 445.5px; height: 345.0px;" /></a>
+</li>
+</ul>
+</li>
+</ol>
+<table class="docutils align-default" id="id9">
+<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>カーソル</p></th>
+<th class="head"><p>x</p></th>
+<th class="head"><p>y</p></th>
+<th class="head"><p>dir</p></th>
+<th class="head"><p>track</p></th>
+<th class="head"><p>kilopost</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A</p></td>
+<td><p>-35.9</p></td>
+<td><p>-348.6</p></td>
+<td><p>-315.6</p></td>
+<td><p>honsen_up</p></td>
+<td><p>18.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>B</p></td>
+<td><p>126.5</p></td>
+<td><p>-279.2</p></td>
+<td><p>-358.0</p></td>
+<td><p>&#64;absolute</p></td>
+<td><p>/</p></td>
+</tr>
+<tr class="row-even"><td><p>C</p></td>
+<td><p>98.7</p></td>
+<td><p>-281.9</p></td>
+<td><p>/</p></td>
+<td><p>&#64;absolute</p></td>
+<td><p>/</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id4">
+<h2><span class="section-number">5.4. </span>宇奈月寄り分岐器<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<p>honsen_downの場合と同様に、空中写真に対して現物合わせで寸法を求める。</p>
+<ol class="arabic">
+<li><p>カーソルAのtrackをhonsen_upにセットする</p></li>
+<li><p>カーソルAの位置、方向を分岐器手前の直線軌道上の適当な点にセットする</p>
+<ul class="simple">
+<li><p>ここでは距離程226.0mに設定</p></li>
+</ul>
+</li>
+<li><p>カーソルBのtrackをhonsen_downにセットする</p></li>
+<li><p>カーソルBの位置、方向を分岐器終端にセットする</p>
+<ul class="simple">
+<li><p>距離程308.0m</p></li>
+</ul>
+</li>
+<li><p>CurveTrack Solverを以下の設定にしてDo Itする</p>
+<ul>
+<li><p>α: A, β: B</p></li>
+<li><p>mapsyntax にチェック</p></li>
+<li><p>Mode: 2. α(free)-&gt;β(fix), R(free)</p></li>
+<li><a class="reference internal image-reference" href="../_images/switch2_1.png"><img alt="../_images/switch2_1.png" src="../_images/switch2_1.png" style="width: 449.0px; height: 345.0px;" /></a>
+</li>
+</ul>
+</li>
+<li><p>ターミナルへの出力をhonsen_up.txtにコピーする</p>
+<ul>
+<li><div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id10" title="Permalink to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+$pt_a = 226.000000;
+$pt_a +9.311951;
+$cant = 0;
+Curve.SetFunction(1);
+Curve.Interpolate(0.000000,0);
+$pt_a +9.311951;
+Curve.Interpolate(-396.093623, $cant);
+$pt_a +19.033903;
+Curve.Interpolate(-396.093623, $cant);
+$pt_a +19.033903;
+Curve.Interpolate(0.000000,0);
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>データをリロードして完成</p>
+<ul>
+<li><a class="reference internal image-reference" href="../_images/switch2_2.png"><img alt="../_images/switch2_2.png" src="../_images/switch2_2.png" style="width: 448.0px; height: 344.0px;" /></a>
+</li>
+</ul>
+</li>
+</ol>
+<table class="docutils align-default" id="id11">
+<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>カーソル</p></th>
+<th class="head"><p>x</p></th>
+<th class="head"><p>y</p></th>
+<th class="head"><p>dir</p></th>
+<th class="head"><p>track</p></th>
+<th class="head"><p>kilopost</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A</p></td>
+<td><p>152.5</p></td>
+<td><p>-278.3</p></td>
+<td><p>-358.0</p></td>
+<td><p>honsen_up</p></td>
+<td><p>226.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>B</p></td>
+<td><p>171.5</p></td>
+<td><p>-277.8</p></td>
+<td><p>-359.4</p></td>
+<td><p>honsen_down</p></td>
+<td><p>308.0</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">5. honsen_up の構築</a><ul>
+<li><a class="reference internal" href="#id1">5.1. 始点を決める</a></li>
+<li><a class="reference internal" href="#id2">5.2. 富山寄り分岐器</a></li>
+<li><a class="reference internal" href="#id3">5.3. プラットホーム部</a></li>
+<li><a class="reference internal" href="#id4">5.4. 宇奈月寄り分岐器</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="honsen_down.html"
+                          title="previous chapter"><span class="section-number">4. </span>honsen_down の構築</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="generatetracks.html"
+                          title="next chapter"><span class="section-number">6. </span>他軌道構文の出力</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorial_terada/honsen_up.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generatetracks.html" title="6. 他軌道構文の出力"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="honsen_down.html" title="4. honsen_down の構築"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tutorial.html" >Tutorial</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="terada_index.html" >寺田駅を作る</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">5. </span>honsen_up の構築</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+  </body>
+</html>
