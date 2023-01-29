@@ -7,6 +7,14 @@
 - プロット画面
   - 任意角度への回転
   
+## [1.5.3] - 2023-01-29
+
+- generate実行時の"too many indices ..."エラーに対する処理を追加
+   - メッセージ `{trackkey}: IndexError. Generate has been ignored.` を出力して、その軌道に対するファイル出力をスキップ
+   - 当該エラーは、owntrack基準の座標系で表せられない位置にある軌道を計算した時に発生
+      - owntrack終点より先に始点がある軌道
+	  - Track構文で表すことができない
+  
 ## [1.5.2] - 2022-11-14
 
 - Curvetrack Solver Mode 7にて自軌道構文が正しく出力されない問題を修正
@@ -35,6 +43,7 @@
   - 軌道に拘束されているカーソルに対してRel.にチェックしてVal.実行した場合に、ReplotするとVal.実行結果がキャンセルされる挙動を修正
 
 ## [1.4.0] - 2022-08-27
+
 
 - 地理院地図との連携(Maptile)
   - 現在のプロット画面を含むマップタイルを取得し表示する
@@ -130,6 +139,7 @@
 
 - 1st release
 
+[1.5.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.2...ver1.5.3
 [1.5.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.1...ver1.5.2
 [1.5.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.0...ver1.5.1
 [1.5.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.4.1...ver1.5.0

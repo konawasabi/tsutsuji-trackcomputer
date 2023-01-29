@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2022 konawasabi
+#    Copyright 2021-2023 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ class TrackControl():
         self.path = None
         self.generated_othertrack = None
         self.pointsequence_track = kml2track.Kml2track()
+        self.exclude_tracks = []
     def loadcfg(self,path):
         '''cfgファイルの読み込み
         '''
@@ -413,6 +414,7 @@ class TrackControl():
     def generate_mapdata(self):
         ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
         '''
+        self.exclude_tracks = []
         if False:
             import pdb
             pdb.set_trace()
@@ -423,15 +425,22 @@ class TrackControl():
 
         # owntrack以外の各軌道について処理する
         for tr in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != self.conf.owntrack]:
-            _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
-            relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
-            cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3]) and i>min(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点のうち注目軌道が含まれる点と、自軌道基準に変換した注目軌道距離程の和をとる
+            try:
+                _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
+                relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
+                cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3]) and i>min(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点のうち注目軌道が含まれる点と、自軌道基準に変換した注目軌道距離程の和をとる
             #cp_tr_ownt = sorted(list(relativecp[:,3])) # 
             
-            self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
+                self.relativeradius_cp(to_calc=tr,cp_dist=cp_tr_ownt) # 制御点毎の相対半径を算出
+            except IndexError:
+                # too many indices for array: array is 1-dimensional, but 2 were indexed に対する処理
+                # = 自軌道基準の座標系で表せない軌道
+                print('{:s}: IndexError. Generate has been ignored.'.format(tr))
+                self.exclude_tracks.append(tr)
+    
 
         # 他軌道構文生成
-        for tr in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != self.conf.owntrack]:
+        for tr in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if (i != self.conf.owntrack and i not in self.exclude_tracks)]:
             output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
             if self.conf.general['offset_variable'] is not None:
                 kp_val = '$'+self.conf.general['offset_variable']+' + '
@@ -572,7 +581,7 @@ class TrackControl():
         path = self.conf.track_data[self.conf.general['owntrack']]['file']
         output_file += 'include \'{:s}\';\n'.format(str(path))
 
-        for tr_l in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i!= self.conf.general['owntrack']]:
+        for tr_l in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if (i!= self.conf.general['owntrack'] and i not in self.exclude_tracks)]:
             path = self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr_l)))
             output_file += 'include \'{:s}\';\n'.format(str(path))
 
