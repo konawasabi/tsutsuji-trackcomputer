@@ -1,5 +1,5 @@
 #
-#    Copyright 2022 konawasabi
+#    Copyright 2022-2023 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class trackplot():
 
         phi_tc2 = tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
         
-        self.result = tc1_tmp[0]
+        self.result = np.vstack((np.array([0,0]),tc1_tmp[0]))
         self.result = np.vstack((self.result,self.result[-1] + cc_tmp[0]))
         self.result = np.vstack((self.result,self.result[-1] + np.dot(self.curvegen.rotate(phi_tc2), tc2_tmp[0].T).T))
         
