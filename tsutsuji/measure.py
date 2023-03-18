@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2022 konawasabi
+#    Copyright 2021-2023 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -330,6 +330,9 @@ class interface():
     def ctfit(self):
         '''カーソルA, B間を結ぶ最適な曲線軌道を求める
         '''
+        if True:
+            import pdb
+            pdb.set_trace()
         cursor_obj =  {'A':self.cursor_A, 'B':self.cursor_B, 'C':self.cursor_C, 'D':self.cursor_D}
         cursor_f_name = self.curvetrack_cursor['v']['α'].get()
         cursor_t_name = self.curvetrack_cursor['v']['β'].get()
@@ -364,7 +367,7 @@ class interface():
             result = sv.curvetrack_fit(B,phiB_inv,A,phiA_inv,lenTC2,lenTC1,tranfunc)
             trackp.generate(B,phiB_inv,phiA_inv,result[0],lenTC2,lenTC1,tranfunc)
             R_result = -result[0]
-            CCL_result = -trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
+            CCL_result = trackp.ccl(B,phiB_inv,phiA_inv,result[0],lenTC1,lenTC2,tranfunc)[0]
             shift_result = np.linalg.norm(result[1][0] - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),result[1][0] - A))
         elif fitmode == self.curve_fitmode_box['values'][2]: #'3. α(free)->β(free), R(fix)'
             if False:
