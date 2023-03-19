@@ -7,6 +7,15 @@
 - プロット画面
   - 任意角度への回転
   
+## [1.5.4] - 2023-03-19
+
+- Curvetrack Solver
+  - 計算結果をプロットする際に、軌道始点or終点が表示されない問題を修正
+  - 特定の条件下で自軌道構文が正しく出力されない問題を修正
+	- 発生条件
+		- α(fix)となるModeで R<0 かつ TCLα, β>0 の場合
+		- β(fix)となるModeで R>0 かつ TCLα, β>0 の場合
+  
 ## [1.5.3] - 2023-01-29
 
 - generate実行時の"too many indices ..."エラーに対する処理を追加
@@ -139,6 +148,7 @@
 
 - 1st release
 
+[1.5.4]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.3...ver1.5.4
 [1.5.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.2...ver1.5.3
 [1.5.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.1...ver1.5.2
 [1.5.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.0...ver1.5.1
