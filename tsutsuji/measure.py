@@ -264,7 +264,8 @@ class interface():
                                                 '4. α(fix), R(fix), CCL(fix)',\
                                                 '5. β(fix), R(fix), CCL(fix)',\
                                                 '6. α(fix)->β(free) via γ, R(free)',\
-                                                '7. α(free)->β(fix) via γ, R(free)')
+                                                '7. α(free)->β(fix) via γ, R(free)',\
+                                                '8. Reverse Curve α(fix)->β(free)')
             self.curve_fitmode_box.state(["readonly"])
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
@@ -407,9 +408,7 @@ class interface():
             #print(R_result, CCL_result, TCL_result)
             #print('transCL: {:f}, mindist: {:f}, CCL: {:f}, Rtmp: {:f}, num: {:f}'.format(result[0],result[1][0],result[1][1],result[1][2],result[2]))
         elif fitmode == self.curve_fitmode_box['values'][6]: #'7. α(free)->β(fix) via γ, R(free)'
-            if False:
-                import pdb
-                pdb.set_trace()
+           
             phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
             phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
             C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
@@ -420,6 +419,15 @@ class interface():
             TCL_result = result[0]
             endpoint = trackp.result[-1]
             shift_result = np.linalg.norm(endpoint - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),endpoint - A))
+        elif fitmode == self.curve_fitmode_box['values'][7]: #'8. Reverse Curve α(fix)->β(free)'
+            if False:
+                import pdb
+                pdb.set_trace()
+            C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
+            result = sv.reverse_curve(A,phiA,B,phiB,lenTC1,lenTC2,0,0,tranfunc,C=C)
+            #print(result)
+            trackp.generate(A,phiA,result[4],result[0][0],lenTC1,lenTC2,tranfunc)
+            trackp.generate_add(result[3],result[4],phiB,result[1][0],0,0,tranfunc)
         else:
             raise Exception('invalid fitmode')
 
@@ -527,7 +535,7 @@ class interface():
                 tmp_cursor.marker.set_direct()
                 tmp_cursor.arrow.set_direct()
         # 自軌道構文の印字
-        if self.calc_mapsyntax_v.get():
+        if self.calc_mapsyntax_v.get() and fitmode != self.curve_fitmode_box['values'][7]:
             print()
             
             print('$pt_a = {:f};'.format(cursor_f.values[4].get() if cursor_f.values[3].get() != '@absolute' else 0))

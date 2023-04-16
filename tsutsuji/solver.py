@@ -191,3 +191,18 @@ class solver():
                num +=1
             
         return (transCL,f1,num)
+    def reverse_curve(self,A,phiA,B,phiB,lenTC11,lenTC12,lenTC21,lenTC22,tranfunc,len_interm=0,C=None,R1tmp=None,R2tmp=None,lenCC1=None,lenCC2=None):
+        if C is None:
+            C = (A + B)/2
+        #phiC = math.angle_twov(A,C) + phiA
+        phiC = 2*np.arccos(np.dot(np.array([np.cos(phiA),np.sin(phiA)]), (C-A)/np.linalg.norm(C-A))) + phiA
+        #R1tmp = np.linalg.norm(C-A)/(2*np.sin())
+        
+        result_1st = self.curvetrack_fit(A, phiA, C, phiC, lenTC11, lenTC12, tranfunc)
+        Cdash = result_1st[1][0]
+
+        result_2nd = self.curvetrack_fit(Cdash, phiC, B, phiB, lenTC21, lenTC22, tranfunc)
+        return (result_1st,result_2nd,C,Cdash,phiC)
+        
+        
+        

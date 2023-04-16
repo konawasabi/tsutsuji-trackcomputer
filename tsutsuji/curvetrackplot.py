@@ -62,6 +62,43 @@ class trackplot():
         
         self.result = np.dot(self.curvegen.rotate(phiA), self.result.T).T
         self.result += A
+    def generate_add(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
+        delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
+        
+        if(lenTC1>0):
+            tc1_tmp = self.curvegen.transition_curve(lenTC1,\
+                                          0,\
+                                          Radius,\
+                                          0,\
+                                          tranfunc,n=10) # 入口側の緩和曲線
+        else:
+            tc1_tmp=(np.array([[0,0]]),0,0)
+            
+        if(lenTC2>0):
+            tc2_tmp = self.curvegen.transition_curve(lenTC2,\
+                                          Radius,\
+                                          0,\
+                                          0,\
+                                          tranfunc,n=10) # 出口側の緩和曲線
+        else:
+            tc2_tmp=(np.array([[0,0]]),0,0)
+
+        phi_circular = delta_phi - tc1_tmp[1] - tc2_tmp[1] # 円軌道での方位角変化
+        
+        cc_tmp = self.curvegen.circular_curve(Radius*phi_circular,\
+                                   Radius,\
+                                   tc1_tmp[1]) # 円軌道
+
+        phi_tc2 = tc1_tmp[1] + cc_tmp[1] # 出口側緩和曲線始端の方位角
+        
+        result_tmp = np.vstack((np.array([0,0]),tc1_tmp[0]))
+        result_tmp = np.vstack((result_tmp,result_tmp[-1] + cc_tmp[0]))
+        result_tmp = np.vstack((result_tmp,result_tmp[-1] + np.dot(self.curvegen.rotate(phi_tc2), tc2_tmp[0].T).T))
+        
+        result_tmp = np.dot(self.curvegen.rotate(phiA), result_tmp.T).T
+        result_tmp += A
+
+        self.result = np.vstack((self.result,result_tmp))
     def ccl(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
         ''' 円軌道の長さ(CCL), 円軌道での方位角変化を求める
         '''
