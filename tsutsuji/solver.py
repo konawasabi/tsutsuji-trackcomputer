@@ -200,6 +200,8 @@ class solver():
         
         result_1st = self.curvetrack_fit(A, phiA, C, phiC, lenTC11, lenTC12, tranfunc)
         Cdash = result_1st[1][0]
+        if len_interm > 0:
+            Cdash += np.array([np.cos(phiC),np.sin(phiC)])*len_interm
 
         result_2nd = self.curvetrack_fit(Cdash, phiC, B, phiB, lenTC21, lenTC22, tranfunc)
         return (result_1st,result_2nd,C,Cdash,phiC)

@@ -236,14 +236,18 @@ class interface():
             self.curvetrack_e = {}
             self.curvetrack_v = {}
             pos = 0
-            for i in ['TCL α','TCL β','CCL', 'R']:
+            row = 0
+            for i in ['TCL α','TCL β','CCL', 'R', 'TCL γ', 'TCL δ', 'L int.', 'R2']:
                 self.curvetrack_l[i] = ttk.Label(self.curvetrack_value_f, text=i)
-                self.curvetrack_l[i].grid(column=pos, row=0, sticky=(tk.E,tk.W))
+                self.curvetrack_l[i].grid(column=pos, row=row*2, sticky=(tk.E,tk.W))
 
                 self.curvetrack_v[i] = tk.DoubleVar(value=0)
                 self.curvetrack_e[i] = ttk.Entry(self.curvetrack_value_f, textvariable=self.curvetrack_v[i],width=8)
-                self.curvetrack_e[i].grid(column=pos, row=1, sticky=(tk.E,tk.W))
+                self.curvetrack_e[i].grid(column=pos, row=row*2+1, sticky=(tk.E,tk.W))
                 pos+=1
+                if pos%4 == 0:
+                    pos = 0
+                    row += 1
             self.curve_transfunc_v = tk.StringVar(value='line')
             
             self.curve_transfunc_f = ttk.Frame(self.curvetrack_f, padding='3 3 3 3')
@@ -342,12 +346,17 @@ class interface():
         sv = solver.solver()
         A = np.array([cursor_f.values[0].get(),cursor_f.values[1].get()])
         B = np.array([cursor_t.values[0].get(),cursor_t.values[1].get()])
+        C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
         phiA = np.deg2rad(cursor_f.values[2].get())
         phiB = np.deg2rad(cursor_t.values[2].get())
         lenTC1 = self.curvetrack_v['TCL α'].get()
         lenTC2 = self.curvetrack_v['TCL β'].get()
+        lenTC3 = self.curvetrack_v['TCL γ'].get()
+        lenTC4 = self.curvetrack_v['TCL δ'].get()
         lenCC = self.curvetrack_v['CCL'].get()
+        lenLint = self.curvetrack_v['L int.'].get()
         R_input = self.curvetrack_v['R'].get()
+        R2_input = self.curvetrack_v['R2'].get()
         tranfunc = self.curve_transfunc_v.get()
 
         fitmode = self.curve_fitmode_v.get()
@@ -397,7 +406,6 @@ class interface():
             if False:
                 import pdb
                 pdb.set_trace()
-            C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
             result = sv.shift_by_TCL(A,phiA,B,phiB,C,tranfunc)
             trackp.generate(A,phiA,phiB,result[1][2],result[0],result[0],tranfunc)
             R_result = result[1][2]
@@ -411,7 +419,6 @@ class interface():
            
             phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
             phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
-            C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
             result = sv.shift_by_TCL(B,phiB_inv,A,phiA_inv,C,tranfunc)
             trackp.generate(B,phiB_inv,phiA_inv,result[1][2],result[0],result[0],tranfunc)
             R_result = -result[1][2]
@@ -423,11 +430,10 @@ class interface():
             if False:
                 import pdb
                 pdb.set_trace()
-            C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
-            result = sv.reverse_curve(A,phiA,B,phiB,lenTC1,lenTC2,0,0,tranfunc,C=C)
+            result = sv.reverse_curve(A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,tranfunc,C=C,len_interm=lenLint)
             #print(result)
             trackp.generate(A,phiA,result[4],result[0][0],lenTC1,lenTC2,tranfunc)
-            trackp.generate_add(result[3],result[4],phiB,result[1][0],0,0,tranfunc)
+            trackp.generate_add(result[3],result[4],phiB,result[1][0],lenTC3,lenTC4,tranfunc)
         else:
             raise Exception('invalid fitmode')
 
@@ -517,6 +523,8 @@ class interface():
             else:
                 print('   startpt:          ({:f}, {:f})'.format(endpoint[0],endpoint[1]))
                 print('   shift from pt. α: {:f}'.format(shift_result))
+        elif fitmode == self.curve_fitmode_box['values'][7]:
+            print('R1: {:f}, R2: {:f}, C\': ({:f}, {:f})'.format(result[0][0],result[1][0],result[2][0],result[2][1])) 
 
         # 演算結果をカーソルに設定 (mode4, 5のみ)
         if self.curvetrack_cursor_assignresult_v.get():
