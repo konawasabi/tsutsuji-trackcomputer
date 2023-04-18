@@ -344,6 +344,10 @@ class interface():
         cursor_via = cursor_obj[cursor_via_name]
         
         sv = solver.solver()
+        svIF = solver.IF()
+        ax = self.mainwindow.ax_plane
+        trackp = curvetrackplot.trackplot()
+        
         A = np.array([cursor_f.values[0].get(),cursor_f.values[1].get()])
         B = np.array([cursor_t.values[0].get(),cursor_t.values[1].get()])
         C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
@@ -361,7 +365,6 @@ class interface():
 
         fitmode = self.curve_fitmode_v.get()
 
-        trackp = curvetrackplot.trackplot()
         if fitmode == self.curve_fitmode_box['values'][0]: #'1. α(fix)->β(free), R(free)'
             result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
             trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
@@ -427,13 +430,12 @@ class interface():
             endpoint = trackp.result[-1]
             shift_result = np.linalg.norm(endpoint - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),endpoint - A))
         elif fitmode == self.curve_fitmode_box['values'][7]: #'8. Reverse Curve α(fix)->β(free)'
-            if False:
-                import pdb
-                pdb.set_trace()
-            result = sv.reverse_curve(A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,tranfunc,C=C,len_interm=lenLint)
-            #print(result)
-            trackp.generate(A,phiA,result[4],result[0][0],lenTC1,lenTC2,tranfunc)
-            trackp.generate_add(result[3],result[4],phiB,result[1][0],lenTC3,lenTC4,tranfunc)
+            result = svIF.mode8(A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode)
+            print(result['param'])
+            print(result['syntax'])
+            ax.plot(result['track'][:,0],result['track'][:,1])
+            self.mainwindow.fig_canvas.draw()
+            return
         else:
             raise Exception('invalid fitmode')
 
@@ -572,7 +574,7 @@ class interface():
                 print('$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp))
             print('Curve.Interpolate({:f},0);'.format(0))
             
-        ax = self.mainwindow.ax_plane
+
         ax.plot(trackp.result[:,0],trackp.result[:,1])
         '''
         if not __debug__:

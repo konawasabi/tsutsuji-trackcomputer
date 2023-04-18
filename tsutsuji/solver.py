@@ -191,20 +191,35 @@ class solver():
                num +=1
             
         return (transCL,f1,num)
-    def reverse_curve(self,A,phiA,B,phiB,lenTC11,lenTC12,lenTC21,lenTC22,tranfunc,len_interm=0,C=None,R1tmp=None,R2tmp=None,lenCC1=None,lenCC2=None):
+    def reverse_curve(self,A,phiA,B,phiB,lenTC11,lenTC12,lenTC21,lenTC22,tranfunc,len_interm=0,C=None,R1=None,R2=None,lenCC1=None,lenCC2=None):
+        '''
+        [A]-TC-CC-TC-[C]-S-TC-CC-TC-[B]
+        '''
         if C is None:
             C = (A + B)/2
-        #phiC = math.angle_twov(A,C) + phiA
+
         phiC = 2*np.arccos(np.dot(np.array([np.cos(phiA),np.sin(phiA)]), (C-A)/np.linalg.norm(C-A))) + phiA
-        #R1tmp = np.linalg.norm(C-A)/(2*np.sin())
         
         result_1st = self.curvetrack_fit(A, phiA, C, phiC, lenTC11, lenTC12, tranfunc)
-        Cdash = result_1st[1][0]
-        if len_interm > 0:
-            Cdash += np.array([np.cos(phiC),np.sin(phiC)])*len_interm
+        Cdash = result_1st[1][0] + np.array([np.cos(phiC),np.sin(phiC)])*len_interm
 
         result_2nd = self.curvetrack_fit(Cdash, phiC, B, phiB, lenTC21, lenTC22, tranfunc)
         return (result_1st,result_2nd,C,Cdash,phiC)
+
+class IF():
+    def __init__(self):
+        self.trackp = curvetrackplot.trackplot()
+        self.sv = solver()
+    def mode1(self,A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode):
+    def mode8(self,A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode):
+        result = self.sv.reverse_curve(A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,tranfunc,C=C,len_interm=lenLint)
+
+        self.trackp.generate(A,phiA,result[4],result[0][0],lenTC1,lenTC2,tranfunc)
+        self.trackp.generate_add(result[3],result[4],phiB,result[1][0],lenTC3,lenTC4,tranfunc)
+
+        parameter_str = 'R1: {:f}, R2: {:f}, C\': ({:f}, {:f})'.format(result[0][0],result[1][0],result[2][0],result[2][1])
+        syntax_str = ''
         
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
         
         
