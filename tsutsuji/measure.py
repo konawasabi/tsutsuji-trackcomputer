@@ -381,6 +381,7 @@ class interface():
             self.mainwindow.fig_canvas.draw()
             return
         elif fitmode == self.curve_fitmode_box['values'][1]: #'2. α(free)->β(fix), R(free)'
+            '''
             if False:
                 import pdb
                 pdb.set_trace()
@@ -391,6 +392,13 @@ class interface():
             R_result = -result[0]
             CCL_result = trackp.ccl(B,phiB_inv,phiA_inv,result[0],lenTC1,lenTC2,tranfunc)[0]
             shift_result = np.linalg.norm(result[1][0] - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),result[1][0] - A))
+            '''
+            result = svIF.mode2()
+            print(result['param'])
+            print(result['syntax'])
+            ax.plot(result['track'][:,0],result['track'][:,1])
+            self.mainwindow.fig_canvas.draw()
+            return
         elif fitmode == self.curve_fitmode_box['values'][2]: #'3. α(free)->β(free), R(fix)'
             if False:
                 import pdb

@@ -245,23 +245,23 @@ class IF():
         self.CCL_result = self.trackp.ccl(self.A,self.phiA,self.phiB,self.result[0],self.lenTC1,self.lenTC2,self.tranfunc)[0]
         self.shift_result = np.linalg.norm(self.result[1][0] - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.result[1][0] - self.B))
 
-        parameter_str += '[Curve fitting]\n'
-        parameter_str += 'Inputs:\n'
-        parameter_str += '   Fitmode:          {:s}\n'.format(self.fitmode)
-        parameter_str += '   Cursor α,β:       {:s},{:s}\n'.format(self.cursor_f_name,self.cursor_t_name)
-        parameter_str += '   Ponint α:         ({:f}, {:f})\n'.format(self.A[0],self.A[1])
-        parameter_str += '   Ponint β:         ({:f}, {:f})\n'.format(self.B[0],self.B[1])
-        parameter_str += '   Direction α:     {:f}\n'.format(self.cursor_f.values[2].get())
-        parameter_str += '   Direction β:     {:f}\n'.format(self.cursor_t.values[2].get())
-        parameter_str += '   Transition func.: {:s}\n'.format(self.tranfunc)
-        parameter_str += '   TCL α:            {:f}\n'.format(self.lenTC1)
-        parameter_str += '   TCL β:            {:f}\n'.format(self.lenTC2)            
-        parameter_str += 'Results:\n'
-        parameter_str += '   R:   {:f}\n'.format(self.R_result)
-        parameter_str += '   CCL: {:f}\n'.format(self.CCL_result)
-        parameter_str += '   endpt:            ({:f}, {:f})\n'.format(self.result[1][0][0],self.result[1][0][1])
-        parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
+        parameter_str += self.gen_paramstr_mode1_2()
+        syntax_str += self.generate_mapsyntax()
 
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def mode2(self):
+        parameter_str = ''
+        syntax_str = ''
+        
+        phiA_inv = self.phiA - np.pi if self.phiA>0 else self.phiA + np.pi
+        phiB_inv = self.phiB - np.pi if self.phiB>0 else self.phiB + np.pi
+        self.result = self.sv.curvetrack_fit(self.B,phiB_inv,self.A,phiA_inv,self.lenTC2,self.lenTC1,self.tranfunc)
+        self.trackp.generate(self.B,phiB_inv,phiA_inv,self.result[0],self.lenTC2,self.lenTC1,self.tranfunc)
+        self.R_result = -self.result[0]
+        self.CCL_result = self.trackp.ccl(self.B,phiB_inv,phiA_inv,self.result[0],self.lenTC1,self.lenTC2,self.tranfunc)[0]
+        self.shift_result = np.linalg.norm(self.result[1][0] - self.A)*np.sign(np.dot(np.array([np.cos(self.phiA),np.sin(self.phiA)]),self.result[1][0] - self.A))
+
+        parameter_str += self.gen_paramstr_mode1_2()
         syntax_str += self.generate_mapsyntax()
 
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
@@ -304,3 +304,30 @@ class IF():
         syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
         
         return syntax_str
+    def gen_paramstr_mode1_2(self):
+        parameter_str = ''
+
+        parameter_str += '[Curve fitting]\n'
+        parameter_str += 'Inputs:\n'
+        parameter_str += '   Fitmode:          {:s}\n'.format(self.fitmode)
+        parameter_str += '   Cursor α,β:       {:s},{:s}\n'.format(self.cursor_f_name,self.cursor_t_name)
+        parameter_str += '   Ponint α:         ({:f}, {:f})\n'.format(self.A[0],self.A[1])
+        parameter_str += '   Ponint β:         ({:f}, {:f})\n'.format(self.B[0],self.B[1])
+        parameter_str += '   Direction α:     {:f}\n'.format(self.cursor_f.values[2].get())
+        parameter_str += '   Direction β:     {:f}\n'.format(self.cursor_t.values[2].get())
+        parameter_str += '   Transition func.: {:s}\n'.format(self.tranfunc)
+        parameter_str += '   TCL α:            {:f}\n'.format(self.lenTC1)
+        parameter_str += '   TCL β:            {:f}\n'.format(self.lenTC2)            
+        parameter_str += 'Results:\n'
+        parameter_str += '   R:   {:f}\n'.format(self.R_result)
+        parameter_str += '   CCL: {:f}\n'.format(self.CCL_result)
+        parameter_str += '   endpt:            ({:f}, {:f})\n'.format(self.result[1][0][0],self.result[1][0][1])
+        parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
+        if self.fitmode == self.curve_fitmode_box['values'][0]:
+            parameter_str += '   endpt:            ({:f}, {:f})'.format(self.result[1][0][0],self.result[1][0][1]) + '\n'
+            parameter_str += '   shift from pt. β: {:f}'.format(self.shift_result) + '\n'
+        else:
+            parameter_str += '   startpt:          ({:f}, {:f})'.format(self.result[1][0][0],self.result[1][0][1]) + '\n'
+            parameter_str += '   shift from pt. α: {:f}'.format(self.shift_result) + '\n'
+
+        return parameter_str
