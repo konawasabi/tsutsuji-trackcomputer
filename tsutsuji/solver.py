@@ -265,7 +265,66 @@ class IF():
         syntax_str += self.generate_mapsyntax()
 
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def mode3(self):
+        parameter_str = ''
+        syntax_str = ''
+        
+        self.result = self.sv.curvetrack_relocation(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.tranfunc,self.R_input)
+        self.A_result = self.A + np.array([np.cos(self.phiA),np.sin(self.phiA)])*self.result[0]
+        self.R_result = self.R_input
+        self.trackp.generate(self.A_result,self.phiA,self.phiB,self.R_input,self.lenTC1,self.lenTC2,self.tranfunc)
+        self.CCL_result = self.trackp.ccl(self.A_result,self.phiA,self.phiB,self.R_input,self.lenTC1,self.lenTC2,self.tranfunc)[0]
+        self.shift_result = self.result[0]
+
+        parameter_str += self.gen_paramstr_mode3()
+        syntax_str += self.generate_mapsyntax()
+
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def mode4_5(self,assigncursor):
+        parameter_str = ''
+        syntax_str = ''
+
+        if self.fitmode == self.curve_fitmode_box['values'][3]:
+            self.phi_end = self.phiA + self.lenCC/self.R_input + self.trackp.phi_TC(self.lenTC1, self.R_input, self.tranfunc) + self.trackp.phi_TC(self.lenTC2, self.R_input, self.tranfunc)
+            self.trackp.generate(self.A, self.phiA, self.phi_end, self.R_input, self.lenTC1, self.lenTC2, self.tranfunc)
+        else:
+            self.phi_end = self.phiB - (self.lenCC/self.R_input + self.trackp.phi_TC(self.lenTC1, self.R_input, self.tranfunc) + self.trackp.phi_TC(self.lenTC2, self.R_input, self.tranfunc))
+            self.trackp.generate(self.B, self.phiB + np.pi if self.phiB>0 else self.phiB - np.pi, self.phi_end + self.np.pi if self.phi_end>0 else self.phi_end - np.pi, -self.R_input, self.lenTC2, self.lenTC1, self.tranfunc)
+        self.R_result = self.R_input
+        self.CCL_result = self.lenCC
+        self.shift_result = 0
+
+        parameter_str += self.gen_paramstr_mode4_5()
+        syntax_str += self.generate_mapsyntax()
+
+        if assigncursor:
+            if self.fitmode == self.curve_fitmode_box['values'][3]:
+                tmp_cursor = self.cursor_t
+                tmp_cursor.values[0].set(self.trackp.result[:,0][-1])
+                tmp_cursor.values[1].set(self.trackp.result[:,1][-1])
+                tmp_cursor.values[2].set(np.rad2deg(self.phi_end))
+                tmp_cursor.marker.set_direct()
+                tmp_cursor.arrow.set_direct()
+            elif self.fitmode == self.curve_fitmode_box['values'][4]:
+                tmp_cursor = self.cursor_f
+                tmp_cursor.values[0].set(self.trackp.result[:,0][-1])
+                tmp_cursor.values[1].set(self.trackp.result[:,1][-1])
+                tmp_cursor.values[2].set(np.rad2deg(self.phi_end))
+                tmp_cursor.marker.set_direct()
+                tmp_cursor.arrow.set_direct()
+
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def mode6(self):
+        parameter_str = ''
+        syntax_str = ''
+        pass
+    def mode7(self):
+        parameter_str = ''
+        syntax_str = ''
+        pass
     def mode8(self):
+        parameter_str = ''
+        syntax_str = ''
         self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.lenTC3,self.lenTC4,self.tranfunc,C=self.C,len_interm=self.lenLint)
 
         self.trackp.generate(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC2,self.tranfunc)
@@ -330,4 +389,48 @@ class IF():
             parameter_str += '   startpt:          ({:f}, {:f})'.format(self.result[1][0][0],self.result[1][0][1]) + '\n'
             parameter_str += '   shift from pt. α: {:f}'.format(self.shift_result) + '\n'
 
+        return parameter_str
+    def gen_paramstr_mode3(self):
+        parameter_str = ''
+
+        parameter_str += '[Curve fitting]' + '\n'
+        parameter_str += 'Inputs:' + '\n'
+        parameter_str += '   Fitmode:          {:s}'.format(self.fitmode) + '\n'
+        parameter_str += '   Cursor α,β:       {:s},{:s}'.format(self.cursor_f_name,self.cursor_t_name) + '\n'
+        parameter_str += '   Ponint α:         ({:f}, {:f})'.format(self.A[0],self.A[1]) + '\n'
+        parameter_str += '   Ponint β:         ({:f}, {:f})'.format(self.B[0],self.B[1]) + '\n'
+        parameter_str += '   Direction α:     {:f}'.format(self.cursor_f.values[2].get()) + '\n'
+        parameter_str += '   Direction β:     {:f}'.format(self.cursor_t.values[2].get()) + '\n'
+        parameter_str += '   Transition func.: {:s}'.format(self.tranfunc) + '\n'
+        parameter_str += '   TCL α:            {:f}'.format(self.lenTC1) + '\n'
+        parameter_str += '   TCL β:            {:f}'.format(self.lenTC2) + '\n'
+        parameter_str += '   R:                {:f}'.format(self.R_input) + '\n'
+        parameter_str += 'Results:' + '\n'
+        parameter_str += '   CCL:        {:f}'.format(self.CCL_result) + '\n'
+        parameter_str += '   startpoint: ({:f}, {:f})'.format(self.A_result[0],self.A_result[1]) + '\n'
+        parameter_str += '   shift:      {:f}'.format(self.shift_result) + '\n'
+        return parameter_str
+    def gen_paramstr_mode4_5(self):
+        parameter_str = ''
+        cursor_label = 'α' if self.fitmode == self.curve_fitmode_box['values'][3] else 'β'
+        
+        parameter_str += '[Curve fitting]' + '\n'
+        parameter_str += 'Inputs:' + '\n'
+        parameter_str += '   Fitmode:          {:s}'.format(self.fitmode) + '\n'
+        parameter_str += '   Cursor {:s}:         {:s}'.format(cursor_label,self.cursor_f_name) + '\n'
+        parameter_str += '   Ponint {:s}:         ({:f}, {:f})'.format(cursor_label,self.A[0],self.A[1]) + '\n'
+        parameter_str += '   Direction {:s}:      {:f}'.format(cursor_label,self.cursor_f.values[2].get()) + '\n'
+        parameter_str += '   Transition func.: {:s}'.format(self.tranfunc) + '\n'
+        parameter_str += '   TCL α:            {:f}'.format(self.lenTC1) + '\n'
+        parameter_str += '   TCL β:            {:f}'.format(self.lenTC2) + '\n'
+        parameter_str += '   CCL:              {:f}'.format(self.CCL_result) + '\n'
+        parameter_str += '   R:                {:f}'.format(self.R_input) + '\n'
+        parameter_str += 'Results:' + '\n'
+        if self.fitmode == self.curve_fitmode_box['values'][3]:
+            parameter_str += '   endpoint: ({:f}, {:f})'.format(self.trackp.result[:,0][-1],self.trackp.result[:,1][-1]) + '\n'
+            parameter_str += '   phi_end:  {:f}'.format(np.rad2deg(self.phi_end)) + '\n'
+
+        else:
+            parameter_str += '   startpoint: ({:f}, {:f})'.format(self.trackp.result[:,0][-1],self.trackp.result[:,1][-1]) + '\n'
+            parameter_str += '   phi_start:  {:f}'.format(np.rad2deg(self.phi_end)) + '\n'
         return parameter_str

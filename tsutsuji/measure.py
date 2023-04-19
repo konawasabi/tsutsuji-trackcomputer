@@ -366,40 +366,23 @@ class interface():
         svIF = solver.IF(A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode,self.curve_fitmode_box,cursor_obj,cursor_f_name,cursor_t_name,cursor_via_name)
 
         if fitmode == self.curve_fitmode_box['values'][0]: #'1. α(fix)->β(free), R(free)'
-
-            '''
-            result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
-            trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
-            R_result = result[0]
-            CCL_result = trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
-            shift_result = np.linalg.norm(result[1][0] - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),result[1][0] - B))
-            '''
             result = svIF.mode1()
+            print()
             print(result['param'])
             print(result['syntax'])
             ax.plot(result['track'][:,0],result['track'][:,1])
             self.mainwindow.fig_canvas.draw()
             return
         elif fitmode == self.curve_fitmode_box['values'][1]: #'2. α(free)->β(fix), R(free)'
-            '''
-            if False:
-                import pdb
-                pdb.set_trace()
-            phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
-            phiB_inv = phiB - np.pi if phiB>0 else phiB + np.pi
-            result = sv.curvetrack_fit(B,phiB_inv,A,phiA_inv,lenTC2,lenTC1,tranfunc)
-            trackp.generate(B,phiB_inv,phiA_inv,result[0],lenTC2,lenTC1,tranfunc)
-            R_result = -result[0]
-            CCL_result = trackp.ccl(B,phiB_inv,phiA_inv,result[0],lenTC1,lenTC2,tranfunc)[0]
-            shift_result = np.linalg.norm(result[1][0] - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),result[1][0] - A))
-            '''
             result = svIF.mode2()
+            print()
             print(result['param'])
             print(result['syntax'])
             ax.plot(result['track'][:,0],result['track'][:,1])
             self.mainwindow.fig_canvas.draw()
             return
         elif fitmode == self.curve_fitmode_box['values'][2]: #'3. α(free)->β(free), R(fix)'
+            '''
             if False:
                 import pdb
                 pdb.set_trace()
@@ -410,18 +393,30 @@ class interface():
             CCL_result = trackp.ccl(A_result,phiA,phiB,R_input,lenTC1,lenTC2,tranfunc)[0]
             shift_result = result[0]
             #print('  x = {:f}'.format(result[0]))
+            '''
+            result = svIF.mode3()
+            print()
+            print(result['param'])
+            print(result['syntax'])
+            ax.plot(result['track'][:,0],result['track'][:,1])
+            self.mainwindow.fig_canvas.draw()
+            return
         elif fitmode == self.curve_fitmode_box['values'][3]: #'4. α(fix), R(fix), CCL(fix)'
-            phi_end = phiA + lenCC/R_input + trackp.phi_TC(lenTC1, R_input, tranfunc) + trackp.phi_TC(lenTC2, R_input, tranfunc)
-            trackp.generate(A, phiA, phi_end, R_input, lenTC1, lenTC2, tranfunc)
-            R_result = R_input
-            CCL_result = lenCC
-            shift_result = 0
+            result = svIF.mode4_5(self.curvetrack_cursor_assignresult_v.get())
+            print()
+            print(result['param'])
+            print(result['syntax'])
+            ax.plot(result['track'][:,0],result['track'][:,1])
+            self.mainwindow.fig_canvas.draw()
+            return
         elif fitmode == self.curve_fitmode_box['values'][4]: #'5. β(fix), R(fix), CCL(fix)'
-            phi_end = phiB - (lenCC/R_input + trackp.phi_TC(lenTC1, R_input, tranfunc) + trackp.phi_TC(lenTC2, R_input, tranfunc))
-            trackp.generate(B, phiB + np.pi if phiB>0 else phiB - np.pi, phi_end + np.pi if phi_end>0 else phi_end - np.pi, -R_input, lenTC2, lenTC1, tranfunc)
-            R_result = R_input
-            CCL_result = lenCC
-            shift_result = 0
+            result = svIF.mode4_5(self.curvetrack_cursor_assignresult_v.get())
+            print()
+            print(result['param'])
+            print(result['syntax'])
+            ax.plot(result['track'][:,0],result['track'][:,1])
+            self.mainwindow.fig_canvas.draw()
+            return
         elif fitmode == self.curve_fitmode_box['values'][5]: #'6. α(fix)->β(free) via γ, R(free)'
             if False:
                 import pdb
