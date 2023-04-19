@@ -207,19 +207,100 @@ class solver():
         return (result_1st,result_2nd,C,Cdash,phiC)
 
 class IF():
-    def __init__(self):
+    def __init__(self,A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode,curve_fitmode_box,cursor_obj,cursor_f_name,cursor_t_name,cursor_via_name):
         self.trackp = curvetrackplot.trackplot()
         self.sv = solver()
-    def mode1(self,A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode):
-    def mode8(self,A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode):
-        result = self.sv.reverse_curve(A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,tranfunc,C=C,len_interm=lenLint)
+        
+        self.A = A
+        self.B = B
+        self.C = C
+        self.phiA = phiA
+        self.phiB = phiB
+        self.lenTC1 = lenTC1
+        self.lenTC2 = lenTC2
+        self.lenTC3 = lenTC3
+        self.lenTC4 = lenTC4
+        self.lenCC = lenCC
+        self.lenLint = lenLint
+        self.R_input = R_input
+        self.R2_input = R2_input
+        self.tranfunc = tranfunc
+        self.fitmode = fitmode
+        self.curve_fitmode_box = curve_fitmode_box
+        self.cursor_obj = cursor_obj
+        self.cursor_f_name = cursor_f_name
+        self.cursor_t_name = cursor_t_name
+        self.cursor_via_name = cursor_via_name
 
-        self.trackp.generate(A,phiA,result[4],result[0][0],lenTC1,lenTC2,tranfunc)
-        self.trackp.generate_add(result[3],result[4],phiB,result[1][0],lenTC3,lenTC4,tranfunc)
+        self.cursor_f = self.cursor_obj[self.cursor_f_name]
+        self.cursor_t = self.cursor_obj[self.cursor_t_name]
+        self.cursor_via = self.cursor_obj[self.cursor_via_name]
+    def mode1(self):
+        parameter_str = ''
+        syntax_str = ''
+        
+        self.result = self.sv.curvetrack_fit(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.tranfunc)
+        self.trackp.generate(self.A,self.phiA,self.phiB,self.result[0],self.lenTC1,self.lenTC2,self.tranfunc)
+        self.R_result = self.result[0]
+        self.CCL_result = self.trackp.ccl(self.A,self.phiA,self.phiB,self.result[0],self.lenTC1,self.lenTC2,self.tranfunc)[0]
+        self.shift_result = np.linalg.norm(self.result[1][0] - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.result[1][0] - self.B))
 
-        parameter_str = 'R1: {:f}, R2: {:f}, C\': ({:f}, {:f})'.format(result[0][0],result[1][0],result[2][0],result[2][1])
+        parameter_str += '[Curve fitting]\n'
+        parameter_str += 'Inputs:\n'
+        parameter_str += '   Fitmode:          {:s}\n'.format(self.fitmode)
+        parameter_str += '   Cursor α,β:       {:s},{:s}\n'.format(self.cursor_f_name,self.cursor_t_name)
+        parameter_str += '   Ponint α:         ({:f}, {:f})\n'.format(self.A[0],self.A[1])
+        parameter_str += '   Ponint β:         ({:f}, {:f})\n'.format(self.B[0],self.B[1])
+        parameter_str += '   Direction α:     {:f}\n'.format(self.cursor_f.values[2].get())
+        parameter_str += '   Direction β:     {:f}\n'.format(self.cursor_t.values[2].get())
+        parameter_str += '   Transition func.: {:s}\n'.format(self.tranfunc)
+        parameter_str += '   TCL α:            {:f}\n'.format(self.lenTC1)
+        parameter_str += '   TCL β:            {:f}\n'.format(self.lenTC2)            
+        parameter_str += 'Results:\n'
+        parameter_str += '   R:   {:f}\n'.format(self.R_result)
+        parameter_str += '   CCL: {:f}\n'.format(self.CCL_result)
+        parameter_str += '   endpt:            ({:f}, {:f})\n'.format(self.result[1][0][0],self.result[1][0][1])
+        parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
+
+        syntax_str += self.generate_mapsyntax()
+
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def mode8(self):
+        self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.lenTC3,self.lenTC4,self.tranfunc,C=self.C,len_interm=self.lenLint)
+
+        self.trackp.generate(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC2,self.tranfunc)
+        self.trackp.generate_add(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC3,self.lenTC4,self.tranfunc)
+
+        parameter_str = 'R1: {:f}, R2: {:f}, C\': ({:f}, {:f})'.format(self.result[0][0],self.result[1][0],self.result[2][0],self.result[2][1])
         syntax_str = ''
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def generate_mapsyntax(self):
+        syntax_str = ''
+        syntax_str += '$pt_a = {:f};'.format(self.cursor_f.values[4].get() if self.cursor_f.values[3].get() != '@absolute' else 0) + '\n'
+        if self.fitmode == self.curve_fitmode_box['values'][0] or self.fitmode == self.curve_fitmode_box['values'][5]:
+            shift = 0
+            syntax_str += '$pt_a;' + '\n'
+        else:
+            shift = self.shift_result
+            syntax_str += '$pt_a {:s}{:f};'.format('+' if shift>=0 else '',shift) + '\n'
+        syntax_str += '$cant = 0;' + '\n'
+        syntax_str += 'Curve.SetFunction({:d});'.format(0 if self.tranfunc == 'sin' else 1) + '\n'
+        syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
+        if self.fitmode == self.curve_fitmode_box['values'][5] or self.fitmode == self.curve_fitmode_box['values'][6]:
+            lenTC_result = {'1':self.TCL_result, '2':self.TCL_result}
+        else:
+            lenTC_result = {'1':self.lenTC1, '2':self.lenTC2}
+        if lenTC_result['1'] != 0 or True:
+            tmp = shift + lenTC_result['1']
+            syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R_result) + '\n'
+        tmp = (shift + lenTC_result['1'] + self.CCL_result)
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R_result) + '\n'
+        if lenTC_result['2'] != 0 or True:
+            tmp = (shift + lenTC_result['1'] + self.CCL_result + lenTC_result['2'])
+            syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
         
-        
+        return syntax_str

@@ -343,11 +343,6 @@ class interface():
         cursor_t = cursor_obj[cursor_t_name]
         cursor_via = cursor_obj[cursor_via_name]
         
-        sv = solver.solver()
-        svIF = solver.IF()
-        ax = self.mainwindow.ax_plane
-        trackp = curvetrackplot.trackplot()
-        
         A = np.array([cursor_f.values[0].get(),cursor_f.values[1].get()])
         B = np.array([cursor_t.values[0].get(),cursor_t.values[1].get()])
         C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
@@ -365,12 +360,26 @@ class interface():
 
         fitmode = self.curve_fitmode_v.get()
 
+        sv = solver.solver()
+        ax = self.mainwindow.ax_plane
+        trackp = curvetrackplot.trackplot()
+        svIF = solver.IF(A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode,self.curve_fitmode_box,cursor_obj,cursor_f_name,cursor_t_name,cursor_via_name)
+
         if fitmode == self.curve_fitmode_box['values'][0]: #'1. α(fix)->β(free), R(free)'
+
+            '''
             result = sv.curvetrack_fit(A,phiA,B,phiB,lenTC1,lenTC2,tranfunc)
             trackp.generate(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)
             R_result = result[0]
             CCL_result = trackp.ccl(A,phiA,phiB,result[0],lenTC1,lenTC2,tranfunc)[0]
             shift_result = np.linalg.norm(result[1][0] - B)*np.sign(np.dot(np.array([np.cos(phiB),np.sin(phiB)]),result[1][0] - B))
+            '''
+            result = svIF.mode1()
+            print(result['param'])
+            print(result['syntax'])
+            ax.plot(result['track'][:,0],result['track'][:,1])
+            self.mainwindow.fig_canvas.draw()
+            return
         elif fitmode == self.curve_fitmode_box['values'][1]: #'2. α(free)->β(fix), R(free)'
             if False:
                 import pdb
@@ -430,7 +439,7 @@ class interface():
             endpoint = trackp.result[-1]
             shift_result = np.linalg.norm(endpoint - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),endpoint - A))
         elif fitmode == self.curve_fitmode_box['values'][7]: #'8. Reverse Curve α(fix)->β(free)'
-            result = svIF.mode8(A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode)
+            result = svIF.mode8()
             print(result['param'])
             print(result['syntax'])
             ax.plot(result['track'][:,0],result['track'][:,1])
