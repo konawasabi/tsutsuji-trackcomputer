@@ -330,8 +330,14 @@ class IF():
         self.trackp.generate(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC2,self.tranfunc)
         self.trackp.generate_add(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC3,self.lenTC4,self.tranfunc)
 
-        parameter_str = 'R1: {:f}, R2: {:f}, C\': ({:f}, {:f})'.format(self.result[0][0],self.result[1][0],self.result[2][0],self.result[2][1])
-        syntax_str = ''
+        self.CCL_result = self.trackp.ccl(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC2,self.tranfunc)[0]
+        self.CCL2_result = self.trackp.ccl(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC3,self.lenTC4,self.tranfunc)[0]
+
+        self.shift_result = np.linalg.norm(self.result[1][1][0] - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.result[1][1][0] - self.B))
+
+        #parameter_str = 'R1: {:f}, R2: {:f}, C\': ({:f}, {:f})'.format(self.result[0][0],self.result[1][0],self.result[2][0],self.result[2][1])
+        parameter_str += self.gen_paramstr_mode8()
+        syntax_str += self.generate_mapsyntax_reversecurve()
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def generate_mapsyntax(self):
@@ -360,6 +366,48 @@ class IF():
         if lenTC_result['2'] != 0 or True:
             tmp = (shift + lenTC_result['1'] + self.CCL_result + lenTC_result['2'])
             syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
+        
+        return syntax_str
+    def generate_mapsyntax_reversecurve(self):
+        syntax_str = ''
+        syntax_str += '$pt_a = {:f};'.format(self.cursor_f.values[4].get() \
+                                             if self.cursor_f.values[3].get() != '@absolute' else 0) + '\n'
+        shift = 0
+        syntax_str += '$pt_a;' + '\n'
+        syntax_str += '$cant = 0;' + '\n'
+        syntax_str += 'Curve.SetFunction({:d});'.format(0 if self.tranfunc == 'sin' else 1) + '\n'
+        syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
+        
+        tmp = shift + self.lenTC1
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[0][0]) + '\n'
+        
+        tmp = (shift + self.lenTC1 + self.CCL_result)
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[0][0]) + '\n'
+        
+        tmp = (shift + self.lenTC1 + self.CCL_result + self.lenTC2)
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
+        syntax_str += '\n'
+
+        end_R1 = shift + self.lenTC1 + self.CCL_result + self.lenTC2 + self.lenLint
+        tmp = end_R1
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += '$cant = 0;' + '\n'
+        syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
+
+        tmp = end_R1 + self.lenTC3
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[1][0]) + '\n'
+        
+        tmp = (end_R1 + self.lenTC3 + self.CCL2_result)
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[1][0]) + '\n'
+        
+        tmp = (end_R1 + self.lenTC3 + self.CCL2_result + self.lenTC4)
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
         
         return syntax_str
@@ -433,4 +481,30 @@ class IF():
         else:
             parameter_str += '   startpoint: ({:f}, {:f})'.format(self.trackp.result[:,0][-1],self.trackp.result[:,1][-1]) + '\n'
             parameter_str += '   phi_start:  {:f}'.format(np.rad2deg(self.phi_end)) + '\n'
+        return parameter_str
+    def gen_paramstr_mode8(self):
+        parameter_str = ''
+
+        parameter_str += '[Curve fitting]' + '\n'
+        parameter_str += 'Inputs:' + '\n'
+        parameter_str += '   Fitmode:          {:s}'.format(self.fitmode) + '\n'
+        parameter_str += '   Cursor α,β,γ:     {:s},{:s},{:s}'.format(self.cursor_f_name,self.cursor_t_name,self.cursor_via_name) + '\n'
+        parameter_str += '   Ponint α:         ({:f}, {:f})'.format(self.A[0],self.A[1]) + '\n'
+        parameter_str += '   Ponint β:         ({:f}, {:f})'.format(self.B[0],self.B[1]) + '\n'
+        parameter_str += '   Ponint γ:         ({:f}, {:f})'.format(self.C[0],self.C[1]) + '\n'
+        parameter_str += '   Direction α:      {:f}'.format(self.cursor_f.values[2].get()) + '\n'
+        parameter_str += '   Direction β:      {:f}'.format(self.cursor_t.values[2].get()) + '\n'
+        parameter_str += '   Transition func.: {:s}'.format(self.tranfunc) + '\n'
+        parameter_str += '   TCL1:             {:f}'.format(self.lenTC1) + '\n'
+        parameter_str += '   TCL2:             {:f}'.format(self.lenTC2) + '\n'
+        parameter_str += '   TCL3:             {:f}'.format(self.lenTC3) + '\n'
+        parameter_str += '   TCL4:             {:f}'.format(self.lenTC4) + '\n'
+        parameter_str += '   L intermediate:   {:f}'.format(self.lenLint) + '\n'
+        parameter_str += 'Results:' + '\n'
+        parameter_str += '   R1:        {:f}'.format(self.result[0][0]) + '\n'
+        parameter_str += '   CCL1:      {:f}'.format(self.CCL_result) + '\n'
+        parameter_str += '   R2:        {:f}'.format(self.result[1][0]) + '\n'
+        parameter_str += '   CCL2:      {:f}'.format(self.CCL2_result) + '\n'
+        parameter_str += '   endpt:     ({:f}, {:f})\n'.format(self.result[1][1][0][0],self.result[1][1][0][1])
+        parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
         return parameter_str
