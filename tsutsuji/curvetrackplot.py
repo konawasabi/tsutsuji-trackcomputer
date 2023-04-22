@@ -27,12 +27,12 @@ class trackplot():
     def __init__(self):
         self.curvegen = trackcoordinate.curve()
         self.result=np.array([[0,0]])
-    def generate(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
+    def generate(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc,R0=0):
         delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
         
         if(lenTC1>0):
             tc1_tmp = self.curvegen.transition_curve(lenTC1,\
-                                          0,\
+                                          R0,\
                                           Radius,\
                                           0,\
                                           tranfunc,n=10) # 入口側の緩和曲線
@@ -62,12 +62,12 @@ class trackplot():
         
         self.result = np.dot(self.curvegen.rotate(phiA), self.result.T).T
         self.result += A
-    def generate_add(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
+    def generate_add(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc,R0=0):
         delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
         
         if(lenTC1>0):
             tc1_tmp = self.curvegen.transition_curve(lenTC1,\
-                                          0,\
+                                          R0,\
                                           Radius,\
                                           0,\
                                           tranfunc,n=10) # 入口側の緩和曲線
@@ -124,10 +124,10 @@ class trackplot():
 
         phi_circul = delta_phi - tc1_tmp[1] - tc2_tmp[1] # 円軌道での方位角変化
         return (Radius*phi_circul, phi_circul)
-    def phi_TC(self,lenTC1, Radius, tranfunc):
+    def phi_TC(self,lenTC1, Radius, tranfunc, R0=0):
         if lenTC1>0:
             tc1_tmp = self.curvegen.transition_curve(lenTC1,\
-                                              0,\
+                                              R0,\
                                               Radius,\
                                               0,\
                                               tranfunc) # 入口側の緩和曲線

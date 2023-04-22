@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2022 konawasabi
+#    Copyright 2021-2023 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ class solver():
     def __init__(self):
         self.ci = tc.curve_intermediate()
         self.cgen = tc.curve()
-    def temporal_trackparam(self,Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,tranfunc):
+    def temporal_trackparam(self,Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,tranfunc,R0=0):
         delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
             
         if(lenTC1>0):
             tc1_tmp = self.ci.transition_curve(lenTC1,\
-                                          0,\
+                                          R0,\
                                           Rtmp,\
                                           phiA,\
                                           tranfunc,\
@@ -42,7 +42,7 @@ class solver():
         if(lenTC2>0):
             tc2_tmp = self.ci.transition_curve(lenTC2,\
                                           Rtmp,\
-                                          0,\
+                                          R0,\
                                           0,\
                                           tranfunc,\
                                           lenTC2) # 出口側の緩和曲線
@@ -98,7 +98,7 @@ class solver():
             x = x - f1[1]/df
             num +=1
         return (x,f1,num)
-    def curvetrack_fit (self,A,phiA,B,phiB,lenTC1,lenTC2,tranfunc,Rtmp=1000,dr=0.1,error=0.01):
+    def curvetrack_fit (self,A,phiA,B,phiB,lenTC1,lenTC2,tranfunc,Rtmp=1000,dr=0.1,error=0.01,R0=0):
         ''' AB間を結ぶ曲線軌道の半径を返す
         A:        始点座標
         phiA:     始点での軌道方位
@@ -110,10 +110,12 @@ class solver():
         Rtmp:     曲線半径初期値
         dr:       残差の微分で使う
         error:    許容誤差
+
+        R0:       始点での軌道半径（複合曲線の緩和曲線を求める際に使用, default: 0）
         '''
 
-        def func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB):
-            tc1_tmp, tc2_tmp, cc_tmp, phi_circular, phi_tc2 = self.temporal_trackparam(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,tranfunc)
+        def func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,R0):
+            tc1_tmp, tc2_tmp, cc_tmp, phi_circular, phi_tc2 = self.temporal_trackparam(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,tranfunc,R0=R0)
 
             res_tmp = A + tc1_tmp[0] + cc_tmp[0] + np.dot(self.ci.rotate(phi_tc2),tc2_tmp[0]) # 与えられたR, lenTC, delta_phiから計算した着点座標
 
@@ -129,8 +131,8 @@ class solver():
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
         while (f1[1] > error and num<1e3):
-            f1 = func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB)
-            df = (func_TC(Rtmp+dr,lenTC1,lenTC2,A,B,phiA,phiB)[1]-func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB)[1])/dr
+            f1 = func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,R0)
+            df = (func_TC(Rtmp+dr,lenTC1,lenTC2,A,B,phiA,phiB,R0)[1]-func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,R0)[1])/dr
 
             Rtmp = Rtmp - f1[1]/df
             num +=1
@@ -205,9 +207,74 @@ class solver():
 
         result_2nd = self.curvetrack_fit(Cdash, phiC, B, phiB, lenTC21, lenTC22, tranfunc)
         return (result_1st,result_2nd,C,Cdash,phiC)
+    def compound_curve(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01):
+        '''
+        [A]-TC-CC-[C]-CC-TC-CC-TC-[B]
+        '''
+        def func(R1,CCL1tmp,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,tranfunc):
+            # [A]-TC1-CC1-TC2-CC2-TC3-[B]なる複合曲線において、CC1の長さをCCL1tmpで与えた場合の着点座標を求める
+            # CC1終点座標,方位を求める
+            if(lenTC1>0):
+                tc1_tmp = self.ci.transition_curve(lenTC1,\
+                                              0,\
+                                              R1,\
+                                              phiA,\
+                                              tranfunc,\
+                                              lenTC1) # 入口側の緩和曲線
+            else:
+                tc1_tmp=(np.array([0,0]),0,0)
+            cc_tmp = self.ci.circular_curve(CCL1tmp,\
+                                            R1,\
+                                            tc1_tmp[1]+phiA,\
+                                            CCL1tmp) # 円軌道
+
+            CC1end = [A + tc1_tmp[0] + cc_tmp[0], phiA + tc1_tmp[1] + cc_tmp[1]]
+
+            # CC1endを始点、Bの延長線上を終点とする単円軌道を求める
+            TC3end = self.curvetrack_fit(CC1end[0], CC1end[1], B, phiB, lenTC2, lenTC3, tranfunc, R0=R1)
+
+            '''
+            # 点Bを通る直線の一般形 ax+by+c=0
+            a = -np.tan(phiB)
+            b = 1
+            c = - a*B[0] - B[1]
+            residual = np.abs(a*TC3end[1][0][0]+b*TC3end[1][0][1]+c)/np.sqrt(a**2+b**2) # 点TC3endと点Bを通る直線の距離
+            '''
+            # 点TC3endと点Bの距離
+            residual = np.abs(np.linalg.norm(TC3end[1][0]-B))
+            return (residual, CC1end, TC3end)
+        
+        #phiA_inv = self.phiA - np.pi if self.phiA>0 else self.phiA + np.pi
+        #phiC_inv = self.phiC - np.pi if self.phiC>0 else self.phiC + np.pi
+
+        # 点Aを始点、点Cの延長線上を通過する単円軌道の半径を求める
+        result_R1 = self.curvetrack_fit(A, phiA, C, phiC, lenTC1, 0, tranfunc)
+
+        # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線長CC1をニュートン法で求める
+        num=0 # 繰り返し回数
+        f1 = (error*100,None,None)
+        CCL1 = 100
+        while (f1[0] > error and num<1e3):
+            f1 = func(result_R1[0],CCL1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,tranfunc)
+            df = (func(result_R1[0],CCL1+dl,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,tranfunc)[0]-func(result_R1[0],CCL1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,tranfunc)[0])/dl
+
+            CCL1 = CCL1 - f1[0]/df
+            num +=1
+
+        '''returns: 
+           CCL1
+           f1
+              residual
+              CC1end
+              TC3end
+           num
+           result_r1
+        '''
+        return (CCL1,f1,num,result_R1)
+        
 
 class IF():
-    def __init__(self,A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode,curve_fitmode_box,cursor_obj,cursor_f_name,cursor_t_name,cursor_via_name):
+    def __init__(self,A,B,C,phiA,phiB,phiC,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode,curve_fitmode_box,cursor_obj,cursor_f_name,cursor_t_name,cursor_via_name):
         self.trackp = curvetrackplot.trackplot()
         self.sv = solver()
         
@@ -216,6 +283,7 @@ class IF():
         self.C = C
         self.phiA = phiA
         self.phiB = phiB
+        self.phiC = phiC
         self.lenTC1 = lenTC1
         self.lenTC2 = lenTC2
         self.lenTC3 = lenTC3
@@ -338,6 +406,22 @@ class IF():
         #parameter_str = 'R1: {:f}, R2: {:f}, C\': ({:f}, {:f})'.format(self.result[0][0],self.result[1][0],self.result[2][0],self.result[2][1])
         parameter_str += self.gen_paramstr_mode8()
         syntax_str += self.generate_mapsyntax_reversecurve()
+        
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def mode9(self):
+        parameter_str = ''
+        syntax_str = ''
+
+        if False:
+            import pdb
+            pdb.set_trace()
+
+        self.result = self.sv.compound_curve(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC2,self.lenTC4,self.tranfunc)
+
+        self.trackp.generate(self.A,self.phiA,self.result[1][1][1],self.result[3][0],self.lenTC1,0,self.tranfunc)
+        self.trackp.generate_add(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC2, self.lenTC4, self.tranfunc, R0 = self.result[3][0])
+        for elem in self.result:
+            print(elem)
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def generate_mapsyntax(self):

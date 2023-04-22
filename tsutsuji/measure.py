@@ -269,7 +269,8 @@ class interface():
                                                 '5. β(fix), R(fix), CCL(fix)',\
                                                 '6. α(fix)->β(free) via γ, R(free)',\
                                                 '7. α(free)->β(fix) via γ, R(free)',\
-                                                '8. Reverse Curve α(fix)->β(free)')
+                                                '8. Reverse Curve α(fix)->β(free)',\
+                                                '9. Compound Curve')
             self.curve_fitmode_box.state(["readonly"])
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
@@ -348,6 +349,7 @@ class interface():
         C = np.array([cursor_via.values[0].get(),cursor_via.values[1].get()])
         phiA = np.deg2rad(cursor_f.values[2].get())
         phiB = np.deg2rad(cursor_t.values[2].get())
+        phiC = np.deg2rad(cursor_via.values[2].get())
         lenTC1 = self.curvetrack_v['TCL α'].get()
         lenTC2 = self.curvetrack_v['TCL β'].get()
         lenTC3 = self.curvetrack_v['TCL γ'].get()
@@ -363,7 +365,7 @@ class interface():
         sv = solver.solver()
         ax = self.mainwindow.ax_plane
         trackp = curvetrackplot.trackplot()
-        svIF = solver.IF(A,B,C,phiA,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode,self.curve_fitmode_box,cursor_obj,cursor_f_name,cursor_t_name,cursor_via_name)
+        svIF = solver.IF(A,B,C,phiA,phiB,phiC,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode,self.curve_fitmode_box,cursor_obj,cursor_f_name,cursor_t_name,cursor_via_name)
 
         if fitmode == self.curve_fitmode_box['values'][0]: #'1. α(fix)->β(free), R(free)'
             result = svIF.mode1()
@@ -443,6 +445,13 @@ class interface():
             shift_result = np.linalg.norm(endpoint - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),endpoint - A))
         elif fitmode == self.curve_fitmode_box['values'][7]: #'8. Reverse Curve α(fix)->β(free)'
             result = svIF.mode8()
+            print(result['param'])
+            print(result['syntax'])
+            ax.plot(result['track'][:,0],result['track'][:,1])
+            self.mainwindow.fig_canvas.draw()
+            return
+        elif fitmode == self.curve_fitmode_box['values'][8]: #'9. Compound Curve'
+            result = svIF.mode9()
             print(result['param'])
             print(result['syntax'])
             ax.plot(result['track'][:,0],result['track'][:,1])
