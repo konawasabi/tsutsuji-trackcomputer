@@ -273,7 +273,75 @@ class solver():
            result_r1
         '''
         return (CCL1,f1,num,result_R1)
+    def compound_curve_givenR(self,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc,dphi=0.001,error=0.01):
+        def func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc):
+            #delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
+            
+            if(lenTC1>0):
+                tc1_tmp = self.ci.transition_curve(lenTC1,\
+                                              0,\
+                                              R1,\
+                                              phiA,\
+                                              tranfunc,\
+                                              lenTC1) # 入口側の緩和曲線
+            else:
+                tc1_tmp=(np.array([0,0]),0,0)
+
+            #phi_circular = delta_phi - tc1_tmp[1]-tc2_tmp[1] # 円軌道での方位角変化
+
+            cc1_tmp = self.ci.circular_curve(R1*phiCC1,\
+                                            R1,\
+                                            tc1_tmp[1]+phiA,\
+                                            R1*phiCC1) # 円軌道
+
+            if(lenTC2>0):
+                tc2_tmp = self.ci.transition_curve(lenTC2,\
+                                              R1,\
+                                              R2,\
+                                              cc1_tmp[1]+tc1_tmp[1]+phiA,\
+                                              tranfunc,\
+                                              lenTC2) # 出口側の緩和曲線
+            else:
+                tc2_tmp=(np.array([0,0]),0,0)
+                
+            if(lenTC3>0):
+                tc3_tmp = self.ci.transition_curve(lenTC3,\
+                                                   R2,\
+                                                   0,\
+                                                   0,\
+                                                   tranfunc,\
+                                                   lenTC3) # 出口側の緩和曲線
+            else:
+                tc3_tmp=(np.array([0,0]),0,0)
+
+            phiCC2 = math.angle_twov(phiA,phiB) - (tc1_tmp[1] + tc2_tmp[1] + tc3_tmp[1]) - phiCC1
+
+            cc2_tmp = self.ci.circular_curve(R2*phiCC2,\
+                                             R2,\
+                                             tc2_tmp[1]+cc1_tmp[1]+tc1_tmp[1]+phiA,\
+                                             R2*phiCC2) # 円軌道
+
+            res_tmp = A + tc1_tmp[0] + cc1_tmp[0] + tc2_tmp[0] + cc2_tmp[0] + np.dot(self.ci.rotate(phiCC2+tc2_tmp[1]+phiCC1+tc1_tmp[1]+phiA),tc3_tmp[0])
+
+            # 点Bを通る直線の一般形 ax+by+c=0
+            a = -np.tan(phiB)
+            b = 1
+            c = - a*B[0] - B[1]
+            residual = np.abs(a*res_tmp[0]+b*res_tmp[1]+c)/np.sqrt(a**2+b**2) # 点res_tmpと点Bを通る直線の距離
         
+            return (res_tmp,residual,tc1_tmp,tc2_tmp,tc3_tmp,phiCC1,phiCC2)
+        # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線始点をニュートン法で求める
+        num=0 # 繰り返し回数
+        f1 = (np.array([0,0]),error*100)
+        phiCC1 = 0.5
+        while (f1[1] > error and num<1e3):
+            f1 = func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)
+            df =  (func(phiCC1+dphi,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1]\
+                  -func(phiCC1,     A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1])/dphi
+
+            phiCC1 = phiCC1 - f1[1]/df
+            num +=1
+        return (phiCC1,f1,num)        
 
 class IF():
     def __init__(self,A,B,C,phiA,phiB,phiC,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode,curve_fitmode_box,cursor_obj,cursor_f_name,cursor_t_name,cursor_via_name):
@@ -468,6 +536,18 @@ class IF():
         syntax_str = self.generate_mapsyntax_reversecurve(initial_shift = True)
         parameter_str = self.gen_paramstr_mode8(endpos=False)
         
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def mode11(self):
+        parameter_str = ''
+        syntax_str = ''
+        self.result = self.sv.compound_curve_givenR(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.lenTC4,self.R_input,self.R2_input,self.tranfunc)
+
+        for i in self.result:
+            print(i)
+
+        self.trackp.generate(self.A,\
+                             self.phiA,self.result[0]+self.phiA,self.R_input,self.lenTC1,self.lenTC2,self.tranfunc)
+
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def generate_mapsyntax(self):
         syntax_str = ''
