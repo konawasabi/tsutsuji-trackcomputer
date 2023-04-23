@@ -99,14 +99,14 @@ class trackplot():
         result_tmp += A
 
         self.result = np.vstack((self.result,result_tmp))
-    def ccl(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc):
+    def ccl(self,A,phiA,phiB,Radius,lenTC1,lenTC2,tranfunc,R0=0):
         ''' 円軌道の長さ(CCL), 円軌道での方位角変化を求める
         '''
         delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
         
         if(lenTC1>0):
             tc1_tmp = self.curvegen.transition_curve(lenTC1,\
-                                          0,\
+                                          R0,\
                                           Radius,\
                                           0,\
                                           tranfunc) # 入口側の緩和曲線
