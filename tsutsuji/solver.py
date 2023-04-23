@@ -392,10 +392,13 @@ class IF():
         parameter_str = ''
         syntax_str = ''
         pass
-    def mode8(self):
+    def mode8(self,withCpos = True):
         parameter_str = ''
         syntax_str = ''
-        self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.lenTC3,self.lenTC4,self.tranfunc,C=self.C,len_interm=self.lenLint)
+        if withCpos:
+            self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.lenTC3,self.lenTC4,self.tranfunc,C=self.C,len_interm=self.lenLint)
+        else:
+            self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.lenTC3,self.lenTC4,self.tranfunc,len_interm=self.lenLint)
 
         self.trackp.generate(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC2,self.tranfunc)
         self.trackp.generate_add(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC3,self.lenTC4,self.tranfunc)
@@ -405,10 +408,8 @@ class IF():
 
         self.shift_result = np.linalg.norm(self.result[1][1][0] - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.result[1][1][0] - self.B))
 
-        #parameter_str = 'R1: {:f}, R2: {:f}, C\': ({:f}, {:f})'.format(self.result[0][0],self.result[1][0],self.result[2][0],self.result[2][1])
-        parameter_str += self.gen_paramstr_mode8()
+        parameter_str += self.gen_paramstr_mode8(withCpos=withCpos)
         syntax_str += self.generate_mapsyntax_reversecurve()
-        
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def mode9(self):
         parameter_str = ''
@@ -608,7 +609,7 @@ class IF():
             parameter_str += '   startpoint: ({:f}, {:f})'.format(self.trackp.result[:,0][-1],self.trackp.result[:,1][-1]) + '\n'
             parameter_str += '   phi_start:  {:f}'.format(np.rad2deg(self.phi_end)) + '\n'
         return parameter_str
-    def gen_paramstr_mode8(self):
+    def gen_paramstr_mode8(self,withCpos=True):
         parameter_str = ''
 
         parameter_str += '[Curve fitting]' + '\n'
@@ -617,7 +618,8 @@ class IF():
         parameter_str += '   Cursor α,β,γ:     {:s},{:s},{:s}'.format(self.cursor_f_name,self.cursor_t_name,self.cursor_via_name) + '\n'
         parameter_str += '   Ponint α:         ({:f}, {:f})'.format(self.A[0],self.A[1]) + '\n'
         parameter_str += '   Ponint β:         ({:f}, {:f})'.format(self.B[0],self.B[1]) + '\n'
-        parameter_str += '   Ponint γ:         ({:f}, {:f})'.format(self.C[0],self.C[1]) + '\n'
+        if withCpos:
+            parameter_str += '   Ponint γ:         ({:f}, {:f})'.format(self.C[0],self.C[1]) + '\n'
         parameter_str += '   Direction α:      {:f}'.format(self.cursor_f.values[2].get()) + '\n'
         parameter_str += '   Direction β:      {:f}'.format(self.cursor_t.values[2].get()) + '\n'
         parameter_str += '   Transition func.: {:s}'.format(self.tranfunc) + '\n'

@@ -269,7 +269,8 @@ class interface():
                                                 '5. β(fix), R(fix), CCL(fix)',\
                                                 '6. α(fix)->β(free) via γ, R(free)',\
                                                 '7. α(free)->β(fix) via γ, R(free)',\
-                                                '8. Reverse Curve α(fix)->β(free)',\
+                                                '8-1. Reverse Curve α(fix)->β(free) via γ',\
+                                                '8-2. Reverse Curve α(fix)->β(free)',\
                                                 '9. Compound Curve')
             self.curve_fitmode_box.state(["readonly"])
             
@@ -443,14 +444,21 @@ class interface():
             TCL_result = result[0]
             endpoint = trackp.result[-1]
             shift_result = np.linalg.norm(endpoint - A)*np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),endpoint - A))
-        elif fitmode == self.curve_fitmode_box['values'][7]: #'8. Reverse Curve α(fix)->β(free)'
+        elif fitmode == self.curve_fitmode_box['values'][7]: #'8-1. Reverse Curve α(fix)->β(free) '
             result = svIF.mode8()
             print(result['param'])
             print(result['syntax'])
             ax.plot(result['track'][:,0],result['track'][:,1])
             self.mainwindow.fig_canvas.draw()
             return
-        elif fitmode == self.curve_fitmode_box['values'][8]: #'9. Compound Curve'
+        elif fitmode == self.curve_fitmode_box['values'][8]: #'8-2. Reverse Curve α(fix)->β(free)'
+            result = svIF.mode8(withCpos=False)
+            print(result['param'])
+            print(result['syntax'])
+            ax.plot(result['track'][:,0],result['track'][:,1])
+            self.mainwindow.fig_canvas.draw()
+            return
+        elif fitmode == self.curve_fitmode_box['values'][9]: #'9. Compound Curve'
             result = svIF.mode9()
             print(result['param'])
             print(result['syntax'])
