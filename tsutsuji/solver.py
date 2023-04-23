@@ -207,7 +207,7 @@ class solver():
 
         result_2nd = self.curvetrack_fit(Cdash, phiC, B, phiB, lenTC21, lenTC22, tranfunc)
         return (result_1st,result_2nd,C,Cdash,phiC)
-    def compound_curve(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.05,error=0.01):
+    def compound_curve(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01):
         '''
         [A]-TC-CC-[C]-CC-TC-CC-TC-[B]
         '''
@@ -230,7 +230,7 @@ class solver():
 
             CC1end = [A + tc1_tmp[0] + cc_tmp[0], phiA + tc1_tmp[1] + cc_tmp[1]]
 
-            '''
+            
             # 求めた曲線CC1と点Cの最短距離を求める
             cc_tmp_array = self.cgen.circular_curve(CCL1tmp,\
                                                     R1,\
@@ -238,7 +238,7 @@ class solver():
                                                     n=20)[0] # 円軌道
             cc_tmp_array += A + tc1_tmp[0]
             residual = min(np.linalg.norm(cc_tmp_array-C,axis=1))
-            '''
+            
 
             # CC1endを始点、Bの延長線上を終点とする単円軌道を求める
             TC3end = self.curvetrack_fit(CC1end[0], CC1end[1], B, phiB, lenTC2, lenTC3, tranfunc, R0=R1)
@@ -255,7 +255,7 @@ class solver():
         num=0 # 繰り返し回数
         f1 = (error*100,None,None)
         CCL1 = 100
-        while (f1[0] > error and num<1e3):
+        while (f1[0] > error and num<1e2):
             f1 =  func(result_R1[0],CCL1,   A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)
             df = (func(result_R1[0],CCL1+dl,A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0]\
                  -func(result_R1[0],CCL1,   A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0])/dl
@@ -405,6 +405,8 @@ class IF():
 
         self.CCL_result = self.trackp.ccl(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC2,self.tranfunc)[0]
         self.CCL2_result = self.trackp.ccl(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC3,self.lenTC4,self.tranfunc)[0]
+        self.R1_val = self.result[0][0]
+        self.R2_val = self.result[1][0]
 
         self.shift_result = np.linalg.norm(self.result[1][1][0] - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.result[1][1][0] - self.B))
 
@@ -432,6 +434,39 @@ class IF():
 
         parameter_str += self.gen_paramstr_mode9()
         syntax_str += self.generate_mapsyntax_compoundcurve()
+        
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def mode10(self):
+        parameter_str = ''
+        syntax_str = ''
+
+        self.result_R1 = self.sv.curvetrack_relocation(self.A,self.phiA,self.C,self.phiC,self.lenTC1,self.lenTC2,self.tranfunc,self.R_input)
+
+        self.Cdash = self.result_R1[1][0]
+
+        self.result_R2 = self.sv.curvetrack_relocation(self.Cdash,self.phiC,self.B,self.phiB,self.lenTC3,self.lenTC4,self.tranfunc,self.R2_input)
+
+        #intermed_vec = self.Cdash + self.result_R2[0]*np.array([np.cos(self.phiC),np.sin(self.phiC)])
+        #self.interm_length = np.linalg.norm(intermed_vec) * np.sign(np.dot(np.array([np.cos(self.phiC),np.sin(self.phiC)]), intermed_vec))
+
+        self.A_result = self.A + self.result_R1[0]*np.array([np.cos(self.phiA),np.sin(self.phiA)])
+        self.C_result = self.Cdash + self.result_R2[0]*np.array([np.cos(self.phiC),np.sin(self.phiC)])
+        self.CCL_result  = self.trackp.ccl(self.A_result,self.phiA,self.phiC,self.R_input ,self.lenTC1,self.lenTC2,self.tranfunc)[0]
+        self.CCL2_result = self.trackp.ccl(self.C_result,self.phiC,self.phiB,self.R2_input,self.lenTC3,self.lenTC4,self.tranfunc)[0]
+        self.lenLint = self.result_R2[0]
+        self.shift_result = self.result_R1[0]
+        self.R1_val = self.R_input
+        self.R2_val = self.R2_input
+
+        
+        self.trackp.generate(self.A_result,\
+                             self.phiA,self.phiC,self.R_input,self.lenTC1,self.lenTC2,self.tranfunc)
+        self.trackp.generate_add(self.C_result,\
+                             self.phiC,self.phiB,self.R2_input,self.lenTC3,self.lenTC4,self.tranfunc)
+
+
+        syntax_str = self.generate_mapsyntax_reversecurve(initial_shift = True)
+        parameter_str = self.gen_paramstr_mode8(endpos=False)
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def generate_mapsyntax(self):
@@ -463,23 +498,28 @@ class IF():
         syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
         
         return syntax_str
-    def generate_mapsyntax_reversecurve(self):
+    def generate_mapsyntax_reversecurve(self,initial_shift=None):
         syntax_str = ''
         syntax_str += '$pt_a = {:f};'.format(self.cursor_f.values[4].get() \
                                              if self.cursor_f.values[3].get() != '@absolute' else 0) + '\n'
-        shift = 0
-        syntax_str += '$pt_a;' + '\n'
+        if initial_shift is None:
+            shift = 0
+            syntax_str += '$pt_a;' + '\n'
+        else:
+            shift = self.shift_result
+            tmp = shift
+            syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += '$cant = 0;' + '\n'
         syntax_str += 'Curve.SetFunction({:d});'.format(0 if self.tranfunc == 'sin' else 1) + '\n'
         syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
         
         tmp = shift + self.lenTC1
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
-        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[0][0]) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R1_val) + '\n'
         
         tmp = (shift + self.lenTC1 + self.CCL_result)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
-        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[0][0]) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R1_val) + '\n'
         
         tmp = (shift + self.lenTC1 + self.CCL_result + self.lenTC2)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
@@ -494,11 +534,11 @@ class IF():
 
         tmp = end_R1 + self.lenTC3
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
-        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[1][0]) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R2_val) + '\n'
         
         tmp = (end_R1 + self.lenTC3 + self.CCL2_result)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
-        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[1][0]) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R2_val) + '\n'
         
         tmp = (end_R1 + self.lenTC3 + self.CCL2_result + self.lenTC4)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
@@ -609,7 +649,7 @@ class IF():
             parameter_str += '   startpoint: ({:f}, {:f})'.format(self.trackp.result[:,0][-1],self.trackp.result[:,1][-1]) + '\n'
             parameter_str += '   phi_start:  {:f}'.format(np.rad2deg(self.phi_end)) + '\n'
         return parameter_str
-    def gen_paramstr_mode8(self,withCpos=True):
+    def gen_paramstr_mode8(self,withCpos=True,endpos=True):
         parameter_str = ''
 
         parameter_str += '[Curve fitting]' + '\n'
@@ -629,12 +669,16 @@ class IF():
         parameter_str += '   TCL4:             {:f}'.format(self.lenTC4) + '\n'
         parameter_str += '   L intermediate:   {:f}'.format(self.lenLint) + '\n'
         parameter_str += 'Results:' + '\n'
-        parameter_str += '   R1:        {:f}'.format(self.result[0][0]) + '\n'
+        parameter_str += '   R1:        {:f}'.format(self.R1_val) + '\n'
         parameter_str += '   CCL1:      {:f}'.format(self.CCL_result) + '\n'
-        parameter_str += '   R2:        {:f}'.format(self.result[1][0]) + '\n'
+        parameter_str += '   R2:        {:f}'.format(self.R2_val) + '\n'
         parameter_str += '   CCL2:      {:f}'.format(self.CCL2_result) + '\n'
-        parameter_str += '   endpt:     ({:f}, {:f})\n'.format(self.result[1][1][0][0],self.result[1][1][0][1])
-        parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
+        if endpos:
+            parameter_str += '   endpt:     ({:f}, {:f})\n'.format(self.result[1][1][0][0],self.result[1][1][0][1])
+            parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
+        else:
+            parameter_str += '   startpt:   ({:f}, {:f})\n'.format(self.A_result[0],self.A_result[1])
+            parameter_str += '   shift from pt. α: {:f}\n'.format(self.shift_result)
         return parameter_str
     def gen_paramstr_mode9(self):
         parameter_str = ''

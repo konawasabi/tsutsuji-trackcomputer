@@ -271,7 +271,8 @@ class interface():
                                                 '7. α(free)->β(fix) via γ, R(free)',\
                                                 '8-1. Reverse Curve α(fix)->β(free) via γ',\
                                                 '8-2. Reverse Curve α(fix)->β(free)',\
-                                                '9. Compound Curve')
+                                                '9. Compound Curve',\
+                                                '10. Compound Curve (given R)')
             self.curve_fitmode_box.state(["readonly"])
             
             self.calc_b = ttk.Button(self.curve_transfunc_f, text="Do It", command=self.ctfit)
@@ -460,6 +461,13 @@ class interface():
             return
         elif fitmode == self.curve_fitmode_box['values'][9]: #'9. Compound Curve'
             result = svIF.mode9()
+            print(result['param'])
+            print(result['syntax'])
+            ax.plot(result['track'][:,0],result['track'][:,1])
+            self.mainwindow.fig_canvas.draw()
+            return
+        elif fitmode == self.curve_fitmode_box['values'][10]: #'10. Compound Curve (given R)'
+            result = svIF.mode10()
             print(result['param'])
             print(result['syntax'])
             ax.plot(result['track'][:,0],result['track'][:,1])
