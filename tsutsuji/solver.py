@@ -455,11 +455,35 @@ class IF():
     def mode6(self):
         parameter_str = ''
         syntax_str = ''
-        pass
+
+        self.result = self.sv.shift_by_TCL(self.A,self.phiA,self.B,self.phiB,self.C,self.tranfunc)
+        self.trackp.generate(self.A,self.phiA,self.phiB,self.result[1][2],self.result[0],self.result[0],self.tranfunc)
+        self.R_result = self.result[1][2]
+        self.CCL_result = self.result[1][1]
+        self.TCL_result = self.result[0]
+        self.endpoint = self.trackp.result[-1]
+        self.shift_result = np.linalg.norm(self.endpoint - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endpoint - self.B))
+
+        parameter_str += self.gen_paramstr_mode6_7()
+        syntax_str += self.generate_mapsyntax()
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def mode7(self):
         parameter_str = ''
         syntax_str = ''
-        pass
+
+        phiA_inv = self.phiA - np.pi if self.phiA>0 else self.phiA + np.pi
+        phiB_inv = self.phiB - np.pi if self.phiB>0 else self.phiB + np.pi
+        self.result = self.sv.shift_by_TCL(self.B,phiB_inv,self.A,phiA_inv,self.C,self.tranfunc)
+        self.trackp.generate(self.B,phiB_inv,phiA_inv,self.result[1][2],self.result[0],self.result[0],self.tranfunc)
+        self.R_result = -self.result[1][2]
+        self.CCL_result = self.result[1][1]
+        self.TCL_result = self.result[0]
+        self.endpoint = self.trackp.result[-1]
+        self.shift_result = np.linalg.norm(self.endpoint - self.A)*np.sign(np.dot(np.array([np.cos(self.phiA),np.sin(self.phiA)]),self.endpoint - self.A))
+
+        parameter_str += self.gen_paramstr_mode6_7()
+        syntax_str += self.generate_mapsyntax()
+        return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def mode8(self,withCpos = True):
         parameter_str = ''
         syntax_str = ''
@@ -743,6 +767,31 @@ class IF():
         else:
             parameter_str += '   startpoint: ({:f}, {:f})'.format(self.trackp.result[:,0][-1],self.trackp.result[:,1][-1]) + '\n'
             parameter_str += '   phi_start:  {:f}'.format(np.rad2deg(self.phi_end)) + '\n'
+        return parameter_str
+    def gen_paramstr_mode6_7(self):
+        parameter_str = ''
+        parameter_str += '\n'
+        parameter_str += '[Curve fitting]' + '\n'
+        parameter_str += 'Inputs:' +'\n'
+        parameter_str += '   Fitmode:          {:s}'.format(self.fitmode) +'\n'
+        parameter_str += '   Cursor α,β,γ:     {:s},{:s},{:s}'.format(self.cursor_f_name,self.cursor_t_name,self.cursor_via_name) +'\n'
+        parameter_str += '   Ponint α:         ({:f}, {:f})'.format(self.A[0],self.A[1]) +'\n'
+        parameter_str += '   Ponint β:         ({:f}, {:f})'.format(self.B[0],self.B[1]) +'\n'
+        parameter_str += '   Ponint γ:         ({:f}, {:f})'.format(self.C[0],self.C[1]) +'\n'
+        parameter_str += '   Direction α:     {:f}'.format(self.cursor_f.values[2].get()) +'\n'
+        parameter_str += '   Direction β:     {:f}'.format(self.cursor_t.values[2].get()) +'\n'
+        parameter_str += '   Transition func.: {:s}'.format(self.tranfunc) +'\n'          
+        parameter_str += 'Results:' +'\n'
+        parameter_str += '   R:   {:f}'.format(self.R_result) +'\n'
+        parameter_str += '   CCL: {:f}'.format(self.CCL_result) +'\n'
+        parameter_str += '   TCL: {:f}'.format(self.TCL_result) +'\n'
+        if '6.' in self.fitmode:
+            #endpoint = self.trackp.result[-1]
+            parameter_str += '   endpt:            ({:f}, {:f})'.format(self.endpoint[0],self.endpoint[1]) +'\n'
+            parameter_str += '   shift from pt. β: {:f}'.format(self.shift_result) +'\n'
+        else:
+            parameter_str += '   startpt:          ({:f}, {:f})'.format(self.endpoint[0],self.endpoint[1]) +'\n'
+            parameter_str += '   shift from pt. α: {:f}'.format(self.shift_result) +'\n'
         return parameter_str
     def gen_paramstr_mode8(self,withCpos=True,endpos=True):
         parameter_str = ''
