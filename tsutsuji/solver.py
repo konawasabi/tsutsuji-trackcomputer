@@ -329,7 +329,7 @@ class solver():
             c = - a*B[0] - B[1]
             residual = np.abs(a*res_tmp[0]+b*res_tmp[1]+c)/np.sqrt(a**2+b**2) # 点res_tmpと点Bを通る直線の距離
         
-            return (res_tmp,residual,tc1_tmp,tc2_tmp,tc3_tmp,phiCC1,phiCC2)
+            return (res_tmp,residual,tc1_tmp,tc2_tmp,tc3_tmp,cc1_tmp,cc2_tmp)
         # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線始点をニュートン法で求める
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
@@ -493,9 +493,12 @@ class IF():
 
         self.result = self.sv.compound_curve(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC2,self.lenTC4,self.tranfunc)
 
+        self.R1_val = self.result[3][0]
+        self.R2_val = self.result[1][2][0]
         self.CCL_result = self.result[0]
         self.CCL2_result = self.trackp.ccl(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC2, self.lenTC4, self.tranfunc, R0 = self.result[3][0])[0]
-        self.shift_result = np.linalg.norm(self.result[1][2][1][0] - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.result[1][2][1][0] - self.B))
+        self.endpos = self.result[1][2][1][0]
+        self.shift_result = np.linalg.norm(self.endpos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endpos - self.B))
 
         self.trackp.generate(self.A,self.phiA,self.result[1][1][1],self.result[3][0],self.lenTC1,0,self.tranfunc)
         self.trackp.generate_add(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC2, self.lenTC4, self.tranfunc, R0 = self.result[3][0])
@@ -546,7 +549,19 @@ class IF():
             print(i)
 
         self.trackp.generate(self.A,\
-                             self.phiA,self.result[0]+self.phiA,self.R_input,self.lenTC1,self.lenTC2,self.tranfunc)
+                             self.phiA,self.result[0]+self.result[1][2][1]+self.phiA,self.R_input,self.lenTC1,0,self.tranfunc)
+        self.trackp.generate_add(self.A + self.result[1][2][0] + self.result[1][5][0],\
+                                 self.result[0]+self.result[1][2][1]+self.phiA,self.phiB,self.R2_input,self.lenTC2,self.lenTC4,self.tranfunc,R0=self.R_input)
+
+        self.R1_val = self.R_input
+        self.R2_val = self.R2_input
+        self.CCL_result = self.R1_val * self.result[0]
+        self.CCL2_result = self.R2_val * self.result[1][6][1]
+        self.endpos = self.result[1][0]
+        self.shift_result = np.linalg.norm(self.endpos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endpos - self.B))
+
+        syntax_str = self.generate_mapsyntax_compoundcurve()
+        parameter_str = self.gen_paramstr_mode9(givenR=True)
 
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def generate_mapsyntax(self):
@@ -637,21 +652,21 @@ class IF():
         
         tmp = shift + self.lenTC1
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
-        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[3][0]) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R1_val) + '\n'
         
         tmp = (shift + self.lenTC1 + self.CCL_result)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
-        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[3][0]) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R1_val) + '\n'
 
         end_R1 = shift + self.lenTC1 + self.CCL_result + self.lenTC2
         tmp = end_R1
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += '$cant = 0;' + '\n'
-        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[1][2][0]) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R2_val) + '\n'
         
         tmp = (end_R1  + self.CCL2_result)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
-        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.result[1][2][0]) + '\n'
+        syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R2_val) + '\n'
         
         tmp = (end_R1  + self.CCL2_result + self.lenTC4)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
@@ -760,7 +775,7 @@ class IF():
             parameter_str += '   startpt:   ({:f}, {:f})\n'.format(self.A_result[0],self.A_result[1])
             parameter_str += '   shift from pt. α: {:f}\n'.format(self.shift_result)
         return parameter_str
-    def gen_paramstr_mode9(self):
+    def gen_paramstr_mode9(self,givenR=False):
         parameter_str = ''
 
         parameter_str += '[Curve fitting]' + '\n'
@@ -779,11 +794,15 @@ class IF():
         #parameter_str += '   TCL3:             {:f}'.format(self.lenTC3) + '\n'
         parameter_str += '   TCL4:             {:f}'.format(self.lenTC4) + '\n'
         #parameter_str += '   L intermediate:   {:f}'.format(self.lenLint) + '\n'
+        if givenR:
+            parameter_str += '   R1:               {:f}'.format(self.R1_val) + '\n'
+            parameter_str += '   R2:               {:f}'.format(self.R2_val) + '\n'
         parameter_str += 'Results:' + '\n'
-        parameter_str += '   R1:        {:f}'.format(self.result[3][0]) + '\n'
+        if givenR is False:
+            parameter_str += '   R1:        {:f}'.format(self.R1_val) + '\n'
+            parameter_str += '   R2:        {:f}'.format(self.R2_val) + '\n'
         parameter_str += '   CCL1:      {:f}'.format(self.CCL_result) + '\n'
-        parameter_str += '   R2:        {:f}'.format(self.result[1][2][0]) + '\n'
         parameter_str += '   CCL2:      {:f}'.format(self.CCL2_result) + '\n'
-        parameter_str += '   endpt:     ({:f}, {:f})\n'.format(self.result[1][2][1][0][0],self.result[1][2][1][0][1])
+        parameter_str += '   endpt:     ({:f}, {:f})\n'.format(self.endpos[0],self.endpos[1])
         parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
         return parameter_str
