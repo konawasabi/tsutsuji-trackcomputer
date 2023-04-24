@@ -266,11 +266,11 @@ class interface():
                                     '5. β(fix), R(fix), CCL(fix)',\
                                     '6. α(fix)->β(free) via γ, R(free)',\
                                     '7. α(free)->β(fix) via γ, R(free)',\
-                                    '8-1. Reverse Curve α->β via γ',\
-                                    '8-2. Reverse Curve α->β',\
-                                    '8-3. Reverse Curve (given R)',\
-                                    '9-1. Compound Curve',\
-                                    '9-2. Compound Curve (given R)')
+                                    '8-1. Reverse α->β via γ',\
+                                    '8-2. Reverse α->β',\
+                                    '8-3. Reverse (given R)',\
+                                    '9-1. Compound',\
+                                    '9-2. Compound (given R)')
             self.curve_fitmode_v = tk.StringVar(value=curve_fitmode_tuple[0])
             self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v,height=len(curve_fitmode_tuple))
             self.curve_fitmode_box.grid(column=2, row=0, sticky=(tk.E,tk.W))
@@ -391,7 +391,7 @@ class interface():
                          cursor_t_name,\
                          cursor_via_name)
 
-        if fitmode == self.curve_fitmode_box['values'][0]: #'1. α(fix)->β(free), R(free)'
+        if   fitmode == self.curve_fitmode_box['values'][0]: #'1. α(fix)->β(free), R(free)'
             result = svIF.mode1()
         elif fitmode == self.curve_fitmode_box['values'][1]: #'2. α(free)->β(fix), R(free)'
             result = svIF.mode2()
@@ -418,11 +418,11 @@ class interface():
         else:
             raise Exception('invalid fitmode')
         
+        print()
         print(result['param'])
         print(result['syntax'])
         ax.plot(result['track'][:,0],result['track'][:,1])
         self.mainwindow.fig_canvas.draw()
-
     def nearesttrack(self):
         '''指定した軌道上のカーソルAに最も近い点を求める
         '''

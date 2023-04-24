@@ -427,7 +427,7 @@ class IF():
             self.trackp.generate(self.A, self.phiA, self.phi_end, self.R_input, self.lenTC1, self.lenTC2, self.tranfunc)
         else:
             self.phi_end = self.phiB - (self.lenCC/self.R_input + self.trackp.phi_TC(self.lenTC1, self.R_input, self.tranfunc) + self.trackp.phi_TC(self.lenTC2, self.R_input, self.tranfunc))
-            self.trackp.generate(self.B, self.phiB + np.pi if self.phiB>0 else self.phiB - np.pi, self.phi_end + self.np.pi if self.phi_end>0 else self.phi_end - np.pi, -self.R_input, self.lenTC2, self.lenTC1, self.tranfunc)
+            self.trackp.generate(self.B, self.phiB + np.pi if self.phiB>0 else self.phiB - np.pi, self.phi_end + np.pi if self.phi_end>0 else self.phi_end - np.pi, -self.R_input, self.lenTC2, self.lenTC1, self.tranfunc)
         self.R_result = self.R_input
         self.CCL_result = self.lenCC
         self.shift_result = 0
