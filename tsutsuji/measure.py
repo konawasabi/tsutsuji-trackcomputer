@@ -410,11 +410,11 @@ class interface():
         elif '8-2.' in fitmode:
             result = svIF.mode8(withCpos=False)
         elif '8-3.' in fitmode:
-            result = svIF.mode11()
+            result = svIF.mode10()
         elif '9-1.' in fitmode:
             result = svIF.mode9()
         elif '9-2.' in fitmode:
-            result = svIF.mode10()
+            result = svIF.mode11()
         else:
             raise Exception('invalid fitmode')
         
