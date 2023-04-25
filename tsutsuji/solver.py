@@ -314,6 +314,9 @@ class solver():
             else:
                 tc3_tmp=(np.array([0,0]),0,0)
 
+            if (math.angle_twov(phiA,phiB) - (tc1_tmp[1] + tc2_tmp[1] + tc3_tmp[1]))<0:
+                raise Exception('invalid R1,R2 pair or too long TC1,2,3')
+
             phiCC2 = math.angle_twov(phiA,phiB) - (tc1_tmp[1] + tc2_tmp[1] + tc3_tmp[1]) - phiCC1
 
             cc2_tmp = self.ci.circular_curve(R2*phiCC2,\
@@ -329,17 +332,19 @@ class solver():
             c = - a*B[0] - B[1]
             residual = np.abs(a*res_tmp[0]+b*res_tmp[1]+c)/np.sqrt(a**2+b**2) # 点res_tmpと点Bを通る直線の距離
         
-            return (res_tmp,residual,tc1_tmp,tc2_tmp,tc3_tmp,cc1_tmp,cc2_tmp)
+            return (res_tmp,residual,tc1_tmp,tc2_tmp,tc3_tmp,cc1_tmp,cc2_tmp,phiCC2)
         # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線始点をニュートン法で求める
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
         phiCC1 = 0.5
-        while (f1[1] > error and num<1e3):
+        while (f1[1] > error and num<1e2):
             f1 = func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)
             df =  (func(phiCC1+dphi,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1]\
                   -func(phiCC1,     A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1])/dphi
 
             phiCC1 = phiCC1 - f1[1]/df
+            if phiCC1 * R1 < 0 or f1[7] * R2 < 0:
+                raise Exception('invalid R1,R2 pair')
             num +=1
         return (phiCC1,f1,num)        
 
@@ -770,7 +775,6 @@ class IF():
         return parameter_str
     def gen_paramstr_mode6_7(self):
         parameter_str = ''
-        parameter_str += '\n'
         parameter_str += '[Curve fitting]' + '\n'
         parameter_str += 'Inputs:' +'\n'
         parameter_str += '   Fitmode:          {:s}'.format(self.fitmode) +'\n'
