@@ -314,8 +314,8 @@ class solver():
             else:
                 tc3_tmp=(np.array([0,0]),0,0)
 
-            if (math.angle_twov(phiA,phiB) - (tc1_tmp[1] + tc2_tmp[1] + tc3_tmp[1]))<0:
-                raise Exception('invalid R1,R2 pair or too long TC1,2,3')
+            #if (math.angle_twov(phiA,phiB) - (tc1_tmp[1] + tc2_tmp[1] + tc3_tmp[1]))<0:
+            #    raise Exception('invalid R1,R2 pair or too long TC1,2,3')
 
             phiCC2 = math.angle_twov(phiA,phiB) - (tc1_tmp[1] + tc2_tmp[1] + tc3_tmp[1]) - phiCC1
 
