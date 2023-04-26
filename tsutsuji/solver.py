@@ -549,6 +549,9 @@ class IF():
         #intermed_vec = self.Cdash + self.result_R2[0]*np.array([np.cos(self.phiC),np.sin(self.phiC)])
         #self.interm_length = np.linalg.norm(intermed_vec) * np.sign(np.dot(np.array([np.cos(self.phiC),np.sin(self.phiC)]), intermed_vec))
 
+        if self.result_R2[0] < 0:
+            raise Exception('invalid R1,R2 pair')
+
         self.A_result = self.A + self.result_R1[0]*np.array([np.cos(self.phiA),np.sin(self.phiA)])
         self.C_result = self.Cdash + self.result_R2[0]*np.array([np.cos(self.phiC),np.sin(self.phiC)])
         self.CCL_result  = self.trackp.ccl(self.A_result,self.phiA,self.phiC,self.R_input ,self.lenTC1,self.lenTC3,self.tranfunc)[0]
