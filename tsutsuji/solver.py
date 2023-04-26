@@ -566,7 +566,7 @@ class IF():
 
 
         syntax_str = self.generate_mapsyntax_reversecurve(initial_shift = True)
-        parameter_str = self.gen_paramstr_mode8(endpos=False)
+        parameter_str = self.gen_paramstr_mode8(endpos=False,givenR=True)
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def mode11(self):
@@ -797,7 +797,7 @@ class IF():
             parameter_str += '   startpt:          ({:f}, {:f})'.format(self.endpoint[0],self.endpoint[1]) +'\n'
             parameter_str += '   shift from pt. α: {:f}'.format(self.shift_result) +'\n'
         return parameter_str
-    def gen_paramstr_mode8(self,withCpos=True,endpos=True):
+    def gen_paramstr_mode8(self,withCpos=True,endpos=True,givenR=False):
         parameter_str = ''
 
         parameter_str += '[Curve fitting]' + '\n'
@@ -811,15 +811,19 @@ class IF():
         parameter_str += '   Direction α:      {:f}'.format(self.cursor_f.values[2].get()) + '\n'
         parameter_str += '   Direction β:      {:f}'.format(self.cursor_t.values[2].get()) + '\n'
         parameter_str += '   Transition func.: {:s}'.format(self.tranfunc) + '\n'
-        parameter_str += '   TCL1:             {:f}'.format(self.lenTC1) + '\n'
-        parameter_str += '   TCL2:             {:f}'.format(self.lenTC2) + '\n'
-        parameter_str += '   TCL3:             {:f}'.format(self.lenTC3) + '\n'
-        parameter_str += '   TCL4:             {:f}'.format(self.lenTC4) + '\n'
+        parameter_str += '   TCLα:             {:f}'.format(self.lenTC1) + '\n'
+        parameter_str += '   TCLγ:             {:f}'.format(self.lenTC3) + '\n'
+        parameter_str += '   TCLδ:             {:f}'.format(self.lenTC4) + '\n'
+        parameter_str += '   TCLβ:             {:f}'.format(self.lenTC2) + '\n'
         parameter_str += '   L intermediate:   {:f}'.format(self.lenLint) + '\n'
+        if givenR:
+            parameter_str += '   R1:              {:f}'.format(self.R1_val) + '\n'
+            parameter_str += '   R2:              {:f}'.format(self.R2_val) + '\n'
         parameter_str += 'Results:' + '\n'
-        parameter_str += '   R1:        {:f}'.format(self.R1_val) + '\n'
+        if givenR is False:
+            parameter_str += '   R1:        {:f}'.format(self.R1_val) + '\n'
+            parameter_str += '   R2:        {:f}'.format(self.R2_val) + '\n'
         parameter_str += '   CCL1:      {:f}'.format(self.CCL_result) + '\n'
-        parameter_str += '   R2:        {:f}'.format(self.R2_val) + '\n'
         parameter_str += '   CCL2:      {:f}'.format(self.CCL2_result) + '\n'
         if endpos:
             parameter_str += '   endpt:     ({:f}, {:f})\n'.format(self.result[1][1][0][0],self.result[1][1][0][1])
@@ -842,10 +846,10 @@ class IF():
         parameter_str += '   Direction β:      {:f}'.format(self.cursor_t.values[2].get()) + '\n'
         parameter_str += '   Direction γ:      {:f}'.format(self.cursor_via.values[2].get()) + '\n'
         parameter_str += '   Transition func.: {:s}'.format(self.tranfunc) + '\n'
-        parameter_str += '   TCL1:             {:f}'.format(self.lenTC1) + '\n'
-        parameter_str += '   TCL2:             {:f}'.format(self.lenTC2) + '\n'
+        parameter_str += '   TCLα:             {:f}'.format(self.lenTC1) + '\n'
+        parameter_str += '   TCLδ:             {:f}'.format(self.lenTC4) + '\n'
         #parameter_str += '   TCL3:             {:f}'.format(self.lenTC3) + '\n'
-        parameter_str += '   TCL4:             {:f}'.format(self.lenTC4) + '\n'
+        parameter_str += '   TCLβ:             {:f}'.format(self.lenTC2) + '\n'
         #parameter_str += '   L intermediate:   {:f}'.format(self.lenLint) + '\n'
         if givenR:
             parameter_str += '   R1:               {:f}'.format(self.R1_val) + '\n'
