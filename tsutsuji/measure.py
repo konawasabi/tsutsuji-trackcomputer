@@ -268,9 +268,10 @@ class interface():
                                     '7. α(free)->β(fix) via γ, R(free)',\
                                     '8-1. Reverse α->β via γ',\
                                     '8-2. Reverse α->β',\
-                                    '8-3. Reverse (given R)',\
+                                    '8-3. Reverse (given R,R2)',\
                                     '9-1. Compound',\
-                                    '9-2. Compound (given R)')
+                                    '9-1-1. Compound (given R)',\
+                                    '9-2. Compound (given R,R2)')
             self.curve_fitmode_v = tk.StringVar(value=curve_fitmode_tuple[0])
             self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v,height=len(curve_fitmode_tuple))
             self.curve_fitmode_box.grid(column=2, row=0, sticky=(tk.E,tk.W))
@@ -415,6 +416,8 @@ class interface():
             result = svIF.mode9()
         elif '9-2.' in fitmode:
             result = svIF.mode9_2()
+        elif '9-1-1.' in fitmode:
+            result = svIF.mode9(givenR1=True)
         else:
             raise Exception('invalid fitmode')
         

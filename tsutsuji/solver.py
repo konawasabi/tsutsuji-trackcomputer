@@ -207,7 +207,7 @@ class solver():
 
         result_2nd = self.curvetrack_fit(Cdash, phiC, B, phiB, lenTC21, lenTC22, tranfunc)
         return (result_1st,result_2nd,C,Cdash,phiC)
-    def compound_curve(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01):
+    def compound_curve(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01,givenR1=None):
         '''
         [A]-TC-CC-[C]-CC-TC-CC-TC-[B]
         '''
@@ -250,6 +250,8 @@ class solver():
 
         # 点Aを始点、点Cの延長線上を通過する単円軌道の半径を求める
         result_R1 = self.curvetrack_fit(A, phiA, C, phiC, lenTC1, 0, tranfunc)
+        if givenR1 is not None:
+            result_R1 = [givenR1]
 
         # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線長CCL1をニュートン法で求める
         num=0 # 繰り返し回数
@@ -510,7 +512,7 @@ class IF():
         parameter_str += self.gen_paramstr_mode8(withCpos=withCpos)
         syntax_str += self.generate_mapsyntax_reversecurve()
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
-    def mode9(self):
+    def mode9(self,givenR1=False):
         parameter_str = ''
         syntax_str = ''
 
@@ -520,7 +522,7 @@ class IF():
 
         #phiC = 2*np.arccos(np.dot(np.array([np.cos(self.phiA),np.sin(self.phiA)]), (self.C-self.A)/np.linalg.norm(self.C-self.A))) + self.phiA
 
-        self.result = self.sv.compound_curve(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC4,self.lenTC2,self.tranfunc)
+        self.result = self.sv.compound_curve(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC4,self.lenTC2,self.tranfunc,givenR1=self.R_input if givenR1 else None)
 
         self.R1_val = self.result[3][0]
         self.R2_val = self.result[1][2][0]
