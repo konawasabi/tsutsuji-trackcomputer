@@ -493,15 +493,15 @@ class IF():
         parameter_str = ''
         syntax_str = ''
         if withCpos:
-            self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.lenTC3,self.lenTC4,self.tranfunc,C=self.C,len_interm=self.lenLint)
+            self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC3,self.lenTC4,self.lenTC2,self.tranfunc,C=self.C,len_interm=self.lenLint)
         else:
-            self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.lenTC3,self.lenTC4,self.tranfunc,len_interm=self.lenLint)
+            self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC3,self.lenTC4,self.lenTC2,self.tranfunc,len_interm=self.lenLint)
 
-        self.trackp.generate(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC2,self.tranfunc)
-        self.trackp.generate_add(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC3,self.lenTC4,self.tranfunc)
+        self.trackp.generate(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC3,self.tranfunc)
+        self.trackp.generate_add(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC4,self.lenTC2,self.tranfunc)
 
-        self.CCL_result = self.trackp.ccl(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC2,self.tranfunc)[0]
-        self.CCL2_result = self.trackp.ccl(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC3,self.lenTC4,self.tranfunc)[0]
+        self.CCL_result = self.trackp.ccl(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC3,self.tranfunc)[0]
+        self.CCL2_result = self.trackp.ccl(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC4,self.lenTC2,self.tranfunc)[0]
         self.R1_val = self.result[0][0]
         self.R2_val = self.result[1][0]
 
@@ -520,17 +520,17 @@ class IF():
 
         #phiC = 2*np.arccos(np.dot(np.array([np.cos(self.phiA),np.sin(self.phiA)]), (self.C-self.A)/np.linalg.norm(self.C-self.A))) + self.phiA
 
-        self.result = self.sv.compound_curve(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC2,self.lenTC4,self.tranfunc)
+        self.result = self.sv.compound_curve(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC4,self.lenTC2,self.tranfunc)
 
         self.R1_val = self.result[3][0]
         self.R2_val = self.result[1][2][0]
         self.CCL_result = self.result[0]
-        self.CCL2_result = self.trackp.ccl(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC2, self.lenTC4, self.tranfunc, R0 = self.result[3][0])[0]
+        self.CCL2_result = self.trackp.ccl(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC4, self.lenTC2, self.tranfunc, R0 = self.result[3][0])[0]
         self.endpos = self.result[1][2][1][0]
         self.shift_result = np.linalg.norm(self.endpos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endpos - self.B))
 
         self.trackp.generate(self.A,self.phiA,self.result[1][1][1],self.result[3][0],self.lenTC1,0,self.tranfunc)
-        self.trackp.generate_add(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC2, self.lenTC4, self.tranfunc, R0 = self.result[3][0])
+        self.trackp.generate_add(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC4, self.lenTC2, self.tranfunc, R0 = self.result[3][0])
 
         parameter_str += self.gen_paramstr_mode9()
         syntax_str += self.generate_mapsyntax_compoundcurve()
@@ -540,19 +540,19 @@ class IF():
         parameter_str = ''
         syntax_str = ''
 
-        self.result_R1 = self.sv.curvetrack_relocation(self.A,self.phiA,self.C,self.phiC,self.lenTC1,self.lenTC2,self.tranfunc,self.R_input)
+        self.result_R1 = self.sv.curvetrack_relocation(self.A,self.phiA,self.C,self.phiC,self.lenTC1,self.lenTC3,self.tranfunc,self.R_input)
 
         self.Cdash = self.result_R1[1][0]
 
-        self.result_R2 = self.sv.curvetrack_relocation(self.Cdash,self.phiC,self.B,self.phiB,self.lenTC3,self.lenTC4,self.tranfunc,self.R2_input)
+        self.result_R2 = self.sv.curvetrack_relocation(self.Cdash,self.phiC,self.B,self.phiB,self.lenTC4,self.lenTC2,self.tranfunc,self.R2_input)
 
         #intermed_vec = self.Cdash + self.result_R2[0]*np.array([np.cos(self.phiC),np.sin(self.phiC)])
         #self.interm_length = np.linalg.norm(intermed_vec) * np.sign(np.dot(np.array([np.cos(self.phiC),np.sin(self.phiC)]), intermed_vec))
 
         self.A_result = self.A + self.result_R1[0]*np.array([np.cos(self.phiA),np.sin(self.phiA)])
         self.C_result = self.Cdash + self.result_R2[0]*np.array([np.cos(self.phiC),np.sin(self.phiC)])
-        self.CCL_result  = self.trackp.ccl(self.A_result,self.phiA,self.phiC,self.R_input ,self.lenTC1,self.lenTC2,self.tranfunc)[0]
-        self.CCL2_result = self.trackp.ccl(self.C_result,self.phiC,self.phiB,self.R2_input,self.lenTC3,self.lenTC4,self.tranfunc)[0]
+        self.CCL_result  = self.trackp.ccl(self.A_result,self.phiA,self.phiC,self.R_input ,self.lenTC1,self.lenTC3,self.tranfunc)[0]
+        self.CCL2_result = self.trackp.ccl(self.C_result,self.phiC,self.phiB,self.R2_input,self.lenTC4,self.lenTC2,self.tranfunc)[0]
         self.lenLint = self.result_R2[0]
         self.shift_result = self.result_R1[0]
         self.R1_val = self.R_input
@@ -560,9 +560,9 @@ class IF():
 
         
         self.trackp.generate(self.A_result,\
-                             self.phiA,self.phiC,self.R_input,self.lenTC1,self.lenTC2,self.tranfunc)
+                             self.phiA,self.phiC,self.R_input,self.lenTC1,self.lenTC3,self.tranfunc)
         self.trackp.generate_add(self.C_result,\
-                             self.phiC,self.phiB,self.R2_input,self.lenTC3,self.lenTC4,self.tranfunc)
+                             self.phiC,self.phiB,self.R2_input,self.lenTC4,self.lenTC2,self.tranfunc)
 
 
         syntax_str = self.generate_mapsyntax_reversecurve(initial_shift = True)
@@ -572,7 +572,7 @@ class IF():
     def mode11(self):
         parameter_str = ''
         syntax_str = ''
-        self.result = self.sv.compound_curve_givenR(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC2,self.lenTC4,self.R_input,self.R2_input,self.tranfunc)
+        self.result = self.sv.compound_curve_givenR(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC4,self.lenTC2,self.R_input,self.R2_input,self.tranfunc)
 
         for i in self.result:
             print(i)
@@ -580,7 +580,7 @@ class IF():
         self.trackp.generate(self.A,\
                              self.phiA,self.result[0]+self.result[1][2][1]+self.phiA,self.R_input,self.lenTC1,0,self.tranfunc)
         self.trackp.generate_add(self.A + self.result[1][2][0] + self.result[1][5][0],\
-                                 self.result[0]+self.result[1][2][1]+self.phiA,self.phiB,self.R2_input,self.lenTC2,self.lenTC4,self.tranfunc,R0=self.R_input)
+                                 self.result[0]+self.result[1][2][1]+self.phiA,self.phiB,self.R2_input,self.lenTC4,self.lenTC2,self.tranfunc,R0=self.R_input)
 
         self.R1_val = self.R_input
         self.R2_val = self.R2_input
@@ -645,26 +645,26 @@ class IF():
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R1_val) + '\n'
         
-        tmp = (shift + self.lenTC1 + self.CCL_result + self.lenTC2)
+        tmp = (shift + self.lenTC1 + self.CCL_result + self.lenTC3)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
         syntax_str += '\n'
 
-        end_R1 = shift + self.lenTC1 + self.CCL_result + self.lenTC2 + self.lenLint
+        end_R1 = shift + self.lenTC1 + self.CCL_result + self.lenTC3 + self.lenLint
         tmp = end_R1
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += '$cant = 0;' + '\n'
         syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
 
-        tmp = end_R1 + self.lenTC3
+        tmp = end_R1 + self.lenTC4
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R2_val) + '\n'
         
-        tmp = (end_R1 + self.lenTC3 + self.CCL2_result)
+        tmp = (end_R1 + self.lenTC4 + self.CCL2_result)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R2_val) + '\n'
         
-        tmp = (end_R1 + self.lenTC3 + self.CCL2_result + self.lenTC4)
+        tmp = (end_R1 + self.lenTC4 + self.CCL2_result + self.lenTC2)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
         
@@ -687,7 +687,7 @@ class IF():
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R1_val) + '\n'
 
-        end_R1 = shift + self.lenTC1 + self.CCL_result + self.lenTC2
+        end_R1 = shift + self.lenTC1 + self.CCL_result + self.lenTC4
         tmp = end_R1
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += '$cant = 0;' + '\n'
@@ -697,7 +697,7 @@ class IF():
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += 'Curve.Interpolate({:f}, $cant);'.format(self.R2_val) + '\n'
         
-        tmp = (end_R1  + self.CCL2_result + self.lenTC4)
+        tmp = (end_R1  + self.CCL2_result + self.lenTC2)
         syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp>=0 else '', tmp) + '\n'
         syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
         
