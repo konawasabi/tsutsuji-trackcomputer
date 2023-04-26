@@ -536,7 +536,7 @@ class IF():
         syntax_str += self.generate_mapsyntax_compoundcurve()
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
-    def mode10(self):
+    def mode8_3(self):
         parameter_str = ''
         syntax_str = ''
 
@@ -572,7 +572,7 @@ class IF():
         parameter_str = self.gen_paramstr_mode8(endpos=False,givenR=True)
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
-    def mode11(self):
+    def mode9_2(self):
         parameter_str = ''
         syntax_str = ''
         self.result = self.sv.compound_curve_givenR(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC4,self.lenTC2,self.R_input,self.R2_input,self.tranfunc)
