@@ -266,12 +266,13 @@ class interface():
                                     '5. β(fix), R(fix), CCL(fix)',\
                                     '6. α(fix)->β(free) via γ, R(free)',\
                                     '7. α(free)->β(fix) via γ, R(free)',\
-                                    '8-1. Reverse α->β via γ',\
-                                    '8-2. Reverse α->β',\
-                                    '8-3. Reverse (given R,R2)',\
+                                    '8-1. Reverse α->β',\
+                                    '8-2. Reverse α->β via γ',\
+                                    '8-3. Reverse α->β (fixed R)',\
+                                    '8-4. Reverse (fixed R,R2)',\
                                     '9-1. Compound',\
-                                    '9-1-1. Compound (given R)',\
-                                    '9-2. Compound (given R,R2)')
+                                    '9-2. Compound (fixed R)',\
+                                    '9-3. Compound (fixed R,R2)')
             self.curve_fitmode_v = tk.StringVar(value=curve_fitmode_tuple[0])
             self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v,height=len(curve_fitmode_tuple))
             self.curve_fitmode_box.grid(column=2, row=0, sticky=(tk.E,tk.W))
@@ -407,17 +408,17 @@ class interface():
         elif fitmode == self.curve_fitmode_box['values'][6]: #'7. α(free)->β(fix) via γ, R(free)'
             result = svIF.mode7()
         elif '8-1.' in fitmode:
-            result = svIF.mode8()
-        elif '8-2.' in fitmode:
             result = svIF.mode8(withCpos=False)
-        elif '8-3.' in fitmode:
-            result = svIF.mode8_3()
+        elif '8-2.' in fitmode:
+            result = svIF.mode8()
+        elif '8-4.' in fitmode:
+            result = svIF.mode10()
         elif '9-1.' in fitmode:
             result = svIF.mode9()
         elif '9-2.' in fitmode:
-            result = svIF.mode9_2()
-        elif '9-1-1.' in fitmode:
             result = svIF.mode9(givenR1=True)
+        elif '9-3.' in fitmode:
+            result = svIF.mode11()
         else:
             raise Exception('invalid fitmode')
         
