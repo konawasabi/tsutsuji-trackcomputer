@@ -85,13 +85,13 @@ class solver():
             c = - a*B[0] - B[1]
             residual = np.abs(a*res_tmp[0]+b*res_tmp[1]+c)/np.sqrt(a**2+b**2) # 点res_tmpと点Bを通る直線の距離
 
-            return (res_tmp,residual)
+            return (res_tmp,residual,phi_circular,phi_tc2)
         
         # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線始点をニュートン法で求める
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
         x =0
-        while (f1[1] > error and num<1e3):
+        while (f1[1] > error and num<1e2):
             f1 = func_TC(R,lenTC1,lenTC2,A,B,phiA,phiB,x)
             df = (func_TC(R,lenTC1,lenTC2,A,B,phiA,phiB,x+dx)[1]-func_TC(R,lenTC1,lenTC2,A,B,phiA,phiB,x)[1])/dx
 
@@ -125,12 +125,12 @@ class solver():
             c = - a*B[0] - B[1]
             residual = np.abs(a*res_tmp[0]+b*res_tmp[1]+c)/np.sqrt(a**2+b**2) # 点res_tmpと点Bを通る直線の距離
 
-            return (res_tmp,residual)
+            return (res_tmp,residual,phi_circular,phi_tc2)
         
         # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線半径をニュートン法で求める
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
-        while (f1[1] > error and num<1e3):
+        while (f1[1] > error and num<1e2):
             f1 = func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,R0)
             df = (func_TC(Rtmp+dr,lenTC1,lenTC2,A,B,phiA,phiB,R0)[1]-func_TC(Rtmp,lenTC1,lenTC2,A,B,phiA,phiB,R0)[1])/dr
 
@@ -210,6 +210,7 @@ class solver():
     def compound_curve(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01,givenR1=None):
         '''
         [A]-TC-CC-[C]-CC-TC-CC-TC-[B]
+        based on mode1
         '''
         def func(R1,CCL1tmp,A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc):
             # [A]-TC1-CC1-TC2-CC2-TC3-[B]なる複合曲線において、CC1の長さをCCL1tmpで与えた場合の着点座標を求める
@@ -230,15 +231,15 @@ class solver():
 
             CC1end = [A + tc1_tmp[0] + cc_tmp[0], phiA + tc1_tmp[1] + cc_tmp[1]]
 
-            
+            '''
             # 求めた曲線CC1と点Cの最短距離を求める
             cc_tmp_array = self.cgen.circular_curve(CCL1tmp,\
                                                     R1,\
                                                     tc1_tmp[1]+phiA,\
                                                     n=20)[0] # 円軌道
             cc_tmp_array += A + tc1_tmp[0]
-            residual = min(np.linalg.norm(cc_tmp_array-C,axis=1))
-            
+            residual = (min(np.linalg.norm(cc_tmp_array-C,axis=1)))
+            '''
 
             # CC1endを始点、Bの延長線上を終点とする単円軌道を求める
             TC3end = self.curvetrack_fit(CC1end[0], CC1end[1], B, phiB, lenTC2, lenTC3, tranfunc, R0=R1)
@@ -249,18 +250,98 @@ class solver():
             return (residual, CC1end, TC3end)
 
         # 点Aを始点、点Cの延長線上を通過する単円軌道の半径を求める
-        result_R1 = self.curvetrack_fit(A, phiA, C, phiC, lenTC1, 0, tranfunc)
-        if givenR1 is not None:
+        if givenR1 is None:
+            result_R1 = self.curvetrack_fit(A, phiA, C, phiC, lenTC1, 0, tranfunc)
+        else:
             result_R1 = [givenR1]
 
         # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線長CCL1をニュートン法で求める
         num=0 # 繰り返し回数
         f1 = (error*100,None,None)
         CCL1 = 100
-        while (f1[0] > error and num<1e2):
+        while (f1[0] > error and num < 1e2):
             f1 =  func(result_R1[0],CCL1,   A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)
             df = (func(result_R1[0],CCL1+dl,A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0]\
                  -func(result_R1[0],CCL1,   A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0])/dl
+
+            CCL1 = CCL1 - f1[0]/df
+            num +=1
+            if CCL1 < 0 or f1[2][1][2]*f1[2][0] < 0: # CCL1<0 or phiCC2*R2(=CCL2)<0
+                raise Exception('invalid R1 or pos.C')
+
+        '''returns: 
+           CCL1
+           f1
+              residual
+              CC1end
+              TC3end
+           num
+           result_r1
+        '''
+        return (CCL1,f1,num,result_R1)
+    def compound_curve_shiftStartPos(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01,givenR1=None):
+        '''
+        [A]-TC-CC-[C]-CC-TC-CC-TC-[B]
+        based on mode2
+        '''
+        def func(R1,CCL1tmp,A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc):
+            # [A]-TC1-CC1-TC2-CC2-TC3-[B]なる複合曲線において、CC1の長さをCCL1tmpで与えた場合の着点座標を求める
+            # CC1終点座標,方位を求める
+            if(lenTC1>0):
+                tc1_tmp = self.ci.transition_curve(lenTC1,\
+                                              0,\
+                                              R1,\
+                                              phiA,\
+                                              tranfunc,\
+                                              lenTC1) # 入口側の緩和曲線
+            else:
+                tc1_tmp=(np.array([0,0]),0,0)
+            cc_tmp = self.ci.circular_curve(CCL1tmp,\
+                                            R1,\
+                                            tc1_tmp[1]+phiA,\
+                                            CCL1tmp) # 円軌道
+
+            CC1end = [A + tc1_tmp[0] + cc_tmp[0], phiA + tc1_tmp[1] + cc_tmp[1]]
+
+            '''
+            # 求めた曲線CC1と点Cの最短距離を求める
+            cc_tmp_array = self.cgen.circular_curve(CCL1tmp,\
+                                                    R1,\
+                                                    tc1_tmp[1]+phiA,\
+                                                    n=20)[0] # 円軌道
+            cc_tmp_array += A + tc1_tmp[0]
+            residual = (min(np.linalg.norm(cc_tmp_array-C,axis=1)))
+            '''
+
+            # CC1endを始点、Bの延長線上を終点とする単円軌道を求める
+            TC3end = self.curvetrack_fit(CC1end[0], CC1end[1], B, phiB, lenTC2, lenTC3, tranfunc, R0=R1)
+
+            # 点TC3endと点Bの距離
+            residual = (np.linalg.norm(TC3end[1][0]-B))
+            
+            return (residual, CC1end, TC3end)
+
+        # 点Aの延長線上を始点、点Cを通過する単円軌道の半径を求める
+        if givenR1 is None:
+            phiA_inv = phiA - np.pi if phiA>0 else phiA + np.pi
+            phiC_inv = phiC - np.pi if phiC>0 else phiC + np.pi
+            result_R1_tmp = self.curvetrack_fit(C, phiC_inv, A, phiA_inv, 0, lenTC1, tranfunc)
+            result_R1 = [-result_R1_tmp[0],result_R1_tmp[1],result_R1_tmp[2]]
+            shift_fromA = np.linalg.norm(result_R1[1][0] - A)\
+                * np.sign(np.dot(np.array([np.cos(phiA),np.sin(phiA)]),result_R1[1][0] - A))
+        else:
+            result_R1 = [givenR1,C,0]
+            shift_fromA = 0
+
+        # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線長CCL1をニュートン法で求める
+        num=0 # 繰り返し回数
+        f1 = (error*100,None,None)
+        CCL1 = 100
+        A_shifted = result_R1[1][0]
+        while (f1[0] > error and num < 50):
+            f1 =  func(result_R1[0],CCL1,   A_shifted,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)
+            df = (func(result_R1[0],CCL1+dl,A_shifted,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0]\
+                 -func(result_R1[0],CCL1,   A_shifted,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0])/dl
 
             CCL1 = CCL1 - f1[0]/df
             num +=1
@@ -274,7 +355,7 @@ class solver():
            num
            result_r1
         '''
-        return (CCL1,f1,num,result_R1)
+        return (CCL1,f1,num,result_R1,shift_fromA)
     def compound_curve_givenR(self,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc,dphi=0.001,error=0.01):
         def func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc):
             #delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
@@ -339,7 +420,7 @@ class solver():
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
         phiCC1 = 0.5
-        while (f1[1] > error and num<1e2):
+        while (f1[1] > error and num < 1e2):
             f1 = func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)
             df =  (func(phiCC1+dphi,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1]\
                   -func(phiCC1,     A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1])/dphi
@@ -348,7 +429,7 @@ class solver():
             if phiCC1 * R1 < 0 or f1[7] * R2 < 0:
                 raise Exception('invalid R1,R2 pair')
             num +=1
-        return (phiCC1,f1,num)        
+        return (phiCC1,f1,num)
 
 class IF():
     def __init__(self,A,B,C,phiA,phiB,phiC,lenTC1,lenTC2,lenTC3,lenTC4,lenCC,lenLint,R_input,R2_input,tranfunc,fitmode,curve_fitmode_box,cursor_obj,cursor_f_name,cursor_t_name,cursor_via_name):
@@ -522,8 +603,15 @@ class IF():
 
         #phiC = 2*np.arccos(np.dot(np.array([np.cos(self.phiA),np.sin(self.phiA)]), (self.C-self.A)/np.linalg.norm(self.C-self.A))) + self.phiA
 
+        '''
+        self.result = self.sv.compound_curve_shiftStartPos(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC4,self.lenTC2,self.tranfunc,givenR1=self.R_input if givenR1 else None)
+        self.startPos = self.result[3][1][0]
+        self.shift_fromA = self.result[4]
+        '''
         self.result = self.sv.compound_curve(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC4,self.lenTC2,self.tranfunc,givenR1=self.R_input if givenR1 else None)
-
+        self.startPos = self.A
+        self.shift_fromA = 0
+        
         self.R1_val = self.result[3][0]
         self.R2_val = self.result[1][2][0]
         self.CCL_result = self.result[0]
@@ -531,7 +619,7 @@ class IF():
         self.endpos = self.result[1][2][1][0]
         self.shift_result = np.linalg.norm(self.endpos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endpos - self.B))
 
-        self.trackp.generate(self.A,self.phiA,self.result[1][1][1],self.result[3][0],self.lenTC1,0,self.tranfunc)
+        self.trackp.generate(self.startPos,self.phiA,self.result[1][1][1],self.result[3][0],self.lenTC1,0,self.tranfunc)
         self.trackp.generate_add(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC4, self.lenTC2, self.tranfunc, R0 = self.result[3][0])
 
         parameter_str += self.gen_paramstr_mode9()
@@ -586,6 +674,9 @@ class IF():
                              self.phiA,self.result[0]+self.result[1][2][1]+self.phiA,self.R_input,self.lenTC1,0,self.tranfunc)
         self.trackp.generate_add(self.A + self.result[1][2][0] + self.result[1][5][0],\
                                  self.result[0]+self.result[1][2][1]+self.phiA,self.phiB,self.R2_input,self.lenTC4,self.lenTC2,self.tranfunc,R0=self.R_input)
+        
+        self.startPos = self.A
+        self.shift_fromA = 0
 
         self.R1_val = self.R_input
         self.R2_val = self.R2_input
@@ -678,7 +769,7 @@ class IF():
         syntax_str = ''
         syntax_str += '$pt_a = {:f};'.format(self.cursor_f.values[4].get() \
                                              if self.cursor_f.values[3].get() != '@absolute' else 0) + '\n'
-        shift = 0
+        shift = self.shift_fromA
         syntax_str += '$pt_a;' + '\n'
         syntax_str += '$cant = 0;' + '\n'
         syntax_str += 'Curve.SetFunction({:d});'.format(0 if self.tranfunc == 'sin' else 1) + '\n'
@@ -866,5 +957,6 @@ class IF():
         parameter_str += '   CCL1:      {:f}'.format(self.CCL_result) + '\n'
         parameter_str += '   CCL2:      {:f}'.format(self.CCL2_result) + '\n'
         parameter_str += '   endpt:     ({:f}, {:f})\n'.format(self.endpos[0],self.endpos[1])
+        parameter_str += '   shift from pt. α: {:f}\n'.format(self.shift_fromA)
         parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
         return parameter_str
