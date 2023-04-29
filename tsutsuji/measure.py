@@ -267,12 +267,12 @@ class interface():
                                     '6. α(fix)->β(free) via γ, R(free)',\
                                     '7. α(free)->β(fix) via γ, R(free)',\
                                     '8-1. Reverse α->β',\
-                                    '8-2. Reverse α->β via γ',\
+                                    '8-2. Reverse α->γ->β',\
                                     '8-3. Reverse α->β (fixed R)',\
-                                    '8-4. Reverse (fixed R,R2)',\
-                                    '9-1. Compound',\
-                                    '9-2. Compound (fixed R)',\
-                                    '9-3. Compound (fixed R,R2)')
+                                    '8-4. Reverse α->γ->β (fixed R,R2)',\
+                                    '9-1. Compound α->γ->β',\
+                                    '9-2. Compound α->γ->β (fixed R)',\
+                                    '9-3. Compound α->β (fixed R,R2)')
             self.curve_fitmode_v = tk.StringVar(value=curve_fitmode_tuple[0])
             self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v,height=len(curve_fitmode_tuple))
             self.curve_fitmode_box.grid(column=2, row=0, sticky=(tk.E,tk.W))
@@ -411,6 +411,8 @@ class interface():
             result = svIF.mode8(withCpos=False)
         elif '8-2.' in fitmode:
             result = svIF.mode8()
+        elif '8-3.' in fitmode:
+            result = svIF.mode12()
         elif '8-4.' in fitmode:
             result = svIF.mode10()
         elif '9-1.' in fitmode:
