@@ -393,33 +393,33 @@ class interface():
                          cursor_t_name,\
                          cursor_via_name)
 
-        if   fitmode == self.curve_fitmode_box['values'][0]: #'1. α(fix)->β(free), R(free)'
+        if   fitmode.startswith('1.'): #'1. α(fix)->β(free), R(free)'
             result = svIF.mode1()
-        elif fitmode == self.curve_fitmode_box['values'][1]: #'2. α(free)->β(fix), R(free)'
+        elif fitmode.startswith('2.'): #'2. α(free)->β(fix), R(free)'
             result = svIF.mode2()
-        elif fitmode == self.curve_fitmode_box['values'][2]: #'3. α(free)->β(free), R(fix)'
+        elif fitmode.startswith('3.'): #'3. α(free)->β(free), R(fix)'
             result = svIF.mode3()
-        elif fitmode == self.curve_fitmode_box['values'][3]: #'4. α(fix), R(fix), CCL(fix)'
+        elif fitmode.startswith('4.'): #'4. α(fix), R(fix), CCL(fix)'
             result = svIF.mode4_5(self.curvetrack_cursor_assignresult_v.get())
-        elif fitmode == self.curve_fitmode_box['values'][4]: #'5. β(fix), R(fix), CCL(fix)'
+        elif fitmode.startswith('5.'): #'5. β(fix), R(fix), CCL(fix)'
             result = svIF.mode4_5(self.curvetrack_cursor_assignresult_v.get())
-        elif fitmode == self.curve_fitmode_box['values'][5]: #'6. α(fix)->β(free) via γ, R(free)'
+        elif fitmode.startswith('6.'): #'6. α(fix)->β(free) via γ, R(free)'
             result = svIF.mode6()
-        elif fitmode == self.curve_fitmode_box['values'][6]: #'7. α(free)->β(fix) via γ, R(free)'
+        elif fitmode.startswith('7.'): #'7. α(free)->β(fix) via γ, R(free)'
             result = svIF.mode7()
-        elif '8-1.' in fitmode:
+        elif fitmode.startswith('8-1.'):
             result = svIF.mode8(withCpos=False)
-        elif '8-2.' in fitmode:
+        elif fitmode.startswith('8-2.'):
             result = svIF.mode8()
-        elif '8-3.' in fitmode:
+        elif fitmode.startswith('8-3.'):
             result = svIF.mode12()
-        elif '8-4.' in fitmode:
+        elif fitmode.startswith('8-4.'):
             result = svIF.mode10()
-        elif '9-1.' in fitmode:
+        elif fitmode.startswith('9-1.'):
             result = svIF.mode9()
-        elif '9-2.' in fitmode:
+        elif fitmode.startswith('9-2.'):
             result = svIF.mode9(givenR1=True)
-        elif '9-3.' in fitmode:
+        elif fitmode.startswith('9-3.'):
             result = svIF.mode11()
         else:
             raise Exception('invalid fitmode')

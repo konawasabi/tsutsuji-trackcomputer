@@ -585,7 +585,7 @@ class IF():
         parameter_str = ''
         syntax_str = ''
 
-        if self.fitmode == self.curve_fitmode_box['values'][3]:
+        if self.fitmode.startswith('4.'):
             self.phi_end = self.phiA + self.lenCC/self.R_input + self.trackp.phi_TC(self.lenTC1, self.R_input, self.tranfunc) + self.trackp.phi_TC(self.lenTC2, self.R_input, self.tranfunc)
             self.trackp.generate(self.A, self.phiA, self.phi_end, self.R_input, self.lenTC1, self.lenTC2, self.tranfunc)
         else:
@@ -599,9 +599,9 @@ class IF():
         syntax_str += self.generate_mapsyntax()
 
         if assigncursor:
-            if self.fitmode == self.curve_fitmode_box['values'][3]:
+            if self.fitmode.startswith('4.'):
                 tmp_cursor = self.cursor_t
-            elif self.fitmode == self.curve_fitmode_box['values'][4]:
+            elif self.fitmode.startswith('5.'):
                 tmp_cursor = self.cursor_f
             else:
                 tmp_cursor = None
@@ -798,7 +798,7 @@ class IF():
     def generate_mapsyntax(self):
         syntax_str = ''
         syntax_str += '$pt_a = {:f};'.format(self.cursor_f.values[4].get() if self.cursor_f.values[3].get() != '@absolute' else 0) + '\n'
-        if self.fitmode == self.curve_fitmode_box['values'][0] or self.fitmode == self.curve_fitmode_box['values'][5]:
+        if self.fitmode.startswith('1.') or self.fitmode.startswith('6.'):
             shift = 0
             syntax_str += '$pt_a;' + '\n'
         else:
@@ -807,7 +807,7 @@ class IF():
         syntax_str += '$cant = 0;' + '\n'
         syntax_str += 'Curve.SetFunction({:d});'.format(0 if self.tranfunc == 'sin' else 1) + '\n'
         syntax_str += 'Curve.Interpolate({:f},0);'.format(0) + '\n'
-        if self.fitmode == self.curve_fitmode_box['values'][5] or self.fitmode == self.curve_fitmode_box['values'][6]:
+        if self.fitmode.startswith('6.') or self.fitmode.startswith('7.'):
             lenTC_result = {'1':self.TCL_result, '2':self.TCL_result}
         else:
             lenTC_result = {'1':self.lenTC1, '2':self.lenTC2}
@@ -923,7 +923,7 @@ class IF():
         parameter_str += '   CCL: {:f}\n'.format(self.CCL_result)
         parameter_str += '   endpt:            ({:f}, {:f})\n'.format(self.result[1][0][0],self.result[1][0][1])
         parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
-        if self.fitmode == self.curve_fitmode_box['values'][0]:
+        if self.fitmode.startswith('1.'):
             parameter_str += '   endpt:            ({:f}, {:f})'.format(self.result[1][0][0],self.result[1][0][1]) + '\n'
             parameter_str += '   shift from pt. β: {:f}'.format(self.shift_result) + '\n'
         else:
@@ -953,7 +953,7 @@ class IF():
         return parameter_str
     def gen_paramstr_mode4_5(self):
         parameter_str = ''
-        cursor_label = 'α' if self.fitmode == self.curve_fitmode_box['values'][3] else 'β'
+        cursor_label = 'α' if self.fitmode.startswith('4.') else 'β'
         
         parameter_str += '[Curve fitting]' + '\n'
         parameter_str += 'Inputs:' + '\n'
@@ -967,7 +967,7 @@ class IF():
         parameter_str += '   CCL:              {:f}'.format(self.CCL_result) + '\n'
         parameter_str += '   R:                {:f}'.format(self.R_input) + '\n'
         parameter_str += 'Results:' + '\n'
-        if self.fitmode == self.curve_fitmode_box['values'][3]:
+        if self.fitmode.startswith('4.'):
             parameter_str += '   endpoint: ({:f}, {:f})'.format(self.trackp.result[:,0][-1],self.trackp.result[:,1][-1]) + '\n'
             parameter_str += '   phi_end:  {:f}'.format(np.rad2deg(self.phi_end)) + '\n'
 
