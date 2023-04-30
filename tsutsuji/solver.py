@@ -501,8 +501,8 @@ class solver():
                   -func(phiCC1,     A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1])/dphi
 
             phiCC1 = phiCC1 - f1[1]/df
-            if phiCC1 * R1 < 0 or f1[7] * R2 < 0:
-                raise Exception('invalid R1,R2 pair')
+            #if phiCC1 * R1 < 0 or f1[7] * R2 < 0:
+            #    raise Exception('invalid R1,R2 pair')
             num +=1
         return (phiCC1,f1,num)
 
@@ -741,6 +741,9 @@ class IF():
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def mode11(self): # 9-3
+        if False:
+            import pdb
+            pdb.set_trace()
         parameter_str = ''
         syntax_str = ''
         self.result = self.sv.compound_curve_givenR(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC4,self.lenTC2,self.R_input,self.R2_input,self.tranfunc)

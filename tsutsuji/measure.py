@@ -271,7 +271,7 @@ class interface():
                                     '8-3. Reverse α->β (fixed R)',\
                                     '8-4. Reverse α->γ->β (fixed R,R2)',\
                                     '9-1. Compound α->γ->β',\
-                                    '9-2. Compound α->γ->β (fixed R)',\
+                                    '9-2. Compound α->β (fixed R)',\
                                     '9-3. Compound α->β (fixed R,R2)')
             self.curve_fitmode_v = tk.StringVar(value=curve_fitmode_tuple[0])
             self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v,height=len(curve_fitmode_tuple))
