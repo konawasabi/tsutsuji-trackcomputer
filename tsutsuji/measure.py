@@ -261,7 +261,8 @@ class interface():
             self.curve_fitmode_l.grid(column=1, row=0, sticky=(tk.E))
             curve_fitmode_tuple  = ('1. α(fix)->β(free), R(free)',\
                                     '2. α(free)->β(fix), R(free)',\
-                                    '3. α(free)->β(free), R(fix)',\
+                                    '3-1. α(free)->β(free), R(fix)',\
+                                    '3-2. α->γ->β, (fixed R,R2)',\
                                     '4. α(fix), R(fix), CCL(fix)',\
                                     '5. β(fix), R(fix), CCL(fix)',\
                                     '6. α(fix)->β(free) via γ, R(free)',\
@@ -397,8 +398,10 @@ class interface():
             result = svIF.mode1()
         elif fitmode.startswith('2.'): #'2. α(free)->β(fix), R(free)'
             result = svIF.mode2()
-        elif fitmode.startswith('3.'): #'3. α(free)->β(free), R(fix)'
+        elif fitmode.startswith('3-1.'): #'3-1. α(free)->β(free), R(fix)'
             result = svIF.mode3()
+        elif fitmode.startswith('3-2.'):
+            result = svIF.mode10()
         elif fitmode.startswith('4.'): #'4. α(fix), R(fix), CCL(fix)'
             result = svIF.mode4_5(self.curvetrack_cursor_assignresult_v.get())
         elif fitmode.startswith('5.'): #'5. β(fix), R(fix), CCL(fix)'
@@ -413,8 +416,8 @@ class interface():
             result = svIF.mode8()
         elif fitmode.startswith('8-3.'):
             result = svIF.mode12()
-        elif fitmode.startswith('8-4.'):
-            result = svIF.mode10()
+        #elif fitmode.startswith('8-4.'):
+        #    result = svIF.mode10()
         elif fitmode.startswith('9-1.'):
             result = svIF.mode9()
         elif fitmode.startswith('9-2.'):
