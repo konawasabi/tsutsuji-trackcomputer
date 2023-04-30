@@ -601,18 +601,18 @@ class IF():
         if assigncursor:
             if self.fitmode == self.curve_fitmode_box['values'][3]:
                 tmp_cursor = self.cursor_t
-                tmp_cursor.values[0].set(self.trackp.result[:,0][-1])
-                tmp_cursor.values[1].set(self.trackp.result[:,1][-1])
-                tmp_cursor.values[2].set(np.rad2deg(self.phi_end))
-                tmp_cursor.marker.set_direct()
-                tmp_cursor.arrow.set_direct()
             elif self.fitmode == self.curve_fitmode_box['values'][4]:
                 tmp_cursor = self.cursor_f
-                tmp_cursor.values[0].set(self.trackp.result[:,0][-1])
-                tmp_cursor.values[1].set(self.trackp.result[:,1][-1])
-                tmp_cursor.values[2].set(np.rad2deg(self.phi_end))
-                tmp_cursor.marker.set_direct()
-                tmp_cursor.arrow.set_direct()
+            else:
+                tmp_cursor = None
+            tmp_cursor.values[0].set(self.trackp.result[:,0][-1])
+            tmp_cursor.values[1].set(self.trackp.result[:,1][-1])
+            tmp_cursor.values[2].set(np.rad2deg(self.phi_end))
+            tmp_cursor.values_toshow[0].set('{:.1f}'.format(self.trackp.result[:,0][-1]))
+            tmp_cursor.values_toshow[1].set('{:.1f}'.format(self.trackp.result[:,1][-1]))
+            tmp_cursor.values_toshow[2].set('{:.1f}'.format(np.rad2deg(self.phi_end)))
+            tmp_cursor.marker.set_direct()
+            tmp_cursor.arrow.set_direct()
 
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
     def mode6(self):
