@@ -200,7 +200,8 @@ class solver():
         if C is None:
             C = (A + B)/2
 
-        phiC = 2*np.arccos(np.dot(np.array([np.cos(phiA),np.sin(phiA)]), (C-A)/np.linalg.norm(C-A))) + phiA
+        phiC_tmp = np.arccos(np.dot(C-A,np.array([np.cos(phiA),np.sin(phiA)]))/(np.linalg.norm(C-A)))
+        phiC = np.sign(-np.cross(C-A,np.array([np.cos(phiA),np.sin(phiA)])))*np.arccos((1-np.tan(phiC_tmp)**2)/(1+np.tan(phiC_tmp)**2)) + phiA
         
         result_1st = self.curvetrack_fit(A, phiA, C, phiC, lenTC11, lenTC12, tranfunc)
         Cdash = result_1st[1][0] + np.array([np.cos(phiC),np.sin(phiC)])*len_interm
@@ -649,6 +650,9 @@ class IF():
     def mode8(self,withCpos = True):
         parameter_str = ''
         syntax_str = ''
+        if False:
+            import pdb
+            pdb.set_trace()
         if withCpos:
             self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC3,self.lenTC4,self.lenTC2,self.tranfunc,C=self.C,len_interm=self.lenLint)
         else:
