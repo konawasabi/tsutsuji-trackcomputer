@@ -767,6 +767,10 @@ class IF():
     def mode12(self): # 8-3
         ''' mode 9-2 + L_intermediate
         '''
+        if False:
+            import pdb
+            pdb.set_trace()
+            
         parameter_str = ''
         syntax_str = ''
 
@@ -777,7 +781,7 @@ class IF():
         self.R1_val = self.result[3][0]
         self.R2_val = self.result[1][2][0]
         self.CCL_result = self.result[0]
-        self.CCL2_result = self.trackp.ccl(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC4, self.lenTC2, self.tranfunc, R0 = self.result[3][0])[0]
+        self.CCL2_result = self.trackp.ccl(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC4, self.lenTC2, self.tranfunc)[0]
         self.endpos = self.result[1][2][1][0]
         self.shift_result = np.linalg.norm(self.endpos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endpos - self.B))
 
