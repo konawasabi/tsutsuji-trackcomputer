@@ -494,7 +494,7 @@ class solver():
         # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線始点をニュートン法で求める
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
-        phiCC1 = 0.5
+        phiCC1 = 0.2 if R1>0 else -0.2
         while (f1[1] > error and num < 1e2):
             f1 = func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)
             df =  (func(phiCC1+dphi,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1]\
@@ -587,7 +587,7 @@ class solver():
         # 点Bを通る直線（x軸との交差角phiB）との距離が最小になる曲線始点をニュートン法で求める
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
-        phiCC1 = 0.5
+        phiCC1 = 0.2 if R1>0 else -0.2
         while (f1[1] > error and num < 1e2):
             f1 = func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,R1,R2,tranfunc)
             df =  (func(phiCC1+dphi,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,R1,R2,tranfunc)[1]\
