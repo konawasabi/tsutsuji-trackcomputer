@@ -747,19 +747,64 @@ class IF():
             import pdb
             pdb.set_trace()
         if withCpos:
-            self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC3,self.lenTC4,self.lenTC2,self.tranfunc,C=self.C,len_interm=self.lenLint)
+            self.result = self.sv.reverse_curve(self.A,\
+                                                self.phiA,\
+                                                self.B,\
+                                                self.phiB,\
+                                                self.lenTC1,\
+                                                self.lenTC3,\
+                                                self.lenTC4,\
+                                                self.lenTC2,\
+                                                self.tranfunc,\
+                                                C=self.C,\
+                                                len_interm=self.lenLint)
         else:
-            self.result = self.sv.reverse_curve(self.A,self.phiA,self.B,self.phiB,self.lenTC1,self.lenTC3,self.lenTC4,self.lenTC2,self.tranfunc,len_interm=self.lenLint)
+            self.result = self.sv.reverse_curve(self.A,\
+                                                self.phiA,\
+                                                self.B,\
+                                                self.phiB,\
+                                                self.lenTC1,\
+                                                self.lenTC3,\
+                                                self.lenTC4,\
+                                                self.lenTC2,\
+                                                self.tranfunc,\
+                                                len_interm=self.lenLint)
 
-        self.trackp.generate(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC3,self.tranfunc)
-        self.trackp.generate_add(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC4,self.lenTC2,self.tranfunc)
+        self.trackp.generate(self.A,\
+                             self.phiA,\
+                             self.result[4],\
+                             self.result[0][0],\
+                             self.lenTC1,\
+                             self.lenTC3,\
+                             self.tranfunc)
+        self.trackp.generate_add(self.result[3],\
+                                 self.result[4],\
+                                 self.phiB,\
+                                 self.result[1][0],\
+                                 self.lenTC4,\
+                                 self.lenTC2,\
+                                 self.tranfunc)
 
-        self.CCL_result = self.trackp.ccl(self.A,self.phiA,self.result[4],self.result[0][0],self.lenTC1,self.lenTC3,self.tranfunc)[0]
-        self.CCL2_result = self.trackp.ccl(self.result[3],self.result[4],self.phiB,self.result[1][0],self.lenTC4,self.lenTC2,self.tranfunc)[0]
+        self.CCL_result = self.trackp.ccl(self.A,\
+                                          self.phiA,\
+                                          self.result[4],\
+                                          self.result[0][0],\
+                                          self.lenTC1,\
+                                          self.lenTC3,\
+                                          self.tranfunc)[0]
+        self.CCL2_result = self.trackp.ccl(self.result[3],\
+                                           self.result[4],\
+                                           self.phiB,\
+                                           self.result[1][0],\
+                                           self.lenTC4,\
+                                           self.lenTC2,\
+                                           self.tranfunc)[0]
         self.R1_val = self.result[0][0]
         self.R2_val = self.result[1][0]
+        self.startPos = self.A
+        self.endPos = self.result[1][1][0]
 
-        self.shift_result = np.linalg.norm(self.result[1][1][0] - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.result[1][1][0] - self.B))
+        self.shift_result = np.linalg.norm(self.endPos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endPos - self.B))
 
         parameter_str += self.gen_paramstr_mode8(withCpos=withCpos)
         syntax_str += self.generate_mapsyntax_reversecurve()
@@ -772,14 +817,17 @@ class IF():
             import pdb
             pdb.set_trace()
 
-        #phiC = 2*np.arccos(np.dot(np.array([np.cos(self.phiA),np.sin(self.phiA)]), (self.C-self.A)/np.linalg.norm(self.C-self.A))) + self.phiA
-
-        '''
-        self.result = self.sv.compound_curve_shiftStartPos(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC4,self.lenTC2,self.tranfunc,givenR1=self.R_input if givenR1 else None)
-        self.startPos = self.result[3][1][0]
-        self.shift_fromA = self.result[4]
-        '''
-        self.result = self.sv.compound_curve(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC4,self.lenTC2,self.tranfunc,givenR1=self.R_input if givenR1 else None)
+        self.result = self.sv.compound_curve(self.A,\
+                                             self.phiA,\
+                                             self.B,\
+                                             self.phiB,\
+                                             self.C,\
+                                             self.phiC,\
+                                             self.lenTC1,\
+                                             self.lenTC4,\
+                                             self.lenTC2,\
+                                             self.tranfunc,\
+                                             givenR1=self.R_input if givenR1 else None)
         self.startPos = self.A
         self.shift_fromA = 0
         
@@ -790,8 +838,20 @@ class IF():
         self.endpos = self.result[1][2][1][0]
         self.shift_result = np.linalg.norm(self.endpos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endpos - self.B))
 
-        self.trackp.generate(self.startPos,self.phiA,self.result[1][1][1],self.result[3][0],self.lenTC1,0,self.tranfunc)
-        self.trackp.generate_add(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC4, self.lenTC2, self.tranfunc, R0 = self.result[3][0])
+        self.trackp.generate(self.startPos,\
+                             self.phiA,\
+                             self.result[1][1][1],\
+                             self.result[3][0],\
+                             self.lenTC1,0,\
+                             self.tranfunc)
+        self.trackp.generate_add(self.result[1][1][0],\
+                                 self.result[1][1][1],\
+                                 self.phiB,\
+                                 self.result[1][2][0],\
+                                 self.lenTC4,\
+                                 self.lenTC2,\
+                                 self.tranfunc,\
+                                 R0 = self.result[3][0])
 
         parameter_str += self.gen_paramstr_mode9()
         syntax_str += self.generate_mapsyntax_compoundcurve()
@@ -801,14 +861,25 @@ class IF():
         parameter_str = ''
         syntax_str = ''
 
-        self.result_R1 = self.sv.curvetrack_relocation(self.A,self.phiA,self.C,self.phiC,self.lenTC1,self.lenTC3,self.tranfunc,self.R_input)
+        self.result_R1 = self.sv.curvetrack_relocation(self.A,\
+                                                       self.phiA,\
+                                                       self.C,\
+                                                       self.phiC,\
+                                                       self.lenTC1,\
+                                                       self.lenTC3,\
+                                                       self.tranfunc,\
+                                                       self.R_input)
 
         self.Cdash = self.result_R1[1][0]
 
-        self.result_R2 = self.sv.curvetrack_relocation(self.Cdash,self.phiC,self.B,self.phiB,self.lenTC4,self.lenTC2,self.tranfunc,self.R2_input)
-
-        #intermed_vec = self.Cdash + self.result_R2[0]*np.array([np.cos(self.phiC),np.sin(self.phiC)])
-        #self.interm_length = np.linalg.norm(intermed_vec) * np.sign(np.dot(np.array([np.cos(self.phiC),np.sin(self.phiC)]), intermed_vec))
+        self.result_R2 = self.sv.curvetrack_relocation(self.Cdash,\
+                                                       self.phiC,\
+                                                       self.B,\
+                                                       self.phiB,\
+                                                       self.lenTC4,\
+                                                       self.lenTC2,\
+                                                       self.tranfunc,\
+                                                       self.R2_input)
 
         if self.result_R2[0] < 0:
             raise Exception('invalid R1,R2 pair')
@@ -821,12 +892,23 @@ class IF():
         self.shift_result = self.result_R1[0]
         self.R1_val = self.R_input
         self.R2_val = self.R2_input
+        self.endPos = self.result_R2[0]
 
         
         self.trackp.generate(self.A_result,\
-                             self.phiA,self.phiC,self.R_input,self.lenTC1,self.lenTC3,self.tranfunc)
+                             self.phiA,\
+                             self.phiC,\
+                             self.R_input,\
+                             self.lenTC1,\
+                             self.lenTC3,\
+                             self.tranfunc)
         self.trackp.generate_add(self.C_result,\
-                             self.phiC,self.phiB,self.R2_input,self.lenTC4,self.lenTC2,self.tranfunc)
+                                 self.phiC,\
+                                 self.phiB,\
+                                 self.R2_input,\
+                                 self.lenTC4,\
+                                 self.lenTC2,\
+                                 self.tranfunc)
 
 
         syntax_str = self.generate_mapsyntax_reversecurve(initial_shift = True)
@@ -870,7 +952,19 @@ class IF():
         parameter_str = ''
         syntax_str = ''
 
-        self.result = self.sv.compound_curve_Linterm(self.A,self.phiA,self.B,self.phiB,self.C,self.phiC,self.lenTC1,self.lenTC3,self.lenTC4,self.lenTC2,self.lenLint,self.tranfunc,givenR1=self.R_input)
+        self.result = self.sv.compound_curve_Linterm(self.A,\
+                                                     self.phiA,\
+                                                     self.B,\
+                                                     self.phiB,\
+                                                     self.C,\
+                                                     self.phiC,\
+                                                     self.lenTC1,\
+                                                     self.lenTC3,\
+                                                     self.lenTC4,\
+                                                     self.lenTC2,\
+                                                     self.lenLint,\
+                                                     self.tranfunc,\
+                                                     givenR1=self.R_input)
         self.startPos = self.A
         self.shift_fromA = 0
         
@@ -878,11 +972,23 @@ class IF():
         self.R2_val = self.result[1][2][0]
         self.CCL_result = self.result[0]
         self.CCL2_result = self.trackp.ccl(self.result[1][1][0], self.result[1][1][1], self.phiB, self.result[1][2][0], self.lenTC4, self.lenTC2, self.tranfunc)[0]
-        self.endpos = self.result[1][2][1][0]
-        self.shift_result = np.linalg.norm(self.endpos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endpos - self.B))
+        self.endPos = self.result[1][2][1][0]
+        self.shift_result = np.linalg.norm(self.endPos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endPos - self.B))
 
-        self.trackp.generate(self.startPos,self.phiA,self.result[1][1][1],self.R1_val,self.lenTC1,self.lenTC3,self.tranfunc)
-        self.trackp.generate_add(self.result[1][3][0], self.result[1][3][1], self.phiB, self.R2_val, self.lenTC4, self.lenTC2, self.tranfunc)
+        self.trackp.generate(self.startPos,\
+                             self.phiA,\
+                             self.result[1][1][1],\
+                             self.R1_val,\
+                             self.lenTC1,\
+                             self.lenTC3,\
+                             self.tranfunc)
+        self.trackp.generate_add(self.result[1][3][0],\
+                                 self.result[1][3][1],\
+                                 self.phiB,\
+                                 self.R2_val,\
+                                 self.lenTC4,\
+                                 self.lenTC2,\
+                                 self.tranfunc)
 
         parameter_str += self.gen_paramstr_mode8(withCpos=False,givenR=True)
         syntax_str += self.generate_mapsyntax_reversecurve()
@@ -917,8 +1023,8 @@ class IF():
         self.R2_val = self.R2_input
         self.CCL_result = self.R1_val * self.result[0]
         self.CCL2_result = self.R2_val * self.result[1][6][1]
-        self.endpos = self.result[1][0]
-        self.shift_result = np.linalg.norm(self.endpos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endpos - self.B))
+        self.endPos = self.result[1][0]
+        self.shift_result = np.linalg.norm(self.endPos - self.B)*np.sign(np.dot(np.array([np.cos(self.phiB),np.sin(self.phiB)]),self.endPos - self.B))
 
         phiR1end = self.result[1][3][1]+self.result[0]+self.result[1][2][1]+self.phiA
         
@@ -937,7 +1043,7 @@ class IF():
                                  self.lenTC2,\
                                  self.tranfunc)
 
-        #parameter_str += self.gen_paramstr_mode8(withCpos=False,givenR=True)
+        parameter_str += self.gen_paramstr_mode8(withCpos=False,givenR=True)
         syntax_str += self.generate_mapsyntax_reversecurve()
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
@@ -1186,7 +1292,7 @@ class IF():
         parameter_str += '   CCL1:      {:f}'.format(self.CCL_result) + '\n'
         parameter_str += '   CCL2:      {:f}'.format(self.CCL2_result) + '\n'
         if endpos:
-            parameter_str += '   endpt:     ({:f}, {:f})\n'.format(self.result[1][1][0][0],self.result[1][1][0][1])
+            parameter_str += '   endpt:     ({:f}, {:f})\n'.format(self.endPos[0],self.endPos[1])
             parameter_str += '   shift from pt. β: {:f}\n'.format(self.shift_result)
         else:
             parameter_str += '   startpt:   ({:f}, {:f})\n'.format(self.A_result[0],self.A_result[1])
