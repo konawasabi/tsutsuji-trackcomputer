@@ -941,6 +941,18 @@ class IF():
         syntax_str += self.generate_mapsyntax_reversecurve()
         
         return {'track':self.trackp.result, 'param':parameter_str, 'syntax':syntax_str}
+    def mode9_12(self,givenR1=False): # 8-3, 9-2
+        if self.lenLint == 0:
+            result=self.mode9(givenR1=givenR1)
+        else:
+            result=self.mode12()
+        return result
+    def mode11_13(self): # 8-4, 9-3
+        if self.lenLint == 0:
+            result=self.mode11()
+        else:
+            result=self.mode13()
+        return result
     def generate_mapsyntax(self):
         syntax_str = ''
         syntax_str += '$pt_a = {:f};'.format(self.cursor_f.values[4].get() if self.cursor_f.values[3].get() != '@absolute' else 0) + '\n'

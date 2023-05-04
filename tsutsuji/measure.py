@@ -269,8 +269,8 @@ class interface():
                                     '7. α(free)->β(fix) via γ, R(free)',\
                                     '8-1. Reverse α->β',\
                                     '8-2. Reverse α->γ->β',\
-                                    '8-3. Reverse α->β (fixed R)',\
-                                    '8-4. Reverse α->β (fixed R,R2)',\
+                                    #'8-3. Reverse α->β (fixed R)',\
+                                    #'8-4. Reverse α->β (fixed R,R2)',\
                                     '9-1. Compound α->γ->β',\
                                     '9-2. Compound α->β (fixed R)',\
                                     '9-3. Compound α->β (fixed R,R2)')
@@ -414,16 +414,17 @@ class interface():
             result = svIF.mode8(withCpos=False)
         elif fitmode.startswith('8-2.'):
             result = svIF.mode8()
-        elif fitmode.startswith('8-3.'):
-            result = svIF.mode12()
-        elif fitmode.startswith('8-4.'):
-            result = svIF.mode13()
+        #elif fitmode.startswith('8-3.'):
+        #    result = svIF.mode12()
+        #elif fitmode.startswith('8-4.'):
+        #    result = svIF.mode13()
         elif fitmode.startswith('9-1.'):
             result = svIF.mode9()
         elif fitmode.startswith('9-2.'):
-            result = svIF.mode9(givenR1=True)
+            #result = svIF.mode9(givenR1=True)
+            result = svIF.mode9_12(givenR1=True)
         elif fitmode.startswith('9-3.'):
-            result = svIF.mode11()
+            result = svIF.mode11_13()
         else:
             raise Exception('invalid fitmode')
         
