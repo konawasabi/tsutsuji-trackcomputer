@@ -275,7 +275,7 @@ class interface():
                                     '9-2. Compound α->β (fixed R)',\
                                     '9-3. Compound α->β (fixed R,R2)')
             self.curve_fitmode_v = tk.StringVar(value=curve_fitmode_tuple[0])
-            self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v,height=len(curve_fitmode_tuple))
+            self.curve_fitmode_box = ttk.Combobox(self.curve_transfunc_f,textvariable=self.curve_fitmode_v,height=len(curve_fitmode_tuple),width=28)
             self.curve_fitmode_box.grid(column=2, row=0, sticky=(tk.E,tk.W))
             self.curve_fitmode_box['values'] = curve_fitmode_tuple
             self.curve_fitmode_box.state(["readonly"])
