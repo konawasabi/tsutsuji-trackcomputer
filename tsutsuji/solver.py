@@ -208,7 +208,7 @@ class solver():
 
         result_2nd = self.curvetrack_fit(Cdash, phiC, B, phiB, lenTC21, lenTC22, tranfunc)
         return (result_1st,result_2nd,C,Cdash,phiC)
-    def compound_curve(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01,num=50,givenR1=None):
+    def compound_curve(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01,num_max=50,givenR1=None):
         '''
         [A]-TC-CC-[C]-CC-TC-CC-TC-[B]
         based on mode1
@@ -260,7 +260,7 @@ class solver():
         num=0 # 繰り返し回数
         f1 = (error*100,None,None)
         CCL1 = 100
-        while (f1[0] > error and num < num):
+        while (f1[0] > error and num < num_max):
             f1 =  func(result_R1[0],CCL1,   A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)
             df = (func(result_R1[0],CCL1+dl,A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0]\
                  -func(result_R1[0],CCL1,   A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0])/dl
@@ -280,7 +280,7 @@ class solver():
            result_r1
         '''
         return (CCL1,f1,num,result_R1)
-    def compound_curve_shiftStartPos(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01,num=50,givenR1=None):
+    def compound_curve_shiftStartPos(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,tranfunc,dl=0.1,error=0.01,num_max=50,givenR1=None):
         '''
         [A]-TC-CC-[C]-CC-TC-CC-TC-[B]
         based on mode2
@@ -339,7 +339,7 @@ class solver():
         f1 = (error*100,None,None)
         CCL1 = 100
         A_shifted = result_R1[1][0]
-        while (f1[0] > error and num < num):
+        while (f1[0] > error and num < num_max):
             f1 =  func(result_R1[0],CCL1,   A_shifted,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)
             df = (func(result_R1[0],CCL1+dl,A_shifted,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0]\
                  -func(result_R1[0],CCL1,   A_shifted,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,tranfunc)[0])/dl
@@ -357,7 +357,7 @@ class solver():
            result_r1
         '''
         return (CCL1,f1,num,result_R1,shift_fromA)
-    def compound_curve_Linterm(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,tranfunc,dl=0.1,error=0.01,num=50,givenR1=None):
+    def compound_curve_Linterm(self,A,phiA,B,phiB,C,phiC,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,tranfunc,dl=0.1,error=0.01,num_max=50,givenR1=None):
         '''
         [A]-TC-CC-TC-S-TC-CC-TC-[B]
         based on mode1
@@ -411,7 +411,7 @@ class solver():
         num=0 # 繰り返し回数
         f1 = (error*100,None,None)
         CCL1 = 100
-        while (f1[0] > error and num < num):
+        while (f1[0] > error and num < num_max):
             f1 =  func(result_R1[0],CCL1,   A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,tranfunc)
             df = (func(result_R1[0],CCL1+dl,A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,tranfunc)[0]\
                  -func(result_R1[0],CCL1,   A,phiA,B,phiB,C,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,tranfunc)[0])/dl
@@ -431,7 +431,7 @@ class solver():
            result_r1
         '''
         return (CCL1,f1,num,result_R1)
-    def compound_curve_givenR(self,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc,dphi=0.001,error=0.01,num=50):
+    def compound_curve_givenR(self,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc,dphi=0.001,error=0.01,num_max=50):
         def func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc):
             #delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
             
@@ -495,7 +495,7 @@ class solver():
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
         phiCC1 = 0.2 if R1>0 else -0.2
-        while (f1[1] > error and num < num):
+        while (f1[1] > error and num < num_max):
             f1 = func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)
             df =  (func(phiCC1+dphi,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1]\
                   -func(phiCC1,     A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,R1,R2,tranfunc)[1])/dphi
@@ -505,7 +505,7 @@ class solver():
             #    raise Exception('invalid R1,R2 pair')
             num +=1
         return (phiCC1,f1,num)
-    def compound_curve_givenR_Lint(self,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,R1,R2,tranfunc,dphi=0.001,error=0.01,num=50):
+    def compound_curve_givenR_Lint(self,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,R1,R2,tranfunc,dphi=0.001,error=0.01,num_max=50):
         def func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,R1,R2,tranfunc):
             #delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化
             
@@ -588,7 +588,7 @@ class solver():
         num=0 # 繰り返し回数
         f1 = (np.array([0,0]),error*100)
         phiCC1 = 0.2 if R1>0 else -0.2
-        while (f1[1] > error and num < num):
+        while (f1[1] > error and num < num_max):
             f1 = func(phiCC1,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,R1,R2,tranfunc)
             df =  (func(phiCC1+dphi,A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,R1,R2,tranfunc)[1]\
                   -func(phiCC1,     A,phiA,B,phiB,lenTC1,lenTC2,lenTC3,lenTC4,lenLint,R1,R2,tranfunc)[1])/dphi
