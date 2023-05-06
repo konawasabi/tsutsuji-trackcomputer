@@ -2,10 +2,14 @@
 
 ## to be implemented
 
-- solver
-  - 渡り線・S字カーブMode
 - プロット画面
   - 任意角度への回転
+  
+## [1.6.0] - 2023-05-06
+
+- Curvetrack Solver
+  - 反向曲線、複心曲線向けModeを追加
+    - Mode 3-2, 8-1, 8-2, 9-1, 9-2, 9-3
   
 ## [1.5.4] - 2023-03-19
 
@@ -145,6 +149,7 @@
 
 - 1st release
 
+[1.6.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.4...ver1.6.0
 [1.5.4]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.3...ver1.5.4
 [1.5.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.2...ver1.5.3
 [1.5.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.1...ver1.5.2
