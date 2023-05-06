@@ -15,6 +15,7 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -165,6 +166,8 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 <div class="viewcode-block" id="angle_twov"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.angle_twov">[docs]</a><span class="k">def</span> <span class="nf">angle_twov</span><span class="p">(</span><span class="n">phiA</span><span class="p">,</span> <span class="n">phiB</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; ベクトルA (方位角phiA)からベクトルB(方位角phiB)への方位角変化を求める</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">eA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phiA</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phiA</span><span class="p">)])</span>
     <span class="n">eB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phiB</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phiB</span><span class="p">)])</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eA</span><span class="p">,</span><span class="n">eB</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">eA</span><span class="p">,</span><span class="n">eB</span><span class="p">))</span></div>
@@ -423,7 +426,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
 </html>

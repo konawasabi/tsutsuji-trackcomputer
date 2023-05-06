@@ -5,7 +5,7 @@
 <html lang="jp">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>tsutsuji.backimg module &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -16,6 +16,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -176,6 +177,44 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">tsutsuji.backimg module</a><ul>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl"><code class="docutils literal notranslate"><span class="pre">BackImgControl</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.BackImgData"><code class="docutils literal notranslate"><span class="pre">BackImgControl.BackImgData</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.BackImgData.rotate"><code class="docutils literal notranslate"><span class="pre">BackImgControl.BackImgData.rotate()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.BackImgData.show"><code class="docutils literal notranslate"><span class="pre">BackImgControl.BackImgData.show()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.clickimglist"><code class="docutils literal notranslate"><span class="pre">BackImgControl.clickimglist()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.closewindow"><code class="docutils literal notranslate"><span class="pre">BackImgControl.closewindow()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.create_window"><code class="docutils literal notranslate"><span class="pre">BackImgControl.create_window()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.deleteimg"><code class="docutils literal notranslate"><span class="pre">BackImgControl.deleteimg()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.imgsarea"><code class="docutils literal notranslate"><span class="pre">BackImgControl.imgsarea()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.load_setting"><code class="docutils literal notranslate"><span class="pre">BackImgControl.load_setting()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.newimg"><code class="docutils literal notranslate"><span class="pre">BackImgControl.newimg()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.save_setting"><code class="docutils literal notranslate"><span class="pre">BackImgControl.save_setting()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.sendtopmost"><code class="docutils literal notranslate"><span class="pre">BackImgControl.sendtopmost()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.BackImgControl.showimg"><code class="docutils literal notranslate"><span class="pre">BackImgControl.showimg()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tsutsuji.backimg.TileMapControl"><code class="docutils literal notranslate"><span class="pre">TileMapControl</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.backimg.TileMapControl.closewindow"><code class="docutils literal notranslate"><span class="pre">TileMapControl.closewindow()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.TileMapControl.create_paramwindow"><code class="docutils literal notranslate"><span class="pre">TileMapControl.create_paramwindow()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.TileMapControl.export"><code class="docutils literal notranslate"><span class="pre">TileMapControl.export()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.TileMapControl.getimg"><code class="docutils literal notranslate"><span class="pre">TileMapControl.getimg()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.TileMapControl.getparameters"><code class="docutils literal notranslate"><span class="pre">TileMapControl.getparameters()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.TileMapControl.sendtopmost"><code class="docutils literal notranslate"><span class="pre">TileMapControl.sendtopmost()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.TileMapControl.setparams_fromcfg"><code class="docutils literal notranslate"><span class="pre">TileMapControl.setparams_fromcfg()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.backimg.TileMapControl.showimg"><code class="docutils literal notranslate"><span class="pre">TileMapControl.showimg()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -212,7 +251,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
 </html>

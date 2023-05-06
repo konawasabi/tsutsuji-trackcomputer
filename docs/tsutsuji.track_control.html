@@ -5,7 +5,7 @@
 <html lang="jp">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>tsutsuji.track_control module &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -16,6 +16,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -60,7 +61,7 @@
 <span class="sig-name descname"><span class="pre">convert_relativecp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trackkey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.convert_relativecp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.convert_relativecp" title="Permalink to this definition">¶</a></dt>
 <dd><p>抽出した制御点を自軌道座標に変換</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
 <dt>ndarray</dt><dd><p>resultcp: [注目軌道基準の距離程, 注目軌道基準のx, y座標, 自軌道基準制御点の距離程, 自軌道基準のx方向距離, 自軌道基準制御点のx, y座標]</p>
 </dd>
@@ -136,13 +137,13 @@
 <span class="sig-name descname"><span class="pre">relativepoint_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_calc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.relativepoint_single"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.relativepoint_single" title="Permalink to this definition">¶</a></dt>
 <dd><p>owntrackを基準とした相対座標への変換</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> -- to_calc: 変換する軌道</p></li>
 <li><p><strong>string</strong> -- owntrack: 自軌道 (Option)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>ndarray</dt><dd><p>[[owntrack基準の距離程, 変換後x座標成分(=0), 変換後y座標成分, 変換後z座標成分, 対応する軌道の距離程,絶対座標x成分,絶対座標y成分,絶対座標z成分,カント], ...]</p>
 </dd>
@@ -173,14 +174,14 @@
 <span class="sig-name descname"><span class="pre">takecp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trackkey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supplemental</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.takecp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.takecp" title="Permalink to this definition">¶</a></dt>
 <dd><p>注目軌道の制御点を抽出</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>trackkey</strong> (<em>string</em>) -- </p></li>
 <li><p><strong>owntrack</strong> (<em>string</em>) -- </p></li>
 <li><p><strong>elem</strong> (<em>string</em>) -- elemで指定した要素のみ抽出する</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>list</dt><dd><p>cp_dist: 注目軌道の制御点距離程</p>
 </dd>
@@ -203,6 +204,36 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">tsutsuji.track_control module</a><ul>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl"><code class="docutils literal notranslate"><span class="pre">TrackControl</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.convert_cant_with_relativecp"><code class="docutils literal notranslate"><span class="pre">TrackControl.convert_cant_with_relativecp()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.convert_relativecp"><code class="docutils literal notranslate"><span class="pre">TrackControl.convert_relativecp()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.drawarea"><code class="docutils literal notranslate"><span class="pre">TrackControl.drawarea()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.dump_trackdata"><code class="docutils literal notranslate"><span class="pre">TrackControl.dump_trackdata()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.dump_trackpos"><code class="docutils literal notranslate"><span class="pre">TrackControl.dump_trackpos()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.generate_mapdata"><code class="docutils literal notranslate"><span class="pre">TrackControl.generate_mapdata()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.generate_otdata"><code class="docutils literal notranslate"><span class="pre">TrackControl.generate_otdata()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.loadcfg"><code class="docutils literal notranslate"><span class="pre">TrackControl.loadcfg()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.loadmap"><code class="docutils literal notranslate"><span class="pre">TrackControl.loadmap()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.plot2d"><code class="docutils literal notranslate"><span class="pre">TrackControl.plot2d()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.plot_controlpoints"><code class="docutils literal notranslate"><span class="pre">TrackControl.plot_controlpoints()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.plot_symbols"><code class="docutils literal notranslate"><span class="pre">TrackControl.plot_symbols()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.relativepoint_all"><code class="docutils literal notranslate"><span class="pre">TrackControl.relativepoint_all()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.relativepoint_single"><code class="docutils literal notranslate"><span class="pre">TrackControl.relativepoint_single()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.relativeradius"><code class="docutils literal notranslate"><span class="pre">TrackControl.relativeradius()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.relativeradius_cp"><code class="docutils literal notranslate"><span class="pre">TrackControl.relativeradius_cp()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.take_cp_by_types"><code class="docutils literal notranslate"><span class="pre">TrackControl.take_cp_by_types()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.takecp"><code class="docutils literal notranslate"><span class="pre">TrackControl.takecp()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -239,7 +270,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
 </html>

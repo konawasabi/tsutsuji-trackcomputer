@@ -5,7 +5,7 @@
 <html lang="jp">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>tsutsuji.drawcursor module &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -16,6 +16,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -219,6 +220,57 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">tsutsuji.drawcursor module</a><ul>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.arrow"><code class="docutils literal notranslate"><span class="pre">arrow</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.arrow.move"><code class="docutils literal notranslate"><span class="pre">arrow.move()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.arrow.press"><code class="docutils literal notranslate"><span class="pre">arrow.press()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.arrow.set_direct"><code class="docutils literal notranslate"><span class="pre">arrow.set_direct()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.arrow.setobj"><code class="docutils literal notranslate"><span class="pre">arrow.setobj()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.arrow.settangent"><code class="docutils literal notranslate"><span class="pre">arrow.settangent()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.arrow.start"><code class="docutils literal notranslate"><span class="pre">arrow.start()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.cursor"><code class="docutils literal notranslate"><span class="pre">cursor</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.cursor.distance2pos"><code class="docutils literal notranslate"><span class="pre">cursor.distance2pos()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.cursor.point_and_dir"><code class="docutils literal notranslate"><span class="pre">cursor.point_and_dir()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker"><code class="docutils literal notranslate"><span class="pre">marker</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker.move"><code class="docutils literal notranslate"><span class="pre">marker.move()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker.nearestpoint"><code class="docutils literal notranslate"><span class="pre">marker.nearestpoint()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker.press"><code class="docutils literal notranslate"><span class="pre">marker.press()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker.setmarkerobj"><code class="docutils literal notranslate"><span class="pre">marker.setmarkerobj()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker.setpos"><code class="docutils literal notranslate"><span class="pre">marker.setpos()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker.start"><code class="docutils literal notranslate"><span class="pre">marker.start()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_pos"><code class="docutils literal notranslate"><span class="pre">marker_pos</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_pos.move"><code class="docutils literal notranslate"><span class="pre">marker_pos.move()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_pos.nearestpoint"><code class="docutils literal notranslate"><span class="pre">marker_pos.nearestpoint()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_pos.posfunc"><code class="docutils literal notranslate"><span class="pre">marker_pos.posfunc()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_pos.press"><code class="docutils literal notranslate"><span class="pre">marker_pos.press()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_pos.pressfunc"><code class="docutils literal notranslate"><span class="pre">marker_pos.pressfunc()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_pos.set_direct"><code class="docutils literal notranslate"><span class="pre">marker_pos.set_direct()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_pos.setmarkerobj"><code class="docutils literal notranslate"><span class="pre">marker_pos.setmarkerobj()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_pos.start"><code class="docutils literal notranslate"><span class="pre">marker_pos.start()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_simple"><code class="docutils literal notranslate"><span class="pre">marker_simple</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_simple.move"><code class="docutils literal notranslate"><span class="pre">marker_simple.move()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_simple.press"><code class="docutils literal notranslate"><span class="pre">marker_simple.press()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_simple.setobj"><code class="docutils literal notranslate"><span class="pre">marker_simple.setobj()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_simple.setpos"><code class="docutils literal notranslate"><span class="pre">marker_simple.setpos()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.drawcursor.marker_simple.start"><code class="docutils literal notranslate"><span class="pre">marker_simple.start()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -255,7 +307,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
 </html>

@@ -5,7 +5,7 @@
 <html lang="jp">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>tsutsuji.solver module &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -16,6 +16,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -46,12 +47,166 @@
   <section id="module-tsutsuji.solver">
 <span id="tsutsuji-solver-module"></span><h1>tsutsuji.solver module<a class="headerlink" href="#module-tsutsuji.solver" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsutsuji.solver.</span></span><span class="sig-name descname"><span class="pre">IF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenCC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenLint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitmode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_fitmode_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor_f_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor_t_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor_via_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.gen_paramstr_mode1_2">
+<span class="sig-name descname"><span class="pre">gen_paramstr_mode1_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.gen_paramstr_mode1_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.gen_paramstr_mode1_2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.gen_paramstr_mode3">
+<span class="sig-name descname"><span class="pre">gen_paramstr_mode3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.gen_paramstr_mode3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.gen_paramstr_mode3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.gen_paramstr_mode4_5">
+<span class="sig-name descname"><span class="pre">gen_paramstr_mode4_5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.gen_paramstr_mode4_5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.gen_paramstr_mode4_5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.gen_paramstr_mode6_7">
+<span class="sig-name descname"><span class="pre">gen_paramstr_mode6_7</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.gen_paramstr_mode6_7"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.gen_paramstr_mode6_7" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.gen_paramstr_mode8">
+<span class="sig-name descname"><span class="pre">gen_paramstr_mode8</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">withCpos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">givenR</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">givenR2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">givenLint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.gen_paramstr_mode8"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.gen_paramstr_mode8" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.gen_paramstr_mode9">
+<span class="sig-name descname"><span class="pre">gen_paramstr_mode9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">givenR</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">givenR2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.gen_paramstr_mode9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.gen_paramstr_mode9" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.generate_mapsyntax">
+<span class="sig-name descname"><span class="pre">generate_mapsyntax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.generate_mapsyntax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.generate_mapsyntax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.generate_mapsyntax_compoundcurve">
+<span class="sig-name descname"><span class="pre">generate_mapsyntax_compoundcurve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.generate_mapsyntax_compoundcurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.generate_mapsyntax_compoundcurve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.generate_mapsyntax_reversecurve">
+<span class="sig-name descname"><span class="pre">generate_mapsyntax_reversecurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.generate_mapsyntax_reversecurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.generate_mapsyntax_reversecurve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode1">
+<span class="sig-name descname"><span class="pre">mode1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode10">
+<span class="sig-name descname"><span class="pre">mode10</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode10"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode10" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode11">
+<span class="sig-name descname"><span class="pre">mode11</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode11"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode11" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode11_13">
+<span class="sig-name descname"><span class="pre">mode11_13</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode11_13"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode11_13" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode12">
+<span class="sig-name descname"><span class="pre">mode12</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode12"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode12" title="Permalink to this definition">¶</a></dt>
+<dd><p>mode 9-2 + L_intermediate</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode13">
+<span class="sig-name descname"><span class="pre">mode13</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode13"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode13" title="Permalink to this definition">¶</a></dt>
+<dd><p>mode 9-3 + L_intermediate</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode2">
+<span class="sig-name descname"><span class="pre">mode2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode3">
+<span class="sig-name descname"><span class="pre">mode3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode4_5">
+<span class="sig-name descname"><span class="pre">mode4_5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assigncursor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode4_5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode4_5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode6">
+<span class="sig-name descname"><span class="pre">mode6</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode6"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode6" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode7">
+<span class="sig-name descname"><span class="pre">mode7</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode7"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode7" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode8">
+<span class="sig-name descname"><span class="pre">mode8</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">withCpos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode8"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode8" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode9">
+<span class="sig-name descname"><span class="pre">mode9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">givenR1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode9" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.IF.mode9_12">
+<span class="sig-name descname"><span class="pre">mode9_12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">givenR1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#IF.mode9_12"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.IF.mode9_12" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="tsutsuji.solver.solver">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsutsuji.solver.</span></span><span class="sig-name descname"><span class="pre">solver</span></span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.solver.compound_curve">
+<span class="sig-name descname"><span class="pre">compound_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">givenR1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.compound_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.compound_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>[A]-TC-CC-[C]-CC-TC-CC-TC-[B]
+based on mode1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.solver.compound_curve_Linterm">
+<span class="sig-name descname"><span class="pre">compound_curve_Linterm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenLint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">givenR1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.compound_curve_Linterm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.compound_curve_Linterm" title="Permalink to this definition">¶</a></dt>
+<dd><p>[A]-TC-CC-TC-S-TC-CC-TC-[B]
+based on mode1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.solver.compound_curve_givenR">
+<span class="sig-name descname"><span class="pre">compound_curve_givenR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dphi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.compound_curve_givenR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.compound_curve_givenR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.solver.compound_curve_givenR_Lint">
+<span class="sig-name descname"><span class="pre">compound_curve_givenR_Lint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenLint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dphi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.compound_curve_givenR_Lint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.compound_curve_givenR_Lint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.solver.compound_curve_shiftStartPos">
+<span class="sig-name descname"><span class="pre">compound_curve_shiftStartPos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">givenR1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.compound_curve_shiftStartPos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.compound_curve_shiftStartPos" title="Permalink to this definition">¶</a></dt>
+<dd><p>[A]-TC-CC-[C]-CC-TC-CC-TC-[B]
+based on mode2</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.solver.solver.curvetrack_fit">
-<span class="sig-name descname"><span class="pre">curvetrack_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rtmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.curvetrack_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.curvetrack_fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">curvetrack_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rtmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.curvetrack_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.curvetrack_fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>AB間を結ぶ曲線軌道の半径を返す
 A:        始点座標
 phiA:     始点での軌道方位
@@ -63,6 +218,7 @@ tranfunc: 逓減関数 'line' or 'sin'
 Rtmp:     曲線半径初期値
 dr:       残差の微分で使う
 error:    許容誤差</p>
+<p>R0:       始点での軌道半径（複合曲線の緩和曲線を求める際に使用, default: 0）</p>
 </dd></dl>
 
 <dl class="py method">
@@ -79,6 +235,12 @@ tranfunc: 逓減関数 'line' or 'sin'
 R:        曲線半径
 dx:       残差の微分で使う
 error:    許容誤差</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.solver.solver.reverse_curve">
+<span class="sig-name descname"><span class="pre">reverse_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC22</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">len_interm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenCC1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenCC2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.reverse_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.reverse_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>[A]-TC-CC-TC-[C]-S-TC-CC-TC-[B]</p>
 </dd></dl>
 
 <dl class="py method">
@@ -99,7 +261,7 @@ error:    許容誤差</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.solver.solver.temporal_trackparam">
-<span class="sig-name descname"><span class="pre">temporal_trackparam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Rtmp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.temporal_trackparam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.temporal_trackparam" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">temporal_trackparam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Rtmp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenTC2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tranfunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/solver.html#solver.temporal_trackparam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.solver.solver.temporal_trackparam" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -113,6 +275,54 @@ error:    許容誤差</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">tsutsuji.solver module</a><ul>
+<li><a class="reference internal" href="#tsutsuji.solver.IF"><code class="docutils literal notranslate"><span class="pre">IF</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.gen_paramstr_mode1_2"><code class="docutils literal notranslate"><span class="pre">IF.gen_paramstr_mode1_2()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.gen_paramstr_mode3"><code class="docutils literal notranslate"><span class="pre">IF.gen_paramstr_mode3()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.gen_paramstr_mode4_5"><code class="docutils literal notranslate"><span class="pre">IF.gen_paramstr_mode4_5()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.gen_paramstr_mode6_7"><code class="docutils literal notranslate"><span class="pre">IF.gen_paramstr_mode6_7()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.gen_paramstr_mode8"><code class="docutils literal notranslate"><span class="pre">IF.gen_paramstr_mode8()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.gen_paramstr_mode9"><code class="docutils literal notranslate"><span class="pre">IF.gen_paramstr_mode9()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.generate_mapsyntax"><code class="docutils literal notranslate"><span class="pre">IF.generate_mapsyntax()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.generate_mapsyntax_compoundcurve"><code class="docutils literal notranslate"><span class="pre">IF.generate_mapsyntax_compoundcurve()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.generate_mapsyntax_reversecurve"><code class="docutils literal notranslate"><span class="pre">IF.generate_mapsyntax_reversecurve()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode1"><code class="docutils literal notranslate"><span class="pre">IF.mode1()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode10"><code class="docutils literal notranslate"><span class="pre">IF.mode10()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode11"><code class="docutils literal notranslate"><span class="pre">IF.mode11()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode11_13"><code class="docutils literal notranslate"><span class="pre">IF.mode11_13()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode12"><code class="docutils literal notranslate"><span class="pre">IF.mode12()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode13"><code class="docutils literal notranslate"><span class="pre">IF.mode13()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode2"><code class="docutils literal notranslate"><span class="pre">IF.mode2()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode3"><code class="docutils literal notranslate"><span class="pre">IF.mode3()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode4_5"><code class="docutils literal notranslate"><span class="pre">IF.mode4_5()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode6"><code class="docutils literal notranslate"><span class="pre">IF.mode6()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode7"><code class="docutils literal notranslate"><span class="pre">IF.mode7()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode8"><code class="docutils literal notranslate"><span class="pre">IF.mode8()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode9"><code class="docutils literal notranslate"><span class="pre">IF.mode9()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.IF.mode9_12"><code class="docutils literal notranslate"><span class="pre">IF.mode9_12()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver"><code class="docutils literal notranslate"><span class="pre">solver</span></code></a><ul>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.compound_curve"><code class="docutils literal notranslate"><span class="pre">solver.compound_curve()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.compound_curve_Linterm"><code class="docutils literal notranslate"><span class="pre">solver.compound_curve_Linterm()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.compound_curve_givenR"><code class="docutils literal notranslate"><span class="pre">solver.compound_curve_givenR()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.compound_curve_givenR_Lint"><code class="docutils literal notranslate"><span class="pre">solver.compound_curve_givenR_Lint()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.compound_curve_shiftStartPos"><code class="docutils literal notranslate"><span class="pre">solver.compound_curve_shiftStartPos()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.curvetrack_fit"><code class="docutils literal notranslate"><span class="pre">solver.curvetrack_fit()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.curvetrack_relocation"><code class="docutils literal notranslate"><span class="pre">solver.curvetrack_relocation()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.reverse_curve"><code class="docutils literal notranslate"><span class="pre">solver.reverse_curve()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.shift_by_TCL"><code class="docutils literal notranslate"><span class="pre">solver.shift_by_TCL()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.solver.solver.temporal_trackparam"><code class="docutils literal notranslate"><span class="pre">solver.temporal_trackparam()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -149,7 +359,7 @@ error:    許容誤差</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
 </html>

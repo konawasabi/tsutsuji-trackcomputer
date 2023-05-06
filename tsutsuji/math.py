@@ -119,6 +119,8 @@ def cross_normal(position, track):
     '''
     return None
 def angle_twov(phiA, phiB):
+    ''' ベクトルA (方位角phiA)からベクトルB(方位角phiB)への方位角変化を求める
+    '''
     eA = np.array([np.cos(phiA),np.sin(phiA)])
     eB = np.array([np.cos(phiB),np.sin(phiB)])
     return np.arccos(np.dot(eA,eB))*np.sign(np.cross(eA,eB))

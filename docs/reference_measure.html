@@ -5,7 +5,7 @@
 <html lang="jp">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>Measure ウィンドウ &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -16,6 +16,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -54,7 +55,7 @@
             
   <section id="measure">
 <h1>Measure ウィンドウ<a class="headerlink" href="#measure" title="Permalink to this heading">¶</a></h1>
-<a class="reference internal image-reference" href="_images/measure.png"><img alt="_images/measure.png" src="_images/measure.png" style="width: 305.4px; height: 203.4px;" /></a>
+<a class="reference internal image-reference" href="_images/measure2.png"><img alt="_images/measure2.png" src="_images/measure2.png" style="width: 315.59999999999997px; height: 223.79999999999998px;" /></a>
 <section id="id1">
 <h2>カーソル機能<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
 <p>プロットウィンドウ上の座標と方角を調べる機能です。
@@ -125,7 +126,7 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 <p>緩和曲線つきの曲線軌道を計算する場合は、TCL α, TCL βフィールドに曲線前後の緩和曲線長を入力し、逓減関数をline/sinラジオボタンで選択しておきます。</p>
 <section id="mode">
 <h3>Mode<a class="headerlink" href="#mode" title="Permalink to this heading">¶</a></h3>
-<p>計算Modeは次の7種類から選べます。</p>
+<p>計算Modeは次の通りです。</p>
 <ul>
 <li><ol class="arabic simple">
 <li><p>α(fix)-&gt;β(free), R(free)</p></li>
@@ -141,9 +142,7 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 <li><p>カーソルαの延長線上に始点をもち、カーソルβを終点とする曲線軌道の半径R、円曲線長CCLを求める</p></li>
 </ul>
 </li>
-<li><ol class="arabic simple" start="3">
-<li><p>α(free)-&gt;β(free), R(fix)</p></li>
-</ol>
+<li><p>3-1. α(free)-&gt;β(free), R(fix)</p>
 <ul class="simple">
 <li><p>Rフィールドに入力された半径Rの曲線軌道について、カーソルα, βの延長線上に始点, 終点を持つものを求める</p></li>
 <li><p>求めた軌道について、軌道始点とカーソルαとの距離、円曲線長CCLを出力する</p></li>
@@ -152,6 +151,40 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 </ul>
 <img alt="_images/curvetracksolver.png" src="_images/curvetracksolver.png" />
 <ul>
+<li><p>3-2. α-&gt;γ-&gt;β, (fixed R,R2)</p>
+<ul>
+<li><p>半径Rでカーソルα, γの延長線上に始点、終点を持つ曲線軌道1、半径R2でカーソルγ, βの延長線上に始点、終点を持つ曲線軌道2を同時に求める</p>
+<ul class="simple">
+<li><p>緩和曲線長について</p>
+<ul>
+<li><p>TCLα, TCLγ: 曲線軌道1の入口側、出口側</p></li>
+<li><p>TCLδ, TCLβ: 曲線軌道2の入口側、出口側</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>求めた軌道について次のパラメータを出力する</p>
+<ul class="simple">
+<li><p>曲線軌道1の始点とカーソルαとの距離</p></li>
+<li><p>曲線軌道1の円曲線長CCL1</p></li>
+<li><p>曲線軌道2の円曲線長CCL2</p></li>
+<li><p>曲線軌道1の終点と曲線軌道2の始点の距離L int.</p></li>
+</ul>
+</li>
+<li><p>与えられた条件で軌道が求められない場合、&quot;Invalid parameters&quot;エラーを出す</p>
+<ul class="simple">
+<li><p>例</p>
+<ul>
+<li><p>曲線軌道1終点よりも手前に曲線軌道2始点が来る場合</p></li>
+<li><p>曲線半径R, R2の符号がカーソルα, γ, βの方位と一貫しない場合</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal image-reference" href="_images/curvetracksolver_3-2.png"><img alt="_images/curvetracksolver_3-2.png" src="_images/curvetracksolver_3-2.png" style="width: 294.40000000000003px; height: 270.40000000000003px;" /></a>
+</li>
+</ul>
+</li>
 <li><ol class="arabic simple" start="4">
 <li><p>α(fix), R(fix), CCL(fix)</p></li>
 </ol>
@@ -186,7 +219,7 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 <li><p>TCL=0の場合の曲線軌道より内側にカーソルγが位置している場合に発生</p></li>
 </ul>
 </li>
-<li><img alt="_images/curvetracksolver_1_6.png" src="_images/curvetracksolver_1_6.png" />
+<li><a class="reference internal image-reference" href="_images/curvetracksolver_1_6.png"><img alt="_images/curvetracksolver_1_6.png" src="_images/curvetracksolver_1_6.png" style="width: 342.40000000000003px; height: 197.60000000000002px;" /></a>
 </li>
 </ul>
 </li>
@@ -200,6 +233,120 @@ mapsyntaxチェックを外すと、Curve構文での出力を停止します。
 </ul>
 </li>
 <li><p>その他の注意点はMode 6と同様</p></li>
+</ul>
+</li>
+<li><ol class="arabic simple" start="8">
+<li><p>Reverse curve</p></li>
+</ol>
+<ul>
+<li><p>カーソルαを起点、カーソルβの延長線上を終点とする反向曲線（互いに向きの異なる2つの円曲線を接続したもの）を求める</p></li>
+<li><p>8-1. Reverse α-&gt;β</p>
+<ul class="simple">
+<li><p>起点側の曲線軌道終点はカーソルα, βの中点に自動設定</p></li>
+</ul>
+</li>
+<li><p>8-2. Reverse α-&gt;γ-&gt;β</p>
+<ul class="simple">
+<li><p>カーソルγの位置で起点側の曲線軌道終点を指定する</p>
+<ul>
+<li><p>カーソルγの方位(Dir.)は無視されます</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>入力パラメータ(8-1, 8-2共通)</p>
+<ul class="simple">
+<li><p>TCLα, γ: 起点側曲線軌道の緩和曲線長(α: 入口側、γ:出口側)</p></li>
+<li><p>TCLδ, β: 終点側曲線軌道の緩和曲線長(δ: 入口側、β:出口側)</p></li>
+<li><p>L int.: 2つの曲線軌道の中間直線長</p></li>
+</ul>
+</li>
+<li><a class="reference internal image-reference" href="_images/curvetracksolver_8.png"><img alt="_images/curvetracksolver_8.png" src="_images/curvetracksolver_8.png" style="width: 360.0px; height: 151.20000000000002px;" /></a>
+</li>
+</ul>
+</li>
+<li><ol class="arabic simple" start="9">
+<li><p>Compound curve</p></li>
+</ol>
+<ul>
+<li><p>カーソルαを起点、カーソルβの延長線上を終点とする複心曲線（半径の異なる二つの円曲線を接続したもの）を求める</p>
+<ul class="simple">
+<li><p>以下の説明では二つの円曲線の向きが同じ場合を示していますが、カーソルα, βの設定次第では反向曲線も求められます</p></li>
+</ul>
+</li>
+<li><p>9-1. Compound α-&gt;γ-&gt;β</p>
+<ul>
+<li><p>カーソルγで起点側 <strong>円軌道</strong> の終点を指定する</p>
+<ul class="simple">
+<li><p>位置(Pos.)と方位(Dir.)の両者を指定する必要があります</p></li>
+<li><p>正確には次の計算手順を経るため、カーソルγを通過しない曲線が得られる場合があります</p>
+<ol class="arabic simple">
+<li><p>カーソルαを起点、カーソルγの延長線上を終点とする曲線の半径R1を求め、起点側曲線軌道の半径とする</p>
+<ul>
+<li><p>この曲線の入口側緩和曲線長さはTCLα、終点側緩和曲線なしとする</p></li>
+</ul>
+</li>
+<li><p>1.で求めた曲線軌道上の点を始点、カーソルβの延長線上を終点とする曲線(半径R2)を求める</p>
+<ul>
+<li><p>この曲線の入口側緩和曲線長さはTCLδ, 終点側緩和曲線長さはTCLβとする</p></li>
+<li><p>入口側緩和曲線は、半径R1からR2へ遷移する曲線となる</p></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>入力パラメータ</p>
+<ul class="simple">
+<li><p>TCLα: 起点側曲線軌道入口側の緩和曲線長</p></li>
+<li><p>TCLδ: 2つの曲線軌道の中間緩和曲線長</p></li>
+<li><p>TCLβ: 終点側曲線軌道出口側の緩和曲線長</p></li>
+<li><p>TCLγ, L int. は無効です</p></li>
+</ul>
+</li>
+<li><p>与えられた条件で軌道が求められない場合、&quot;Invalid parameters&quot;エラーを出す</p></li>
+<li><a class="reference internal image-reference" href="_images/curvetracksolver_9-1.png"><img alt="_images/curvetracksolver_9-1.png" src="_images/curvetracksolver_9-1.png" style="width: 344.8px; height: 264.0px;" /></a>
+</li>
+</ul>
+</li>
+<li><p>9-2. Compound α-&gt;β (fixed R)</p>
+<ul>
+<li><p>起点側曲線軌道の半径をRとした場合の複心曲線を求める</p>
+<ul class="simple">
+<li><p>カーソルγは無効</p></li>
+</ul>
+</li>
+<li><p>入力パラメータ</p>
+<ul>
+<li><p>R: 起点側曲線軌道の半径</p></li>
+<li><p>L int.: 2つの曲線軌道の中間直線長</p></li>
+<li><p>TCLα: 起点側曲線軌道入口側の緩和曲線長</p></li>
+<li><p>TCLβ: 終点側曲線軌道出口側の緩和曲線長</p></li>
+<li><p>L int. == 0の場合</p>
+<ul class="simple">
+<li><p>TCLδ: 2つの曲線軌道の中間緩和曲線長</p></li>
+<li><p>TCLγは無効</p></li>
+</ul>
+</li>
+<li><p>L int. &gt; 0の場合</p>
+<ul class="simple">
+<li><p>TCLγ: 起点側曲線軌道出口側の緩和曲線長</p></li>
+<li><p>TCLδ: 終点側巨船軌道入口側の緩和曲線長</p></li>
+</ul>
+</li>
+<li><img alt="_images/curvetracksolver_9_curvature.png" src="_images/curvetracksolver_9_curvature.png" />
+</li>
+</ul>
+</li>
+<li><p>与えられた条件で軌道が求められない場合、&quot;Invalid parameters&quot;エラーを出す</p></li>
+</ul>
+</li>
+<li><p>9-3. Compound α-&gt;β (fixed R,R2)</p>
+<ul class="simple">
+<li><p>起点側曲線軌道の半径をR、終点側をR2とした場合の複心曲線を求める</p></li>
+<li><p>入力パラメータにR2が追加される他はMode 9-2と同一</p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -348,7 +495,7 @@ Curve.Interpolate(0.000000,0.000000);
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
 </html>
