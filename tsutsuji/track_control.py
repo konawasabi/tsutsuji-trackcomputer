@@ -578,14 +578,17 @@ class TrackControl():
         # generate結果をincludeする擬似マップファイルを生成
         output_file = ''
 
-        path = self.conf.track_data[self.conf.general['owntrack']]['file']
+        # 自軌道ファイルをinclude
+        path = self.conf.general['output_path'].joinpath(pathlib.Path('owntrack')).joinpath(self.conf.track_data[self.conf.general['owntrack']]['file'].name)
         output_file += 'include \'{:s}\';\n'.format(str(path))
 
+        # 他軌道ファイルをinclude
         for tr_l in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if (i!= self.conf.general['owntrack'] and i not in self.exclude_tracks)]:
             path = self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr_l)))
             output_file += 'include \'{:s}\';\n'.format(str(path))
 
         otmap_path = self.conf.general['output_path'].joinpath(pathlib.Path('tmpmap.txt'))
+        print(output_file)
 
         # kobushi-trackviewerのマップパーサーへoutput_fileを渡す
         ot_interp = mapinterpreter.ParseMap(env=None,parser=None)
