@@ -588,7 +588,6 @@ class TrackControl():
             output_file += 'include \'{:s}\';\n'.format(str(path))
 
         otmap_path = self.conf.general['output_path'].joinpath(pathlib.Path('tmpmap.txt'))
-        print(output_file)
 
         # kobushi-trackviewerのマップパーサーへoutput_fileを渡す
         ot_interp = mapinterpreter.ParseMap(env=None,parser=None)
@@ -602,7 +601,7 @@ class TrackControl():
             endkp = self.conf.track_data[self.conf.general['owntrack']]['endpoint']
         else:
             endkp = max(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp)
-        self.ot_map_source.cp_arbdistribution = [min(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp),\
+        self.ot_map_source.cp_arbdistribution = [min(self.track[self.conf.general['owntrack']]['data'].controlpoints.list_cp)+self.conf.general['origin_distance'],\
                                             endkp + self.conf.general['unit_length'],\
                                             self.conf.general['unit_length']]
 
