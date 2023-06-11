@@ -52,8 +52,9 @@ class TrackControl():
 
         '''
 
-        #import pdb
-        #pdb.set_trace()
+        if True:
+            import pdb
+            pdb.set_trace()
         
         if self.conf != None:
             self.track = {}
@@ -105,6 +106,16 @@ class TrackControl():
                 self.track[i]['cplist_symbol'] = self.take_cp_by_types(self.track[i]['data'].own_track.data)
                 self.track[i]['toshow'] = True
                 self.track[i]['output_mapfile'] = None
+
+                self.track[i]['data'].owntrack_pos = self.track[i]['result']
+                self.track[i]['data'].owntrack_curve = self.track[i]['tgen'].generate_curveradius_dist()
+
+                self.track[i]['othertrack'] = {}
+                for otkey in self.track['up']['data'].othertrack.data.keys():
+                    self.track[i]['othertrack'][otkey] = {}
+                    otdata = self.track[i]['othertrack'][otkey]
+                    otdata['tgen'] = trackgenerator.OtherTrackGenerator(self.track[i]['data'],otkey)
+                    otdata['result'] = otdata['tgen'].generate()
 
         self.pointsequence_track.load_files(self.conf)
             
@@ -282,6 +293,10 @@ class TrackControl():
                 if self.track[i]['toshow']:
                     tmp = self.track[i]['result']
                     ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
+                if len(self.track[i]['othertrack'])>0:
+                    for otkey in self.track[i]['othertrack'].keys():
+                        tmp = self.track[i]['othertrack'][otkey]['result']
+                        ax.plot(tmp[:,1],tmp[:,2],label='{:s}_{:s}'.format(i,otkey),color=self.conf.track_data[i]['color'],lw=1)
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
             self.pointsequence_track.plot2d(ax)
