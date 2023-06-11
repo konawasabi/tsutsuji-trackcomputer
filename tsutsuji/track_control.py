@@ -52,7 +52,7 @@ class TrackControl():
 
         '''
 
-        if True:
+        if False:
             import pdb
             pdb.set_trace()
         
@@ -107,6 +107,7 @@ class TrackControl():
                 self.track[i]['toshow'] = True
                 self.track[i]['output_mapfile'] = None
 
+                # 従属する他軌道座標データを生成
                 self.track[i]['data'].owntrack_pos = self.track[i]['result']
                 self.track[i]['data'].owntrack_curve = self.track[i]['tgen'].generate_curveradius_dist()
 
@@ -116,6 +117,9 @@ class TrackControl():
                     otdata = self.track[i]['othertrack'][otkey]
                     otdata['tgen'] = trackgenerator.OtherTrackGenerator(self.track[i]['data'],otkey)
                     otdata['result'] = otdata['tgen'].generate()
+                    otdata['toshow'] = True
+                    otdata['color'] = self.conf.track_data[i]['color']#.copy()
+                    
 
         self.pointsequence_track.load_files(self.conf)
             
@@ -295,8 +299,12 @@ class TrackControl():
                     ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
                 if len(self.track[i]['othertrack'])>0:
                     for otkey in self.track[i]['othertrack'].keys():
-                        tmp = self.track[i]['othertrack'][otkey]['result']
-                        ax.plot(tmp[:,1],tmp[:,2],label='{:s}_{:s}'.format(i,otkey),color=self.conf.track_data[i]['color'],lw=1)
+                        if self.track[i]['othertrack'][otkey]['toshow']:
+                            tmp = self.track[i]['othertrack'][otkey]['result']
+                            ax.plot(tmp[:,1],tmp[:,2],\
+                                    label='{:s}_{:s}'.format(i,otkey),\
+                                    color=self.track[i]['othertrack'][otkey]['color'],\
+                                    lw=1)
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
             self.pointsequence_track.plot2d(ax)
