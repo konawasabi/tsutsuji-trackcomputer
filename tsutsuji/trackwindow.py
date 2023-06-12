@@ -77,20 +77,10 @@ class TrackWindow(ttk.Frame):
             focused = self.track_tree.focus()
             parent = self.track_tree.parent(focused)
             if clicked_zone == 'image': #チェックボックスをクリックしたか
-                if clicked_track == 'root': # rootをクリックした場合、cfgファイルから読み込んだ軌道を一括設定
-                    '''
-                    for tkey in self.mainwindow.trackcontrol.track.keys():
-                        self.mainwindow.trackcontrol.track[tkey]['toshow'] = False
-                        for otherT in self.mainwindow.trackcontrol.track[tkey]['othertrack'].keys():
-                            self.mainwindow.trackcontrol.track[tkey]['othertrack'][otherT]['toshow'] = False
-                    for tkey in self.track_tree.get_checked():
-                        if '@' not in tkey:
-                            self.mainwindow.trackcontrol.track[tkey]['toshow'] = True
-                    '''
+                # rootをクリックした場合、cfgファイルから読み込んだ軌道を一括設定
+                if clicked_track == 'root': 
                     for tkey in self.track_tree.get_children('root'):
                         target = self.mainwindow.trackcontrol.track[tkey]
-                        #print(self.track_tree.get_checked(), 'root' in self.track_tree.get_checked(), self.track_tree.tag_has("checked", 'root'))
-                        
                         if self.track_tree.tag_has("checked", 'root'):
                             target['toshow'] = True
                         else:
@@ -101,35 +91,41 @@ class TrackWindow(ttk.Frame):
                                 ot_target['toshow'] = True
                             else:
                                 ot_target['toshow'] = False
-
-                elif clicked_track == 'seq_points': # seq_points をクリックした場合、kml/csvファイルから読み込んだ点列を一括設定
+                # seq_points をクリックした場合、kml/csvファイルから読み込んだ点列を一括設定
+                elif clicked_track == 'seq_points': 
                     for tkey in self.mainwindow.trackcontrol.pointsequence_track.track.keys():
                         self.mainwindow.trackcontrol.pointsequence_track.track[tkey]['toshow'] = False
                     for tkey in self.track_tree.get_checked():
                         if '@KML_' in tkey or '@CSV_' in tkey:
                             self.mainwindow.trackcontrol.pointsequence_track.track[tkey]['toshow'] = True
-                elif clicked_track == 'generated': # generatedをクリックした場合、計算した他軌道を一括設定
+                # generatedをクリックした場合、計算した他軌道を一括設定
+                elif clicked_track == 'generated': 
                     for tkey in self.mainwindow.trackcontrol.generated_othertrack.keys():
                         self.mainwindow.trackcontrol.generated_othertrack[tkey]['toshow'] = False
                     for tkey in self.track_tree.get_checked():
                         if '@OT_' in tkey:
                             self.mainwindow.trackcontrol.generated_othertrack[re.sub('@OT_','',tkey)]['toshow'] = True
-                elif '@' not in clicked_track: # 個別のtrack(自軌道形式)をクリックした場合
+                # 個別のtrack(自軌道形式)をクリックした場合
+                elif '@' not in clicked_track: 
                     self.mainwindow.trackcontrol.track[clicked_track]['toshow'] = \
                         not self.mainwindow.trackcontrol.track[clicked_track]['toshow']
-                elif '@KML_' in clicked_track or '@CSV_' in clicked_track: # 個別のKML/CSV点列をクリックした場合
+                # 個別のKML/CSV点列をクリックした場合
+                elif '@KML_' in clicked_track or '@CSV_' in clicked_track: 
                     self.mainwindow.trackcontrol.pointsequence_track.track[clicked_track]['toshow'] = \
                         not self.mainwindow.trackcontrol.pointsequence_track.track[clicked_track]['toshow']
-                elif '@OWOT_' in clicked_track: # 自軌道に従属する他軌道をクリックした場合
+                # 自軌道に従属する他軌道をクリックした場合
+                elif '@OWOT_' in clicked_track: 
                     #print(focused, self.track_tree.parent(focused))
                     clicked_track_rm = re.sub('@OWOT_','',focused)
                     self.mainwindow.trackcontrol.track[self.track_tree.parent(focused)]['othertrack'][clicked_track_rm]['toshow'] = \
                         not self.mainwindow.trackcontrol.track[self.track_tree.parent(focused)]['othertrack'][clicked_track_rm]['toshow']
-                else: # 個別の他軌道をクリックした場合
+                # 個別の他軌道をクリックした場合
+                else: 
                     self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['toshow'] = \
                         not self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['toshow']
             elif clicked_zone == 'text':
-                if clicked_column == '#1': #ラインカラーをクリックしたら、カラーピッカーを開く
+                #ラインカラーをクリックしたら、カラーピッカーを開く
+                if clicked_column == '#1': 
                     if '@' not in clicked_track:
                         nowcolor = self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color']
                     elif '@OWOT_' in clicked_track:
