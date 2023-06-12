@@ -78,11 +78,30 @@ class TrackWindow(ttk.Frame):
             parent = self.track_tree.parent(focused)
             if clicked_zone == 'image': #チェックボックスをクリックしたか
                 if clicked_track == 'root': # rootをクリックした場合、cfgファイルから読み込んだ軌道を一括設定
+                    '''
                     for tkey in self.mainwindow.trackcontrol.track.keys():
                         self.mainwindow.trackcontrol.track[tkey]['toshow'] = False
+                        for otherT in self.mainwindow.trackcontrol.track[tkey]['othertrack'].keys():
+                            self.mainwindow.trackcontrol.track[tkey]['othertrack'][otherT]['toshow'] = False
                     for tkey in self.track_tree.get_checked():
                         if '@' not in tkey:
                             self.mainwindow.trackcontrol.track[tkey]['toshow'] = True
+                    '''
+                    for tkey in self.track_tree.get_children('root'):
+                        target = self.mainwindow.trackcontrol.track[tkey]
+                        #print(self.track_tree.get_checked(), 'root' in self.track_tree.get_checked(), self.track_tree.tag_has("checked", 'root'))
+                        
+                        if self.track_tree.tag_has("checked", 'root'):
+                            target['toshow'] = True
+                        else:
+                            target['toshow'] = False
+                        for otkey in self.track_tree.get_children(tkey):
+                            ot_target = target['othertrack'][re.sub('@OWOT_','',otkey)]
+                            if self.track_tree.tag_has("checked", 'root'):
+                                ot_target['toshow'] = True
+                            else:
+                                ot_target['toshow'] = False
+
                 elif clicked_track == 'seq_points': # seq_points をクリックした場合、kml/csvファイルから読み込んだ点列を一括設定
                     for tkey in self.mainwindow.trackcontrol.pointsequence_track.track.keys():
                         self.mainwindow.trackcontrol.pointsequence_track.track[tkey]['toshow'] = False
@@ -198,6 +217,8 @@ class TrackWindow(ttk.Frame):
         self.master.focus_force()
 
 class CheckboxTreeview_tsutsuji(CheckboxTreeview):
+    ''' 子要素のチェックを全てon/offした場合に親要素のチェックを操作しないように変更
+    '''
     def _check_ancestor(self, item):
         self.change_state(item, "checked")
     def _uncheck_ancestor(self, item):
