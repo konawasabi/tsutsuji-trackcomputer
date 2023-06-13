@@ -115,14 +115,19 @@ class TrackWindow(ttk.Frame):
                         not self.mainwindow.trackcontrol.pointsequence_track.track[clicked_track]['toshow']
                 # 自軌道に従属する他軌道をクリックした場合
                 elif '@OWOT_' in clicked_track: 
-                    #print(focused, self.track_tree.parent(focused))
                     clicked_track_rm = re.sub('@OWOT_','',focused)
-                    self.mainwindow.trackcontrol.track[self.track_tree.parent(focused)]['othertrack'][clicked_track_rm]['toshow'] = \
-                        not self.mainwindow.trackcontrol.track[self.track_tree.parent(focused)]['othertrack'][clicked_track_rm]['toshow']
+                    target = self.mainwindow.trackcontrol.track[self.track_tree.parent(focused)]['othertrack'][clicked_track_rm]
+                    if self.track_tree.tag_has("checked", focused):
+                        target['toshow'] = True
+                    else:
+                        target['toshow'] = False
                 # 個別の他軌道をクリックした場合
-                else: 
-                    self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['toshow'] = \
-                        not self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]['toshow']
+                else:
+                    target = self.mainwindow.trackcontrol.generated_othertrack[clicked_track_rematt]
+                    if self.track_tree.tag_has("checked", focused):
+                        target['toshow'] = True
+                    else:
+                        target['toshow'] = False
             elif clicked_zone == 'text':
                 #ラインカラーをクリックしたら、カラーピッカーを開く
                 if clicked_column == '#1': 
