@@ -92,27 +92,35 @@ class TrackWindow(ttk.Frame):
                             else:
                                 ot_target['toshow'] = False
                 # seq_points をクリックした場合、kml/csvファイルから読み込んだ点列を一括設定
-                elif clicked_track == 'seq_points': 
-                    for tkey in self.mainwindow.trackcontrol.pointsequence_track.track.keys():
-                        self.mainwindow.trackcontrol.pointsequence_track.track[tkey]['toshow'] = False
-                    for tkey in self.track_tree.get_checked():
-                        if '@KML_' in tkey or '@CSV_' in tkey:
-                            self.mainwindow.trackcontrol.pointsequence_track.track[tkey]['toshow'] = True
+                elif clicked_track == 'seq_points':
+                    for tkey in self.track_tree.get_children(clicked_track):
+                        target = self.mainwindow.trackcontrol.pointsequence_track.track[tkey]
+                        if self.track_tree.tag_has("checked", clicked_track):
+                            target['toshow'] = True
+                        else:
+                            target['toshow'] = False
                 # generatedをクリックした場合、計算した他軌道を一括設定
-                elif clicked_track == 'generated': 
-                    for tkey in self.mainwindow.trackcontrol.generated_othertrack.keys():
-                        self.mainwindow.trackcontrol.generated_othertrack[tkey]['toshow'] = False
-                    for tkey in self.track_tree.get_checked():
-                        if '@OT_' in tkey:
-                            self.mainwindow.trackcontrol.generated_othertrack[re.sub('@OT_','',tkey)]['toshow'] = True
+                elif clicked_track == 'generated':
+                    for tkey in self.track_tree.get_children(clicked_track):
+                        target = self.mainwindow.trackcontrol.generated_othertrack[re.sub('@OT_','',tkey)]
+                        if self.track_tree.tag_has("checked", clicked_track):
+                            target['toshow'] = True
+                        else:
+                            target['toshow'] = False
                 # 個別のtrack(自軌道形式)をクリックした場合
-                elif '@' not in clicked_track: 
-                    self.mainwindow.trackcontrol.track[clicked_track]['toshow'] = \
-                        not self.mainwindow.trackcontrol.track[clicked_track]['toshow']
+                elif parent == 'root':
+                    target = self.mainwindow.trackcontrol.track[clicked_track]
+                    if self.track_tree.tag_has("checked", clicked_track):
+                        target['toshow'] = True
+                    else:
+                        target['toshow'] = False
                 # 個別のKML/CSV点列をクリックした場合
-                elif '@KML_' in clicked_track or '@CSV_' in clicked_track: 
-                    self.mainwindow.trackcontrol.pointsequence_track.track[clicked_track]['toshow'] = \
-                        not self.mainwindow.trackcontrol.pointsequence_track.track[clicked_track]['toshow']
+                elif parent == 'seq_points':
+                    target = self.mainwindow.trackcontrol.pointsequence_track.track[clicked_track]
+                    if self.track_tree.tag_has("checked", clicked_track):
+                        target['toshow'] = True
+                    else:
+                        target['toshow'] = False
                 # 自軌道に従属する他軌道をクリックした場合
                 elif '@OWOT_' in clicked_track: 
                     clicked_track_rm = re.sub('@OWOT_','',focused)
