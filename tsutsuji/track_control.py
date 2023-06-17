@@ -112,7 +112,7 @@ class TrackControl():
                 self.track[i]['data'].owntrack_curve = self.track[i]['tgen'].generate_curveradius_dist()
 
                 self.track[i]['othertrack'] = {}
-                for otkey in self.track['up']['data'].othertrack.data.keys():
+                for otkey in self.track[i]['data'].othertrack.data.keys():
                     self.track[i]['othertrack'][otkey] = {}
                     otdata = self.track[i]['othertrack'][otkey]
                     otdata['tgen'] = trackgenerator.OtherTrackGenerator(self.track[i]['data'],otkey)
@@ -124,7 +124,7 @@ class TrackControl():
         self.pointsequence_track.load_files(self.conf)
             
             
-    def relativepoint_single(self,to_calc,owntrack=None):
+    def relativepoint_single(self,to_calc,owntrack=None,parent_track=None):
         '''owntrackを基準とした相対座標への変換
 
         Args:
@@ -138,61 +138,120 @@ class TrackControl():
         '''
         def interpolate(aroundzero,ix,typ,base='x_tr'):
             return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
+        def take_relpos_std(src,tgt):
+            len_tr = len(tgt)
+            result = []
+            # 自軌道に対する相対座標の算出
+            for pos in src:
+                tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
+                tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
+                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = min_ix[0][0]
+
+                if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
+                    aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
+                                  'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
+                                  'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
+                                  'x_ab':tgt[:,1][min_ix_val-1:min_ix_val+2],\
+                                  'y_ab':tgt[:,2][min_ix_val-1:min_ix_val+2],\
+                                  'z_ab':tgt[:,3][min_ix_val-1:min_ix_val+2],\
+                                  'cant':tgt[:,8][min_ix_val-1:min_ix_val+2]}
+                    # aroundzero : [変換後x座標成分, 変換後y座標成分, 対応する軌道の距離程, 絶対座標x成分, 絶対座標y成分]
+                    signx = np.sign(aroundzero['x_tr'])
+                    if signx[0] != signx[1]:
+                        result.append([pos[0],\
+                                       0,\
+                                       interpolate(aroundzero,0,'y_tr'),\
+                                       interpolate(aroundzero,0,'z_ab') - pos[3],\
+                                       interpolate(aroundzero,0,'kp'),\
+                                       interpolate(aroundzero,0,'x_ab'),\
+                                       interpolate(aroundzero,0,'y_ab'),\
+                                       interpolate(aroundzero,0,'z_ab'),\
+                                       interpolate(aroundzero,0,'cant')])
+                    elif signx[1] != signx[2]:
+                        result.append([pos[0],\
+                                       0,\
+                                       interpolate(aroundzero,1,'y_tr'),\
+                                       interpolate(aroundzero,1,'z_ab') - pos[3],\
+                                       interpolate(aroundzero,1,'kp'),\
+                                       interpolate(aroundzero,1,'x_ab'),\
+                                       interpolate(aroundzero,1,'y_ab'),\
+                                       interpolate(aroundzero,1,'z_ab'),\
+                                       interpolate(aroundzero,1,'cant')])
+                else:
+                    result.append([pos[0],\
+                                   tgt_xy_trans[0][min_ix][0],\
+                                   tgt_xy_trans[1][min_ix][0],\
+                                   tgt[:,3][min_ix][0] - pos[3],\
+                                   tgt[:,0][min_ix][0],\
+                                   tgt[:,1][min_ix][0],\
+                                   tgt[:,2][min_ix][0],\
+                                   tgt[:,3][min_ix][0],\
+                                   tgt[:,8][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+            return result
+        def take_relpos_owot(src,tgt):
+            len_tr = len(tgt)
+            result = []
+            # 自軌道に対する相対座標の算出
+            for pos in src:
+                tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
+                tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
+                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = min_ix[0][0]
+
+                if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
+                    aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
+                                  'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
+                                  'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
+                                  'x_ab':tgt[:,1][min_ix_val-1:min_ix_val+2],\
+                                  'y_ab':tgt[:,2][min_ix_val-1:min_ix_val+2],\
+                                  'z_ab':tgt[:,3][min_ix_val-1:min_ix_val+2],\
+                                  'cant':tgt[:,5][min_ix_val-1:min_ix_val+2]}
+                    # aroundzero : [変換後x座標成分, 変換後y座標成分, 対応する軌道の距離程, 絶対座標x成分, 絶対座標y成分]
+                    signx = np.sign(aroundzero['x_tr'])
+                    if signx[0] != signx[1]:
+                        result.append([pos[0],\
+                                       0,\
+                                       interpolate(aroundzero,0,'y_tr'),\
+                                       interpolate(aroundzero,0,'z_ab') - pos[3],\
+                                       interpolate(aroundzero,0,'kp'),\
+                                       interpolate(aroundzero,0,'x_ab'),\
+                                       interpolate(aroundzero,0,'y_ab'),\
+                                       interpolate(aroundzero,0,'z_ab'),\
+                                       interpolate(aroundzero,0,'cant')])
+                    elif signx[1] != signx[2]:
+                        result.append([pos[0],\
+                                       0,\
+                                       interpolate(aroundzero,1,'y_tr'),\
+                                       interpolate(aroundzero,1,'z_ab') - pos[3],\
+                                       interpolate(aroundzero,1,'kp'),\
+                                       interpolate(aroundzero,1,'x_ab'),\
+                                       interpolate(aroundzero,1,'y_ab'),\
+                                       interpolate(aroundzero,1,'z_ab'),\
+                                       interpolate(aroundzero,1,'cant')])
+                else:
+                    result.append([pos[0],\
+                                   tgt_xy_trans[0][min_ix][0],\
+                                   tgt_xy_trans[1][min_ix][0],\
+                                   tgt[:,3][min_ix][0] - pos[3],\
+                                   tgt[:,0][min_ix][0],\
+                                   tgt[:,1][min_ix][0],\
+                                   tgt[:,2][min_ix][0],\
+                                   tgt[:,3][min_ix][0],\
+                                   tgt[:,5][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+            return result
+        
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        if '@' not in to_calc:
+        src = self.track[owntrack]['result']
+        if parent_track is not None:
+            tgt = self.track[parent_track]['othertrack'][to_calc]['result']
+            result = take_relpos_owot(src,tgt)
+        elif '@' not in to_calc:
             tgt = self.track[to_calc]['result']
+            result = take_relpos_std(src,tgt)
         else:
             tgt = self.pointsequence_track.track[to_calc]['result']
-        src = self.track[owntrack]['result']
-        len_tr = len(tgt)
-        result = []
-        # 自軌道に対する相対座標の算出
-        for pos in src:
-            tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
-            tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
-            min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-            min_ix_val = min_ix[0][0]
-
-            if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
-                aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
-                              'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
-                              'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
-                              'x_ab':tgt[:,1][min_ix_val-1:min_ix_val+2],\
-                              'y_ab':tgt[:,2][min_ix_val-1:min_ix_val+2],\
-                              'z_ab':tgt[:,3][min_ix_val-1:min_ix_val+2],\
-                              'cant':tgt[:,8][min_ix_val-1:min_ix_val+2]}
-                # aroundzero : [変換後x座標成分, 変換後y座標成分, 対応する軌道の距離程, 絶対座標x成分, 絶対座標y成分]
-                signx = np.sign(aroundzero['x_tr'])
-                if signx[0] != signx[1]:
-                    result.append([pos[0],\
-                                   0,\
-                                   interpolate(aroundzero,0,'y_tr'),\
-                                   interpolate(aroundzero,0,'z_ab') - pos[3],\
-                                   interpolate(aroundzero,0,'kp'),\
-                                   interpolate(aroundzero,0,'x_ab'),\
-                                   interpolate(aroundzero,0,'y_ab'),\
-                                   interpolate(aroundzero,0,'z_ab'),\
-                                   interpolate(aroundzero,0,'cant')])
-                elif signx[1] != signx[2]:
-                    result.append([pos[0],\
-                                   0,\
-                                   interpolate(aroundzero,1,'y_tr'),\
-                                   interpolate(aroundzero,1,'z_ab') - pos[3],\
-                                   interpolate(aroundzero,1,'kp'),\
-                                   interpolate(aroundzero,1,'x_ab'),\
-                                   interpolate(aroundzero,1,'y_ab'),\
-                                   interpolate(aroundzero,1,'z_ab'),\
-                                   interpolate(aroundzero,1,'cant')])
-            else:
-                result.append([pos[0],\
-                               tgt_xy_trans[0][min_ix][0],\
-                               tgt_xy_trans[1][min_ix][0],\
-                               tgt[:,3][min_ix][0] - pos[3],\
-                               tgt[:,0][min_ix][0],\
-                               tgt[:,1][min_ix][0],\
-                               tgt[:,2][min_ix][0],\
-                               tgt[:,3][min_ix][0],\
-                               tgt[:,8][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+            result = take_relpos_std(src,tgt)
         return(np.array(result))
     def relativepoint_all(self,owntrack=None):
         '''読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。
@@ -202,9 +261,17 @@ class TrackControl():
         calc_track = [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != owntrack]
         for tr in calc_track:
             self.rel_track[tr]=self.relativepoint_single(tr,owntrack)
+
+        calc_track = [i for i in self.conf.track_keys if i != owntrack]
+        for tr in calc_track:
+            for ottr in self.track[tr]['othertrack'].keys():
+                self.rel_track['@OWOT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr)
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        calc_track = [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != owntrack] if to_calc == None else [to_calc]
+        if to_calc is None:
+            calc_track = self.get_trackkeys(owntrack)
+        else:
+            calc_track = to_calc
         for tr in calc_track:
             self.rel_track_radius[tr] = []
 
@@ -401,6 +468,17 @@ class TrackControl():
                     cp_dist.append(dat)
             cp_dist = sorted(set(cp_dist))
             pos_cp = self.track[trackkey]['result'][np.isin(self.track[trackkey]['result'][:,0],cp_dist)]
+        elif '@OWOT' in trackkey:
+            parent_key = trackkey.split('@')[1].split('_')[1]
+            child_key = trackkey.split('@_')[-1]
+            for dat in self.track[parent_key]['othertrack'][child_key]['result']:
+                cp_dist.append(dat[0])
+            cp_dist.append(0)
+            cp_dist = sorted(set(cp_dist))
+            pos_cp_tmp = self.track[parent_key]['othertrack'][child_key]['result'][np.isin(self.track[parent_key]['othertrack'][child_key]['result'][:,0],cp_dist)]
+            pos_cp = []
+            for dat in pos_cp_tmp:
+                pos_cp.append([dat[0],dat[1],dat[2],dat[3],0,0,0,dat[4],dat[5],dat[6],dat[7]])
         else:
             for dat in self.pointsequence_track.track[trackkey]['result']:
                 cp_dist.append(dat[0])
@@ -447,7 +525,7 @@ class TrackControl():
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
 
         # owntrack以外の各軌道について処理する
-        for tr in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != self.conf.owntrack]:
+        for tr in self.get_trackkeys(self.conf.owntrack):
             try:
                 _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
                 relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
@@ -463,7 +541,7 @@ class TrackControl():
     
 
         # 他軌道構文生成
-        for tr in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if (i != self.conf.owntrack and i not in self.exclude_tracks)]:
+        for tr in [i for i in self.get_trackkeys(self.conf.owntrack) if i not in self.exclude_tracks]:
             output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
             if self.conf.general['offset_variable'] is not None:
                 kp_val = '$'+self.conf.general['offset_variable']+' + '
@@ -471,7 +549,7 @@ class TrackControl():
                 kp_val = ''
 
             for data in self.rel_track_radius_cp[tr]:
-                if '@' not in tr or ('@' in tr and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
+                if '@' not in tr or '@OWOT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
                     output_map['x'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
                     output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],data[2])
                     output_map['y'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
@@ -499,7 +577,7 @@ class TrackControl():
                     output_map['cant'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
                     output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[1])
 
-
+            
             key = 'interpolate_func'
             if len(relativecp[key])>0:
                 for index in range(len(relativecp[key])):
@@ -539,6 +617,10 @@ class TrackControl():
 
             if '@' not in tr:
                 self.track[tr]['output_mapfile'] = output_file
+            elif '@OWOT' in tr:
+                parent_key = tr.split('@')[1].split('_')[1]
+                child_key = tr.split('@_')[-1]
+                self.track[parent_key]['othertrack'][child_key]['output_mapfile'] = output_file
             else:
                 self.pointsequence_track.track[tr]['conf']['output_mapfile'] = output_file
             
@@ -606,7 +688,8 @@ class TrackControl():
         output_file += 'include \'{:s}\';\n'.format(str(path))
 
         # 他軌道ファイルをinclude
-        for tr_l in [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if (i!= self.conf.general['owntrack'] and i not in self.exclude_tracks)]:
+        otlist = self.get_trackkeys(self.conf.general['owntrack'])
+        for tr_l in [i for i in otlist if (i not in self.exclude_tracks)]:
             path = self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr_l)))
             output_file += 'include \'{:s}\';\n'.format(str(path))
 
@@ -645,3 +728,13 @@ class TrackControl():
                                             'color':'#000000',\
                                             #'controlpoints':[i['distance'] for i in self.ot_map_source.othertrack.data[key]],\
                                             'distrange':generator.distrange}
+    def get_trackkeys(self,owntrack):
+        calc_track = [i for i in self.conf.track_keys if i!=owntrack]
+        calc_track += self.conf.kml_keys
+        calc_track += self.conf.csv_keys
+
+        
+        for tr in [i for i in self.conf.track_keys if i != owntrack]:
+            for ottr in self.track[tr]['othertrack'].keys():
+                calc_track.append('@OWOT_{:s}@_{:s}'.format(tr,ottr))
+        return calc_track
