@@ -471,8 +471,8 @@ class TrackControl():
         elif '@OWOT' in trackkey:
             parent_key = trackkey.split('@')[1].split('_')[1]
             child_key = trackkey.split('@_')[-1]
-            for dat in self.track[parent_key]['othertrack'][child_key]['result']:
-                cp_dist.append(dat[0])
+            for dat in self.track[parent_key]['othertrack'][child_key]['tgen'].data:
+                cp_dist.append(dat['distance'])
             cp_dist.append(0)
             cp_dist = sorted(set(cp_dist))
             pos_cp_tmp = self.track[parent_key]['othertrack'][child_key]['result'][np.isin(self.track[parent_key]['othertrack'][child_key]['result'][:,0],cp_dist)]
