@@ -474,7 +474,10 @@ class TrackControl():
             for dat in self.track[parent_key]['othertrack'][child_key]['tgen'].data:
                 cp_dist.append(dat['distance'])
             cp_dist.append(0)
-            cp_dist = sorted(set(cp_dist))
+
+            parent_cp_dist,_ = self.takecp(parent_key) # 親軌道の制御点を求める
+            cp_dist = sorted(set(cp_dist + parent_cp_dist)) # 注目する軌道と親軌道の制御点の和集合を求める
+
             pos_cp_tmp = self.track[parent_key]['othertrack'][child_key]['result'][np.isin(self.track[parent_key]['othertrack'][child_key]['result'][:,0],cp_dist)]
             pos_cp = []
             for dat in pos_cp_tmp:
