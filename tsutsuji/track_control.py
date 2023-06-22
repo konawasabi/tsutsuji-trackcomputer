@@ -22,6 +22,7 @@ import pathlib
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import interpolate
+import re
 
 from kobushi import mapinterpreter
 from kobushi import trackgenerator
@@ -688,7 +689,8 @@ class TrackControl():
 
         # 自軌道ファイルをinclude
         path = self.conf.general['output_path'].joinpath(pathlib.Path('owntrack')).joinpath(self.conf.track_data[self.conf.general['owntrack']]['file'].name)
-        output_file += 'include \'{:s}\';\n'.format(str(path))
+        #output_file += 'include \'{:s}\';\n'.format(str(path))
+        output_file += self.read_owntrackmap(path)
 
         # 他軌道ファイルをinclude
         otlist = self.get_trackkeys(self.conf.general['owntrack'])
@@ -741,3 +743,32 @@ class TrackControl():
             for ottr in self.track[tr]['othertrack'].keys():
                 calc_track.append('@OWOT_{:s}@_{:s}'.format(tr,ottr))
         return calc_track
+    def read_owntrackmap(self,filepath,rootpath = None):
+        mapdata = ''
+        input_path     = pathlib.Path(filepath)
+        #input_parent   = input_path.parent
+        #input_filename = input_path.name
+        if rootpath is None:
+            path = input_path
+        else:
+            path = pathlib.Path(rootpath).joinpath(input_path.name)
+        with open(path, mode='r') as fp:
+            mapdata = fp.read()
+        mapdata = re.sub('BveTs Map 2.02.*?\n', '', mapdata)
+
+        str_pointer = 0
+        result = ''
+        while(True):
+            m = re.search('include(\s)*\'.*\'(\s)*;',mapdata)
+            if m is None:
+                result += mapdata
+                break
+            else:
+                result += mapdata[:(m.span())[0]]
+                arg_include = re.search('(?<=include\s\').*?(?=\';)',m.group(0))
+                filepath = pathlib.Path(arg_include.group(0))
+                result += self.read_owntrackmap(filepath, rootpath=input_path.parent)
+                mapdata = mapdata[m.span()[1]:]
+        
+        return result
+        
