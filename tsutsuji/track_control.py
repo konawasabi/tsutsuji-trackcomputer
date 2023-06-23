@@ -470,7 +470,7 @@ class TrackControl():
             cp_dist = sorted(set(cp_dist))
             pos_cp = self.track[trackkey]['result'][np.isin(self.track[trackkey]['result'][:,0],cp_dist)]
         elif '@OWOT' in trackkey:
-            parent_key = trackkey.split('@')[1].split('_')[1]
+            parent_key = re.search('(?<=@OWOT_).+(?=@)',trackkey).group(0)#trackkey.split('@')[1].split('OWOT_')[1]
             child_key = trackkey.split('@_')[-1]
             for dat in self.track[parent_key]['othertrack'][child_key]['tgen'].data:
                 cp_dist.append(dat['distance'])
@@ -622,7 +622,7 @@ class TrackControl():
             if '@' not in tr:
                 self.track[tr]['output_mapfile'] = output_file
             elif '@OWOT' in tr:
-                parent_key = tr.split('@')[1].split('_')[1]
+                parent_key = re.search('(?<=@OWOT_).+(?=@)',tr).group(0)
                 child_key = tr.split('@_')[-1]
                 self.track[parent_key]['othertrack'][child_key]['output_mapfile'] = output_file
             else:
