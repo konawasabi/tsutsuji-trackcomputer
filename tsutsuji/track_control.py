@@ -692,15 +692,27 @@ class TrackControl():
     def plot_symbols(self, ax, symboltype, size=20):
         ''' 制御点座標をプロットする
         '''
-        symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x'}
+        symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x', 'track':'+'}
         if len(self.track.keys()) > 0:
             for tr_l in self.conf.track_keys:
-                if self.track[tr_l]['toshow']:
+                if self.track[tr_l]['toshow'] and symboltype != 'track':
                     if symboltype == 'supplemental_cp':
                         pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
                     else:
                         pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
                     ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
+                elif symboltype == 'track':
+                    for tr_ot in self.track[tr_l]['othertrack'].keys():
+                        trackdata = self.track[tr_l]['othertrack'][tr_ot]
+                        if trackdata['toshow']:
+                            cp_dist = []
+                            for cp in trackdata['tgen'].data:
+                                cp_dist.append(cp['distance'])
+                            pos = trackdata['result'][np.isin(trackdata['result'][:,0],cp_dist)]
+                            ax.scatter(pos[:,1],pos[:,2],color=trackdata['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
+                            
+                        
+                    
     def generate_otdata(self):
         ''' generate結果から他軌道座標データを生成する
         '''

@@ -185,7 +185,7 @@ class mainwindow(ttk.Frame):
         self.plotarea_symbol_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
         self.plot_marker_ctrl = {}
         position = 0
-        for val in ['radius','gradient','supplemental_cp']:
+        for val in ['radius','gradient','supplemental_cp','track']:
             self.plot_marker_ctrl[val] = {}
             self.plot_marker_ctrl[val]['variable'] = tk.BooleanVar(value=False)
             self.plot_marker_ctrl[val]['widget'] = ttk.Checkbutton(self.plotarea_symbol_frame, text=val, variable=self.plot_marker_ctrl[val]['variable'], onvalue=True, offvalue=False)
