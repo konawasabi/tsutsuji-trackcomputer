@@ -117,10 +117,35 @@ class TrackControl():
                     self.track[i]['othertrack'][otkey] = {}
                     otdata = self.track[i]['othertrack'][otkey]
                     otdata['tgen'] = trackgenerator.OtherTrackGenerator(self.track[i]['data'],otkey)
-                    otdata['result'] = otdata['tgen'].generate()
                     otdata['toshow'] = True
                     otdata['color'] = self.conf.track_data[i]['color']#.copy()
-                    
+
+                    result_tmp = otdata['tgen'].generate()
+                    result_theta = []
+                    ix = 0
+                    while ix<len(result_tmp)-1: # 生成した座標データに方位情報を追加する
+                        data = result_tmp[ix]
+                        result_theta.append([data[0],\
+                                             data[1],\
+                                             data[2],\
+                                             data[3],\
+                                             np.arctan((result_tmp[ix+1][2]-result_tmp[ix][2])/((result_tmp[ix+1][1]-result_tmp[ix][1]))),\
+                                             data[4],\
+                                             data[5],\
+                                             data[6],\
+                                             data[7]])
+                        ix +=1
+                    data = result_tmp[ix]
+                    result_theta.append([data[0],\
+                                         data[1],\
+                                         data[2],\
+                                         data[3],\
+                                         result_tmp[ix-1][4],\
+                                         data[4],\
+                                         data[5],\
+                                         data[6],\
+                                         data[7]])
+                    otdata['result'] = np.array(result_theta)
 
         self.pointsequence_track.load_files(self.conf)
             

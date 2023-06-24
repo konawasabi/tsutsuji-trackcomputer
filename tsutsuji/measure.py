@@ -48,11 +48,11 @@ class interface():
             self.values_toshow = [tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value='0'),tk.StringVar(value=''),tk.StringVar(value='0')]
             self.coordinate_v = tk.StringVar(value='abs')
             
-            self.x_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[0],width=5)
-            self.y_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[1],width=5)
-            self.theta_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[2],width=5)
-            self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=9)
-            self.trackkp_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[4],width=5)
+            self.x_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[0],width=6)
+            self.y_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[1],width=6)
+            self.theta_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[2],width=6)
+            self.track_e = ttk.Combobox(self.pframe, textvariable=self.values[3],width=18)
+            self.trackkp_e = ttk.Entry(self.pframe, textvariable=self.values_toshow[4],width=6)
             
             self.make_trackkeylist()
             self.values[3].set('@absolute')
@@ -84,9 +84,17 @@ class interface():
             self.arrow.set_direct()
         def make_trackkeylist(self):
             currentval = self.values[3].get()
+
+            owot_keys = []
+            for parent_tr in self.parent.mainwindow.trackcontrol.track.keys():
+                for child_tr in self.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'].keys():
+                    owot_keys.append('@OWOT_{:s}@_{:s}'.format(parent_tr,child_tr))
+                
             self.track_e['values'] = tuple(['@absolute'])\
                 +tuple(self.parent.mainwindow.trackcontrol.track.keys())\
-                +tuple(self.parent.mainwindow.trackcontrol.pointsequence_track.track.keys())
+                +tuple(self.parent.mainwindow.trackcontrol.pointsequence_track.track.keys())\
+                +tuple(owot_keys)
+            
             if currentval not in self.track_e['values']:
                 self.values[3].set('@absolute')
     def __init__(self,mainwindow):
@@ -443,6 +451,10 @@ class interface():
         trackkey = self.nearesttrack_sel_v.get()
         if '@' not in trackkey:
             track = self.mainwindow.trackcontrol.track[trackkey]['result']
+        elif '@OWOT_' in trackkey:
+            parent_tr = re.search('(?<=@OWOT_).+(?=@)',trackkey).group(0)
+            child_tr =  trackkey.split('@_')[-1]
+            track = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
         else:
             track = self.mainwindow.trackcontrol.pointsequence_track.track[trackkey]['result']
         track_pos = track[:,1:3]
