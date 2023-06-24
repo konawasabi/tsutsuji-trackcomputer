@@ -130,10 +130,13 @@ class TrackControl():
                                              data[2],\
                                              data[3],\
                                              np.arctan((result_tmp[ix+1][2]-result_tmp[ix][2])/((result_tmp[ix+1][1]-result_tmp[ix][1]))),\
+                                             0,\
+                                             0,\
                                              data[4],\
                                              data[5],\
                                              data[6],\
                                              data[7]])
+                        # [距離程, x, y, z, theta, radius(=0), gradient(=0), interpolate_func, cant, center, gauge]
                         ix +=1
                     data = result_tmp[ix]
                     result_theta.append([data[0],\
@@ -141,6 +144,8 @@ class TrackControl():
                                          data[2],\
                                          data[3],\
                                          result_tmp[ix-1][4],\
+                                         0,\
+                                         0,\
                                          data[4],\
                                          data[5],\
                                          data[6],\
@@ -232,7 +237,7 @@ class TrackControl():
                                   'x_ab':tgt[:,1][min_ix_val-1:min_ix_val+2],\
                                   'y_ab':tgt[:,2][min_ix_val-1:min_ix_val+2],\
                                   'z_ab':tgt[:,3][min_ix_val-1:min_ix_val+2],\
-                                  'cant':tgt[:,5][min_ix_val-1:min_ix_val+2]}
+                                  'cant':tgt[:,8][min_ix_val-1:min_ix_val+2]}
                     # aroundzero : [変換後x座標成分, 変換後y座標成分, 対応する軌道の距離程, 絶対座標x成分, 絶対座標y成分]
                     signx = np.sign(aroundzero['x_tr'])
                     if signx[0] != signx[1]:
@@ -264,7 +269,7 @@ class TrackControl():
                                    tgt[:,1][min_ix][0],\
                                    tgt[:,2][min_ix][0],\
                                    tgt[:,3][min_ix][0],\
-                                   tgt[:,5][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+                                   tgt[:,8][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
             return result
         
         owntrack = self.conf.owntrack if owntrack == None else owntrack
@@ -498,16 +503,17 @@ class TrackControl():
             parent_key = re.search('(?<=@OT_).+(?=@)',trackkey).group(0)#trackkey.split('@')[1].split('OT_')[1]
             child_key = trackkey.split('@_')[-1]
             for dat in self.track[parent_key]['othertrack'][child_key]['tgen'].data:
-                cp_dist.append(dat['distance'])
+                if elem == None or dat['key'] == elem:
+                    cp_dist.append(dat['distance'])
             cp_dist.append(0)
 
-            parent_cp_dist,_ = self.takecp(parent_key) # 親軌道の制御点を求める
-            cp_dist = sorted(set(cp_dist + parent_cp_dist)) # 注目する軌道と親軌道の制御点の和集合を求める
+            if supplemental:
+                parent_cp_dist,_ = self.takecp(parent_key) # 親軌道の制御点を求める
+                cp_dist = sorted(set(cp_dist + parent_cp_dist)) # 注目する軌道と親軌道の制御点の和集合を求める
+            else:
+                cp_dist = sorted(set(cp_dist))
 
-            pos_cp_tmp = self.track[parent_key]['othertrack'][child_key]['result'][np.isin(self.track[parent_key]['othertrack'][child_key]['result'][:,0],cp_dist)]
-            pos_cp = []
-            for dat in pos_cp_tmp:
-                pos_cp.append([dat[0],dat[1],dat[2],dat[3],0,0,0,dat[4],dat[5],dat[6],dat[7]])
+            pos_cp = self.track[parent_key]['othertrack'][child_key]['result'][np.isin(self.track[parent_key]['othertrack'][child_key]['result'][:,0],cp_dist)]
         else:
             for dat in self.pointsequence_track.track[trackkey]['result']:
                 cp_dist.append(dat[0])
