@@ -283,8 +283,8 @@ class marker_pos():
         self.track_key = self.p.values[3].get()
         if '@' not in self.track_key:
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:,1:3]
-        elif '@OWOT_' in self.track_key:
-            parent_tr = re.search('(?<=@OWOT_).+(?=@)',self.track_key).group(0)
+        elif '@OT_' in self.track_key:
+            parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
             child_tr =  self.track_key.split('@_')[-1]
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][:,1:3]
         elif '@KML_' in self.track_key or '@CSV_' in self.track_key:
@@ -302,8 +302,8 @@ class marker_pos():
         min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
         if '@' not in self.track_key:
             result = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][min_dist_ix]
-        elif '@OWOT_' in self.track_key:
-            parent_tr = re.search('(?<=@OWOT_).+(?=@)',self.track_key).group(0)
+        elif '@OT_' in self.track_key:
+            parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
             child_tr =  self.track_key.split('@_')[-1]
             result = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][min_dist_ix]
         else:
@@ -346,8 +346,8 @@ class marker_pos():
             kp = self.p.values[4].get()
             if '@' not in self.track_key:
                 self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result']
-            elif '@OWOT_' in self.track_key:
-                parent_tr = re.search('(?<=@OWOT_).+(?=@)',self.track_key).group(0)
+            elif '@OT_' in self.track_key:
+                parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
                 child_tr =  self.track_key.split('@_')[-1]
                 self.track_data = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
             else:
@@ -357,8 +357,8 @@ class marker_pos():
             for i in range(0,5):
                 if '@' not in self.track_key:
                     pos_kp.append(math.interpolate_with_dist(self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'],i,kp))
-                elif '@OWOT_' in self.track_key:
-                    parent_tr = re.search('(?<=@OWOT_).+(?=@)',self.track_key).group(0)
+                elif '@OT_' in self.track_key:
+                    parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
                     child_tr =  self.track_key.split('@_')[-1]
                     pos_kp.append(math.interpolate_with_dist(self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'],i,kp))
                 else:
@@ -389,8 +389,8 @@ class marker_pos():
             self.prev_trackpos = pos_kp
             if '@' not in self.track_key:
                 self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:1,3]
-            elif '@OWOT_' in self.track_key:
-                parent_tr = re.search('(?<=@OWOT_).+(?=@)',self.track_key).group(0)
+            elif '@OT_' in self.track_key:
+                parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
                 child_tr =  self.track_key.split('@_')[-1]
                 self.track_data = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][:1,3]
             else:

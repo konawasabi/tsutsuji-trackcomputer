@@ -451,8 +451,8 @@ class interface():
         trackkey = self.nearesttrack_sel_v.get()
         if '@' not in trackkey:
             track = self.mainwindow.trackcontrol.track[trackkey]['result']
-        elif '@OWOT_' in trackkey:
-            parent_tr = re.search('(?<=@OWOT_).+(?=@)',trackkey).group(0)
+        elif '@OT_' in trackkey:
+            parent_tr = re.search('(?<=@OT_).+(?=@)',trackkey).group(0)
             child_tr =  trackkey.split('@_')[-1]
             track = self.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
         else:
@@ -541,7 +541,7 @@ class interface():
         owot_keys = []
         for parent_tr in self.mainwindow.trackcontrol.track.keys():
             for child_tr in self.mainwindow.trackcontrol.track[parent_tr]['othertrack'].keys():
-                owot_keys.append('@OWOT_{:s}@_{:s}'.format(parent_tr,child_tr))
+                owot_keys.append('@OT_{:s}@_{:s}'.format(parent_tr,child_tr))
 
         result = tuple(self.mainwindow.trackcontrol.track.keys())\
             +tuple(self.mainwindow.trackcontrol.pointsequence_track.track.keys())\

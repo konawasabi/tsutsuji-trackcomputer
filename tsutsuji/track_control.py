@@ -291,7 +291,7 @@ class TrackControl():
         calc_track = [i for i in self.conf.track_keys if i != owntrack]
         for tr in calc_track:
             for ottr in self.track[tr]['othertrack'].keys():
-                self.rel_track['@OWOT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr)
+                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr)
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         if to_calc is None:
@@ -494,8 +494,8 @@ class TrackControl():
                     cp_dist.append(dat)
             cp_dist = sorted(set(cp_dist))
             pos_cp = self.track[trackkey]['result'][np.isin(self.track[trackkey]['result'][:,0],cp_dist)]
-        elif '@OWOT' in trackkey:
-            parent_key = re.search('(?<=@OWOT_).+(?=@)',trackkey).group(0)#trackkey.split('@')[1].split('OWOT_')[1]
+        elif '@OT' in trackkey:
+            parent_key = re.search('(?<=@OT_).+(?=@)',trackkey).group(0)#trackkey.split('@')[1].split('OT_')[1]
             child_key = trackkey.split('@_')[-1]
             for dat in self.track[parent_key]['othertrack'][child_key]['tgen'].data:
                 cp_dist.append(dat['distance'])
@@ -578,7 +578,7 @@ class TrackControl():
                 kp_val = ''
 
             for data in self.rel_track_radius_cp[tr]:
-                if '@' not in tr or '@OWOT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
+                if '@' not in tr or '@OT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
                     output_map['x'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
                     output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],data[2])
                     output_map['y'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
@@ -646,8 +646,8 @@ class TrackControl():
 
             if '@' not in tr:
                 self.track[tr]['output_mapfile'] = output_file
-            elif '@OWOT' in tr:
-                parent_key = re.search('(?<=@OWOT_).+(?=@)',tr).group(0)
+            elif '@OT' in tr:
+                parent_key = re.search('(?<=@OT_).+(?=@)',tr).group(0)
                 child_key = tr.split('@_')[-1]
                 self.track[parent_key]['othertrack'][child_key]['output_mapfile'] = output_file
             else:
@@ -778,7 +778,7 @@ class TrackControl():
         
         for tr in [i for i in self.conf.track_keys if i != owntrack]:
             for ottr in self.track[tr]['othertrack'].keys():
-                calc_track.append('@OWOT_{:s}@_{:s}'.format(tr,ottr))
+                calc_track.append('@OT_{:s}@_{:s}'.format(tr,ottr))
         return calc_track
     def read_owntrackmap(self,filepath,rootpath = None):
         mapdata = ''
