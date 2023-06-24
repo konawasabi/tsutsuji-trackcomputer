@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
+import re
 
 from kobushi import trackcoordinate
 
@@ -166,9 +167,8 @@ class interface():
             self.nearesttrack_sel_l = ttk.Label(self.nearesttrack_f, text='Track')
             self.nearesttrack_sel_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
             self.nearesttrack_sel_v = tk.StringVar(value='')
-            self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=8)
-            self.nearesttrack_sel_e['values'] = tuple(self.mainwindow.trackcontrol.track.keys())\
-                +tuple(self.mainwindow.trackcontrol.pointsequence_track.track.keys())
+            self.nearesttrack_sel_e = ttk.Combobox(self.nearesttrack_f, textvariable=self.nearesttrack_sel_v,width=18)
+            self.nearesttrack_sel_e['values'] = self.reload_nearesttrack_keys()
             self.nearesttrack_sel_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
             self.nearesttrack_sel_e.state(["readonly"])
             
@@ -454,7 +454,7 @@ class interface():
         elif '@OWOT_' in trackkey:
             parent_tr = re.search('(?<=@OWOT_).+(?=@)',trackkey).group(0)
             child_tr =  trackkey.split('@_')[-1]
-            track = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
+            track = self.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
         else:
             track = self.mainwindow.trackcontrol.pointsequence_track.track[trackkey]['result']
         track_pos = track[:,1:3]
@@ -536,4 +536,14 @@ class interface():
         if self.master is not None:
             for marker in [self.cursor_A, self.cursor_B, self.cursor_C, self.cursor_D]:
                 marker.make_trackkeylist()
-                
+            self.nearesttrack_sel_e['values']=self.reload_nearesttrack_keys()
+    def reload_nearesttrack_keys(self,target=None):
+        owot_keys = []
+        for parent_tr in self.mainwindow.trackcontrol.track.keys():
+            for child_tr in self.mainwindow.trackcontrol.track[parent_tr]['othertrack'].keys():
+                owot_keys.append('@OWOT_{:s}@_{:s}'.format(parent_tr,child_tr))
+
+        result = tuple(self.mainwindow.trackcontrol.track.keys())\
+            +tuple(self.mainwindow.trackcontrol.pointsequence_track.track.keys())\
+            +tuple(owot_keys)
+        return result
