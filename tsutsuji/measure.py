@@ -89,7 +89,7 @@ class interface():
             owot_keys = []
             for parent_tr in self.parent.mainwindow.trackcontrol.track.keys():
                 for child_tr in self.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'].keys():
-                    owot_keys.append('@OWOT_{:s}@_{:s}'.format(parent_tr,child_tr))
+                    owot_keys.append('@OT_{:s}@_{:s}'.format(parent_tr,child_tr))
                 
             self.track_e['values'] = tuple(['@absolute'])\
                 +tuple(self.parent.mainwindow.trackcontrol.track.keys())\
