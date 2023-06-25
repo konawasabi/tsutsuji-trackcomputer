@@ -49,6 +49,9 @@ Plot control
 
     * supplemental_cpが指定されている座標にマーカー(✖)を描画する
 
+  * track
+
+    * track要素が指定されている座標にマーカー(+)を描画する
 
 Measureボタン
 -------------
@@ -56,7 +59,7 @@ Measureボタン
 Measureウィンドウを開きます。
 詳細は :doc:`reference_measure` を参照。
 
-.. image:: ./files/measure.png
+.. image:: ./files/measure2.png
 	   :scale: 60%
 
 Generateボタン
@@ -66,6 +69,10 @@ cfgファイルの設定に従い、他軌道構文データを計算します�
 計算結果は、cfgファイル[@TSUTSUJI_GENERAL]セクションのoutput_pathで指定したディレクトリに出力されます。
 デフォルトでは、cfgファイルと同じ階層のresultディレクトリへ保存されます。
 
+track要素で定義した軌道のtrackkeyは次のフォーマット `@OT_parent@_trackname` に変換されます。
+ここで、 `trackname` は読み込んだmapファイルでのtrackkey、 `parent` は読み込んだmapファイルにcfgファイルで与えられた軌道キーです。
+
 これと同時に、計算した他軌道の線形をプロットウィンドウに表示します。
 計算結果は黒線でプロットされます。
 軌道カラーはTrackウィンドウで変更できます。
+

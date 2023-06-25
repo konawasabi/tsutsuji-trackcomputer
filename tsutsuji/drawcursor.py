@@ -20,6 +20,8 @@
 import numpy as np
 from . import math
 import tkinter as tk
+import re
+
 from kobushi import dialog_multifields
 
 class cursor():
@@ -96,6 +98,10 @@ class marker():
         self.track_key = self.p.values[3].get()
         if self.track_key != '@absolute':
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:,1:3]
+        elif '@OWOT_' in self.track_key:
+            parent_tr = re.search('(?<=@OWOT_).+(?=@)',self.track_key).group(0)
+            child_tr =  self.track_key.split('@_')[-1]
+            self.track_data = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][:,1:3]
         else:
             self.track_data = None
 
@@ -130,7 +136,12 @@ class marker():
         inputpos = np.array([x,y])
         distance = (self.track_data - inputpos)**2
         min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
-        return self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][min_dist_ix]
+        if '@OWOT_' in self.track_key:
+            parent_tr = re.search('(?<=@OWOT_).+(?=@)',self.track_key).group(0)
+            child_tr =  self.track_key.split('@_')[-1]
+            return self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][min_dist_ix]
+        else:
+            return self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][min_dist_ix]
     def setmarkerobj(self,pos=False):
         self.markerpos, = self.ax.plot([],[],self.color+'x')
         if pos:
@@ -183,7 +194,7 @@ class arrow():
             cos = vector[0]/np.sqrt(vector[0]**2+vector[1]**2)
             theta = np.arccos(cos) if sin > 0 else -np.arccos(cos)
             self.p.values[2].set(np.rad2deg(theta))
-            self.p.values_toshow[2].set('{:.1f}'.format(np.rad2deg(theta)))
+            self.p.values_toshow[2].set('{:.3f}'.format(np.rad2deg(theta)))
             self.p.parent.setdistance()
     def press(self,event):
         self.p.parent.printdirection(mycursor=self.p)
@@ -272,6 +283,10 @@ class marker_pos():
         self.track_key = self.p.values[3].get()
         if '@' not in self.track_key:
             self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:,1:3]
+        elif '@OT_' in self.track_key:
+            parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
+            child_tr =  self.track_key.split('@_')[-1]
+            self.track_data = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][:,1:3]
         elif '@KML_' in self.track_key or '@CSV_' in self.track_key:
             self.track_data = self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result'][:,1:3]
         else:
@@ -287,6 +302,10 @@ class marker_pos():
         min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
         if '@' not in self.track_key:
             result = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][min_dist_ix]
+        elif '@OT_' in self.track_key:
+            parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
+            child_tr =  self.track_key.split('@_')[-1]
+            result = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][min_dist_ix]
         else:
             result = self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result'][min_dist_ix]
         return result
@@ -307,11 +326,11 @@ class marker_pos():
             kp = result[0]
         self.p.values[0].set(x)
         self.p.values[1].set(y)
-        self.p.values_toshow[0].set('{:.1f}'.format(x))
-        self.p.values_toshow[1].set('{:.1f}'.format(y))
+        self.p.values_toshow[0].set('{:.3f}'.format(x))
+        self.p.values_toshow[1].set('{:.3f}'.format(y))
         if kp is not None:
             self.p.values[4].set(kp)
-            self.p.values_toshow[4].set('{:.1f}'.format(kp))
+            self.p.values_toshow[4].set('{:.3f}'.format(kp))
         self.p.parent.setdistance()
         return x,y
     def pressfunc(self,parent):
@@ -327,6 +346,10 @@ class marker_pos():
             kp = self.p.values[4].get()
             if '@' not in self.track_key:
                 self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result']
+            elif '@OT_' in self.track_key:
+                parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
+                child_tr =  self.track_key.split('@_')[-1]
+                self.track_data = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
             else:
                 self.track_data = self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result']
 
@@ -334,6 +357,10 @@ class marker_pos():
             for i in range(0,5):
                 if '@' not in self.track_key:
                     pos_kp.append(math.interpolate_with_dist(self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'],i,kp))
+                elif '@OT_' in self.track_key:
+                    parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
+                    child_tr =  self.track_key.split('@_')[-1]
+                    pos_kp.append(math.interpolate_with_dist(self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'],i,kp))
                 else:
                     pos_kp.append(math.interpolate_with_dist(self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result'],i,kp))
             #pos_kp = self.track_data[self.track_data[:,0] == kp][-1]
@@ -362,6 +389,10 @@ class marker_pos():
             self.prev_trackpos = pos_kp
             if '@' not in self.track_key:
                 self.track_data = self.p.parent.mainwindow.trackcontrol.track[self.track_key]['result'][:1,3]
+            elif '@OT_' in self.track_key:
+                parent_tr = re.search('(?<=@OT_).+(?=@)',self.track_key).group(0)
+                child_tr =  self.track_key.split('@_')[-1]
+                self.track_data = self.p.parent.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][:1,3]
             else:
                 self.track_data = self.p.parent.mainwindow.trackcontrol.pointsequence_track.track[self.track_key]['result'][:1,3]
 

@@ -23,7 +23,7 @@ import pathlib
 import re
 import argparse
 
-from lark import Lark, Transformer, v_args
+from lark import Lark, Transformer, v_args, Visitor
 
 from kobushi import loadmapgrammer as lgr
 from kobushi import loadheader as lhe
@@ -53,6 +53,18 @@ def readfile(filename, offset_label, offset_val, result_list, input_root, includ
       [{'filename':str, 'data':str}, ...]
     
     '''
+    if False:
+        import pdb
+        pdb.set_trace()
+
+    class detectDistance(Visitor):
+        def __init__(self, *args, **kwargs):
+            super().__init__()
+            self.isdistance = args[0]
+        def call_predefined_variable(self, tree):
+            if tree.children[0].value == 'distance':
+                self.isdistance[0] = True
+    
     path, rootpath, header_enc = lhe.loadheader(filename, 'BveTs Map ',2)
     fp = open(path,'r',encoding=header_enc)
     fp.readline()
@@ -87,10 +99,18 @@ def readfile(filename, offset_label, offset_val, result_list, input_root, includ
                                include_file = re.sub('\'','',tree.children[0].children[0]))
                     output += pre_elem + elem + ';'
                 elif tree.data == 'set_distance':
-                    if inverse_kp:
-                        output += pre_elem + offset_label + ' - ({:s})'.format(elem) + ';'
+                    isdistance = [False]
+                    detectDistance(isdistance).visit(tree)
+                    if not isdistance[0]:
+                        if inverse_kp:
+                            output += pre_elem + offset_label + ' - ({:s})'.format(elem) + ';'
+                        else:
+                            output += pre_elem + offset_label + ' + ' +  elem + ';'
                     else:
-                        output += pre_elem + offset_label + ' + ' +  elem + ';'
+                        if inverse_kp:
+                            output += pre_elem + ' - ({:s})'.format(elem) + ';'
+                        else:
+                            output += pre_elem +  elem + ';'
                 else:
                     output += pre_elem + elem + ';'
             else:

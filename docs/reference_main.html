@@ -5,16 +5,13 @@
 <html lang="jp">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>メインウィンドウ &#8212; tsutsuji-trackcomputer  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
     
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bizstyle.js"></script>
@@ -107,6 +104,11 @@
 <li><p>supplemental_cpが指定されている座標にマーカー(✖)を描画する</p></li>
 </ul>
 </li>
+<li><p>track</p>
+<ul>
+<li><p>track要素が指定されている座標にマーカー(+)を描画する</p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -115,13 +117,15 @@
 <h2>Measureボタン<a class="headerlink" href="#measure" title="Permalink to this heading">¶</a></h2>
 <p>Measureウィンドウを開きます。
 詳細は <a class="reference internal" href="reference_measure.html"><span class="doc">Measure ウィンドウ</span></a> を参照。</p>
-<a class="reference internal image-reference" href="_images/measure.png"><img alt="_images/measure.png" src="_images/measure.png" style="width: 305.4px; height: 203.4px;" /></a>
+<a class="reference internal image-reference" href="_images/measure2.png"><img alt="_images/measure2.png" src="_images/measure2.png" style="width: 315.59999999999997px; height: 223.79999999999998px;" /></a>
 </section>
 <section id="generate">
 <h2>Generateボタン<a class="headerlink" href="#generate" title="Permalink to this heading">¶</a></h2>
 <p>cfgファイルの設定に従い、他軌道構文データを計算します。
 計算結果は、cfgファイル[&#64;TSUTSUJI_GENERAL]セクションのoutput_pathで指定したディレクトリに出力されます。
 デフォルトでは、cfgファイルと同じ階層のresultディレクトリへ保存されます。</p>
+<p>track要素で定義した軌道のtrackkeyは次のフォーマット <cite>&#64;OT_parent&#64;_trackname</cite> に変換されます。
+ここで、 <cite>trackname</cite> は読み込んだmapファイルでのtrackkey、 <cite>parent</cite> は読み込んだmapファイルにcfgファイルで与えられた軌道キーです。</p>
 <p>これと同時に、計算した他軌道の線形をプロットウィンドウに表示します。
 計算結果は黒線でプロットされます。
 軌道カラーはTrackウィンドウで変更できます。</p>
@@ -201,7 +205,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

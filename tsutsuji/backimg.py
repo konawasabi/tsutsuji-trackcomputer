@@ -403,123 +403,137 @@ class TileMapControl():
         self.master.withdraw()
         self.master = None
         self.mainwindow.sendtopmost()
-    def getimg(self, scalex, as_ratio):
+    def getimg(self, scalex, as_ratio, maptilenumwarning=36):
         if False:
             import pdb
             pdb.set_trace()
 
-        if self.toshow:
-            self.img = None
+        if not self.toshow:
+            return
 
-            if '{z}' not in self.template_url or \
-               '{x}' not in self.template_url or \
-               '{y}' not in self.template_url:
-                raise Exception('Invalid template_url')
-            else:
-                url_base = self.template_url.replace('{z}', '{:d}').replace('{x}', '{:d}').replace('{y}', '{:d}')
+        if '{z}' not in self.template_url or \
+           '{x}' not in self.template_url or \
+           '{y}' not in self.template_url:
+            raise Exception('Invalid template_url')
+        else:
+            url_base = self.template_url.replace('{z}', '{:d}').replace('{x}', '{:d}').replace('{y}', '{:d}')
 
-            width = scalex
-            height = scalex*as_ratio
+        width = scalex
+        height = scalex*as_ratio
 
-            if self.autozoom:
-                
-                tilenumx = int(width/123)
-                zoom = 18 - int(np.sqrt((tilenumx/2)))
-                '''
+        if self.autozoom:
+
+            tilenumx = int(width/123)
+            zoom = 18 - int(np.sqrt((tilenumx/2)))
+            '''
+            zoom = 18
+            for count in range(1,18):
+                tilenumx = int(width/(123*count))
+                if tilenumx**2 <= 8:
+                    zoom = 18-(count-1)
+                    break
+            '''
+            if zoom > 18:
                 zoom = 18
-                for count in range(1,18):
-                    tilenumx = int(width/(123*count))
-                    if tilenumx**2 <= 8:
-                        zoom = 18-(count-1)
-                        break
-                '''
-                if zoom > 18:
-                    zoom = 18
-                if zoom < 0:
-                    zoom = 0
-            else:
-                zoom = self.zoom
+            if zoom < 0:
+                zoom = 0
+        else:
+            zoom = self.zoom
 
-            # 基準となる緯度経度をorigin_metricだけオフセット
-            origin = math.calc_xy2pl(self.origin_metric[1],\
-                                     -self.origin_metric[0],\
-                                     self.origin_longlat[1],\
-                                     self.origin_longlat[0])
-            origin = [origin[1],origin[0]]
+        # 基準となる緯度経度をorigin_metricだけオフセット
+        origin = math.calc_xy2pl(self.origin_metric[1],\
+                                 -self.origin_metric[0],\
+                                 self.origin_longlat[1],\
+                                 self.origin_longlat[0])
+        origin = [origin[1],origin[0]]
 
-            canvas_center = [self.mainwindow.viewpos_v[0].get(),\
-                             self.mainwindow.viewpos_v[1].get()]
+        canvas_center = [self.mainwindow.viewpos_v[0].get(),\
+                         self.mainwindow.viewpos_v[1].get()]
 
-            # プロット画面の左上(lu)、右下(rd)座標を求め、緯度経度に変換する
-            border_lu = math.calc_xy2pl(-(-height/2 + canvas_center[1]),\
-                                        (-width/2 + canvas_center[0]),\
-                                        origin[1],\
-                                        origin[0])
-            border_rd = math.calc_xy2pl(-(height/2 + canvas_center[1]),\
-                                        (width/2 + canvas_center[0]),\
-                                        origin[1],\
-                                        origin[0])
+        # プロット画面の左上(lu)、右下(rd)座標を求め、緯度経度に変換する
+        border_lu = math.calc_xy2pl(-(-height/2 + canvas_center[1]),\
+                                    (-width/2 + canvas_center[0]),\
+                                    origin[1],\
+                                    origin[0])
+        border_rd = math.calc_xy2pl(-(height/2 + canvas_center[1]),\
+                                    (width/2 + canvas_center[0]),\
+                                    origin[1],\
+                                    origin[0])
 
-            # プロット画面の左上、右下を含むマップタイル座標を求める
-            # (1)座標を緯度経度->ピクセル座標に変換、(2)タイル座標に変換、(3)タイル内での相対位置を求める
-            px_lu = [math.long2px(border_lu[1],zoom), math.lat2py(border_lu[0],zoom)]
-            tile_lu =[int(px_lu[0]/256), int(px_lu[1]/256)]
-            rel_lu = [px_lu[0]%256, px_lu[1]%256]
+        # プロット画面の左上、右下を含むマップタイル座標を求める
+        # (1)座標を緯度経度->ピクセル座標に変換、(2)タイル座標に変換、(3)タイル内での相対位置を求める
+        px_lu = [math.long2px(border_lu[1],zoom), math.lat2py(border_lu[0],zoom)]
+        tile_lu =[int(px_lu[0]/256), int(px_lu[1]/256)]
+        rel_lu = [px_lu[0]%256, px_lu[1]%256]
 
-            px_rd = [math.long2px(border_rd[1],zoom), math.lat2py(border_rd[0],zoom)]
-            tile_rd =[int(px_rd[0]/256), int(px_rd[1]/256)]
-            rel_rd = [px_rd[0]%256, px_rd[1]%256]
+        px_rd = [math.long2px(border_rd[1],zoom), math.lat2py(border_rd[0],zoom)]
+        tile_rd =[int(px_rd[0]/256), int(px_rd[1]/256)]
+        rel_rd = [px_rd[0]%256, px_rd[1]%256]
 
-            # 右上、左下を含むタイルの端点座標をm単位で求める
-            pos_tile_corner = {}
-            pos_tile_corner['lu'] = math.calc_pl2xy(math.py2lat(tile_lu[1]*256, zoom),\
-                                                    math.px2long((tile_lu[0])*256, zoom),\
-                                                    origin[1],\
-                                                    origin[0])
-            pos_tile_corner['rd'] = math.calc_pl2xy(math.py2lat((tile_rd[1]+1)*256, zoom),\
-                                                    math.px2long((tile_rd[0]+1)*256, zoom),\
-                                                    origin[1],\
-                                                    origin[0])
+        # 右上、左下を含むタイルの端点座標をm単位で求める
+        pos_tile_corner = {}
+        pos_tile_corner['lu'] = math.calc_pl2xy(math.py2lat(tile_lu[1]*256, zoom),\
+                                                math.px2long((tile_lu[0])*256, zoom),\
+                                                origin[1],\
+                                                origin[0])
+        pos_tile_corner['rd'] = math.calc_pl2xy(math.py2lat((tile_rd[1]+1)*256, zoom),\
+                                                math.px2long((tile_rd[0]+1)*256, zoom),\
+                                                origin[1],\
+                                                origin[0])
 
-            # 取得するマップタイルの表示範囲
-            extent = [pos_tile_corner['lu'][1],\
-                      pos_tile_corner['rd'][1], \
-                      -pos_tile_corner['lu'][0],\
-                      -pos_tile_corner['rd'][0]]
+        # 取得するマップタイルの表示範囲
+        extent = [pos_tile_corner['lu'][1],\
+                  pos_tile_corner['rd'][1], \
+                  -pos_tile_corner['lu'][0],\
+                  -pos_tile_corner['rd'][0]]
 
-            # マップタイルデータ取得
-            x_min = tile_lu[0]
-            x_max = tile_rd[0]
-            y_min = tile_lu[1]
-            y_max = tile_rd[1]
+        # マップタイルデータ取得
+        x_min = tile_lu[0]
+        x_max = tile_rd[0]
+        y_min = tile_lu[1]
+        y_max = tile_rd[1]
 
-            x_num = x_max-x_min +1
-            y_num = y_max-y_min +1
+        x_num = x_max-x_min +1
+        y_num = y_max-y_min +1
 
-            result = Image.new('RGB', (256*x_num, 256*y_num), (0,0,0))
+        imgnum = 0
+        for i in range(0,x_num):
+            for j in range(0,y_num):
+                url_toget = url_base.format(zoom,x_min+i,y_min+j)
 
-            counts = 0
-            for i in range(0,x_num):
-                for j in range(0,y_num):
-                    url_toget = url_base.format(zoom,x_min+i,y_min+j)
+                if url_toget not in self.img_cache.keys():
+                    imgnum +=1
 
-                    try:
-                        if url_toget not in self.img_cache.keys():
-                            self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget, timeout=(10.0,10.0)).content))
-                            message = ''
-                        else:
-                            message = 'cached'
-                        result.paste(self.img_cache[url_toget], (256*i, 256*j))
-                    except Exception as e:
-                        message = 'ERROR' #e
+        if imgnum > maptilenumwarning:
+            if not tk.messagebox.askokcancel('get {:d} maptiles'.format(imgnum),'{:d} 枚のmaptileをダウンロードします。続行しますか？'.format(imgnum)):
+                print('Cancelled')
+                return
+        
+        self.img = None
+        result = Image.new('RGB', (256*x_num, 256*y_num), (0,0,0))
 
-                    print('{:d}/{:d}'.format(counts+1,x_num*y_num),url_toget,message)
-                    counts +=1
-            print('Done')
+        counts = 0
+        for i in range(0,x_num):
+            for j in range(0,y_num):
+                url_toget = url_base.format(zoom,x_min+i,y_min+j)
 
-            self.img = result
-            self.extent = extent
-            self.filename = 'x{:d}y{:d}z{:d}'.format(x_min,y_min,zoom)
+                try:
+                    if url_toget not in self.img_cache.keys():
+                        self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget, timeout=(10.0,10.0)).content))
+                        message = ''
+                    else:
+                        message = 'cached'
+                    result.paste(self.img_cache[url_toget], (256*i, 256*j))
+                except Exception as e:
+                    message = 'ERROR' #e
+
+                print('{:d}/{:d}'.format(counts+1,x_num*y_num),url_toget,message)
+                counts +=1
+        print('Done')
+
+        self.img = result
+        self.extent = extent
+        self.filename = 'x{:d}y{:d}z{:d}'.format(x_min,y_min,zoom)
     def showimg(self,ax,as_ratio=1,ymag=1):
         if self.toshow and self.img is not None:
             ax.imshow(self.img,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect=ymag)

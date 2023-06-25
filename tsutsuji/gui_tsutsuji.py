@@ -101,10 +101,10 @@ class mainwindow(ttk.Frame):
         
         self.plt_canvas_base = tk.Canvas(self.canvas_frame, bg="white", width=900, height=700)
         self.plt_canvas_base.grid(row = 0, column = 0)
-        
+
         def on_canvas_resize(event):
-            self.plt_canvas_base.itemconfigure(self.fig_frame_id, width=event.width, height=event.height)
             #print(event)
+            self.plt_canvas_base.itemconfigure(self.fig_frame_id, width=event.width, height=event.height)
         
         self.fig_frame = tk.Frame(self.plt_canvas_base)
         self.fig_frame_id = self.plt_canvas_base.create_window((0, 0), window=self.fig_frame, anchor="nw")
@@ -114,7 +114,7 @@ class mainwindow(ttk.Frame):
         
         self.fig_canvas = FigureCanvasTkAgg(self.fig_plane, master=self.fig_frame)
         self.fig_canvas.draw()
-        self.fig_canvas.get_tk_widget().grid(row=0, column=0, sticky='news')
+        self.fig_canvas.get_tk_widget().grid(row=0, column=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         
         self.canvas_frame.columnconfigure(0, weight=1)
         #self.canvas_frame.columnconfigure(1, weight=1)
@@ -185,7 +185,7 @@ class mainwindow(ttk.Frame):
         self.plotarea_symbol_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
         self.plot_marker_ctrl = {}
         position = 0
-        for val in ['radius','gradient','supplemental_cp']:
+        for val in ['radius','gradient','supplemental_cp','track']:
             self.plot_marker_ctrl[val] = {}
             self.plot_marker_ctrl[val]['variable'] = tk.BooleanVar(value=False)
             self.plot_marker_ctrl[val]['widget'] = ttk.Checkbutton(self.plotarea_symbol_frame, text=val, variable=self.plot_marker_ctrl[val]['variable'], onvalue=True, offvalue=False)
