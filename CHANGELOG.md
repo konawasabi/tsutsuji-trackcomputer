@@ -5,6 +5,14 @@
 - プロット画面
   - 任意角度への回転
 
+## [1.7.0] - 2023-06-25
+
+- Track構文で定義した他軌道データの読み込み、変換に対応
+- Measure
+  - x, y, dir, distの有効数字を小数点以下3桁に変更
+  - 各種ウィジェットのサイズ修正
+  - nearesttrackの軌道選択メニューについて、マップリロード時に内容を更新
+
 ## [1.6.1] - 2023-05-21
 
 - offset_variable関係
@@ -156,6 +164,7 @@
 
 - 1st release
 
+[1.7.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.6.1...ver1.7.0
 [1.6.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.6.0...ver1.6.1
 [1.6.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.4...ver1.6.0
 [1.5.4]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.3...ver1.5.4
