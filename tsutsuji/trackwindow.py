@@ -72,7 +72,7 @@ class TrackWindow(ttk.Frame):
         if event != None:
             clicked_column = self.track_tree.identify_column(event.x)
             clicked_track = self.track_tree.identify_row(event.y)
-            clicked_track_rematt = re.sub('@OT_','',clicked_track)
+            clicked_track_rematt = re.sub('@GT_','',clicked_track)
             clicked_zone = getattr(event, 'widget').identify("element", event.x, event.y)
             focused = self.track_tree.focus()
             parent = self.track_tree.parent(focused)
@@ -206,11 +206,11 @@ class TrackWindow(ttk.Frame):
         self.track_tree.insert("", "end", 'generated', text='generated', open=True)
         if self.mainwindow.trackcontrol.generated_othertrack is not None:
             for i in self.mainwindow.trackcontrol.generated_othertrack.keys():
-                self.track_tree.insert("generated", "end", '@OT_'+i, text=i,\
+                self.track_tree.insert("generated", "end", '@GT_'+i, text=i,\
                                        values=('■■■'),\
-                                       tags=('@OT_'+i,))
-                self.track_tree.tag_configure('@OT_'+i,foreground=self.mainwindow.trackcontrol.generated_othertrack[i]['color'])
-                self.track_tree.change_state('@OT_'+i, 'checked' if self.mainwindow.trackcontrol.generated_othertrack[i]['toshow'] else 'unchecked')
+                                       tags=('@GT_'+i,))
+                self.track_tree.tag_configure('@GT_'+i,foreground=self.mainwindow.trackcontrol.generated_othertrack[i]['color'])
+                self.track_tree.change_state('@GT_'+i, 'checked' if self.mainwindow.trackcontrol.generated_othertrack[i]['toshow'] else 'unchecked')
     def reset_treevalue(self):
         ''' ツリーリストを再構築する
         '''
