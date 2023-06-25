@@ -5,6 +5,9 @@
 - プロット画面
   - 任意角度への回転
 
+## [1.7.1] - 2023-06-25
+- Trackウィンドウでgenerateした軌道を制御できないバグを修正
+
 ## [1.7.0] - 2023-06-25
 
 - Track構文で定義した他軌道データの読み込み、変換に対応
@@ -164,6 +167,7 @@
 
 - 1st release
 
+[1.7.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.0...ver1.7.1
 [1.7.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.6.1...ver1.7.0
 [1.6.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.6.0...ver1.6.1
 [1.6.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.4...ver1.6.0
