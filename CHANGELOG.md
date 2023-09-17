@@ -4,6 +4,11 @@
 
 - プロット画面
   - 任意角度への回転
+  
+## [1.7.2] - 2023-09-18
+
+- プロット画面のウィンドウリサイズへの対応
+  - ウィンドウリサイズ後、プロット範囲を再描画するにはReplotを実行する
 
 ## [1.7.1] - 2023-06-25
 - Trackウィンドウでgenerateした軌道を制御できないバグを修正
@@ -167,6 +172,7 @@
 
 - 1st release
 
+[1.7.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.1...ver1.7.2
 [1.7.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.0...ver1.7.1
 [1.7.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.6.1...ver1.7.0
 [1.6.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.6.0...ver1.6.1
