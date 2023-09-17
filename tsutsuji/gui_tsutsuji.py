@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2022 konawasabi
+#    Copyright 2021-2023 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -100,12 +100,12 @@ class mainwindow(ttk.Frame):
         self.ax_plane = self.fig_plane.add_subplot(gs1[0])
         
         self.plt_canvas_base = tk.Canvas(self.canvas_frame, bg="white", width=900, height=700)
-        self.plt_canvas_base.grid(row = 0, column = 0)
+        self.plt_canvas_base.grid(row = 0, column = 0, sticky=(tk.N, tk.W, tk.E, tk.S))
 
         def on_canvas_resize(event):
-            #print(event)
+            #print(event, self.fig_plane.get_size_inches())
             self.plt_canvas_base.itemconfigure(self.fig_frame_id, width=event.width, height=event.height)
-        
+            
         self.fig_frame = tk.Frame(self.plt_canvas_base)
         self.fig_frame_id = self.plt_canvas_base.create_window((0, 0), window=self.fig_frame, anchor="nw")
         self.fig_frame.columnconfigure(0, weight=1)
@@ -322,7 +322,8 @@ class mainwindow(ttk.Frame):
         else:
             center = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
             #windowratio = self.ax_plane.bbox.height/self.ax_plane.bbox.width # 平面図のアスペクト比を取得
-            windowratio = 1/self.aspectratio_v.get()*7/9
+            plotsize = self.fig_plane.get_size_inches()
+            windowratio = 1/self.aspectratio_v.get()*plotsize[1]/plotsize[0]
             scalex = self.viewp_scale_v.get()
             scaley = windowratio * scalex
             
