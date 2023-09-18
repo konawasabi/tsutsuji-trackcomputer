@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2022 konawasabi
+#    Copyright 2021-2023 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -206,8 +206,9 @@ class arrow():
             if reset:
                 self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
                 element = (np.cos(np.deg2rad(self.p.values[2].get())),np.sin(np.deg2rad(self.p.values[2].get())))
+            figsize = self.p.parentwindow.fig_plane.get_size_inches()
             self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],\
-                                             angles='xy',scale=2,scale_units='inches',width=0.0025)
+                                             angles='xy',scale=2,scale_units='inches',width=0.0025*7/figsize[0])
         else:
             self.pointerdir.set_UVC(element[0],element[1])
     def settangent(self,pointerpos,reset=False):
