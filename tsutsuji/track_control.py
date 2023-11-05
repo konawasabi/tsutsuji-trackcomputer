@@ -476,8 +476,8 @@ class TrackControl():
         ''' 注目軌道の制御点を抽出
 
         Args:
-                 trackkey (string): 
-                 owntrack (string):
+                 trackkey (string): 注目軌道キー
+                 owntrack (string): 座標変換の基準となる軌道キー (Noneの場合はself.conf.owntrack)
                  elem     (string): elemで指定した要素のみ抽出する
         Returns:
                  list
@@ -522,23 +522,48 @@ class TrackControl():
             pos_cp = self.pointsequence_track.track[trackkey]['result'][np.isin(self.pointsequence_track.track[trackkey]['result'][:,0],cp_dist)]
         
         return cp_dist, pos_cp
-    def convert_relativecp(self,trackkey,pos_cp,owntrack = None):
+    def convert_relativecp(self,trackkey,pos_cp,owntrack = None,checkU = False):
         ''' 抽出した制御点を自軌道座標に変換
-
+        Args:
+                trackkey (string): 注目軌道キー
+                pos_cp   (list):   self.takecpで抽出した注目軌道の制御点リスト
+                owntrack (string): 座標変換の基準となる軌道キー (Noneの場合はself.conf.owntrack)
+                checkU   (bool):   U字軌道チェックを行う場合はTrue
         Return: 
                 ndarray
                    resultcp: [注目軌道基準の距離程, 注目軌道基準のx, y座標, 自軌道基準制御点の距離程, 自軌道基準のx方向距離, 自軌道基準制御点のx, y座標] 
         '''
+
+        if False:
+            import pdb
+            pdb.set_trace()
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        target = self.track[owntrack]['result'][:,1:3]
+        orig_track = self.track[owntrack]['result'][:,1:3]
+        dest_track = self.track[trackkey]['result'][:,1:3]
         kp_cp = []
         rel_dist = []
         resultcp = []
         for data in pos_cp:
             inputpos = np.array([data[1],data[2]])
-            result = math.minimumdist(target,inputpos)
+            result = math.minimumdist(orig_track,inputpos)
             if result[3] == -1 and result[2]>0:
                 continue
+            elif True:#checkU:
+                # 注目点ー自軌道基準点間で注目軌道or自軌道と交わる場合はスキップ
+                pos_orig = np.array([result[1][0],result[1][1]]) # 自軌道上の交点
+                
+                otline_x = dest_track[:,0]
+                if inputpos[0]-pos_orig[0] != 0:
+                    otline_y = otline_x*(inputpos[1]-pos_orig[1])/(inputpos[0]-pos_orig[0]) + pos_orig[1]
+                    if np.count_nonzero(np.diff(np.sign(otline_y - dest_track[:,1]))>0)>1:
+                        print('skip')
+                        continue
+                else:
+                    otline_x = np.ones(len(dest_track))*inputpos[0]
+                    if np.count_nonzero(np.diff(np.sign(otline_x - dest_track[:,0]))>0)>1:
+                        print('skip')
+                        continue
+                    
             resultcp.append([data[0],\
                              inputpos[0],\
                              inputpos[1],\
@@ -551,7 +576,7 @@ class TrackControl():
         ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
         '''
         self.exclude_tracks = []
-        if False:
+        if True:
             import pdb
             pdb.set_trace()
 
