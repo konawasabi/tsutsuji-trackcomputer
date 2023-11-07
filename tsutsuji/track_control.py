@@ -544,25 +544,40 @@ class TrackControl():
         rel_dist = []
         resultcp = []
         for data in pos_cp:
-            inputpos = np.array([data[1],data[2]])
+            inputpos = np.array([data[1],data[2]]) # 注目軌道上の点
             result = math.minimumdist(orig_track,inputpos)
             if result[3] == -1 and result[2]>0:
                 continue
             elif True:#checkU:
                 # 注目点ー自軌道基準点間で注目軌道or自軌道と交わる場合はスキップ
                 pos_orig = np.array([result[1][0],result[1][1]]) # 自軌道上の交点
+                eOD = (inputpos - pos_orig)/np.linalg.norm(inputpos - pos_orig)
+                tmp_n = np.dot(dest_track - pos_orig, eOD)
+                tmp_dist_vect = (dest_track - (tmp_n.reshape(-1,1)*eOD+pos_orig))**2
+                #tmp_dist_vect = ( (tmp_n.reshape(-1,1)*eOD))**2
+                tmp_distance = np.sqrt(tmp_dist_vect[:,0]+tmp_dist_vect[:,1])
+                dist_minix = np.argmin(tmp_distance)
+                tmp_num = np.arange(0,len(tmp_distance))
+                tmp_result = np.delete(np.vstack((tmp_distance,tmp_num)),dist_minix,1)
+                dist_minix_2nd = int(tmp_result[1][np.argmin(tmp_result[0])])
                 
-                otline_x = dest_track[:,0]
-                if inputpos[0]-pos_orig[0] != 0:
-                    otline_y = otline_x*(inputpos[1]-pos_orig[1])/(inputpos[0]-pos_orig[0]) + pos_orig[1]
-                    if np.count_nonzero(np.diff(np.sign(otline_y - dest_track[:,1]))>0)>1:
-                        print('skip')
-                        continue
-                else:
-                    otline_x = np.ones(len(dest_track))*inputpos[0]
-                    if np.count_nonzero(np.diff(np.sign(otline_x - dest_track[:,0]))>0)>1:
-                        print('skip')
-                        continue
+                #print(tmp_n,np.linalg.norm(inputpos-pos_orig),tmp_distance)
+                print(tmp_distance[dist_minix_2nd],tmp_n[dist_minix_2nd],np.linalg.norm(inputpos-pos_orig),dist_minix_2nd,dist_minix)
+                if tmp_n[dist_minix_2nd]<np.linalg.norm(inputpos-pos_orig):
+                    print('skip')
+                    continue
+                #2番目に小さい数を見つけたい
+                    
+                '''
+                if math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig)[0] - result[0] < 0:
+                    print('skip',inputpos,pos_orig)
+                    print(math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig))
+                    print(result)
+                    print(math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig)[0] - result[0])
+                    print(np.rad2deg(np.arccos(np.dot(np.array([1,0]),math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig)[1]-pos_orig)/np.linalg.norm(math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig)[1]-pos_orig))))
+                    continue
+                '''
+                
                     
             resultcp.append([data[0],\
                              inputpos[0],\
