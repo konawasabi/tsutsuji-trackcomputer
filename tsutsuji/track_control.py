@@ -604,7 +604,7 @@ class TrackControl():
         for tr in self.get_trackkeys(self.conf.owntrack):
             try:
                 _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
-                relativecp = self.convert_relativecp(tr,pos_cp_tr,checkU=True) # 自軌道基準の距離程に変換
+                relativecp = self.convert_relativecp(tr,pos_cp_tr,checkU=self.conf.general['check_u']) # 自軌道基準の距離程に変換
                 cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3]) and i>min(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点のうち注目軌道が含まれる点と、自軌道基準に変換した注目軌道距離程の和をとる
             #cp_tr_ownt = sorted(list(relativecp[:,3])) # 
             
