@@ -118,6 +118,41 @@ def cross_normal(position, track):
     Return:
     '''
     return None
+
+def mindist_crossline(position, phiA, track):
+    '''曲線trackとpositionを通る方位角phiAの直線Uの交点について、positionとの距離が最小となるものを求める
+
+    track上の各点をT_k, positionをP, 座標原点Oとして、直線Uに沿う単位ベクトルをeUで表す。
+    OT_k - (OP + α * eU) が最小となるようなαを求める。 
+
+    Args:
+         position (ndarray):
+           np.array([x,y])
+    
+         phiA (float):
+           絶対座標x軸に対して直線がなす角
+    
+         track (ndarray):
+           np.array([[x0,y0],[x1,y1],...,[xn,yn]])
+
+    Return:
+        np.array:
+           [[alpha: 最小となる距離, sort_ix: 距離が最小となる点のインデックス],...]
+        : 
+    '''
+
+    eU = np.array([np.cos(phiA),np.sin(phiA)])
+    alpha = np.dot(track - position, eU)
+    dist_v = (track - (alpha.reshape(-1,1)*eU + position))**2
+    distance = np.sqrt(dist_v[:,0] + dist_v[:,1])
+
+    sort_ix = np.argsort(distance)
+
+    result = []
+    for i in range(0,5):
+        result.append([alpha[sort_ix[i]],sort_ix[i]])
+
+    return np.array(result)
 def angle_twov(phiA, phiB):
     ''' ベクトルA (方位角phiA)からベクトルB(方位角phiB)への方位角変化を求める
     '''

@@ -72,7 +72,7 @@ class TrackWindow(ttk.Frame):
         if event != None:
             clicked_column = self.track_tree.identify_column(event.x)
             clicked_track = self.track_tree.identify_row(event.y)
-            clicked_track_rematt = re.sub('@OT_','',clicked_track)
+            clicked_track_rematt = re.sub('@GT_','',clicked_track)
             clicked_zone = getattr(event, 'widget').identify("element", event.x, event.y)
             focused = self.track_tree.focus()
             parent = self.track_tree.parent(focused)
@@ -86,7 +86,7 @@ class TrackWindow(ttk.Frame):
                         else:
                             target['toshow'] = False
                         for otkey in self.track_tree.get_children(tkey):
-                            ot_target = target['othertrack'][re.sub('@OWOT_','',otkey)]
+                            ot_target = target['othertrack'][re.sub('@OT_','',otkey)]
                             if self.track_tree.tag_has("checked", 'root'):
                                 ot_target['toshow'] = True
                             else:
@@ -122,8 +122,8 @@ class TrackWindow(ttk.Frame):
                     else:
                         target['toshow'] = False
                 # 自軌道に従属する他軌道をクリックした場合
-                elif '@OWOT_' in clicked_track: 
-                    clicked_track_rm = re.sub('@OWOT_','',focused)
+                elif '@OT_' in clicked_track: 
+                    clicked_track_rm = re.sub('@OT_','',focused)
                     target = self.mainwindow.trackcontrol.track[self.track_tree.parent(focused)]['othertrack'][clicked_track_rm]
                     if self.track_tree.tag_has("checked", focused):
                         target['toshow'] = True
@@ -141,8 +141,8 @@ class TrackWindow(ttk.Frame):
                 if clicked_column == '#1': 
                     if '@' not in clicked_track:
                         nowcolor = self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color']
-                    elif '@OWOT_' in clicked_track:
-                        clicked_track_rm = re.sub('@OWOT_','',focused)
+                    elif '@OT_' in clicked_track:
+                        clicked_track_rm = re.sub('@OT_','',focused)
                         nowcolor = self.mainwindow.trackcontrol.track[parent]['othertrack'][clicked_track_rm]['color']
                             
                     elif '@KML_' in clicked_track or '@CSV_' in clicked_track:
@@ -154,8 +154,8 @@ class TrackWindow(ttk.Frame):
                         if '@' not in clicked_track:
                             self.mainwindow.trackcontrol.conf.track_data[clicked_track]['color'] = inputdata[1]
                             self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
-                        elif '@OWOT_' in clicked_track: 
-                            clicked_track_rm = re.sub('@OWOT_','',focused)
+                        elif '@OT_' in clicked_track: 
+                            clicked_track_rm = re.sub('@OT_','',focused)
                             self.mainwindow.trackcontrol.track[parent]['othertrack'][clicked_track_rm]['color'] = inputdata[1]
                             self.track_tree.tag_configure(clicked_track,foreground=inputdata[1])
                         elif '@KML_' in clicked_track or '@CSV_' in clicked_track:
@@ -183,10 +183,10 @@ class TrackWindow(ttk.Frame):
 
             # 従属する他軌道の表示
             for otkey in self.mainwindow.trackcontrol.track[i]['othertrack'].keys():
-                self.track_tree.insert(i,"end",'@OWOT_'+otkey,text=otkey,values=('■■■'),\
-                                       tags=('@OWOT_'+otkey,))
-                self.track_tree.tag_configure('@OWOT_'+otkey,foreground=self.mainwindow.trackcontrol.track[i]['othertrack'][otkey]['color'])
-                self.track_tree.change_state('@OWOT_'+otkey, 'checked' if self.mainwindow.trackcontrol.track[i]['othertrack'][otkey]['toshow'] else 'unchecked')
+                self.track_tree.insert(i,"end",'@OT_'+otkey,text=otkey,values=('■■■'),\
+                                       tags=('@OT_'+otkey,))
+                self.track_tree.tag_configure('@OT_'+otkey,foreground=self.mainwindow.trackcontrol.track[i]['othertrack'][otkey]['color'])
+                self.track_tree.change_state('@OT_'+otkey, 'checked' if self.mainwindow.trackcontrol.track[i]['othertrack'][otkey]['toshow'] else 'unchecked')
 
         # KML/CSVから読み込んだ点列データの表示
         label_sqtr = 'seq_points'
@@ -206,11 +206,11 @@ class TrackWindow(ttk.Frame):
         self.track_tree.insert("", "end", 'generated', text='generated', open=True)
         if self.mainwindow.trackcontrol.generated_othertrack is not None:
             for i in self.mainwindow.trackcontrol.generated_othertrack.keys():
-                self.track_tree.insert("generated", "end", '@OT_'+i, text=i,\
+                self.track_tree.insert("generated", "end", '@GT_'+i, text=i,\
                                        values=('■■■'),\
-                                       tags=('@OT_'+i,))
-                self.track_tree.tag_configure('@OT_'+i,foreground=self.mainwindow.trackcontrol.generated_othertrack[i]['color'])
-                self.track_tree.change_state('@OT_'+i, 'checked' if self.mainwindow.trackcontrol.generated_othertrack[i]['toshow'] else 'unchecked')
+                                       tags=('@GT_'+i,))
+                self.track_tree.tag_configure('@GT_'+i,foreground=self.mainwindow.trackcontrol.generated_othertrack[i]['color'])
+                self.track_tree.change_state('@GT_'+i, 'checked' if self.mainwindow.trackcontrol.generated_othertrack[i]['toshow'] else 'unchecked')
     def reset_treevalue(self):
         ''' ツリーリストを再構築する
         '''

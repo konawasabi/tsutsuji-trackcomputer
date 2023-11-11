@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2022 konawasabi
+#    Copyright 2021-2023 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -100,12 +100,12 @@ class mainwindow(ttk.Frame):
         self.ax_plane = self.fig_plane.add_subplot(gs1[0])
         
         self.plt_canvas_base = tk.Canvas(self.canvas_frame, bg="white", width=900, height=700)
-        self.plt_canvas_base.grid(row = 0, column = 0)
+        self.plt_canvas_base.grid(row = 0, column = 0, sticky=(tk.N, tk.W, tk.E, tk.S))
 
         def on_canvas_resize(event):
-            #print(event)
+            #print(event, self.fig_plane.get_size_inches())
             self.plt_canvas_base.itemconfigure(self.fig_frame_id, width=event.width, height=event.height)
-        
+            
         self.fig_frame = tk.Frame(self.plt_canvas_base)
         self.fig_frame_id = self.plt_canvas_base.create_window((0, 0), window=self.fig_frame, anchor="nw")
         self.fig_frame.columnconfigure(0, weight=1)
@@ -292,9 +292,10 @@ class mainwindow(ttk.Frame):
             self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
         self.trackwindow.reset_treevalue()
         self.measurewindow.reload_trackkeys()
-        
+
+        plotsize = self.fig_plane.get_size_inches()
         self.staticmapctrl.setparams_fromcfg(self.trackcontrol.conf.maptile)
-        self.staticmapctrl.getimg(self.viewp_scale_v.get(),7/9)
+        self.staticmapctrl.getimg(self.viewp_scale_v.get(),plotsize[1]/plotsize[0])
         
         self.drawall()
     def reloadcfg(self, event=None):
@@ -312,7 +313,8 @@ class mainwindow(ttk.Frame):
                 self.trackcontrol.plot_symbols(self.ax_plane,key)
 
         self.measurewindow.drawall()
-            
+        plotsize = self.fig_plane.get_size_inches()
+        
         if self.view_whole_v.get() == 'True':
             imgarea = self.backimgctrl.imgsarea()
             imgarea = self.trackcontrol.drawarea(imgarea)
@@ -321,24 +323,24 @@ class mainwindow(ttk.Frame):
             self.ax_plane.set_ylim(imgarea[2],imgarea[3])
         else:
             center = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
-            #windowratio = self.ax_plane.bbox.height/self.ax_plane.bbox.width # 平面図のアスペクト比を取得
-            windowratio = 1/self.aspectratio_v.get()*7/9
+            windowratio = 1/self.aspectratio_v.get()*plotsize[1]/plotsize[0] # 平面図のアスペクト比を取得
             scalex = self.viewp_scale_v.get()
             scaley = windowratio * scalex
             
             self.ax_plane.set_xlim(center[0]-scalex/2, center[0]+scalex/2)
             self.ax_plane.set_ylim(center[1]-scaley/2, center[1]+scaley/2)
-        
-        self.staticmapctrl.showimg(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
+    
+        self.staticmapctrl.showimg(self.ax_plane,as_ratio=plotsize[1]/plotsize[0],ymag=self.aspectratio_v.get())
 
         for i in self.backimgctrl.imgs.keys():
-            self.backimgctrl.imgs[i].show(self.ax_plane,as_ratio=7/9,ymag=self.aspectratio_v.get())
+            self.backimgctrl.imgs[i].show(self.ax_plane,as_ratio=plotsize[1]/plotsize[0],ymag=self.aspectratio_v.get())
 
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
     def move_xy(self,x,y):
         nowpos = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
-        windowratio = 1/self.aspectratio_v.get()*7/9
+        plotsize = self.fig_plane.get_size_inches()
+        windowratio = 1/self.aspectratio_v.get()*plotsize[1]/plotsize[0]
         scalex = self.viewp_scale_v.get()
         scaley = windowratio * scalex
 
@@ -382,7 +384,8 @@ class mainwindow(ttk.Frame):
         elif event.keysym == 'Down':
             self.move_xy(0,1)
     def getmaptile(self, event=None):
-        self.staticmapctrl.getimg(self.viewp_scale_v.get(),7/9)
+        plotsize = self.fig_plane.get_size_inches()
+        self.staticmapctrl.getimg(self.viewp_scale_v.get(),plotsize[1]/plotsize[0])
         self.drawall()
 def main():
     if not __debug__:

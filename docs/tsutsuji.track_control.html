@@ -55,8 +55,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl.convert_relativecp">
-<span class="sig-name descname"><span class="pre">convert_relativecp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trackkey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.convert_relativecp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.convert_relativecp" title="Permalink to this definition">¶</a></dt>
-<dd><p>抽出した制御点を自軌道座標に変換</p>
+<span class="sig-name descname"><span class="pre">convert_relativecp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trackkey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.convert_relativecp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.convert_relativecp" title="Permalink to this definition">¶</a></dt>
+<dd><p>抽出した制御点を自軌道座標に変換
+:param trackkey: 注目軌道キー
+:type trackkey: string
+:param pos_cp: self.takecpで抽出した注目軌道の制御点リスト
+:type pos_cp: list
+:param owntrack: 座標変換の基準となる軌道キー (Noneの場合はself.conf.owntrack)
+:type owntrack: string
+:param checkU: U字軌道チェックを行う場合はTrue
+:type checkU: bool</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><dl class="simple">
@@ -168,7 +176,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl.relativeradius_cp">
 <span class="sig-name descname"><span class="pre">relativeradius_cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_calc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.relativeradius_cp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.relativeradius_cp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>self.relativepoint_all()及びself.relativeradius()の結果(self.rel_track, self.rel_track_radius)について、cp_distで指定した距離程ごとに相対半径の平均値、相対座標の内挿値を出力する。</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl.take_cp_by_types">
@@ -183,8 +192,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>trackkey</strong> (<em>string</em>) -- </p></li>
-<li><p><strong>owntrack</strong> (<em>string</em>) -- </p></li>
+<li><p><strong>trackkey</strong> (<em>string</em>) -- 注目軌道キー</p></li>
+<li><p><strong>owntrack</strong> (<em>string</em>) -- 座標変換の基準となる軌道キー (Noneの場合はself.conf.owntrack)</p></li>
 <li><p><strong>elem</strong> (<em>string</em>) -- elemで指定した要素のみ抽出する</p></li>
 </ul>
 </dd>

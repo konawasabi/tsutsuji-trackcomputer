@@ -172,12 +172,14 @@ class TrackControl():
         def take_relpos_std(src,tgt):
             len_tr = len(tgt)
             result = []
+            tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
             # 自軌道に対する相対座標の算出
             for pos in src:
-                tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
                 tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
-                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = min_ix[0][0]
+
+                min_vals = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = int(min_vals[np.argsort(np.abs(min_vals[:,0]))[0]][1])
+                min_ix = (np.array([min_ix_val]),)
 
                 if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
@@ -223,13 +225,15 @@ class TrackControl():
         def take_relpos_owot(src,tgt):
             len_tr = len(tgt)
             result = []
+            tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
             # 自軌道に対する相対座標の算出
             for pos in src:
-                tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
                 tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
-                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = min_ix[0][0]
 
+                min_vals = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = int(min_vals[np.argsort(np.abs(min_vals[:,0]))[0]][1])
+                min_ix = (np.array([min_ix_val]),)
+                
                 if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
                                   'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
@@ -339,6 +343,8 @@ class TrackControl():
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
     def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None):
+        '''self.relativepoint_all()及びself.relativeradius()の結果(self.rel_track, self.rel_track_radius)について、cp_distで指定した距離程ごとに相対半径の平均値、相対座標の内挿値を出力する。
+        '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
         if cp_dist == None:
@@ -476,8 +482,8 @@ class TrackControl():
         ''' 注目軌道の制御点を抽出
 
         Args:
-                 trackkey (string): 
-                 owntrack (string):
+                 trackkey (string): 注目軌道キー
+                 owntrack (string): 座標変換の基準となる軌道キー (Noneの場合はself.conf.owntrack)
                  elem     (string): elemで指定した要素のみ抽出する
         Returns:
                  list
@@ -522,23 +528,58 @@ class TrackControl():
             pos_cp = self.pointsequence_track.track[trackkey]['result'][np.isin(self.pointsequence_track.track[trackkey]['result'][:,0],cp_dist)]
         
         return cp_dist, pos_cp
-    def convert_relativecp(self,trackkey,pos_cp,owntrack = None):
+    def convert_relativecp(self,trackkey,pos_cp,owntrack = None,checkU = False):
         ''' 抽出した制御点を自軌道座標に変換
-
+        Args:
+                trackkey (string): 注目軌道キー
+                pos_cp   (list):   self.takecpで抽出した注目軌道の制御点リスト
+                owntrack (string): 座標変換の基準となる軌道キー (Noneの場合はself.conf.owntrack)
+                checkU   (bool):   U字軌道チェックを行う場合はTrue
         Return: 
                 ndarray
                    resultcp: [注目軌道基準の距離程, 注目軌道基準のx, y座標, 自軌道基準制御点の距離程, 自軌道基準のx方向距離, 自軌道基準制御点のx, y座標] 
         '''
+
+        if False:
+            import pdb
+            pdb.set_trace()
         owntrack = self.conf.owntrack if owntrack == None else owntrack
-        target = self.track[owntrack]['result'][:,1:3]
+        orig_track = self.track[owntrack]['result'][:,1:3]
+        if '@' not in trackkey:
+            dest_track = self.track[trackkey]['result'][:,1:3]
+        elif '@OT' in trackkey:
+            parent_key = re.search('(?<=@OT_).+(?=@)',trackkey).group(0)
+            child_key = trackkey.split('@_')[-1]
+            dest_track = self.track[parent_key]['othertrack'][child_key]['result'][:,1:3]
+        else:
+            dest_track = self.pointsequence_track.track[trackkey]['result'][:,1:3]
         kp_cp = []
         rel_dist = []
         resultcp = []
         for data in pos_cp:
-            inputpos = np.array([data[1],data[2]])
-            result = math.minimumdist(target,inputpos)
+            inputpos = np.array([data[1],data[2]]) # 注目軌道上の点
+            result = math.minimumdist(orig_track,inputpos)
             if result[3] == -1 and result[2]>0:
                 continue
+            elif checkU:
+                # 注目点ー自軌道基準点間で注目軌道or自軌道と交わる場合はスキップ
+                pos_orig = np.array([result[1][0],result[1][1]]) # 自軌道上の交点
+                eOD = (inputpos - pos_orig)/np.linalg.norm(inputpos - pos_orig)
+                tmp_n = np.dot(dest_track - pos_orig, eOD)
+                tmp_dist_vect = (dest_track - (tmp_n.reshape(-1,1)*eOD+pos_orig))**2
+                #tmp_dist_vect = ( (tmp_n.reshape(-1,1)*eOD))**2
+                tmp_distance = np.sqrt(tmp_dist_vect[:,0]+tmp_dist_vect[:,1])
+                dist_minix = np.argmin(tmp_distance)
+                tmp_num = np.arange(0,len(tmp_distance))
+                tmp_result = np.delete(np.vstack((tmp_distance,tmp_num)),dist_minix,1)
+                dist_minix_2nd = int(tmp_result[1][np.argmin(tmp_result[0])])
+                
+                #print(tmp_n,np.linalg.norm(inputpos-pos_orig),tmp_distance)
+                #print(tmp_distance[dist_minix_2nd],tmp_n[dist_minix_2nd],np.linalg.norm(inputpos-pos_orig),dist_minix_2nd,dist_minix)
+                if tmp_n[dist_minix_2nd]<np.linalg.norm(inputpos-pos_orig): # ２番目に距離が小さい点がinputpos-pos_origより小さい場合は除外
+                    #print('skip')
+                    continue
+                    
             resultcp.append([data[0],\
                              inputpos[0],\
                              inputpos[1],\
@@ -563,7 +604,7 @@ class TrackControl():
         for tr in self.get_trackkeys(self.conf.owntrack):
             try:
                 _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
-                relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
+                relativecp = self.convert_relativecp(tr,pos_cp_tr,checkU=self.conf.general['check_u']) # 自軌道基準の距離程に変換
                 cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3]) and i>min(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点のうち注目軌道が含まれる点と、自軌道基準に変換した注目軌道距離程の和をとる
             #cp_tr_ownt = sorted(list(relativecp[:,3])) # 
             
@@ -576,6 +617,7 @@ class TrackControl():
     
 
         # 他軌道構文生成
+        digit_str = '{:.'+'{:d}'.format(self.conf.general['output_digit'])+'f}'
         for tr in [i for i in self.get_trackkeys(self.conf.owntrack) if i not in self.exclude_tracks]:
             output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
             if self.conf.general['offset_variable'] is not None:
@@ -585,15 +627,15 @@ class TrackControl():
 
             for data in self.rel_track_radius_cp[tr]:
                 if '@' not in tr or '@OT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
-                    output_map['x'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
-                    output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],data[2])
-                    output_map['y'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
-                    output_map['y'] += 'Track[\'{:s}\'].Y.Interpolate({:.2f},{:.2f});\n'.format(tr,data[6],data[5])
+                    output_map['x'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                    output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(tr,data[3],data[2])
+                    output_map['y'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                    output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(tr,data[6],data[5])
                 else:
-                    output_map['x'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
-                    output_map['x'] += 'Track[\'{:s}\'].X.Interpolate({:.2f},{:.2f});\n'.format(tr,data[3],0)
-                    output_map['y'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
-                    output_map['y'] += 'Track[\'{:s}\'].Y.Interpolate({:.2f},{:.2f});\n'.format(tr,data[6],0)
+                    output_map['x'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                    output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(tr,data[3],0)
+                    output_map['y'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                    output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(tr,data[6],0)
 
             cp_dist = {}
             pos_cp = {}
@@ -605,49 +647,49 @@ class TrackControl():
             if len(relativecp['cant'])>0:
                 '''
                 for data in self.rel_track[tr][np.isin(self.rel_track[tr][:,0],relativecp['cant'][:,0])]:
-                    output_map['cant'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
-                    output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[8])
+                    output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                    output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(tr,data[8])
                 '''
                 for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
-                    output_map['cant'] += '{:s}{:.2f};\n'.format(kp_val,data[0])
-                    output_map['cant'] += 'Track[\'{:s}\'].Cant.Interpolate({:.3f});\n'.format(tr,data[1])
+                    output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                    output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(tr,data[1])
 
             
             key = 'interpolate_func'
             if len(relativecp[key])>0:
                 for index in range(len(relativecp[key])):
-                    output_map[key] += '{:s}{:.2f};\n'.format(kp_val,relativecp[key][index][3])
-                    output_map[key] += 'Track[\'{:s}\'].Cant.SetFunction({:d});\n'.format(tr,int(pos_cp[key][index][7]))
+                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                    output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(tr,int(pos_cp[key][index][7]))
             
             key = 'center'
             if len(relativecp[key])>0:
                 for index in range(len(relativecp[key])):
-                    output_map[key] += '{:s}{:.2f};\n'.format(kp_val,relativecp[key][index][3])
-                    output_map[key] += 'Track[\'{:s}\'].Cant.SetCenter({:.3f});\n'.format(tr,pos_cp[key][index][9])
+                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                    output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(tr,pos_cp[key][index][9])
 
             key = 'gauge'
             if len(relativecp[key])>0:
                 for index in range(len(relativecp[key])):
-                    output_map[key] += '{:s}{:.2f};\n'.format(kp_val,relativecp[key][index][3])
-                    output_map[key] += 'Track[\'{:s}\'].Cant.SetGauge({:.3f});\n'.format(tr,pos_cp[key][index][10])
+                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                    output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(tr,pos_cp[key][index][10])
 
             output_file = ''
             output_file += 'BveTs Map 2.02:utf-8\n\n'
             # 他軌道構文印字
             if kp_val != '':
                 output_file += '# offset\n'
-                output_file += '${:s} = {:f};\n'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance'])+'\n'
-            output_file += '# Track[\'{:s}\'].X\n'.format(tr)
+                output_file += ('${:s} = {:f};\n').format(self.conf.general['offset_variable'],self.conf.general['origin_distance'])+'\n'
+            output_file += ('# Track[\'{:s}\'].X\n').format(tr)
             output_file += output_map['x']+'\n'
-            output_file += '# Track[\'{:s}\'].Y\n'.format(tr)
+            output_file += ('# Track[\'{:s}\'].Y\n').format(tr)
             output_file += output_map['y']+'\n'
-            output_file += '# Track[\'{:s}\'].Cant.Interpolate\n'.format(tr)
+            output_file += ('# Track[\'{:s}\'].Cant.Interpolate\n').format(tr)
             output_file += output_map['cant']+'\n'
-            output_file += '# Track[\'{:s}\'].Cant.SetFunction\n'.format(tr)
+            output_file += ('# Track[\'{:s}\'].Cant.SetFunction\n').format(tr)
             output_file += output_map['interpolate_func']+'\n'
-            output_file += '# Track[\'{:s}\'].Cant.SetCenter\n'.format(tr)
+            output_file += ('# Track[\'{:s}\'].Cant.SetCenter\n').format(tr)
             output_file += output_map['center']+'\n'
-            output_file += '# Track[\'{:s}\'].Cant.SetGauge\n'.format(tr)
+            output_file += ('# Track[\'{:s}\'].Cant.SetGauge\n').format(tr)
             output_file += output_map['gauge']+'\n'
 
             if '@' not in tr:

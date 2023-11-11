@@ -4,6 +4,24 @@
 
 - プロット画面
   - 任意角度への回転
+  
+## [1.7.3] - 2023-11-11
+
+- 自軌道に対する各軌道の相対座標計算ルーチンの修正
+  - 自軌道法線と対象軌道が2回交差する場合、自軌道から近い方の交点を検出するように変更
+  - 2回交差を判別する処理を実行するかどうかはcfgファイル、[@TSUTSUJI_GENERAL]セクションのcheck_uで指定
+	- デフォルトではTrue (実行する)
+- マップファイルとして出力される各パラメータ桁数の変更に対応
+  - cfgファイル、[@TSUTSUJI_GENERAL]セクションのoutput_digitで指定
+  - デフォルトでは小数点以下3桁
+  
+## [1.7.2] - 2023-09-18
+
+- プロット画面のウィンドウリサイズへの対応
+  - ウィンドウリサイズ後、プロット範囲を再描画するにはReplotを実行する
+
+## [1.7.1] - 2023-06-25
+- Trackウィンドウでgenerateした軌道を制御できないバグを修正
 
 ## [1.7.0] - 2023-06-25
 
@@ -164,6 +182,8 @@
 
 - 1st release
 
+[1.7.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.1...ver1.7.2
+[1.7.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.0...ver1.7.1
 [1.7.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.6.1...ver1.7.0
 [1.6.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.6.0...ver1.6.1
 [1.6.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.5.4...ver1.6.0

@@ -44,10 +44,19 @@ class Config():
                         'unit_length':1,\
                         'owntrack':None,\
                         'output_path':'./result',\
-                        'backimg':None}
+                        'backimg':None,\
+                        'check_u':True,\
+                        'output_digit':3}
         if '@TSUTSUJI_GENERAL' in sections:
             for k in self.cp.options('@TSUTSUJI_GENERAL'):
-                self.general[k] = self.cp['@TSUTSUJI_GENERAL'][k] if k not in ['origin_distance', 'unit_length'] else float(self.cp['@TSUTSUJI_GENERAL'][k])
+                if k in ['origin_distance', 'unit_length']:
+                    self.general[k] = float(self.cp['@TSUTSUJI_GENERAL'][k])
+                elif k in ['output_digit']:
+                    self.general[k] = int(self.cp['@TSUTSUJI_GENERAL'][k])
+                elif k in ['check_u']:
+                    self.general[k] = True if self.cp['@TSUTSUJI_GENERAL'][k] == 'True' else False
+                else:
+                    self.general[k] = self.cp['@TSUTSUJI_GENERAL'][k]
             self.owntrack = self.general['owntrack']
             self.general['output_path'] = self.path_parent.joinpath(pathlib.Path(self.general['output_path']))
             if self.general['backimg'] is not None:

@@ -11,9 +11,6 @@
     <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
     
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bizstyle.js"></script>
@@ -91,10 +88,19 @@
                         <span class="s1">&#39;unit_length&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>\
                         <span class="s1">&#39;owntrack&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>\
                         <span class="s1">&#39;output_path&#39;</span><span class="p">:</span><span class="s1">&#39;./result&#39;</span><span class="p">,</span>\
-                        <span class="s1">&#39;backimg&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">}</span>
+                        <span class="s1">&#39;backimg&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>\
+                        <span class="s1">&#39;check_u&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>\
+                        <span class="s1">&#39;output_digit&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
         <span class="k">if</span> <span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;origin_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;unit_length&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;origin_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;unit_length&#39;</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;output_digit&#39;</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;check_u&#39;</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span> <span class="k">else</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">owntrack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;owntrack&#39;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;output_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;output_path&#39;</span><span class="p">]))</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;backimg&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -205,7 +211,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

@@ -172,6 +172,30 @@ z: ズームレベル (0-18)</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="tsutsuji.math.mindist_crossline">
+<span class="sig-prename descclassname"><span class="pre">tsutsuji.math.</span></span><span class="sig-name descname"><span class="pre">mindist_crossline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/math.html#mindist_crossline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.math.mindist_crossline" title="Permalink to this definition">¶</a></dt>
+<dd><p>曲線trackとpositionを通る方位角phiAの直線Uの交点について、positionとの距離が最小となるものを求める</p>
+<p>track上の各点をT_k, positionをP, 座標原点Oとして、直線Uに沿う単位ベクトルをeUで表す。
+OT_k - (OP + α * eU) が最小となるようなαを求める。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>ndarray</em>) -- np.array([x,y])</p></li>
+<li><p><strong>phiA</strong> (<em>float</em>) -- 絶対座標x軸に対して直線がなす角</p></li>
+<li><p><strong>track</strong> (<em>ndarray</em>) -- np.array([[x0,y0],[x1,y1],...,[xn,yn]])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[[alpha: 最小となる距離, sort_ix: 距離が最小となる点のインデックス],...]
+:</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="tsutsuji.math.minimumdist">
 <span class="sig-prename descclassname"><span class="pre">tsutsuji.math.</span></span><span class="sig-name descname"><span class="pre">minimumdist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/math.html#minimumdist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.math.minimumdist" title="Permalink to this definition">¶</a></dt>
 <dd><p>二次元曲線trackについて、座標pから最も近い曲線上の点を求める。
@@ -264,6 +288,7 @@ L: 緯度の上限値 [deg]</p>
 <li><a class="reference internal" href="#tsutsuji.math.interpolate_with_dist"><code class="docutils literal notranslate"><span class="pre">interpolate_with_dist()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.math.lat2py"><code class="docutils literal notranslate"><span class="pre">lat2py()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.math.long2px"><code class="docutils literal notranslate"><span class="pre">long2px()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.math.mindist_crossline"><code class="docutils literal notranslate"><span class="pre">mindist_crossline()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.math.minimumdist"><code class="docutils literal notranslate"><span class="pre">minimumdist()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.math.px2long"><code class="docutils literal notranslate"><span class="pre">px2long()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.math.py2lat"><code class="docutils literal notranslate"><span class="pre">py2lat()</span></code></a></li>
