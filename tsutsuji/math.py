@@ -136,8 +136,9 @@ def mindist_crossline(position, phiA, track):
            np.array([[x0,y0],[x1,y1],...,[xn,yn]])
 
     Return:
-        float: 最小となる距離
-        ndarray: 
+        np.array:
+           [[alpha: 最小となる距離, sort_ix: 距離が最小となる点のインデックス],...]
+        : 
     '''
 
     eU = np.array([np.cos(phiA),np.sin(phiA)])
