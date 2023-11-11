@@ -172,12 +172,14 @@ class TrackControl():
         def take_relpos_std(src,tgt):
             len_tr = len(tgt)
             result = []
+            tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
             # 自軌道に対する相対座標の算出
             for pos in src:
-                tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
                 tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
-                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = min_ix[0][0]
+
+                min_vals = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = int(min_vals[np.argsort(np.abs(min_vals[:,0]))[0]][1])
+                min_ix = (np.array([min_ix_val]),)
 
                 if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
@@ -223,13 +225,15 @@ class TrackControl():
         def take_relpos_owot(src,tgt):
             len_tr = len(tgt)
             result = []
+            tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
             # 自軌道に対する相対座標の算出
             for pos in src:
-                tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
                 tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
-                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = min_ix[0][0]
 
+                min_vals = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = int(min_vals[np.argsort(np.abs(min_vals[:,0]))[0]][1])
+                min_ix = (np.array([min_ix_val]),)
+                
                 if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
                                   'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
@@ -339,6 +343,8 @@ class TrackControl():
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
     def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None):
+        '''self.relativepoint_all()及びself.relativeradius()の結果(self.rel_track, self.rel_track_radius)について、cp_distで指定した距離程ごとに相対半径の平均値、相対座標の内挿値を出力する。
+        '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
         if cp_dist == None:
@@ -548,7 +554,7 @@ class TrackControl():
             result = math.minimumdist(orig_track,inputpos)
             if result[3] == -1 and result[2]>0:
                 continue
-            elif True:#checkU:
+            elif checkU:
                 # 注目点ー自軌道基準点間で注目軌道or自軌道と交わる場合はスキップ
                 pos_orig = np.array([result[1][0],result[1][1]]) # 自軌道上の交点
                 eOD = (inputpos - pos_orig)/np.linalg.norm(inputpos - pos_orig)
@@ -563,21 +569,9 @@ class TrackControl():
                 
                 #print(tmp_n,np.linalg.norm(inputpos-pos_orig),tmp_distance)
                 print(tmp_distance[dist_minix_2nd],tmp_n[dist_minix_2nd],np.linalg.norm(inputpos-pos_orig),dist_minix_2nd,dist_minix)
-                if tmp_n[dist_minix_2nd]<np.linalg.norm(inputpos-pos_orig):
+                if tmp_n[dist_minix_2nd]<np.linalg.norm(inputpos-pos_orig): # ２番目に距離が小さい点がinputpos-pos_origより小さい場合は除外
                     print('skip')
                     continue
-                #2番目に小さい数を見つけたい
-                    
-                '''
-                if math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig)[0] - result[0] < 0:
-                    print('skip',inputpos,pos_orig)
-                    print(math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig))
-                    print(result)
-                    print(math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig)[0] - result[0])
-                    print(np.rad2deg(np.arccos(np.dot(np.array([1,0]),math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig)[1]-pos_orig)/np.linalg.norm(math.minimumdist(self.track[trackkey]['result'][:,1:3],pos_orig)[1]-pos_orig))))
-                    continue
-                '''
-                
                     
             resultcp.append([data[0],\
                              inputpos[0],\
@@ -603,7 +597,7 @@ class TrackControl():
         for tr in self.get_trackkeys(self.conf.owntrack):
             try:
                 _, pos_cp_tr = self.takecp(tr) # 注目している軌道の制御点座標データを抽出（注目軌道基準の座標）
-                relativecp = self.convert_relativecp(tr,pos_cp_tr) # 自軌道基準の距離程に変換
+                relativecp = self.convert_relativecp(tr,pos_cp_tr,checkU=True) # 自軌道基準の距離程に変換
                 cp_tr_ownt = sorted(set([i for i in cp_ownt if i<=max(relativecp[:,3]) and i>min(relativecp[:,3])] + list(relativecp[:,3]))) # 自軌道制御点のうち注目軌道が含まれる点と、自軌道基準に変換した注目軌道距離程の和をとる
             #cp_tr_ownt = sorted(list(relativecp[:,3])) # 
             
