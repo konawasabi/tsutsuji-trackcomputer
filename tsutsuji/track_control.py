@@ -545,7 +545,14 @@ class TrackControl():
             pdb.set_trace()
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         orig_track = self.track[owntrack]['result'][:,1:3]
-        dest_track = self.track[trackkey]['result'][:,1:3]
+        if '@' not in trackkey:
+            dest_track = self.track[trackkey]['result'][:,1:3]
+        elif '@OT' in trackkey:
+            parent_key = re.search('(?<=@OT_).+(?=@)',trackkey).group(0)
+            child_key = trackkey.split('@_')[-1]
+            dest_track = self.track[parent_key]['othertrack'][child_key]['result'][:,1:3]
+        else:
+            dest_track = self.pointsequence_track.track[trackkey]['result'][:,1:3]
         kp_cp = []
         rel_dist = []
         resultcp = []
@@ -568,9 +575,9 @@ class TrackControl():
                 dist_minix_2nd = int(tmp_result[1][np.argmin(tmp_result[0])])
                 
                 #print(tmp_n,np.linalg.norm(inputpos-pos_orig),tmp_distance)
-                print(tmp_distance[dist_minix_2nd],tmp_n[dist_minix_2nd],np.linalg.norm(inputpos-pos_orig),dist_minix_2nd,dist_minix)
+                #print(tmp_distance[dist_minix_2nd],tmp_n[dist_minix_2nd],np.linalg.norm(inputpos-pos_orig),dist_minix_2nd,dist_minix)
                 if tmp_n[dist_minix_2nd]<np.linalg.norm(inputpos-pos_orig): # ２番目に距離が小さい点がinputpos-pos_origより小さい場合は除外
-                    print('skip')
+                    #print('skip')
                     continue
                     
             resultcp.append([data[0],\
@@ -585,7 +592,7 @@ class TrackControl():
         ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
         '''
         self.exclude_tracks = []
-        if True:
+        if False:
             import pdb
             pdb.set_trace()
 
