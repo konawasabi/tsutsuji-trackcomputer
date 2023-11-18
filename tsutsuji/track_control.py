@@ -167,16 +167,10 @@ class TrackControl():
              ndarray
                  [[owntrack基準の距離程, 変換後x座標成分(=0), 変換後y座標成分, 変換後z座標成分, 対応する軌道の距離程,絶対座標x成分,絶対座標y成分,絶対座標z成分,カント], ...]
         '''
-        def interpolate(aroundzero,ix,typ,base='x_tr'):
-            return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
-        
-        def cross_twolines(tgt_xy,min_ix,pos):
-            eB = (tgt_xy[min_ix+1] - tgt_xy[min_ix])/np.linalg.norm(tgt_xy[min_ix+1] - tgt_xy[min_ix])
-            eA = np.array([np.cos(pos[4]+np.pi/2),np.sin(pos[4]+np.pi/2)])
-            alpha = (np.dot((tgt_xy[min_ix] - pos[1:3]),eA)+np.dot(-(tgt_xy[min_ix] - pos[1:3]),eB)*np.dot(eA,eB))/(1-np.dot(eA,eB)**2)
-            beta = np.dot(-(tgt_xy[min_ix] - pos[1:3]),eB)+alpha*np.dot(eA,eB)
-            return alpha, beta, pos[1:3]+eA*alpha, tgt_xy[min_ix]+eB*beta
+    
         def take_relpos_std(src,tgt):
+            def interpolate(aroundzero,ix,typ,base='x_tr'):
+                return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
             len_tr = len(tgt)
             result = []
             tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
@@ -187,57 +181,6 @@ class TrackControl():
                 min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
                 min_ix_val = min_ix[0][0]
 
-                if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
-                    aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
-                                  'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
-                                  'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
-                                  'x_ab':tgt[:,1][min_ix_val-1:min_ix_val+2],\
-                                  'y_ab':tgt[:,2][min_ix_val-1:min_ix_val+2],\
-                                  'z_ab':tgt[:,3][min_ix_val-1:min_ix_val+2],\
-                                  'cant':tgt[:,8][min_ix_val-1:min_ix_val+2]}
-                    # aroundzero : [変換後x座標成分, 変換後y座標成分, 対応する軌道の距離程, 絶対座標x成分, 絶対座標y成分]
-                    signx = np.sign(aroundzero['x_tr'])
-                    if signx[0] != signx[1]:
-                        result.append([pos[0],\
-                                       0,\
-                                       interpolate(aroundzero,0,'y_tr'),\
-                                       interpolate(aroundzero,0,'z_ab') - pos[3],\
-                                       interpolate(aroundzero,0,'kp'),\
-                                       interpolate(aroundzero,0,'x_ab'),\
-                                       interpolate(aroundzero,0,'y_ab'),\
-                                       interpolate(aroundzero,0,'z_ab'),\
-                                       interpolate(aroundzero,0,'cant')])
-                    elif signx[1] != signx[2]:
-                        result.append([pos[0],\
-                                       0,\
-                                       interpolate(aroundzero,1,'y_tr'),\
-                                       interpolate(aroundzero,1,'z_ab') - pos[3],\
-                                       interpolate(aroundzero,1,'kp'),\
-                                       interpolate(aroundzero,1,'x_ab'),\
-                                       interpolate(aroundzero,1,'y_ab'),\
-                                       interpolate(aroundzero,1,'z_ab'),\
-                                       interpolate(aroundzero,1,'cant')])
-                else:
-                    result.append([pos[0],\
-                                   tgt_xy_trans[0][min_ix][0],\
-                                   tgt_xy_trans[1][min_ix][0],\
-                                   tgt[:,3][min_ix][0] - pos[3],\
-                                   tgt[:,0][min_ix][0],\
-                                   tgt[:,1][min_ix][0],\
-                                   tgt[:,2][min_ix][0],\
-                                   tgt[:,3][min_ix][0],\
-                                   tgt[:,8][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
-            return result
-        def take_relpos_owot(src,tgt):
-            len_tr = len(tgt)
-            result = []
-            tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
-            # 自軌道に対する相対座標の算出
-            for pos in src:
-                tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
-                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = min_ix[0][0]
-                
                 if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
                                   'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
@@ -282,6 +225,12 @@ class TrackControl():
         def take_relpos_std_vec(scr,tgt):
             def interpolate_vec(data,ix,typ,base,dist):
                 return (data[ix+1][typ]-data[ix][typ])/(data[ix+1][base]-data[ix][base])*dist+data[ix][typ]
+            def cross_twolines(tgt_xy,min_ix,pos):
+                eB = (tgt_xy[min_ix+1] - tgt_xy[min_ix])/np.linalg.norm(tgt_xy[min_ix+1] - tgt_xy[min_ix])
+                eA = np.array([np.cos(pos[4]+np.pi/2),np.sin(pos[4]+np.pi/2)])
+                alpha = (np.dot((tgt_xy[min_ix] - pos[1:3]),eA)+np.dot(-(tgt_xy[min_ix] - pos[1:3]),eB)*np.dot(eA,eB))/(1-np.dot(eA,eB)**2)
+                beta = np.dot(-(tgt_xy[min_ix] - pos[1:3]),eB)+alpha*np.dot(eA,eB)
+                return alpha, beta, pos[1:3]+eA*alpha, tgt_xy[min_ix]+eB*beta
             
             len_tr = len(tgt)
             result = []
@@ -329,7 +278,7 @@ class TrackControl():
         src = self.track[owntrack]['result']
         if parent_track is not None:
             tgt = self.track[parent_track]['othertrack'][to_calc]['result']
-            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_owot(src,tgt)
+            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
         elif '@' not in to_calc:
             tgt = self.track[to_calc]['result']
             result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
@@ -643,7 +592,7 @@ class TrackControl():
         ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
         '''
         self.exclude_tracks = []
-        if True:
+        if False:
             import pdb
             pdb.set_trace()
 
