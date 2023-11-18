@@ -155,7 +155,7 @@ class TrackControl():
         self.pointsequence_track.load_files(self.conf)
             
             
-    def relativepoint_single(self,to_calc,owntrack=None,parent_track=None):
+    def relativepoint_single(self,to_calc,owntrack=None,parent_track=None,check_U=True):
         '''owntrackを基準とした相対座標への変換
 
         Args:
@@ -329,27 +329,27 @@ class TrackControl():
         src = self.track[owntrack]['result']
         if parent_track is not None:
             tgt = self.track[parent_track]['othertrack'][to_calc]['result']
-            result = take_relpos_std_vec(src,tgt)
+            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_owot(src,tgt)
         elif '@' not in to_calc:
             tgt = self.track[to_calc]['result']
-            result = take_relpos_std_vec(src,tgt)
+            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
         else:
             tgt = self.pointsequence_track.track[to_calc]['result']
-            result = take_relpos_std_vec(src,tgt)
+            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
         return(np.array(result))
-    def relativepoint_all(self,owntrack=None):
+    def relativepoint_all(self,owntrack=None,check_U=True):
         '''読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。
 
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != owntrack]
         for tr in calc_track:
-            self.rel_track[tr]=self.relativepoint_single(tr,owntrack)
+            self.rel_track[tr]=self.relativepoint_single(tr,owntrack,check_U=check_U)
 
         calc_track = [i for i in self.conf.track_keys if i != owntrack]
         for tr in calc_track:
             for ottr in self.track[tr]['othertrack'].keys():
-                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr)
+                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr,check_U=check_U)
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         if to_calc is None:
@@ -645,7 +645,7 @@ class TrackControl():
             import pdb
             pdb.set_trace()
 
-        self.relativepoint_all() # 全ての軌道データを自軌道基準の座標に変換
+        self.relativepoint_all(checkU=True)#self.conf.general['check_u']) # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データについて自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
 
