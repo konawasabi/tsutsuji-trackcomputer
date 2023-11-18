@@ -293,7 +293,7 @@ class TrackControl():
                 res = []
                 res_debug = []
                 for ix in range(int(min_ix[0])-5 if int(min_ix[0])-5>=0     else 0,\
-                                int(min_ix[0])+5 if int(min_ix[0])+5<len_tr else 0):
+                                int(min_ix[0])+5 if int(min_ix[0])+5<len_tr-1 else len_tr-1):
                     result_tmp = cross_twolines(tgt_xy,ix,pos)
                     res.append(tuple([ix])+(result_tmp[0],result_tmp[1],result_tmp[2][0],result_tmp[2][1]))
                     res_debug.append(tuple([ix])+result_tmp)
@@ -329,13 +329,13 @@ class TrackControl():
         src = self.track[owntrack]['result']
         if parent_track is not None:
             tgt = self.track[parent_track]['othertrack'][to_calc]['result']
-            result = take_relpos_owot(src,tgt)
+            result = take_relpos_std_vec(src,tgt)
         elif '@' not in to_calc:
             tgt = self.track[to_calc]['result']
             result = take_relpos_std_vec(src,tgt)
         else:
             tgt = self.pointsequence_track.track[to_calc]['result']
-            result = take_relpos_std(src,tgt)
+            result = take_relpos_std_vec(src,tgt)
         return(np.array(result))
     def relativepoint_all(self,owntrack=None):
         '''読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。
