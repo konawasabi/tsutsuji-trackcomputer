@@ -137,7 +137,7 @@ def mindist_crossline(position, phiA, track):
 
     Return:
         np.array:
-           [[alpha: 最小となる距離, sort_ix: 距離が最小となる点のインデックス],...]
+           [[sort_ix: 交点との距離が最小となる点のインデックス, alpha: positionから点列交点の距離, distance: 求めた交点から点列の距離],...]
         : 
     '''
 
@@ -146,13 +146,16 @@ def mindist_crossline(position, phiA, track):
     dist_v = (track - (alpha.reshape(-1,1)*eU + position))**2
     distance = np.sqrt(dist_v[:,0] + dist_v[:,1])
 
-    sort_ix = np.argsort(distance)
+    sort_ix = np.argsort(distance) # 点列と交点の距離が小さい順にソートしたインデックスを得る
 
+    '''
     result = []
     for i in range(0,5):
-        result.append([alpha[sort_ix[i]],sort_ix[i]])
+        result.append([alpha[sort_ix[i]],sort_ix[i],distance[sort_ix[i]]])
+    '''
+    
+    return np.vstack((sort_ix,alpha[sort_ix],distance[sort_ix])).T
 
-    return np.array(result)
 def angle_twov(phiA, phiB):
     ''' ベクトルA (方位角phiA)からベクトルB(方位角phiB)への方位角変化を求める
     '''

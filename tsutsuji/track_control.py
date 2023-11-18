@@ -169,6 +169,13 @@ class TrackControl():
         '''
         def interpolate(aroundzero,ix,typ,base='x_tr'):
             return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
+        
+        def cross_twolines(tgt_xy,min_ix,pos):
+            eB = (tgt_xy[min_ix+1] - tgt_xy[min_ix])/np.linalg.norm(tgt_xy[min_ix+1] - tgt_xy[min_ix])
+            eA = np.array([np.cos(pos[4]+np.pi/2),np.sin(pos[4]+np.pi/2)])
+            alpha = (np.dot((tgt_xy[min_ix] - pos[1:3]),eA)+np.dot(-(tgt_xy[min_ix] - pos[1:3]),eB)*np.dot(eA,eB))/(1-np.dot(eA,eB)**2)
+            beta = np.dot(-(tgt_xy[min_ix] - pos[1:3]),eB)+alpha*np.dot(eA,eB)
+            return alpha, beta, pos[1:3]+eA*alpha, tgt_xy[min_ix]+eB*beta
         def take_relpos_std(src,tgt):
             len_tr = len(tgt)
             result = []
@@ -177,9 +184,8 @@ class TrackControl():
             for pos in src:
                 tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
 
-                min_vals = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = int(min_vals[np.argsort(np.abs(min_vals[:,0]))[0]][1])
-                min_ix = (np.array([min_ix_val]),)
+                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = min_ix[0][0]
 
                 if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
@@ -229,10 +235,8 @@ class TrackControl():
             # 自軌道に対する相対座標の算出
             for pos in src:
                 tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
-
-                min_vals = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = int(min_vals[np.argsort(np.abs(min_vals[:,0]))[0]][1])
-                min_ix = (np.array([min_ix_val]),)
+                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = min_ix[0][0]
                 
                 if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
@@ -275,7 +279,52 @@ class TrackControl():
                                    tgt[:,3][min_ix][0],\
                                    tgt[:,8][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
             return result
-        
+        def take_relpos_std_vec(scr,tgt):
+            def interpolate_vec(data,ix,typ,base,dist):
+                return (data[ix+1][typ]-data[ix][typ])/(data[ix+1][base]-data[ix][base])*dist+data[ix][typ]
+            
+            len_tr = len(tgt)
+            result = []
+            tgt_xy = np.vstack((tgt[:,1],tgt[:,2])).T
+            # 自軌道に対する相対座標の算出
+            for pos in src:
+                tgt_norm_cross = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix = tgt_norm_cross[np.argsort(np.abs(tgt_norm_cross[0:10,1]**2 + tgt_norm_cross[0:10,2]**2))][:,0]
+                res = []
+                res_debug = []
+                for ix in range(int(min_ix[0])-5 if int(min_ix[0])-5>=0     else 0,\
+                                int(min_ix[0])+5 if int(min_ix[0])+5<len_tr else 0):
+                    result_tmp = cross_twolines(tgt_xy,ix,pos)
+                    res.append(tuple([ix])+(result_tmp[0],result_tmp[1],result_tmp[2][0],result_tmp[2][1]))
+                    res_debug.append(tuple([ix])+result_tmp)
+                res = np.array(res)
+
+                if len(res[res[:,2]>=0])>0:
+                    res_mindist = res[np.argmin(res[res[:,2]>=0][:,2])]
+                
+                    kp_interp = tgt[int(res_mindist[0])][0]+res_mindist[2]
+                    result.append([pos[0],\
+                                   0,\
+                                   res_mindist[1],\
+                                   interpolate_vec(tgt,int(res_mindist[0]),3,0,res_mindist[2]) - pos[3],\
+                                   kp_interp,\
+                                   interpolate_vec(tgt,int(res_mindist[0]),1,0,res_mindist[2]),\
+                                   interpolate_vec(tgt,int(res_mindist[0]),2,0,res_mindist[2]),\
+                                   interpolate_vec(tgt,int(res_mindist[0]),3,0,res_mindist[2]),\
+                                   interpolate_vec(tgt,int(res_mindist[0]),8,0,res_mindist[2])])
+                else:
+                    min_ix = int(res[0][0])
+                    result.append([pos[0],\
+                                0,\
+                                res[0][1],\
+                                tgt[:,3][min_ix] - pos[3],\
+                                tgt[:,0][min_ix],\
+                                tgt[:,1][min_ix],\
+                                tgt[:,2][min_ix],\
+                                tgt[:,3][min_ix],\
+                                tgt[:,8][min_ix]])
+                
+            return result
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         src = self.track[owntrack]['result']
         if parent_track is not None:
@@ -283,7 +332,7 @@ class TrackControl():
             result = take_relpos_owot(src,tgt)
         elif '@' not in to_calc:
             tgt = self.track[to_calc]['result']
-            result = take_relpos_std(src,tgt)
+            result = take_relpos_std_vec(src,tgt)
         else:
             tgt = self.pointsequence_track.track[to_calc]['result']
             result = take_relpos_std(src,tgt)
@@ -592,7 +641,7 @@ class TrackControl():
         ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
         '''
         self.exclude_tracks = []
-        if False:
+        if True:
             import pdb
             pdb.set_trace()
 
