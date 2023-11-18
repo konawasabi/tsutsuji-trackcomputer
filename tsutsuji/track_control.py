@@ -625,7 +625,9 @@ class TrackControl():
                 
                 #print(tmp_n,np.linalg.norm(inputpos-pos_orig),tmp_distance)
                 #print(tmp_distance[dist_minix_2nd],tmp_n[dist_minix_2nd],np.linalg.norm(inputpos-pos_orig),dist_minix_2nd,dist_minix)
-                if tmp_n[dist_minix_2nd]<np.linalg.norm(inputpos-pos_orig): # ２番目に距離が小さい点がinputpos-pos_origより小さい場合は除外
+                if not np.isnan(tmp_n[dist_minix_2nd]) and\
+                   int(tmp_n[dist_minix_2nd]) < int(np.linalg.norm(inputpos-pos_orig)) and\
+                   np.abs(tmp_n[dist_minix]-tmp_n[dist_minix_2nd])>10: # ２番目に距離が小さい点がinputpos-pos_origより小さい場合は除外
                     #print('skip')
                     continue
                     
@@ -645,7 +647,7 @@ class TrackControl():
             import pdb
             pdb.set_trace()
 
-        self.relativepoint_all(checkU=True)#self.conf.general['check_u']) # 全ての軌道データを自軌道基準の座標に変換
+        self.relativepoint_all(check_U=self.conf.general['check_u']) # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データについて自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
 
