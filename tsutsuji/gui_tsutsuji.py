@@ -22,6 +22,7 @@ import pathlib
 import os
 import webbrowser
 import argparse
+import time
 
 import tkinter as tk
 from tkinter import ttk
@@ -353,7 +354,11 @@ class mainwindow(ttk.Frame):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
     def generate_output(self, event=None):
+        if not __debug__:
+            start = time.time()
         self.trackcontrol.generate_mapdata()
+        if not __debug__:
+            print(time.time()-start)
         self.get_othertrack()
     def aboutwindow(self, event=None):
         msg  = 'Tsutsuji trackcomputer\n'
