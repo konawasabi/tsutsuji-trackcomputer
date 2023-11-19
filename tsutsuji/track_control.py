@@ -565,19 +565,15 @@ class TrackControl():
                 eOD = (inputpos - pos_orig)/np.linalg.norm(inputpos - pos_orig)
                 tmp_n = np.dot(dest_track - pos_orig, eOD)
                 tmp_dist_vect = (dest_track - (tmp_n.reshape(-1,1)*eOD+pos_orig))**2
-                #tmp_dist_vect = ( (tmp_n.reshape(-1,1)*eOD))**2
                 tmp_distance = np.sqrt(tmp_dist_vect[:,0]+tmp_dist_vect[:,1])
-                dist_minix = np.argmin(tmp_distance)
-                tmp_num = np.arange(0,len(tmp_distance))
-                tmp_result = np.delete(np.vstack((tmp_distance,tmp_num)),dist_minix,1)
-                dist_minix_2nd = int(tmp_result[1][np.argmin(tmp_result[0])])
-                
-                #print(tmp_n,np.linalg.norm(inputpos-pos_orig),tmp_distance)
-                #print(tmp_distance[dist_minix_2nd],tmp_n[dist_minix_2nd],np.linalg.norm(inputpos-pos_orig),dist_minix_2nd,dist_minix)
+
+                dist_ix_sort = np.argsort(tmp_distance)
+                dist_minix = dist_ix_sort[0]
+                dist_minix_2nd = dist_ix_sort[1]
+
                 if not np.isnan(tmp_n[dist_minix_2nd]) and\
                    int(tmp_n[dist_minix_2nd]) < int(np.linalg.norm(inputpos-pos_orig)) and\
                    np.abs(tmp_n[dist_minix]-tmp_n[dist_minix_2nd])>10: # ２番目に距離が小さい点がinputpos-pos_origより小さい場合は除外
-                    #print('skip')
                     continue
                     
             resultcp.append([data[0],\
