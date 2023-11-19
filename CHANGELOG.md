@@ -5,6 +5,13 @@
 - プロット画面
   - 任意角度への回転
   
+## [1.7.4] - 2023-11-19
+
+- ver. 1.7.3で追加した処理のバグフィックス
+  - 自軌道法線と対象軌道が2回交差する場合の処理が正しく動作しない問題を修正
+- [@TSUTSUJI_GENERAL]セクションのcheck_u = Falseでは、ver. 1.7.2以前の処理のみを実行
+  - 処理時間が増加したため、2回交差の可能性が少ない場合は処理を省略できるようにしている
+  
 ## [1.7.3] - 2023-11-11
 
 - 自軌道に対する各軌道の相対座標計算ルーチンの修正
@@ -182,6 +189,7 @@
 
 - 1st release
 
+[1.7.4]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.3...ver1.7.4
 [1.7.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.2...ver1.7.3
 [1.7.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.1...ver1.7.2
 [1.7.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.0...ver1.7.1
