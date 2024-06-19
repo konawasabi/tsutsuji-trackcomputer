@@ -195,6 +195,7 @@
 
 - 1st release
 
+[1.7.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4...ver1.7.4.1
 [1.7.4]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.3...ver1.7.4
 [1.7.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.2...ver1.7.3
 [1.7.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.1...ver1.7.2
