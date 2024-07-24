@@ -701,9 +701,12 @@ class IF():
             tmp_cursor.values[0].set(self.trackp.result[:,0][-1])
             tmp_cursor.values[1].set(self.trackp.result[:,1][-1])
             tmp_cursor.values[2].set(np.rad2deg(self.phi_end))
+            tmp_cursor.values[3].set('@absolute')
+            tmp_cursor.values[4].set(0.0)
             tmp_cursor.values_toshow[0].set('{:.1f}'.format(self.trackp.result[:,0][-1]))
             tmp_cursor.values_toshow[1].set('{:.1f}'.format(self.trackp.result[:,1][-1]))
             tmp_cursor.values_toshow[2].set('{:.1f}'.format(np.rad2deg(self.phi_end)))
+            tmp_cursor.values_toshow[4].set('{:.1f}'.format(0.0))
             tmp_cursor.marker.set_direct()
             tmp_cursor.arrow.set_direct()
 
