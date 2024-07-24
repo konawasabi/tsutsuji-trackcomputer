@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2023 konawasabi
+#    Copyright 2021-2024 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -263,7 +263,7 @@ class marker_simple():
             self.yout = y
         else:
             self.xout, self.yout = self.posfunc(x,y)
-        self.markerpos.set_data([[self.xout],[self.yout]])
+        self.markerpos.set_data([self.xout],[self.yout])
         #self.annotate.set(text ='({:.1f},{:.1f})'.format(self.xout,self.yout), position=(self.xout,self.yout))
         self.canvas.draw()
     def setobj(self):
