@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2023 konawasabi
+#    Copyright 2021-2024 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -363,7 +363,7 @@ class mainwindow(ttk.Frame):
     def aboutwindow(self, event=None):
         msg  = 'Tsutsuji trackcomputer\n'
         msg += 'Version '+__version__+'\n\n'
-        msg += 'Copyright © 2023 konawasabi\n'
+        msg += 'Copyright © 2024 konawasabi\n'
         msg += 'Released under the Apache License, Version 2.0 .\n'
         msg += 'https://www.apache.org/licenses/LICENSE-2.0'
         tk.messagebox.showinfo(message=msg)
