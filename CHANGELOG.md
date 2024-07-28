@@ -5,6 +5,14 @@
 - プロット画面
   - 任意角度への回転
   
+## [1.7.5] - 2024-07-28
+
+- matplotlib ver 3.9.0以降がインストールされている環境でMeasure, pos.カーソルが正常動作するように修正
+- CuveTrack Solver
+  - Mode 4,5にてAssign result to cursorを有効にした場合、対象となるカーソルのTrackが@absolute以外に指定されていた場合の挙動を変更
+	- これまでは、計算結果が対象カーソルに反映されなかった
+	- 本バージョンからは、計算結果（カーソル座標と方位）を対象カーソルに反映の上、Track: @absoluteに上書きする
+  
 ## [1.7.4.1] - 2024-06-19
 
 - matplotlib ver. 3.9.0 がインストールされている環境下でMeasure, pos.カーソルが正常動作しない問題の暫定処置
@@ -195,6 +203,7 @@
 
 - 1st release
 
+[1.7.5]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4.1...ver1.7.5
 [1.7.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4...ver1.7.4.1
 [1.7.4]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.3...ver1.7.4
 [1.7.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.2...ver1.7.3
