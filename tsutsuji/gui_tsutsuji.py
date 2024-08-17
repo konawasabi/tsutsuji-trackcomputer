@@ -87,7 +87,7 @@ class mainwindow(ttk.Frame):
 
         self.staticmapctrl = backimg.TileMapControl(self)
 
-        self.heightwindow = heightwindow.interface(self)
+        self.heightwindow = heightwindow.HeightWindow(self)
         
         self.create_widgets()
         self.create_menubar()
@@ -343,6 +343,8 @@ class mainwindow(ttk.Frame):
 
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
+
+        self.heightwindow.drawall()
     def move_xy(self,x,y):
         nowpos = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
         plotsize = self.fig_plane.get_size_inches()

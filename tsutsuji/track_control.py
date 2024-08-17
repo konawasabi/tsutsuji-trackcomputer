@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2023 konawasabi
+#    Copyright 2021-2024 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -394,16 +394,20 @@ class TrackControl():
                                      zval])
             self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
     def plot2d(self, ax):
+        self._plot2d_base(ax, (1,2))
+    def plot2d_height(self, ax):
+        self._plot2d_base(ax, (0,3))
+    def _plot2d_base(self, ax, col_ix):
         if len(self.track) > 0:
             for i in self.conf.track_keys:
                 if self.track[i]['toshow']:
                     tmp = self.track[i]['result']
-                    ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
+                    ax.plot(tmp[:,col_ix[0]],tmp[:,col_ix[1]],label=i,color=self.conf.track_data[i]['color'])
                 if len(self.track[i]['othertrack'])>0:
                     for otkey in self.track[i]['othertrack'].keys():
                         if self.track[i]['othertrack'][otkey]['toshow']:
                             tmp = self.track[i]['othertrack'][otkey]['result']
-                            ax.plot(tmp[:,1],tmp[:,2],\
+                            ax.plot(tmp[:,col_ix[0]],tmp[:,col_ix[1]],\
                                     label='{:s}_{:s}'.format(i,otkey),\
                                     color=self.track[i]['othertrack'][otkey]['color'],\
                                     lw=1)
@@ -415,7 +419,7 @@ class TrackControl():
                 if self.generated_othertrack[otrack]['toshow']:
                     tmp = self.generated_othertrack[otrack]['data']
                     tmp = tmp[tmp[:,0]<=self.generated_othertrack[otrack]['distrange']['max']]
-                    ax.plot(tmp[:,1],tmp[:,2],color=self.generated_othertrack[otrack]['color'])
+                    ax.plot(tmp[:,col_ix[0]],tmp[:,col_ix[1]],color=self.generated_othertrack[otrack]['color'])
     def drawarea(self, extent_input = None):
         extent = [0,0,0,0] if extent_input == None else extent_input
         if len(self.track) > 0:

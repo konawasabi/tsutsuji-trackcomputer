@@ -26,10 +26,11 @@ import numpy as np
 import tkinter as tk
 from tkinter import ttk
 
-class interface():
+class HeightWindow():
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
         self.master = None
+        self.trackcontrol = self.mainwindow.trackcontrol
     def create_window(self):
         if self.master == None:
             self.master = tk.Toplevel(self.mainwindow)
@@ -39,17 +40,19 @@ class interface():
             self.mainframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
             self.master.title('Height')
             self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
+            self.master.columnconfigure(0, weight=1)
+            self.master.rowconfigure(0, weight=1)
 
             self.create_widgets()
     def create_widgets(self):
         self.canvas_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.canvas_frame.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         
-        self.fig_height = plt.figure(figsize=(9,7),tight_layout=True)
+        self.fig_height = plt.figure(figsize=(8,5),tight_layout=True)
         gs1 = self.fig_height.add_gridspec(nrows=1,ncols=1)
         self.ax_height = self.fig_height.add_subplot(gs1[0])
         
-        self.plt_canvas_base = tk.Canvas(self.canvas_frame, bg="white", width=900, height=700)
+        self.plt_canvas_base = tk.Canvas(self.canvas_frame, bg="white", width=800, height=500)
         self.plt_canvas_base.grid(row = 0, column = 0, sticky=(tk.N, tk.W, tk.E, tk.S))
 
         def on_canvas_resize(event):
@@ -70,4 +73,9 @@ class interface():
     def closewindow(self):
         self.master.withdraw()
         self.master = None
+    def drawall(self):
+        if self.master is not None:
+            self.ax_height.cla()
+            self.trackcontrol.plot2d_height(self.ax_height)
+            self.fig_canvas.draw()
         
