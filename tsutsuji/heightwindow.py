@@ -44,6 +44,8 @@ class HeightWindow():
             self.master.rowconfigure(0, weight=1)
 
             self.create_widgets()
+        else:
+            self.sendtopmost()
     def create_widgets(self):
         self.canvas_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.canvas_frame.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -70,12 +72,19 @@ class HeightWindow():
         
         self.canvas_frame.columnconfigure(0, weight=1)
         self.canvas_frame.rowconfigure(0, weight=1)
+        
+        self.drawall()
     def closewindow(self):
         self.master.withdraw()
         self.master = None
+    def sendtopmost(self,event=None):
+        self.master.lift()
+        self.master.focus_force()
     def drawall(self):
         if self.master is not None:
             self.ax_height.cla()
             self.trackcontrol.plot2d_height(self.ax_height)
+            self.ax_height.set_xlabel('distance [m]')
+            self.ax_height.set_ylabel('height [m]')
             self.fig_canvas.draw()
         
