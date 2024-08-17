@@ -31,6 +31,11 @@ class HeightWindow():
         self.mainwindow = mainwindow
         self.master = None
         self.trackcontrol = self.mainwindow.trackcontrol
+
+        self.distance_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+        self.height_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+        self.viewlim_auto_v = tk.StringVar()
+        self.viewlim_auto_v.set('True')
     def create_window(self):
         if self.master == None:
             self.master = tk.Toplevel(self.mainwindow)
@@ -72,6 +77,46 @@ class HeightWindow():
         
         self.canvas_frame.columnconfigure(0, weight=1)
         self.canvas_frame.rowconfigure(0, weight=1)
+
+        # --- ボタンフレーム
+        self.button_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.button_frame.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+        self.replot_btn = ttk.Button(self.button_frame, text="Replot", command = self.drawall)
+        self.replot_btn.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E))
+
+        # --- プロット範囲フレーム
+
+        self.plotarea_frame = ttk.Labelframe(self.button_frame, padding='3 3 3 3', text = 'Plot control')
+        self.plotarea_frame.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+        self.plotarea_val_frame = ttk.Frame(self.plotarea_frame, padding='3 3 3 3')
+        self.plotarea_val_frame.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+        
+        self.dmin_l = ttk.Label(self.plotarea_val_frame, text='d. min.')
+        self.dmax_l = ttk.Label(self.plotarea_val_frame, text='d. max.')
+        self.hmin_l = ttk.Label(self.plotarea_val_frame, text='h. min.')
+        self.hmax_l = ttk.Label(self.plotarea_val_frame, text='h. max.')
+        
+        self.dmin_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
+        self.dmax_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
+        self.hmin_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
+        self.hmax_l.grid(column=2, row=1, sticky=(tk.E,tk.W))
+
+        self.dmin_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.distance_lim_v[0],width=5)
+        self.dmax_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.distance_lim_v[1],width=5)
+        self.hmin_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.height_lim_v[0],width=5)
+        self.hmax_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.height_lim_v[1],width=5)
+        
+        self.viewlim_auto_ent = ttk.Checkbutton(self.plotarea_val_frame, text='Auto', variable=self.viewlim_auto_v, onvalue='True', offvalue='False')
+        
+        self.dmin_ent.grid(column=1, row=0, sticky=(tk.E,tk.W))
+        self.dmax_ent.grid(column=3, row=0, sticky=(tk.E,tk.W))
+        self.hmin_ent.grid(column=1, row=1, sticky=(tk.E,tk.W))
+        self.hmax_ent.grid(column=3, row=1, sticky=(tk.E,tk.W))
+        self.viewlim_auto_ent.grid(column=0, row=3, sticky=(tk.E,tk.W))
+
+        # ---
         
         self.drawall()
     def closewindow(self):
@@ -86,5 +131,17 @@ class HeightWindow():
             self.trackcontrol.plot2d_height(self.ax_height)
             self.ax_height.set_xlabel('distance [m]')
             self.ax_height.set_ylabel('height [m]')
+            if self.viewlim_auto_v.get() == 'False':
+                self.ax_height.set_xlim(self.distance_lim_v[0].get(), self.distance_lim_v[1].get())
+                self.ax_height.set_ylim(self.height_lim_v[0].get(), self.height_lim_v[1].get())
+            else:
+                self.ax_height.set_xlim()
+                self.ax_height.set_ylim()
+                xlim = self.ax_height.get_xlim()
+                ylim = self.ax_height.get_ylim()
+                #print(xlim,ylim)
+                for ix in (0,1):
+                    self.distance_lim_v[ix].set(float(xlim[ix]))
+                    self.height_lim_v[ix].set(float(ylim[ix]))
             self.fig_canvas.draw()
         
