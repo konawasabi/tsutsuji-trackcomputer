@@ -123,6 +123,17 @@ class HeightWindow():
         self.hlim_auto_ent.grid(column=3, row=2, sticky=(tk.E,tk.W))
 
         # ---
+
+        self.plotmove_frame = ttk.Frame(self.plotarea_frame, padding='3 3 3 3')
+        self.plotmove_frame.grid(column=0, row=1, sticky=(tk.N, tk.W, tk.E, tk.S))
+
+        self.plotmove_btn_left = ttk.Button(self.plotmove_frame, text="←", command = lambda: self.move_xy(-1,0))
+        self.plotmove_btn_right = ttk.Button(self.plotmove_frame, text="→", command = lambda: self.move_xy(1,0))
+        
+        self.plotmove_btn_left.grid(column=0, row=0, sticky=(tk.E,tk.W))
+        self.plotmove_btn_right.grid(column=1, row=0, sticky=(tk.E,tk.W))
+        
+        # ---
         
         self.drawall()
     def closewindow(self):
@@ -133,6 +144,13 @@ class HeightWindow():
         self.master.focus_force()
     def setautolim(self, val):
         if val.get() == 'True':
+            self.drawall()
+    def move_xy(self, x, y):
+        if self.dlim_auto_v.get() == 'False':
+            xlim = (self.distance_lim_v[0].get(), self.distance_lim_v[1].get())
+            delta = (xlim[1]-xlim[0])/5*x
+            self.distance_lim_v[0].set(xlim[0]+delta)
+            self.distance_lim_v[1].set(xlim[1]+delta)
             self.drawall()
     def drawall(self):
         if self.master is not None:
@@ -146,13 +164,13 @@ class HeightWindow():
                 self.ax_height.set_xlim()
                 xlim = self.ax_height.get_xlim()
                 for ix in (0,1):
-                    self.distance_lim_v[ix].set(float(xlim[ix]))
+                    self.distance_lim_v[ix].set(float(np.floor(xlim[ix])))
             if self.hlim_auto_v.get() == 'False':
                 self.ax_height.set_ylim(self.height_lim_v[0].get(), self.height_lim_v[1].get())
             else:
                 self.ax_height.set_ylim()
                 ylim = self.ax_height.get_ylim()
                 for ix in (0,1):
-                    self.height_lim_v[ix].set(float(ylim[ix]))
+                    self.height_lim_v[ix].set(float(np.floor(ylim[ix])))
             self.fig_canvas.draw()
         
