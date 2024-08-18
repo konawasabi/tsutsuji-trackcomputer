@@ -738,6 +738,10 @@ class TrackControl():
                 cplist[data['key']].append(data['distance'])
         return cplist
     def plot_symbols(self, ax, symboltype, size=20):
+        self._plot_symbols_base(ax, symboltype, (1,2), size=size)
+    def plot_symbols_height(self, ax, symboltype, size=20):
+        self._plot_symbols_base(ax, symboltype, (0,3), size=size)
+    def _plot_symbols_base(self, ax, symboltype, col_ix, size=20):
         ''' 制御点座標をプロットする
         '''
         symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x', 'track':'+'}
@@ -748,7 +752,7 @@ class TrackControl():
                         pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
                     else:
                         pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
-                    ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
+                    ax.scatter(pos[:,col_ix[0]],pos[:,col_ix[1]],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
                 elif symboltype == 'track':
                     for tr_ot in self.track[tr_l]['othertrack'].keys():
                         trackdata = self.track[tr_l]['othertrack'][tr_ot]
@@ -757,7 +761,7 @@ class TrackControl():
                             for cp in trackdata['tgen'].data:
                                 cp_dist.append(cp['distance'])
                             pos = trackdata['result'][np.isin(trackdata['result'][:,0],cp_dist)]
-                            ax.scatter(pos[:,1],pos[:,2],color=trackdata['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
+                            ax.scatter(pos[:,col_ix[0]],pos[:,col_ix[1]],color=trackdata['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
                             
                         
                     

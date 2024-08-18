@@ -34,10 +34,13 @@ class HeightWindow():
 
         self.distance_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.height_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
-        self.dlim_auto_v = tk.StringVar()
-        self.dlim_auto_v.set('True')
-        self.hlim_auto_v = tk.StringVar()
-        self.hlim_auto_v.set('True')
+        self.dlim_auto_v = tk.BooleanVar(value=True)
+        self.hlim_auto_v = tk.BooleanVar(value=True)
+
+        self.plot_marker_ctrl_v = {}
+        position = 0
+        for val in ['radius','gradient','supplemental_cp','track']:
+            self.plot_marker_ctrl_v[val] = tk.BooleanVar(value=False)
     def create_window(self):
         if self.master == None:
             self.master = tk.Toplevel(self.mainwindow)
@@ -112,8 +115,8 @@ class HeightWindow():
         self.hmin_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.height_lim_v[0],width=5)
         self.hmax_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.height_lim_v[1],width=5)
         
-        self.dlim_auto_ent = ttk.Checkbutton(self.plotarea_val_frame, text='', variable=self.dlim_auto_v, onvalue='True', offvalue='False', command=lambda: self.setautolim(self.dlim_auto_v))
-        self.hlim_auto_ent = ttk.Checkbutton(self.plotarea_val_frame, text='', variable=self.hlim_auto_v, onvalue='True', offvalue='False', command=lambda: self.setautolim(self.hlim_auto_v))
+        self.dlim_auto_ent = ttk.Checkbutton(self.plotarea_val_frame, text='', variable=self.dlim_auto_v, onvalue=True, offvalue=False, command=lambda: self.setautolim(self.dlim_auto_v))
+        self.hlim_auto_ent = ttk.Checkbutton(self.plotarea_val_frame, text='', variable=self.hlim_auto_v, onvalue=True, offvalue=False, command=lambda: self.setautolim(self.hlim_auto_v))
         
         self.dmin_ent.grid(column=1, row=1, sticky=(tk.E,tk.W))
         self.dmax_ent.grid(column=2, row=1, sticky=(tk.E,tk.W))
@@ -134,6 +137,17 @@ class HeightWindow():
         self.plotmove_btn_right.grid(column=1, row=0, sticky=(tk.E,tk.W))
         
         # ---
+
+        self.plotarea_symbol_frame = ttk.Labelframe(self.plotarea_frame, padding='3 3 3 3', text = 'Symbols')
+        self.plotarea_symbol_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
+        self.plot_marker_ctrl_w = {}
+        position = 0
+        for val in ['radius','gradient','supplemental_cp','track']:
+            self.plot_marker_ctrl_w = ttk.Checkbutton(self.plotarea_symbol_frame, text=val, variable=self.plot_marker_ctrl_v[val], onvalue=True, offvalue=False)
+            self.plot_marker_ctrl_w.grid(column=0, row=position, sticky=(tk.E,tk.W))
+            position +=1
+
+        # ---
         
         self.drawall()
     def closewindow(self):
@@ -146,7 +160,7 @@ class HeightWindow():
         if val.get() == 'True':
             self.drawall()
     def move_xy(self, x, y):
-        if self.dlim_auto_v.get() == 'False':
+        if self.dlim_auto_v.get() == False:
             xlim = (self.distance_lim_v[0].get(), self.distance_lim_v[1].get())
             delta = (xlim[1]-xlim[0])/5*x
             self.distance_lim_v[0].set(xlim[0]+delta)
@@ -158,19 +172,28 @@ class HeightWindow():
             self.trackcontrol.plot2d_height(self.ax_height)
             self.ax_height.set_xlabel('distance [m]')
             self.ax_height.set_ylabel('height [m]')
-            if self.dlim_auto_v.get() == 'False':
+
+            # 描画範囲Autoでない場合
+            if self.dlim_auto_v.get() == False:
                 self.ax_height.set_xlim(self.distance_lim_v[0].get(), self.distance_lim_v[1].get())
             else:
                 self.ax_height.set_xlim()
                 xlim = self.ax_height.get_xlim()
                 for ix in (0,1):
                     self.distance_lim_v[ix].set(float(np.floor(xlim[ix])))
-            if self.hlim_auto_v.get() == 'False':
+            if self.hlim_auto_v.get() == False:
                 self.ax_height.set_ylim(self.height_lim_v[0].get(), self.height_lim_v[1].get())
             else:
                 self.ax_height.set_ylim()
                 ylim = self.ax_height.get_ylim()
                 for ix in (0,1):
                     self.height_lim_v[ix].set(float(np.floor(ylim[ix])))
+
+            # 軌道要素シンボル
+            
+            for key in self.plot_marker_ctrl_v.keys():
+                if self.plot_marker_ctrl_v[key].get():
+                    self.trackcontrol.plot_symbols_height(self.ax_height,key)
+            
             self.fig_canvas.draw()
         
