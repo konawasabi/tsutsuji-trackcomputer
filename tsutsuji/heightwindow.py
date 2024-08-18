@@ -26,11 +26,14 @@ import numpy as np
 import tkinter as tk
 from tkinter import ttk
 
+from . import heightmeasure
+
 class HeightWindow():
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
         self.master = None
         self.trackcontrol = self.mainwindow.trackcontrol
+        self.measureUI = heightmeasure.Interface(self.mainwindow)
 
         self.distance_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.height_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
@@ -42,7 +45,7 @@ class HeightWindow():
         for val in ['radius','gradient','supplemental_cp','track']:
             self.plot_marker_ctrl_v[val] = tk.BooleanVar(value=False)
     def create_window(self):
-        if self.master == None:
+        if self.master is None:
             self.master = tk.Toplevel(self.mainwindow)
             self.mainframe = ttk.Frame(self.master, padding = '3 3 3 3')
             self.mainframe.columnconfigure(0, weight=1)
@@ -148,10 +151,19 @@ class HeightWindow():
             position +=1
 
         # ---
+
+        self.backimg_b = ttk.Button(self.button_frame, text='BackImg.', command = None)
+        self.backimg_b.grid(column=0, row=2,sticky=(tk.E,tk.W))
+        
+        self.measure_b = ttk.Button(self.button_frame, text='Measure', command = self.measureUI.create_window)
+        self.measure_b.grid(column=0, row=3,sticky=(tk.E,tk.W))
+
+        # ---
         
         self.drawall()
     def closewindow(self):
         self.master.withdraw()
+        self.measureUI.closewindow()
         self.master = None
     def sendtopmost(self,event=None):
         self.master.lift()
