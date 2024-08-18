@@ -34,8 +34,10 @@ class HeightWindow():
 
         self.distance_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.height_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
-        self.viewlim_auto_v = tk.StringVar()
-        self.viewlim_auto_v.set('True')
+        self.dlim_auto_v = tk.StringVar()
+        self.dlim_auto_v.set('True')
+        self.hlim_auto_v = tk.StringVar()
+        self.hlim_auto_v.set('True')
     def create_window(self):
         if self.master == None:
             self.master = tk.Toplevel(self.mainwindow)
@@ -93,28 +95,32 @@ class HeightWindow():
         self.plotarea_val_frame = ttk.Frame(self.plotarea_frame, padding='3 3 3 3')
         self.plotarea_val_frame.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         
-        self.dmin_l = ttk.Label(self.plotarea_val_frame, text='d. min.')
-        self.dmax_l = ttk.Label(self.plotarea_val_frame, text='d. max.')
-        self.hmin_l = ttk.Label(self.plotarea_val_frame, text='h. min.')
-        self.hmax_l = ttk.Label(self.plotarea_val_frame, text='h. max.')
+        self.min_l = ttk.Label(self.plotarea_val_frame, text='min.')
+        self.max_l = ttk.Label(self.plotarea_val_frame, text='max.')
+        self.d_l = ttk.Label(self.plotarea_val_frame, text='dist.')
+        self.h_l = ttk.Label(self.plotarea_val_frame, text='ht.')
+        self.auto_l = ttk.Label(self.plotarea_val_frame, text='auto')
         
-        self.dmin_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
-        self.dmax_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
-        self.hmin_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
-        self.hmax_l.grid(column=2, row=1, sticky=(tk.E,tk.W))
+        self.min_l.grid(column=1, row=0, sticky=(tk.E,tk.W))
+        self.max_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
+        self.d_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
+        self.h_l.grid(column=0, row=2, sticky=(tk.E,tk.W))
+        self.auto_l.grid(column=3, row=0, sticky=(tk.E,tk.W))
 
         self.dmin_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.distance_lim_v[0],width=5)
         self.dmax_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.distance_lim_v[1],width=5)
         self.hmin_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.height_lim_v[0],width=5)
         self.hmax_ent = ttk.Entry(self.plotarea_val_frame, textvariable=self.height_lim_v[1],width=5)
         
-        self.viewlim_auto_ent = ttk.Checkbutton(self.plotarea_val_frame, text='Auto', variable=self.viewlim_auto_v, onvalue='True', offvalue='False')
+        self.dlim_auto_ent = ttk.Checkbutton(self.plotarea_val_frame, text='', variable=self.dlim_auto_v, onvalue='True', offvalue='False', command=lambda: self.setautolim(self.dlim_auto_v))
+        self.hlim_auto_ent = ttk.Checkbutton(self.plotarea_val_frame, text='', variable=self.hlim_auto_v, onvalue='True', offvalue='False', command=lambda: self.setautolim(self.hlim_auto_v))
         
-        self.dmin_ent.grid(column=1, row=0, sticky=(tk.E,tk.W))
-        self.dmax_ent.grid(column=3, row=0, sticky=(tk.E,tk.W))
-        self.hmin_ent.grid(column=1, row=1, sticky=(tk.E,tk.W))
-        self.hmax_ent.grid(column=3, row=1, sticky=(tk.E,tk.W))
-        self.viewlim_auto_ent.grid(column=0, row=3, sticky=(tk.E,tk.W))
+        self.dmin_ent.grid(column=1, row=1, sticky=(tk.E,tk.W))
+        self.dmax_ent.grid(column=2, row=1, sticky=(tk.E,tk.W))
+        self.hmin_ent.grid(column=1, row=2, sticky=(tk.E,tk.W))
+        self.hmax_ent.grid(column=2, row=2, sticky=(tk.E,tk.W))
+        self.dlim_auto_ent.grid(column=3, row=1, sticky=(tk.E,tk.W))
+        self.hlim_auto_ent.grid(column=3, row=2, sticky=(tk.E,tk.W))
 
         # ---
         
@@ -125,23 +131,28 @@ class HeightWindow():
     def sendtopmost(self,event=None):
         self.master.lift()
         self.master.focus_force()
+    def setautolim(self, val):
+        if val.get() == 'True':
+            self.drawall()
     def drawall(self):
         if self.master is not None:
             self.ax_height.cla()
             self.trackcontrol.plot2d_height(self.ax_height)
             self.ax_height.set_xlabel('distance [m]')
             self.ax_height.set_ylabel('height [m]')
-            if self.viewlim_auto_v.get() == 'False':
+            if self.dlim_auto_v.get() == 'False':
                 self.ax_height.set_xlim(self.distance_lim_v[0].get(), self.distance_lim_v[1].get())
-                self.ax_height.set_ylim(self.height_lim_v[0].get(), self.height_lim_v[1].get())
             else:
                 self.ax_height.set_xlim()
-                self.ax_height.set_ylim()
                 xlim = self.ax_height.get_xlim()
-                ylim = self.ax_height.get_ylim()
-                #print(xlim,ylim)
                 for ix in (0,1):
                     self.distance_lim_v[ix].set(float(xlim[ix]))
+            if self.hlim_auto_v.get() == 'False':
+                self.ax_height.set_ylim(self.height_lim_v[0].get(), self.height_lim_v[1].get())
+            else:
+                self.ax_height.set_ylim()
+                ylim = self.ax_height.get_ylim()
+                for ix in (0,1):
                     self.height_lim_v[ix].set(float(ylim[ix]))
             self.fig_canvas.draw()
         
