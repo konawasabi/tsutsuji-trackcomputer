@@ -33,14 +33,19 @@ from . import curvetrackplot
 '''
 
 class Interface():
+    class unitCursor():
+        def __init__(self,id,parent,ax,canvas,color,ch_main,ch_measure):
+            self.id = id
+            self.marker = drawcursor.marker_simple(parent,ax,canvas,color,ch_main,ch_measure)
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
         self.master = None
         #self.trackcontrol = self.mainwindow.trackcontrol
         self.cursorlist_column = ('Track', 'Distance', 'Height', 'Gradient')
+        self.cursors = {}
     def create_window(self):
         if self.master is None:
-            self.master = tk.Toplevel(self.mainwindow)
+            self.master = tk.Toplevel(self.mainwindow.master)
             self.master.title('Measure (Height)')
             self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
             self.master.columnconfigure(0, weight=1)
@@ -86,8 +91,18 @@ class Interface():
         self.master.lift()
         self.master.focus_force()
     def addcursor(self):
-        self.cursorlist.insert('','end',values=('@absolute',255,255,255))
+        iid = self.cursorlist.insert('','end',values=('',0,0,0))
+        self.cursors[iid] = drawcursor.marker_simple(self,self.mainwindow.ax_height,self.mainwindow.fig_canvas,'g',self.mainwindow.sendtopmost,self.mainwindow.sendtopmost)
+        def abspos(x,y):
+            temp = self.cursorlist.item(iid, 'values')
+            self.cursorlist.item(iid,values=(temp[0],x,y,temp[3]))
+            return (x,y)
+        def printpos(self_loc):
+            print(iid, self_loc)
+        self.cursors[iid].start(lambda x,y: abspos(x,y), lambda self: printpos(self))
+        
     def deletecursor(self):
         selected = self.cursorlist.focus()
         if len(selected)>0:
             self.cursorlist.delete(selected)
+            del self.cursors[selected]

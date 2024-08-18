@@ -33,7 +33,7 @@ class HeightWindow():
         self.mainwindow = mainwindow
         self.master = None
         self.trackcontrol = self.mainwindow.trackcontrol
-        self.measureUI = heightmeasure.Interface(self.mainwindow)
+        self.measureUI = heightmeasure.Interface(self)
 
         self.distance_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.height_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
