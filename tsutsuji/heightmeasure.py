@@ -60,9 +60,9 @@ class Interface():
         else:
             self.sendtopmost()
     def create_widgets(self):
-        self.cursorlist = ttk.Treeview(self.mainframe, column=self.cursorlist_column)
-        self.cursorlist.column('#0',width=10)
-        self.cursorlist.column('Track',width=80)
+        self.cursorlist = ttk.Treeview(self.mainframe, column=self.cursorlist_column,height=5)
+        self.cursorlist.column('#0',width=40)
+        self.cursorlist.column('Track',width=100)
         self.cursorlist.column('Distance',width=80)
         self.cursorlist.column('Height',width=80)
         self.cursorlist.column('Gradient',width=80)
@@ -74,8 +74,45 @@ class Interface():
         
         self.cursorlist.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
 
+        self.edit_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.edit_frame.grid(column=0, row=1,sticky=(tk.E, tk.W))
+
+        edit_vals = ('ID', 'Track', 'Distance', 'Height', 'Gradient')
+        self.edit_labels = {}
+        self.edit_entries = {}
+        self.edit_vals = {}
+
+        for i in edit_vals:
+            self.edit_labels[i] = ttk.Label(self.edit_frame, text=i)
+
+        i = 'ID'
+        self.edit_vals[i] = tk.StringVar(value='')
+        self.edit_entries[i] = ttk.Entry(self.edit_frame, textvariable = self.edit_vals[i],width=10)
+
+        i = 'Track'
+        self.edit_vals[i] = tk.StringVar(value='')
+        self.edit_entries[i] = ttk.Combobox(self.edit_frame, textvariable = self.edit_vals[i],width=10)
+
+        i = 'Distance'
+        self.edit_vals[i] = tk.DoubleVar(value=0)
+        self.edit_entries[i] = ttk.Entry(self.edit_frame, textvariable = self.edit_vals[i],width=10)
+
+        i = 'Height'
+        self.edit_vals[i] = tk.DoubleVar(value=0)
+        self.edit_entries[i] = ttk.Entry(self.edit_frame, textvariable = self.edit_vals[i],width=10)
+
+        i = 'Gradient'
+        self.edit_vals[i] = tk.DoubleVar(value=0)
+        self.edit_entries[i] = ttk.Entry(self.edit_frame, textvariable = self.edit_vals[i],width=10)
+
+        j = 0
+        for i in edit_vals:
+            self.edit_labels[i].grid(column=j, row=0,sticky=(tk.E, tk.W))
+            self.edit_entries[i].grid(column=j, row=1,sticky=(tk.E, tk.W))
+            j+=1
+
         self.button_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.button_frame.grid(column=0, row=1,sticky=(tk.E, tk.W))
+        self.button_frame.grid(column=0, row=2,sticky=(tk.E, tk.W))
 
         self.add_b = ttk.Button(self.button_frame, text='Add', command=self.addcursor)
         self.del_b = ttk.Button(self.button_frame, text='Delete', command=self.deletecursor)
@@ -92,7 +129,10 @@ class Interface():
         self.master.focus_force()
     def addcursor(self):
         iid = self.cursorlist.insert('','end',values=('',0,0,0))
-        self.cursors[iid] = drawcursor.marker_simple(self,self.mainwindow.ax_height,self.mainwindow.fig_canvas,'g',self.mainwindow.sendtopmost,self.mainwindow.sendtopmost)
+        #temp = self.cursorlist.item(iid, 'values')
+        #self.cursorlist.item(iid,values=(iid,temp[1],temp[2],temp[3]))
+        self.cursorlist.item(iid,text=iid)
+        self.cursors[iid] = drawcursor.marker_simple(self,self.mainwindow.ax_height,self.mainwindow.fig_canvas,'g',self.mainwindow.sendtopmost,self.sendtopmost)
         def abspos(x,y):
             temp = self.cursorlist.item(iid, 'values')
             self.cursorlist.item(iid,values=(temp[0],x,y,temp[3]))
