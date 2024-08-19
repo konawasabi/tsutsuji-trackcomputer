@@ -241,6 +241,9 @@ class marker_simple():
         self.ch_measure = ch_measure
 
         self.setobj()
+    def __del__(self):
+        #self.deleteobj()
+        pass
     def start(self,posfunc,pressfunc):
         self.posfunc = posfunc
         self.pressfunc = pressfunc
@@ -269,6 +272,10 @@ class marker_simple():
     def setobj(self):
         self.markerpos, = self.ax.plot([],[],self.color+'x')
         #self.annotate = self.ax.text(0,0,'')
+    def deleteobj(self):
+        marker = self.markerpos
+        marker.remove()
+        self.canvas.draw()
 
 class marker_pos():
     def __init__(self,parent,color):

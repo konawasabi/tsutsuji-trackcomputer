@@ -105,7 +105,5 @@ class Interface():
         selected = self.cursorlist.focus()
         if len(selected)>0:
             self.cursorlist.delete(selected)
-            marker = self.cursors[selected].markerpos
-            marker.remove()
-            self.cursors[selected].canvas.draw()
+            self.cursors[selected].deleteobj()
             del self.cursors[selected]
