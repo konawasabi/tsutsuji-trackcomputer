@@ -57,6 +57,7 @@ class Interface():
             self.mainframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
             
             self.create_widgets()
+            self.make_trackkeylist()
         else:
             self.sendtopmost()
     def create_widgets(self):
@@ -87,7 +88,7 @@ class Interface():
 
         i = 'ID'
         self.edit_vals[i] = tk.StringVar(value='')
-        self.edit_entries[i] = ttk.Entry(self.edit_frame, textvariable = self.edit_vals[i],width=10)
+        self.edit_entries[i] = ttk.Entry(self.edit_frame, textvariable = self.edit_vals[i],width=5)
 
         i = 'Track'
         self.edit_vals[i] = tk.StringVar(value='')
@@ -147,3 +148,18 @@ class Interface():
             self.cursorlist.delete(selected)
             self.cursors[selected].deleteobj()
             del self.cursors[selected]
+    def make_trackkeylist(self):
+        currentval = self.edit_vals['Track'].get()
+
+        owot_keys = []
+        for parent_tr in self.mainwindow.mainwindow.trackcontrol.track.keys():
+            for child_tr in self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'].keys():
+                owot_keys.append('@OT_{:s}@_{:s}'.format(parent_tr,child_tr))
+
+        self.edit_entries['Track']['values'] = tuple(['@absolute'])\
+            +tuple(self.mainwindow.mainwindow.trackcontrol.track.keys())\
+            +tuple(self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track.keys())\
+            +tuple(owot_keys)
+
+        if currentval not in self.edit_entries['Track']['values']:
+            self.edit_vals['Track'].set('@absolute')
