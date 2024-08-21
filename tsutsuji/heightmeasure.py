@@ -130,17 +130,50 @@ class Interface():
         self.master.focus_force()
     def addcursor(self):
         iid = self.cursorlist.insert('','end',values=('',0,0,0))
-        #temp = self.cursorlist.item(iid, 'values')
-        #self.cursorlist.item(iid,values=(iid,temp[1],temp[2],temp[3]))
         self.cursorlist.item(iid,text=iid)
         self.cursors[iid] = drawcursor.marker_simple(self,self.mainwindow.ax_height,self.mainwindow.fig_canvas,'g',self.mainwindow.sendtopmost,self.sendtopmost)
+        temp = self.cursorlist.item(iid, 'values')
+        self.cursorlist.item(iid,values=(self.edit_vals['Track'].get(),temp[1],temp[2],temp[3]))
+        self.movecursor(iid_argv = iid)
+        
+    def movecursor(self,iid_argv=None):
+        if iid_argv is None:
+            iid = self.edit_vals['ID'].get()
+        else:
+            iid = iid_argv
         def abspos(x,y):
             temp = self.cursorlist.item(iid, 'values')
             self.cursorlist.item(iid,values=(temp[0],x,y,temp[3]))
             return (x,y)
+        def trackpos(x,y,key):
+            temp = self.cursorlist.item(iid, 'values')
+            result = nearestpoint(x,y,key)
+            self.cursorlist.item(iid,values=(temp[0],result[0],result[3],result[6]))
+            return (result[0],result[3])
+        def nearestpoint(x,y,track_key):
+            inputpos = np.array([x,y])
+            track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result']
+            track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
+            distance = (track_data - inputpos)**2
+            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+            if '@' not in track_key:
+                result = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result'][min_dist_ix]
+            elif '@OT_' in track_key:
+                parent_tr = re.search('(?<=@OT_).+(?=@)',track_key).group(0)
+                child_tr =  track_key.split('@_')[-1]
+                result = self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][min_dist_ix]
+            else:
+                result = self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track[track_key]['result'][min_dist_ix]
+            return result
+            
         def printpos(self_loc):
             print(iid, self_loc)
-        self.cursors[iid].start(lambda x,y: abspos(x,y), lambda self: printpos(self))
+
+        trackkey = self.edit_vals['Track'].get()
+        if trackkey == '@absolute':
+            self.cursors[iid].start(lambda x,y: abspos(x,y), lambda self: printpos(self))
+        else:
+            self.cursors[iid].start(lambda x,y: trackpos(x,y,trackkey), lambda self: printpos(self))
         
     def deletecursor(self):
         selected = self.cursorlist.focus()
