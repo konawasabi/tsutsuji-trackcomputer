@@ -62,6 +62,7 @@ class Interface():
             self.sendtopmost()
     def create_widgets(self):
         self.cursorlist = ttk.Treeview(self.mainframe, column=self.cursorlist_column,height=5)
+        self.cursorlist.bind('<<TreeviewSelect>>',self.click_cursorlist)
         self.cursorlist.column('#0',width=40)
         self.cursorlist.column('Track',width=100)
         self.cursorlist.column('Distance',width=80)
@@ -199,3 +200,13 @@ class Interface():
     def reload_trackkeys(self):
         if self.master is not None:
             self.make_trackkeylist()
+    def click_cursorlist(self, event=None):
+        if event != None:
+            selected = self.cursorlist.focus()
+            if len(selected)>0:
+                data = self.cursorlist.item(selected, 'values')
+                self.edit_vals['ID'].set(selected)
+                self.edit_vals['Track'].set(data[0])
+                self.edit_vals['Distance'].set(data[1])
+                self.edit_vals['Height'].set(data[2])
+                self.edit_vals['Gradient'].set(data[3])
