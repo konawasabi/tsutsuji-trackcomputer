@@ -208,4 +208,6 @@ class HeightWindow():
                     self.trackcontrol.plot_symbols_height(self.ax_height,key)
             
             self.fig_canvas.draw()
+    def reloadcfg(self):
+        self.measureUI.reload_trackkeys()
         

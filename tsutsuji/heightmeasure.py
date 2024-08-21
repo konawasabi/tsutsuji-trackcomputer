@@ -163,3 +163,6 @@ class Interface():
 
         if currentval not in self.edit_entries['Track']['values']:
             self.edit_vals['Track'].set('@absolute')
+    def reload_trackkeys(self):
+        if self.master is not None:
+            self.make_trackkeylist()

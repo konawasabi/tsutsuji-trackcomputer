@@ -298,6 +298,7 @@ class mainwindow(ttk.Frame):
             self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
         self.trackwindow.reset_treevalue()
         self.measurewindow.reload_trackkeys()
+        self.heightwindow.reloadcfg()
 
         plotsize = self.fig_plane.get_size_inches()
         self.staticmapctrl.setparams_fromcfg(self.trackcontrol.conf.maptile)
