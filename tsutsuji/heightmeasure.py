@@ -210,3 +210,9 @@ class Interface():
                 self.edit_vals['Distance'].set(data[1])
                 self.edit_vals['Height'].set(data[2])
                 self.edit_vals['Gradient'].set(data[3])
+    def replotCursors(self):
+        for key in self.cursors.keys():
+            data = self.cursorlist.item(key,'values')
+            self.cursors[key].setobj()
+            self.cursors[key].setpos(float(data[1]),float(data[2]),direct=True)
+        self.mainwindow.fig_canvas.draw()

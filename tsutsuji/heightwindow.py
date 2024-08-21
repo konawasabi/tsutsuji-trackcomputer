@@ -206,7 +206,7 @@ class HeightWindow():
             for key in self.plot_marker_ctrl_v.keys():
                 if self.plot_marker_ctrl_v[key].get():
                     self.trackcontrol.plot_symbols_height(self.ax_height,key)
-            
+            self.measureUI.replotCursors()
             self.fig_canvas.draw()
     def reloadcfg(self):
         self.measureUI.reload_trackkeys()
