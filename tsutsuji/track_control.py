@@ -395,8 +395,10 @@ class TrackControl():
             self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
     def plot2d(self, ax):
         self._plot2d_base(ax, (1,2))
+        self.pointsequence_track.plot2d(ax)
     def plot2d_height(self, ax):
         self._plot2d_base(ax, (0,3))
+        self.pointsequence_track.plot2d_height(ax)
     def _plot2d_base(self, ax, col_ix):
         if len(self.track) > 0:
             for i in self.conf.track_keys:
@@ -413,7 +415,6 @@ class TrackControl():
                                     lw=1)
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
-            self.pointsequence_track.plot2d(ax)
         if self.generated_othertrack is not None:
             for otrack in self.generated_othertrack.keys():
                 if self.generated_othertrack[otrack]['toshow']:

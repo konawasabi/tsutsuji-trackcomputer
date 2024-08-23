@@ -107,10 +107,14 @@ class Kml2track():
         
         return result_np
     def plot2d(self, ax):
+        self._plot2d_base(ax, (1,2))
+    def plot2d_height(self, ax):
+        self._plot2d_base(ax, (0,3))
+    def _plot2d_base(self, ax, col_ix):
         for key in self.track.keys():
             if self.track[key]['toshow']:
                 tmp = self.track[key]['result']
-                ax.plot(tmp[:,1],tmp[:,2],label=key,color=self.track[key]['color'])
+                ax.plot(tmp[:,col_ix[0]],tmp[:,col_ix[1]],label=key,color=self.track[key]['color'])
     def drawarea(self, extent_orig):
         extent = extent_orig
         for key in self.track.keys():
