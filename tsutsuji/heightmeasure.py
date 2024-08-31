@@ -153,18 +153,20 @@ class Interface():
             return (result[0],result[3])
         def nearestpoint(x,y,track_key):
             inputpos = np.array([x,y])
-            track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result']
-            track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
-            distance = (track_data - inputpos)**2
-            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
             if '@' not in track_key:
-                result = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result'][min_dist_ix]
+                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result']
             elif '@OT_' in track_key:
                 parent_tr = re.search('(?<=@OT_).+(?=@)',track_key).group(0)
                 child_tr =  track_key.split('@_')[-1]
-                result = self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result'][min_dist_ix]
-            else:
-                result = self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track[track_key]['result'][min_dist_ix]
+                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
+            elif '@KML_' in track_key or '@CSV_' in track_key:
+                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track[track_key]['result']
+                
+            
+            track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
+            distance = (track_data - inputpos)**2
+            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+            result = track_data_tmp[min_dist_ix]
             return result
             
         def printpos(self_loc):
