@@ -232,13 +232,14 @@ class arrow():
         self.canvas.draw()
 
 class marker_simple():
-    def __init__(self,parent,ax,canvas,color,ch_main,ch_measure):
+    def __init__(self,parent,ax,canvas,color,ch_main,ch_measure,symbol='x'):
         self.parent = parent
         self.ax = ax
         self.canvas = canvas
         self.color = color
         self.ch_main = ch_main
         self.ch_measure = ch_measure
+        self.symbol = symbol
 
         self.setobj()
     def __del__(self):
@@ -270,7 +271,10 @@ class marker_simple():
         #self.annotate.set(text ='({:.1f},{:.1f})'.format(self.xout,self.yout), position=(self.xout,self.yout))
         self.canvas.draw()
     def setobj(self):
-        self.markerpos, = self.ax.plot([],[],self.color+'x')
+        if '#' in self.color:
+            self.markerpos, = self.ax.plot([],[],color=self.color, marker=self.symbol)
+        else:
+            self.markerpos, = self.ax.plot([],[],self.color+'x')
         #self.annotate = self.ax.text(0,0,'')
     def deleteobj(self):
         marker = self.markerpos
