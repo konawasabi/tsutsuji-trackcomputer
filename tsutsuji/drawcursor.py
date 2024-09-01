@@ -280,6 +280,9 @@ class marker_simple():
         marker = self.markerpos
         marker.remove()
         self.canvas.draw()
+    def setcolor(self,color):
+        self.markerpos.set_color(color)
+        self.canvas.draw()
 
 class marker_pos():
     def __init__(self,parent,color):

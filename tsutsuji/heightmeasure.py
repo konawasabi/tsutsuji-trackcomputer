@@ -137,7 +137,7 @@ class Interface():
         self.button_frame.grid(column=0, row=2,sticky=(tk.E, tk.W))
 
         self.add_b = ttk.Button(self.button_frame, text='Add', command=self.addcursor)
-        self.edit_b = ttk.Button(self.button_frame, text='Edit', command=None)
+        self.edit_b = ttk.Button(self.button_frame, text='Edit', command=self.editcursor)
         self.move_b = ttk.Button(self.button_frame, text='Move', command=None)
         self.del_b = ttk.Button(self.button_frame, text='Delete', command=self.deletecursor)
 
@@ -233,6 +233,57 @@ class Interface():
                                   self.sendtopmost)
         self.cursors[iid].setobj()
         self.cursors[iid].setpos(self.cursors[iid].get_value('Distance'),self.cursors[iid].get_value('Height'),direct=True)
+    def editcursor(self,iid=None):
+        if iid is None:
+            iid = self.edit_vals['ID'].get()
+
+        key = 'Track'
+        track_key = self.edit_vals[key].get()
+        self.cursors[iid].set_value(key, track_key)
+        self.setcursorvalue(iid,key,track_key)
+        
+        key = 'Distance'
+        dist = self.edit_vals[key].get()
+        self.cursors[iid].set_value(key, dist)
+        self.setcursorvalue(iid,key,dist)
+        if track_key == '@absolute':
+            height = self.edit_vals['Height'].get()
+            gradient = self.edit_vals['Gradient'].get()
+        else:
+            inputpos = np.array([dist,0])
+            if '@' not in track_key:
+                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result']
+            elif '@OT_' in track_key:
+                parent_tr = re.search('(?<=@OT_).+(?=@)',track_key).group(0)
+                child_tr =  track_key.split('@_')[-1]
+                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
+            elif '@KML_' in track_key or '@CSV_' in track_key:
+                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track[track_key]['result']
+            track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
+            distance = (track_data - inputpos)**2
+            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+            result = track_data_tmp[min_dist_ix]
+            dist = result[0]
+            height = result[3]
+            gradient = result[6]
+
+        key = 'Distance'
+        self.cursors[iid].set_value(key, dist)
+        self.setcursorvalue(iid,key,dist)
+        key = 'Height'
+        self.cursors[iid].set_value(key, height)
+        self.setcursorvalue(iid,key,height)
+        key = 'Gradient'
+        self.cursors[iid].set_value(key, gradient)
+        self.setcursorvalue(iid,key,gradient)
+
+        self.cursors[iid].setpos(dist,\
+                                 height,direct=True)
+
+        key = 'Color'
+        self.cursors[iid].set_value(key, self.edit_vals[key].get())
+        self.setcursorvalue(iid,key,self.edit_vals[key].get())
+        self.cursors[iid].setcolor(self.edit_vals[key].get())
         
     def make_trackkeylist(self):
         currentval = self.edit_vals['Track'].get()
