@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
+import tkinter.colorchooser as colorchooser
 import re
 import itertools
 
@@ -126,6 +127,7 @@ class Interface():
         i = 'Color'
         self.edit_vals[i] = tk.StringVar(value='')
         self.edit_entries[i] = ttk.Entry(self.edit_frame, textvariable = self.edit_vals[i],width=10)
+        self.edit_entries[i].bind('<Button-1>',self.choosecursorcolor)
 
         j = 0
         for i in edit_vals:
@@ -320,3 +322,7 @@ class Interface():
             self.cursors[key].setobj()
             self.cursors[key].setpos(float(data[1]),float(data[2]),direct=True)
         self.mainwindow.fig_canvas.draw()
+    def choosecursorcolor(self,event=None):
+        inputdata = colorchooser.askcolor(color=self.edit_vals['Color'].get())
+        if inputdata[1] is not None:
+            self.edit_vals['Color'].set(inputdata[1])
