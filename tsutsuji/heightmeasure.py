@@ -37,15 +37,32 @@ from . import curvetrackplot
 class Interface():
     class unitCursor(drawcursor.marker_simple):
         def __init__(self,parent,ax,canvas,color,ch_main,ch_measure,iid):
+            self.marker = None
+            self.arrow = None
             self.makeobj(parent,ax,canvas,color,ch_main,ch_measure)
             self.iid = iid
             self.values = {'Track':'', 'Distance':0, 'Height':0,'Gradient':0, 'Color':color}
         def makeobj(self,parent,ax,canvas,color,ch_main,ch_measure):
-            super().__init__(parent,ax,canvas,color,ch_main,ch_measure)
+            self.marker = drawcursor.marker_simple(parent,ax,canvas,color,ch_main,ch_measure)
+            self.arrow = drawcursor.arrow(parent,self.marker,ax=ax,canvas=canvas)
         def set_value(self,key,val):
             self.values[key] = val
         def get_value(self,key):
             return self.values[key]
+        def start(self,posfunc,pressfunc):
+            self.marker.start(posfunc,pressfunc)
+        def move(self,event):
+            self.marker.move(event)
+        def press(self,event):
+            self.marker.press(event)
+        def setpos(self,x,y,direct=False):
+            self.marker.setpos(x,y,direct)
+        def setobj(self):
+            self.marker.setobj()
+        def deleteobj(self):
+            self.marker.deleteobj()
+        def setcolor(self,color):
+            self.marker.setcolor(color)
             
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
@@ -208,12 +225,14 @@ class Interface():
             
         def printpos(self_loc):
             print(iid, self_loc)
+        def click():
+            self.cursors[iid].arrow.start()
 
         trackkey = self.edit_vals['Track'].get()
         if trackkey == '@absolute':
-            self.cursors[iid].start(lambda x,y: abspos(x,y), lambda self: printpos(self))
+            self.cursors[iid].marker.start(lambda x,y: abspos(x,y), lambda self: printpos(self))
         else:
-            self.cursors[iid].start(lambda x,y: trackpos(x,y,trackkey), lambda self: printpos(self))
+            self.cursors[iid].marker.start(lambda x,y: trackpos(x,y,trackkey), lambda self: printpos(self))
     def deletecursor(self):
         selected = self.cursorlist.focus()
         if len(selected)>0:
@@ -239,6 +258,8 @@ class Interface():
         if iid is None:
             iid = self.edit_vals['ID'].get()
 
+        if iid == '':
+            return None
         key = 'Track'
         track_key = self.edit_vals[key].get()
         self.cursors[iid].set_value(key, track_key)
@@ -246,8 +267,7 @@ class Interface():
         
         key = 'Distance'
         dist = self.edit_vals[key].get()
-        self.cursors[iid].set_value(key, dist)
-        self.setcursorvalue(iid,key,dist)
+        
         if track_key == '@absolute':
             height = self.edit_vals['Height'].get()
             gradient = self.edit_vals['Gradient'].get()
