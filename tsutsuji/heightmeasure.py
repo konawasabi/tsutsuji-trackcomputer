@@ -34,17 +34,134 @@ from . import math
 from . import curvetrackplot
 '''
 
+class arrow():
+    def __init__(self,parent,marker,figure):
+        self.p = parent
+        self.marker = marker
+        self.ax = self.marker.ax
+        self.canvas = self.marker.canvas
+        self.ch_main = self.marker.ch_main
+        self.ch_measure = self.marker.ch_measure
+        self.figure = figure
+        
+        self.pointerdir = None
+        self.tangentline = None
+        self.lastmousepoint = np.array([0, 0])
+        self.pointed_pos = np.array([0,0])
+    def __del__(self):
+        pass
+    def start(self,posfunc,pressfunc):
+        self.posfunc = posfunc
+        self.pressfunc = pressfunc
+
+        self.ch_main()
+        self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
+        self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
+
+        self.deleteobj()
+
+        '''
+        self.track_key = self.p.values[3].get()
+        self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
+        self.p.parentwindow.sendtopmost()
+        '''
+    def move(self,event):
+        if event.xdata is not None and event.ydata is not None:
+            self.setpos(event.xdata,event.ydata)
+        '''
+        position = np.array([event.xdata,event.ydata])
+        if event.xdata is not None and event.ydata is not None:
+            if self.track_key == '@absolute':
+                vector = (position - self.pointed_pos)
+                element = vector/np.sqrt(vector[0]**2+vector[1]**2)
+                self.lastmousepoint = np.array([event.xdata, event.ydata])
+            else:
+                v_marker = (position - self.pointed_pos)
+                v_track = np.array([np.cos(self.marker.prev_trackpos[4]),np.sin(self.marker.prev_trackpos[4])])
+                if np.dot(v_marker, v_track) > 0:
+                    vector = v_track
+                    element = vector
+                else:
+                    vector = np.array([np.cos(self.marker.prev_trackpos[4]-np.pi),np.sin(self.marker.prev_trackpos[4]-np.pi)])
+                    element = vector
+            self.setobj(element)
+            if self.track_key == '@absolute':
+                self.settangent(position)
+            self.canvas.draw()
+
+            sin = vector[1]/np.sqrt(vector[0]**2+vector[1]**2)
+            cos = vector[0]/np.sqrt(vector[0]**2+vector[1]**2)
+            theta = np.arccos(cos) if sin > 0 else -np.arccos(cos)
+            self.p.values[2].set(np.rad2deg(theta))
+            self.p.values_toshow[2].set('{:.3f}'.format(np.rad2deg(theta)))
+            self.p.parent.setdistance()
+        '''
+    def press(self,event):
+        if event.xdata is not None and event.ydata is not None:
+            self.setpos(event.xdata,event.ydata)
+        self.pressfunc(self)
+        self.ch_measure()
+        self.canvas.mpl_disconnect(self.press_id)
+        self.canvas.mpl_disconnect(self.move_id)
+    def setpos(self, x, y, direct=False):
+        position = np.array(x,y)
+        vector = (position - self.pointed_pos)
+        element = vector/np.sqrt(vector[0]**2+vector[1]**2)
+        self.lastmousepoint = np.array([event.xdata, event.ydata])
+        self.setobj(element)
+        self.canvas.draw()
+    def setobj(self,element,reset=False):
+        if self.pointerdir == None or reset:
+            if reset:
+                #self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
+                #element = (np.cos(np.deg2rad(self.p.values[2].get())),np.sin(np.deg2rad(self.p.values[2].get())))
+                marker_pos = self.marker.markerpos.get_lines()[0].get_data()
+                self.pointed_pos = np.array([marker_pos[0][0],marker_pos[1][0]])
+                element = (1,0)
+            figsize = self.figure.get_size_inches()
+            self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],\
+                                             angles='xy',scale=2,scale_units='inches',width=0.0025*7/figsize[0])
+        else:
+            self.pointerdir.set_UVC(element[0],element[1])
+    def settangent(self,pointerpos,reset=False):
+        if self.p.values[3].get() == '@absolute':
+            if reset:
+                pointerpos = self.lastmousepoint
+            origin = np.array([self.p.values[0].get(),self.p.values[1].get()])
+            diff = pointerpos - origin
+            diagonal = np.dot(math.rotate(np.pi),diff) + origin
+
+            if self.tangentline == None or reset:
+                self.tangentline, = self.ax.plot([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]],'k--',alpha=0.25)
+            else:
+                self.tangentline.set_data([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]])
+    def set_direct(self):
+        if self.pointerdir != None:
+            self.pointerdir.remove()
+            self.pointerdir = None
+        self.setobj(None,reset=True)
+        #self.p.parent.printdirection()
+        self.canvas.draw()
+    def deleteobj(self):
+        if self.pointerdir is not None:
+            self.pointerdir.remove()
+            self.pointerdir = None
+        if self.tangentline is not None:
+            self.tangentline.remove()
+            self.tangentline = None
+        
+
 class Interface():
     class unitCursor(drawcursor.marker_simple):
         def __init__(self,parent,ax,canvas,color,ch_main,ch_measure,iid):
             self.marker = None
             self.arrow = None
-            self.makeobj(parent,ax,canvas,color,ch_main,ch_measure)
+            self.makeobj(parent,ax,canvas,color,ch_main,ch_measure,figure)
             self.iid = iid
             self.values = {'Track':'', 'Distance':0, 'Height':0,'Gradient':0, 'Color':color}
-        def makeobj(self,parent,ax,canvas,color,ch_main,ch_measure):
+        def makeobj(self,parent,ax,canvas,color,ch_main,ch_measure,figure):
             self.marker = drawcursor.marker_simple(parent,ax,canvas,color,ch_main,ch_measure)
-            self.arrow = drawcursor.arrow(parent,self.marker,ax=ax,canvas=canvas)
+            self.arrow = drawcursor.arrow(parent,self.marker,figure)
         def set_value(self,key,val):
             self.values[key] = val
         def get_value(self,key):
@@ -63,7 +180,8 @@ class Interface():
             self.marker.deleteobj()
         def setcolor(self,color):
             self.marker.setcolor(color)
-            
+        def start_arrow(self,posfunc,pressfunc):
+            self.arrow.start(posfunc,pressfunc)
     def __init__(self,mainwindow):
         self.mainwindow = mainwindow
         self.master = None
@@ -157,7 +275,7 @@ class Interface():
 
         self.add_b = ttk.Button(self.button_frame, text='Add', command=self.addcursor)
         self.edit_b = ttk.Button(self.button_frame, text='Edit', command=self.editcursor)
-        self.move_b = ttk.Button(self.button_frame, text='Move', command=None)
+        self.move_b = ttk.Button(self.button_frame, text='Grad.', command=self.movearrow)
         self.del_b = ttk.Button(self.button_frame, text='Delete', command=self.deletecursor)
 
         self.add_b.grid(column=0, row=0,sticky=(tk.N, tk.E, tk.W))
@@ -346,3 +464,9 @@ class Interface():
         inputdata = colorchooser.askcolor(color=self.edit_vals['Color'].get())
         if inputdata[1] is not None:
             self.edit_vals['Color'].set(inputdata[1])
+    def movearrow(self,iid_argv=None):
+        if iid_argv is None:
+            iid = self.edit_vals['ID'].get()
+        else:
+            iid = iid_argv
+        self.cursors[iid].arrow.start(None,None)
