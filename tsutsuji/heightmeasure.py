@@ -150,9 +150,7 @@ class arrow():
         else:
             self.tangentline.set_data([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]])
     def set_direct(self):
-        if self.pointerdir != None:
-            self.pointerdir.remove()
-            self.pointerdir = None
+        self.deleteobj()
         self.setobj(None,reset=True)
         #self.p.parent.printdirection()
         self.canvas.draw()
@@ -359,12 +357,17 @@ class Interface():
             
         def printpos(self_loc):
             print(iid, self_loc)
+        def listselect():
+            self.cursorlist.focus(item=iid)
+            self.cursorlist.selection_set(iid)
         def click():
-            self.cursors[iid].arrow.start()
+            marker_dist = self.cursors[iid].get_value('Distance')
+            marker_height = self.cursors[iid].get_value('Height')
+            self.cursors[iid].arrow.start(lambda x,y: (x,y),lambda x: print('end'),marker_dist, marker_height)
 
         trackkey = self.edit_vals['Track'].get()
         if trackkey == '@absolute':
-            self.cursors[iid].marker.start(lambda x,y: abspos(x,y), lambda self: printpos(self))
+            self.cursors[iid].marker.start(lambda x,y: abspos(x,y), lambda self: listselect())
         else:
             self.cursors[iid].marker.start(lambda x,y: trackpos(x,y,trackkey), lambda self: printpos(self))
     def deletecursor(self):
