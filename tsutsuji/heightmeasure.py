@@ -50,15 +50,16 @@ class arrow():
         self.pointed_pos = np.array([0,0])
     def __del__(self):
         pass
-    def start(self,posfunc,pressfunc):
+    def start(self,posfunc,pressfunc,x,y):
         self.posfunc = posfunc
         self.pressfunc = pressfunc
 
         self.ch_main()
+        self.deleteobj()
         self.press_id = self.canvas.mpl_connect('button_press_event',self.press)
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
 
-        self.deleteobj()
+        self.pointed_pos = np.array([x,y])
 
         '''
         self.track_key = self.p.values[3].get()
@@ -97,17 +98,17 @@ class arrow():
             self.p.parent.setdistance()
         '''
     def press(self,event):
-        if event.xdata is not None and event.ydata is not None:
-            self.setpos(event.xdata,event.ydata)
+        #if event.xdata is not None and event.ydata is not None:
+        #    self.setpos(event.xdata,event.ydata)
         self.pressfunc(self)
         self.ch_measure()
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
     def setpos(self, x, y, direct=False):
-        position = np.array(x,y)
+        position = np.array([x,y])
         vector = (position - self.pointed_pos)
         element = vector/np.sqrt(vector[0]**2+vector[1]**2)
-        self.lastmousepoint = np.array([event.xdata, event.ydata])
+        self.lastmousepoint = np.array([x, y])
         self.setobj(element)
         self.canvas.draw()
     def setobj(self,element,reset=False):
@@ -149,11 +150,12 @@ class arrow():
         if self.tangentline is not None:
             self.tangentline.remove()
             self.tangentline = None
+        self.canvas.draw()
         
 
 class Interface():
     class unitCursor(drawcursor.marker_simple):
-        def __init__(self,parent,ax,canvas,color,ch_main,ch_measure,iid):
+        def __init__(self,parent,ax,canvas,color,ch_main,ch_measure,iid,figure):
             self.marker = None
             self.arrow = None
             self.makeobj(parent,ax,canvas,color,ch_main,ch_measure,figure)
@@ -161,7 +163,7 @@ class Interface():
             self.values = {'Track':'', 'Distance':0, 'Height':0,'Gradient':0, 'Color':color}
         def makeobj(self,parent,ax,canvas,color,ch_main,ch_measure,figure):
             self.marker = drawcursor.marker_simple(parent,ax,canvas,color,ch_main,ch_measure)
-            self.arrow = drawcursor.arrow(parent,self.marker,figure)
+            self.arrow = arrow(parent,self.marker,figure)
         def set_value(self,key,val):
             self.values[key] = val
         def get_value(self,key):
@@ -178,6 +180,7 @@ class Interface():
             self.marker.setobj()
         def deleteobj(self):
             self.marker.deleteobj()
+            self.arrow.deleteobj()
         def setcolor(self,color):
             self.marker.setcolor(color)
         def start_arrow(self,posfunc,pressfunc):
@@ -294,7 +297,7 @@ class Interface():
         iid = self.cursorlist.insert('','end',values=('',0,0,0,''))
         self.cursorlist.item(iid,text=iid)
         color_temp = next(self.cursorcolors)
-        self.cursors[iid] = self.unitCursor(self,self.mainwindow.ax_height,self.mainwindow.fig_canvas,color_temp,self.mainwindow.sendtopmost,self.sendtopmost,iid)
+        self.cursors[iid] = self.unitCursor(self,self.mainwindow.ax_height,self.mainwindow.fig_canvas,color_temp,self.mainwindow.sendtopmost,self.sendtopmost,iid,self.mainwindow.fig_height)
         self.setcursorvalue(iid,'Track',self.edit_vals['Track'].get())
         self.setcursorvalue(iid,'Color',color_temp)
         self.movecursor(iid_argv = iid)
@@ -469,4 +472,6 @@ class Interface():
             iid = self.edit_vals['ID'].get()
         else:
             iid = iid_argv
-        self.cursors[iid].arrow.start(None,None)
+        marker_dist = self.cursors[iid].get_value('Distance')
+        marker_height = self.cursors[iid].get_value('Height')
+        self.cursors[iid].arrow.start(lambda x,y: (x,y),lambda x: print('end'),marker_dist, marker_height)
