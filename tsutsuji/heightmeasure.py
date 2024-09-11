@@ -28,9 +28,10 @@ import itertools
 from kobushi import trackcoordinate
 
 from . import drawcursor
+from . import math
+
 '''
 from . import solver
-from . import math
 from . import curvetrackplot
 '''
 
@@ -110,6 +111,7 @@ class arrow():
         element = vector/np.sqrt(vector[0]**2+vector[1]**2)
         self.lastmousepoint = np.array([x, y])
         self.setobj(element)
+        self.settangent(position,self.pointed_pos)
         self.canvas.draw()
     def setobj(self,element,reset=False):
         if self.pointerdir == None or reset:
@@ -124,7 +126,8 @@ class arrow():
                                              angles='xy',scale=2,scale_units='inches',width=0.0025*7/figsize[0])
         else:
             self.pointerdir.set_UVC(element[0],element[1])
-    def settangent(self,pointerpos,reset=False):
+    def settangent(self,pointerpos,origin,reset=False):
+        '''
         if self.p.values[3].get() == '@absolute':
             if reset:
                 pointerpos = self.lastmousepoint
@@ -136,6 +139,16 @@ class arrow():
                 self.tangentline, = self.ax.plot([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]],'k--',alpha=0.25)
             else:
                 self.tangentline.set_data([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]])
+        '''
+        if reset:
+            pointerpos = self.lastmousepoint
+        diff = pointerpos - origin
+        diagonal = np.dot(math.rotate(np.pi),diff) + origin
+
+        if self.tangentline == None or reset:
+            self.tangentline, = self.ax.plot([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]],'k--',alpha=0.25)
+        else:
+            self.tangentline.set_data([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]])
     def set_direct(self):
         if self.pointerdir != None:
             self.pointerdir.remove()
