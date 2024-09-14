@@ -49,11 +49,13 @@ class arrow():
         self.tangentline = None
         self.lastmousepoint = np.array([0, 0])
         self.pointed_pos = np.array([0,0])
+        self.trackdata = None
     def __del__(self):
         pass
-    def start(self,posfunc,pressfunc,x,y):
+    def start(self,posfunc,pressfunc,x,y,drawtangent=True):
         self.posfunc = posfunc
         self.pressfunc = pressfunc
+        self.drawtangent = drawtangent
 
         self.ch_main()
         self.deleteobj()
@@ -106,12 +108,16 @@ class arrow():
         self.canvas.mpl_disconnect(self.press_id)
         self.canvas.mpl_disconnect(self.move_id)
     def setpos(self, x, y, direct=False):
-        position = np.array([x,y])
+        if direct:
+            position = np.array([x,y])
+        else:
+            position = self.posfunc(x,y)
         vector = (position - self.pointed_pos)
         element = vector/np.sqrt(vector[0]**2+vector[1]**2)
         self.lastmousepoint = np.array([x, y])
         self.setobj(element)
-        self.settangent(position,self.pointed_pos)
+        if self.drawtangent:
+            self.settangent(position,self.pointed_pos)
         self.canvas.draw()
     def setobj(self,element,reset=False):
         if self.pointerdir == None or reset:
@@ -288,14 +294,16 @@ class Interface():
         self.button_frame.grid(column=0, row=2,sticky=(tk.E, tk.W))
 
         self.add_b = ttk.Button(self.button_frame, text='Add', command=self.addcursor)
+        self.grad_b = ttk.Button(self.button_frame, text='Grad.', command=self.movearrow)
+        self.move_b = ttk.Button(self.button_frame, text='Move', command=self.movecursor)
         self.edit_b = ttk.Button(self.button_frame, text='Edit', command=self.editcursor)
-        self.move_b = ttk.Button(self.button_frame, text='Grad.', command=self.movearrow)
         self.del_b = ttk.Button(self.button_frame, text='Delete', command=self.deletecursor)
 
         self.add_b.grid(column=0, row=0,sticky=(tk.N, tk.E, tk.W))
-        self.edit_b.grid(column=1, row=0,sticky=(tk.N, tk.E, tk.W))
+        self.grad_b.grid(column=1, row=0,sticky=(tk.N, tk.E, tk.W))
         self.move_b.grid(column=2, row=0,sticky=(tk.N, tk.E, tk.W))
-        self.del_b.grid(column=3, row=0,sticky=(tk.N, tk.E, tk.W))
+        self.edit_b.grid(column=3, row=0,sticky=(tk.N, tk.E, tk.W))
+        self.del_b.grid(column=4, row=0,sticky=(tk.N, tk.E, tk.W))
         
     def closewindow(self):
         if self.master is not None:
@@ -325,6 +333,7 @@ class Interface():
     def movecursor(self,iid_argv=None):
         if iid_argv is None:
             iid = self.edit_vals['ID'].get()
+            self.setcursorvalue(iid,'Track',self.edit_vals['Track'].get())
         else:
             iid = iid_argv
         def abspos(x,y):
@@ -332,28 +341,13 @@ class Interface():
             self.setcursorvalue(iid,'Height',y)
             return (x,y)
         def trackpos(x,y,key):
-            result = nearestpoint(x,y,key)
+            result = self.nearestpoint(x,y,key)
             self.setcursorvalue(iid,'Distance',result[0])
             self.setcursorvalue(iid,'Height',result[3])
             self.setcursorvalue(iid,'Gradient',result[6])
+            self.trackdata = result
             return (result[0],result[3])
-        def nearestpoint(x,y,track_key):
-            inputpos = np.array([x,y])
-            if '@' not in track_key:
-                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result']
-            elif '@OT_' in track_key:
-                parent_tr = re.search('(?<=@OT_).+(?=@)',track_key).group(0)
-                child_tr =  track_key.split('@_')[-1]
-                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
-            elif '@KML_' in track_key or '@CSV_' in track_key:
-                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track[track_key]['result']
-                
-            
-            track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
-            distance = (track_data - inputpos)**2
-            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
-            result = track_data_tmp[min_dist_ix]
-            return result
+        
             
         def printpos(self_loc):
             print(iid, self_loc)
@@ -369,7 +363,24 @@ class Interface():
         if trackkey == '@absolute':
             self.cursors[iid].marker.start(lambda x,y: abspos(x,y), lambda self: listselect())
         else:
-            self.cursors[iid].marker.start(lambda x,y: trackpos(x,y,trackkey), lambda self: printpos(self))
+            self.cursors[iid].marker.start(lambda x,y: trackpos(x,y,trackkey), lambda self: listselect())
+    def nearestpoint(self, x,y,track_key):
+        inputpos = np.array([x,y])
+        if '@' not in track_key:
+            track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result']
+        elif '@OT_' in track_key:
+            parent_tr = re.search('(?<=@OT_).+(?=@)',track_key).group(0)
+            child_tr =  track_key.split('@_')[-1]
+            track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
+        elif '@KML_' in track_key or '@CSV_' in track_key:
+            track_data_tmp = self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track[track_key]['result']
+
+
+        track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
+        distance = (track_data - inputpos)**2
+        min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+        result = track_data_tmp[min_dist_ix]
+        return result
     def deletecursor(self):
         selected = self.cursorlist.focus()
         if len(selected)>0:
@@ -484,10 +495,39 @@ class Interface():
         if inputdata[1] is not None:
             self.edit_vals['Color'].set(inputdata[1])
     def movearrow(self,iid_argv=None):
+        def abspos(x, y, ox, oy):
+            self.setcursorvalue(iid, 'Gradient', (y-oy)/(x-ox)*1000)
+            return (x, y)
+        def listselect():
+            self.cursorlist.focus(item=iid)
+            self.cursorlist.selection_set(iid)
+        def trackpos(x, y, ox, oy, key):
+            result = self.trackdata
+        
+            if x >= result[0]:
+                rx = 10
+                grad = result[6]
+                ry = rx*result[6]/1000
+            else:
+                rx = -10
+                grad = -result[6]
+                ry = rx*result[6]/1000
+                
+            self.setcursorvalue(iid, 'Gradient', grad)
+            #print(grad,ox,oy,rx,ry,x,y)
+            return (ox+rx, oy+ry)
         if iid_argv is None:
             iid = self.edit_vals['ID'].get()
         else:
             iid = iid_argv
         marker_dist = self.cursors[iid].get_value('Distance')
         marker_height = self.cursors[iid].get_value('Height')
-        self.cursors[iid].arrow.start(lambda x,y: (x,y),lambda x: print('end'),marker_dist, marker_height)
+        trackkey = self.edit_vals['Track'].get()
+        if trackkey == '@absolute':
+            self.cursors[iid].arrow.start(lambda x,y: abspos(x,y, marker_dist, marker_height),\
+                                          lambda x: listselect(),\
+                                          marker_dist, marker_height)
+        else:
+            self.cursors[iid].arrow.start(lambda x,y: trackpos(x,y, marker_dist, marker_height, trackkey),\
+                                          lambda x: listselect(),\
+                                          marker_dist, marker_height, drawtangent=False)
