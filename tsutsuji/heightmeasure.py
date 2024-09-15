@@ -252,6 +252,10 @@ class Interface():
         
         self.cursorlist.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
 
+        self.cursorlist_scrollbar = ttk.Scrollbar(self.mainframe, orient=tk.VERTICAL, command=self.cursorlist.yview)
+        self.cursorlist_scrollbar.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+        self.cursorlist.configure(yscrollcommand=self.cursorlist_scrollbar.set)
+
         self.edit_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.edit_frame.grid(column=0, row=1,sticky=(tk.E, tk.W))
 
