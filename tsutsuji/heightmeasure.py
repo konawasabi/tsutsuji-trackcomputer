@@ -116,7 +116,7 @@ class arrow():
         element = vector/np.sqrt(vector[0]**2+vector[1]**2)
         self.lastmousepoint = np.array([x, y])
         self.setobj(element)
-        if self.drawtangent:
+        if self.drawtangent and direct == False:
             self.settangent(position,self.pointed_pos)
         self.canvas.draw()
     def setobj(self,element,reset=False):
@@ -124,9 +124,11 @@ class arrow():
             if reset:
                 #self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
                 #element = (np.cos(np.deg2rad(self.p.values[2].get())),np.sin(np.deg2rad(self.p.values[2].get())))
-                marker_pos = self.marker.markerpos.get_lines()[0].get_data()
-                self.pointed_pos = np.array([marker_pos[0][0],marker_pos[1][0]])
-                element = (1,0)
+                #marker_pos = self.marker.markerpos.get_lines()[0].get_data()
+                #self.pointed_pos = np.array([marker_pos[0][0],marker_pos[1][0]])
+                #self.pointed_pos = np.array(position)
+                #element = (1,0)
+                pass
             figsize = self.figure.get_size_inches()
             self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],\
                                              angles='xy',scale=2,scale_units='inches',width=0.0025*7/figsize[0])
@@ -177,7 +179,7 @@ class Interface():
             self.arrow = None
             self.makeobj(parent,ax,canvas,color,ch_main,ch_measure,figure)
             self.iid = iid
-            self.values = {'Track':'', 'Distance':0, 'Height':0,'Gradient':0, 'Color':color}
+            self.values = {'Track':'', 'Distance':0, 'Height':0,'Gradient':0, 'Color':color, 'Angle':0.0}
         def makeobj(self,parent,ax,canvas,color,ch_main,ch_measure,figure):
             self.marker = drawcursor.marker_simple(parent,ax,canvas,color,ch_main,ch_measure)
             self.arrow = arrow(parent,self.marker,figure)
@@ -191,8 +193,10 @@ class Interface():
             self.marker.move(event)
         def press(self,event):
             self.marker.press(event)
-        def setpos(self,x,y,direct=False):
+        def setpos(self,x,y,direct=False,angle=None):
             self.marker.setpos(x,y,direct)
+            if angle is not None:
+                self.arrow.setobj((np.cos(angle),np.sin(angle)),reset=True)
         def setobj(self):
             self.marker.setobj()
         def deleteobj(self):
@@ -488,7 +492,7 @@ class Interface():
         for key in self.cursors.keys():
             data = self.cursorlist.item(key,'values')
             self.cursors[key].setobj()
-            self.cursors[key].setpos(float(data[1]),float(data[2]),direct=True)
+            self.cursors[key].setpos(float(data[1]),float(data[2]),direct=True,angle=self.cursors[key].get_value('Angle'))
         self.mainwindow.fig_canvas.draw()
     def choosecursorcolor(self,event=None):
         inputdata = colorchooser.askcolor(color=self.edit_vals['Color'].get())
@@ -497,6 +501,7 @@ class Interface():
     def movearrow(self,iid_argv=None):
         def abspos(x, y, ox, oy):
             self.setcursorvalue(iid, 'Gradient', (y-oy)/(x-ox)*1000)
+            self.setcursorvalue(iid, 'Angle', self.pos2angle(x,y,ox,oy))
             return (x, y)
         def listselect():
             self.cursorlist.focus(item=iid)
@@ -505,15 +510,16 @@ class Interface():
             result = self.trackdata
         
             if x >= result[0]:
-                rx = 10
+                rx = 1
                 grad = result[6]
                 ry = rx*result[6]/1000
             else:
-                rx = -10
+                rx = -1
                 grad = -result[6]
                 ry = rx*result[6]/1000
                 
             self.setcursorvalue(iid, 'Gradient', grad)
+            self.setcursorvalue(iid, 'Angle', self.pos2angle(rx+ox,ry+oy,ox,oy))
             #print(grad,ox,oy,rx,ry,x,y)
             return (ox+rx, oy+ry)
         if iid_argv is None:
@@ -531,3 +537,9 @@ class Interface():
             self.cursors[iid].arrow.start(lambda x,y: trackpos(x,y, marker_dist, marker_height, trackkey),\
                                           lambda x: listselect(),\
                                           marker_dist, marker_height, drawtangent=False)
+    def pos2angle(self,x,y,ox,oy):
+        temp_angle = np.atan((y-oy)/(x-ox))
+        if x-ox>=0:
+            return temp_angle
+        else:
+            return np.pi + temp_angle
