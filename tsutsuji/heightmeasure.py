@@ -196,7 +196,7 @@ class Interface():
         def setpos(self,x,y,direct=False,angle=None):
             self.marker.setpos(x,y,direct)
             if angle is not None:
-                self.arrow.setobj((np.cos(angle),np.sin(angle)),reset=True)
+                self.arrow.setobj((np.cos(angle),np.sin(angle)))
         def setobj(self):
             self.marker.setobj()
         def deleteobj(self):
@@ -451,8 +451,16 @@ class Interface():
         self.cursors[iid].set_value(key, gradient)
         self.setcursorvalue(iid,key,gradient)
 
+        prevangle = self.cursors[iid].get_value('Angle')
+        if prevangle >= - np.pi/2 and prevangle < np.pi/2:
+            angle = self.pos2angle(1+dist,gradient/1000+height,dist,height)
+        else:
+            angle = self.pos2angle(-1+dist,gradient/1000+height,dist,height)
+        key = 'Angle'
+        self.setcursorvalue(iid,key,angle)
+
         self.cursors[iid].setpos(dist,\
-                                 height,direct=True)
+                                 height,direct=True,angle=angle)
 
         key = 'Color'
         self.cursors[iid].set_value(key, self.edit_vals[key].get())
@@ -491,6 +499,7 @@ class Interface():
     def replotCursors(self):
         for key in self.cursors.keys():
             data = self.cursorlist.item(key,'values')
+            self.cursors[key].deleteobj()
             self.cursors[key].setobj()
             self.cursors[key].setpos(float(data[1]),float(data[2]),direct=True,angle=self.cursors[key].get_value('Angle'))
         self.mainwindow.fig_canvas.draw()
@@ -500,7 +509,11 @@ class Interface():
             self.edit_vals['Color'].set(inputdata[1])
     def movearrow(self,iid_argv=None):
         def abspos(x, y, ox, oy):
-            self.setcursorvalue(iid, 'Gradient', (y-oy)/(x-ox)*1000)
+            if x-ox > 0:
+                grad = (y-oy)/(x-ox)*1000
+            else:
+                grad = -(y-oy)/(x-ox)*1000
+            self.setcursorvalue(iid, 'Gradient', grad)
             self.setcursorvalue(iid, 'Angle', self.pos2angle(x,y,ox,oy))
             return (x, y)
         def listselect():
