@@ -241,7 +241,7 @@ class Interface():
         self.cursorlist = ttk.Treeview(self.clistframe, column=self.cursorlist_column,height=5)
         self.cursorlist.bind('<<TreeviewSelect>>',self.click_cursorlist)
         self.cursorlist.column('#0',width=40)
-        self.cursorlist.column('Track',width=100)
+        self.cursorlist.column('Track')#,width=100)
         self.cursorlist.column('Distance',width=80)
         self.cursorlist.column('Height',width=80)
         self.cursorlist.column('Gradient',width=80)
@@ -276,7 +276,7 @@ class Interface():
 
         i = 'Track'
         self.edit_vals[i] = tk.StringVar(value='')
-        self.edit_entries[i] = ttk.Combobox(self.edit_frame, textvariable = self.edit_vals[i],width=10)
+        self.edit_entries[i] = ttk.Combobox(self.edit_frame, textvariable = self.edit_vals[i])#,width=10)
 
         i = 'Distance'
         self.edit_vals[i] = tk.DoubleVar(value=0)
