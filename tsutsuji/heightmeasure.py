@@ -173,7 +173,7 @@ class arrow():
         
 
 class Interface():
-    class unitCursor(drawcursor.marker_simple):
+    class unitCursor():
         def __init__(self,parent,ax,canvas,color,ch_main,ch_measure,iid,figure):
             self.marker = None
             self.arrow = None
@@ -235,7 +235,10 @@ class Interface():
         else:
             self.sendtopmost()
     def create_widgets(self):
-        self.cursorlist = ttk.Treeview(self.mainframe, column=self.cursorlist_column,height=5)
+        self.clistframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.clistframe.grid(column=0, row=0,sticky=(tk.E, tk.W))
+        
+        self.cursorlist = ttk.Treeview(self.clistframe, column=self.cursorlist_column,height=5)
         self.cursorlist.bind('<<TreeviewSelect>>',self.click_cursorlist)
         self.cursorlist.column('#0',width=40)
         self.cursorlist.column('Track',width=100)
@@ -252,7 +255,7 @@ class Interface():
         
         self.cursorlist.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
 
-        self.cursorlist_scrollbar = ttk.Scrollbar(self.mainframe, orient=tk.VERTICAL, command=self.cursorlist.yview)
+        self.cursorlist_scrollbar = ttk.Scrollbar(self.clistframe, orient=tk.VERTICAL, command=self.cursorlist.yview)
         self.cursorlist_scrollbar.grid(column=1, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.cursorlist.configure(yscrollcommand=self.cursorlist_scrollbar.set)
 
@@ -298,20 +301,22 @@ class Interface():
             self.edit_entries[i].grid(column=j, row=1,sticky=(tk.E, tk.W))
             j+=1
 
+        self.edit_b = ttk.Button(self.edit_frame, text='Edit', command=self.editcursor)
+        self.edit_b.grid(column=j, row=1,sticky=(tk.E, tk.W))
+        
+
         self.button_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.button_frame.grid(column=0, row=2,sticky=(tk.E, tk.W))
 
         self.add_b = ttk.Button(self.button_frame, text='Add', command=self.addcursor)
         self.grad_b = ttk.Button(self.button_frame, text='Grad.', command=self.movearrow)
         self.move_b = ttk.Button(self.button_frame, text='Move', command=self.movecursor)
-        self.edit_b = ttk.Button(self.button_frame, text='Edit', command=self.editcursor)
         self.del_b = ttk.Button(self.button_frame, text='Delete', command=self.deletecursor)
 
         self.add_b.grid(column=0, row=0,sticky=(tk.N, tk.E, tk.W))
         self.grad_b.grid(column=1, row=0,sticky=(tk.N, tk.E, tk.W))
         self.move_b.grid(column=2, row=0,sticky=(tk.N, tk.E, tk.W))
-        self.edit_b.grid(column=3, row=0,sticky=(tk.N, tk.E, tk.W))
-        self.del_b.grid(column=4, row=0,sticky=(tk.N, tk.E, tk.W))
+        self.del_b.grid(column=10, row=0,sticky=(tk.N, tk.E, tk.W))
         
     def closewindow(self):
         if self.master is not None:
