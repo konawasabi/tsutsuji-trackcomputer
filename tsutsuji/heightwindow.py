@@ -208,7 +208,15 @@ class HeightWindow():
             for key in self.plot_marker_ctrl_v.keys():
                 if self.plot_marker_ctrl_v[key].get():
                     self.trackcontrol.plot_symbols_height(self.ax_height,key)
+
+            # カーソル
             self.measureUI.replotCursors()
+
+            # 背景画像
+            plotsize = self.fig_height.get_size_inches()
+            for i in self.backimg.imgs.keys():
+                self.backimg.imgs[i].show(self.ax_height,as_ratio=plotsize[1]/plotsize[0],ymag=1)
+            
             self.fig_canvas.draw()
     def reloadcfg(self):
         self.measureUI.reload_trackkeys()
