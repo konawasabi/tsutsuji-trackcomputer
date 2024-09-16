@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2022 konawasabi
+#    Copyright 2021-2024 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ class BackImgControl():
         self.master = None
     def create_window(self):
         if self.master == None:
-            self.master = tk.Toplevel(self.mainwindow)
+            self.master = tk.Toplevel(self.mainwindow.master)
             self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
             self.mainframe.columnconfigure(0, weight=1)
             self.mainframe.rowconfigure(0, weight=1)

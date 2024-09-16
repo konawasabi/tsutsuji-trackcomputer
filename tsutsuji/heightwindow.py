@@ -27,6 +27,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from . import heightmeasure
+from . import backimg
 
 class HeightWindow():
     def __init__(self,mainwindow):
@@ -34,6 +35,7 @@ class HeightWindow():
         self.master = None
         self.trackcontrol = self.mainwindow.trackcontrol
         self.measureUI = heightmeasure.Interface(self)
+        self.backimg = backimg.BackImgControl(self)
 
         self.distance_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.height_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
@@ -152,7 +154,7 @@ class HeightWindow():
 
         # ---
 
-        self.backimg_b = ttk.Button(self.button_frame, text='BackImg.', command = None)
+        self.backimg_b = ttk.Button(self.button_frame, text='BackImg.', command = self.backimg.create_window)
         self.backimg_b.grid(column=0, row=2,sticky=(tk.E,tk.W))
         
         self.measure_b = ttk.Button(self.button_frame, text='Measure', command = self.measureUI.create_window)
