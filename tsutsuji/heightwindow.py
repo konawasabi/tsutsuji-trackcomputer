@@ -27,7 +27,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from . import heightmeasure
-from . import backimg
+from . import backimg_height
 
 class HeightWindow():
     def __init__(self,mainwindow):
@@ -35,7 +35,7 @@ class HeightWindow():
         self.master = None
         self.trackcontrol = self.mainwindow.trackcontrol
         self.measureUI = heightmeasure.Interface(self)
-        self.backimg = backimg.BackImgControl(self)
+        self.backimg = backimg_height.BackImgControl_Height(self)
 
         self.distance_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.height_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
@@ -215,7 +215,7 @@ class HeightWindow():
             # 背景画像
             plotsize = self.fig_height.get_size_inches()
             for i in self.backimg.imgs.keys():
-                self.backimg.imgs[i].show(self.ax_height,as_ratio=plotsize[1]/plotsize[0],ymag=1)
+                self.backimg.imgs[i].show(self.ax_height,as_ratio=plotsize[1]/plotsize[0])
             
             self.fig_canvas.draw()
     def reloadcfg(self):
