@@ -257,12 +257,12 @@ class BackImgControl():
     def load_setting(self,path=None):
         if path is None:
             path = filedialog.askopenfilename()
+            for key in self.imglist_sb.get_children():
+                self.imglist_sb.delete(key)
         conf = configparser.ConfigParser()
         conf.read(path)
         self.conf_path = path
 
-        for key in self.imglist_sb.get_children():
-            self.imglist_sb.delete(key)
         self.imgs = {}
         for sections in conf.sections():
             self.imgs[sections]=self.BackImgData(sections)
@@ -276,9 +276,10 @@ class BackImgControl():
             self.imgs[sections].rotrad = float(conf[sections]['rot'])
             self.imgs[sections].alpha = float(conf[sections]['alpha'])
             self.imgs[sections].scale = float(conf[sections]['scale'])
-            
-            self.imglist_sb.insert('',tk.END, sections, text=sections)
-            self.imglist_sb.selection_set(sections)
+
+            if path is None:
+                self.imglist_sb.insert('',tk.END, sections, text=sections)
+                self.imglist_sb.selection_set(sections)
         self.mainwindow.drawall()
     def sendtopmost(self,event=None):
         self.master.lift()

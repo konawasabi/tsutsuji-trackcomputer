@@ -45,6 +45,7 @@ class Config():
                         'owntrack':None,\
                         'output_path':'./result',\
                         'backimg':None,\
+                        'backimg_height':None,\
                         'check_u':True,\
                         'output_digit':3}
         if '@TSUTSUJI_GENERAL' in sections:
@@ -61,6 +62,8 @@ class Config():
             self.general['output_path'] = self.path_parent.joinpath(pathlib.Path(self.general['output_path']))
             if self.general['backimg'] is not None:
                 self.general['backimg'] = self.path_parent.joinpath(pathlib.Path(self.general['backimg']))
+            if self.general['backimg_height'] is not None:
+                self.general['backimg_height'] = self.path_parent.joinpath(pathlib.Path(self.general['backimg_height']))
                 
         self.track_data = self.get_trackdata(self.track_keys)
         for tk in self.track_keys:

@@ -296,6 +296,10 @@ class mainwindow(ttk.Frame):
             self.backimgctrl.load_setting(path = self.trackcontrol.conf.general['backimg'])
         elif self.backimgctrl.conf_path is not None:
             self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
+        if self.trackcontrol.conf.general['backimg_height'] is not None:
+            self.heightwindow.backimg.load_setting(path = self.trackcontrol.conf.general['backimg_height'])
+        elif self.heightwindow.backimg.conf_path is not None:
+            self.heightwindow.backimg.load_setting(path = self.heightwindow.backimg.conf_path)
         self.trackwindow.reset_treevalue()
         self.measurewindow.reload_trackkeys()
         self.heightwindow.reloadcfg()
