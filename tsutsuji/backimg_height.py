@@ -84,7 +84,7 @@ class BackImgControl_Height():
                            trans_f[0](self.width), \
                            trans_f[1](self.height),\
                            trans_f[1](0),]
-            print(self.extent)
+            #print(self.extent)
         def show(self,ax,as_ratio=1,ymag=1):
             if self.toshow:
                 self.reshape()
@@ -163,14 +163,14 @@ class BackImgControl_Height():
 
             
             self.x0_e = ttk.Entry(self.input_frame, textvariable=self.pos_img0[0],width=5)
-            self.x1_e = ttk.Entry(self.input_frame, textvariable=self.pos_img1[0],width=5)
             self.y0_e = ttk.Entry(self.input_frame, textvariable=self.pos_img0[1],width=5)
+            self.x1_e = ttk.Entry(self.input_frame, textvariable=self.pos_img1[0],width=5)
             self.y1_e = ttk.Entry(self.input_frame, textvariable=self.pos_img1[1],width=5)
             
             
             self.d0_e = ttk.Entry(self.input_frame, textvariable=self.pos_plot0[0],width=5)
-            self.d1_e = ttk.Entry(self.input_frame, textvariable=self.pos_plot1[0],width=5)
             self.h0_e = ttk.Entry(self.input_frame, textvariable=self.pos_plot0[1],width=5)
+            self.d1_e = ttk.Entry(self.input_frame, textvariable=self.pos_plot1[0],width=5)
             self.h1_e = ttk.Entry(self.input_frame, textvariable=self.pos_plot1[1],width=5)
             
             #self.rot_e = ttk.Entry(self.input_frame, textvariable=self.rot_v,width=5)
@@ -207,6 +207,11 @@ class BackImgControl_Height():
             self.button_close = ttk.Button(self.button_frame, text="Close", command=self.master.destroy)
             self.button_close.grid(column=0, row=1, sticky=(tk.S))
             '''
+
+            self.button_save = ttk.Button(self.button_frame, text="Save", command=self.save_setting)
+            self.button_save.grid(column=0, row=1, sticky=(tk.E,tk.S))
+            self.button_load = ttk.Button(self.button_frame, text="Load", command=self.load_setting)
+            self.button_load.grid(column=1, row=1, sticky=(tk.E,tk.S))
 
             self.master.focus_set()
         else:
@@ -293,11 +298,16 @@ class BackImgControl_Height():
             for imgkey in self.imgs.keys():
                 fp.writelines('[{:s}]\n'.format(imgkey))
                 #fp.writelines('file = {:s}\n'.format(imgkey))
-                fp.writelines('rot = {:f}\n'.format(self.imgs[imgkey].rotrad))
+                #fp.writelines('rot = {:f}\n'.format(self.imgs[imgkey].rotrad))
                 fp.writelines('alpha = {:f}\n'.format(self.imgs[imgkey].alpha))
-                fp.writelines('scale = {:f}\n'.format(self.imgs[imgkey].scale))
-                fp.writelines('origin = {:f},{:f}\n'.format(self.imgs[imgkey].origin[0],self.imgs[imgkey].origin[1]))
-                fp.writelines('shift = {:f},{:f}\n'.format(self.imgs[imgkey].shift[0],self.imgs[imgkey].shift[1]))
+                #fp.writelines('scale = {:f}\n'.format(self.imgs[imgkey].scale))
+                #fp.writelines('origin = {:f},{:f}\n'.format(self.imgs[imgkey].origin[0],self.imgs[imgkey].origin[1]))
+                #fp.writelines('shift = {:f},{:f}\n'.format(self.imgs[imgkey].shift[0],self.imgs[imgkey].shift[1]))
+                fp.writelines('pos_img0 = {:f},{:f}\n'.format(self.imgs[imgkey].pos_img0[0],self.imgs[imgkey].pos_img0[1]))
+                fp.writelines('pos_img1 = {:f},{:f}\n'.format(self.imgs[imgkey].pos_img1[0],self.imgs[imgkey].pos_img1[1]))
+                fp.writelines('pos_plot0 = {:f},{:f}\n'.format(self.imgs[imgkey].pos_plot0[0],self.imgs[imgkey].pos_plot0[1]))
+                fp.writelines('pos_plot1 = {:f},{:f}\n'.format(self.imgs[imgkey].pos_plot1[0],self.imgs[imgkey].pos_plot1[1]))
+                
                 fp.writelines('\n')
             fp.close()
     def load_setting(self,path=None):
@@ -307,19 +317,30 @@ class BackImgControl_Height():
         conf.read(path)
         self.conf_path = path
 
+        for key in self.imglist_sb.get_children():
+            self.imglist_sb.delete(key)
         self.imgs = {}
         for sections in conf.sections():
             self.imgs[sections]=self.BackImgData(sections)
-            origin = conf[sections]['origin'].split(',')
-            self.imgs[sections].origin[0] = float(origin[0])
-            self.imgs[sections].origin[1] = float(origin[1])
-            shift = conf[sections]['shift'].split(',')
-            self.imgs[sections].shift[0] = float(shift[0])
-            self.imgs[sections].shift[1] = float(shift[1])
+            tmp = conf[sections]['pos_img0'].split(',')
+            self.imgs[sections].pos_img0[0] = float(tmp[0])
+            self.imgs[sections].pos_img0[1] = float(tmp[1])
+            tmp = conf[sections]['pos_img1'].split(',')
+            self.imgs[sections].pos_img1[0] = float(tmp[0])
+            self.imgs[sections].pos_img1[1] = float(tmp[1])
+            tmp = conf[sections]['pos_plot0'].split(',')
+            self.imgs[sections].pos_plot0[0] = float(tmp[0])
+            self.imgs[sections].pos_plot0[1] = float(tmp[1])
+            tmp = conf[sections]['pos_plot1'].split(',')
+            self.imgs[sections].pos_plot1[0] = float(tmp[0])
+            self.imgs[sections].pos_plot1[1] = float(tmp[1])
 
-            self.imgs[sections].rotrad = float(conf[sections]['rot'])
+            #self.imgs[sections].rotrad = float(conf[sections]['rot'])
             self.imgs[sections].alpha = float(conf[sections]['alpha'])
-            self.imgs[sections].scale = float(conf[sections]['scale'])
+            #self.imgs[sections].scale = float(conf[sections]['scale'])
+            
+            self.imglist_sb.insert('',tk.END, sections, text=sections)
+            self.imglist_sb.selection_set(sections)
         self.mainwindow.drawall()
     def sendtopmost(self,event=None):
         self.master.lift()
