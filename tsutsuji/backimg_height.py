@@ -46,7 +46,7 @@ class BackImgControl_Height():
             self.origin = [0,0]
             self.shift = [0,0]
             self.rotrad = 0
-            self.alpha = 0.5
+            self.alpha = 1.0
             self.extent = [0,width,0,height]
             self.scale = 1
 
