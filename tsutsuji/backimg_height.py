@@ -41,12 +41,19 @@ class BackImgControl_Height():
             self.toshow = True
             width  = self.output_data.shape[1]
             height = self.output_data.shape[0]
+            self.width = width
+            self.height = height
             self.origin = [0,0]
             self.shift = [0,0]
             self.rotrad = 0
             self.alpha = 0.5
-            self.extent = [0,width,0,-height]
+            self.extent = [0,width,0,height]
             self.scale = 1
+
+            self.pos_img0 = [0,0]
+            self.pos_img1 = [width,height]
+            self.pos_plot0 = [0,0]
+            self.pos_plot1 = [width, height]
         def rotate(self,rad):
             pass
             def rotmatrix(tau1):
@@ -69,8 +76,18 @@ class BackImgControl_Height():
             shape_rot = shape_rot + np.vstack((self.shift[0],self.shift[1]))
             
             self.extent = [min(shape_rot[0]),max(shape_rot[0]),min(shape_rot[1]),max(shape_rot[1])]
+        def reshape(self):
+            trans_f = [lambda x: (self.pos_plot1[0] - self.pos_plot0[0])/(self.pos_img1[0]-self.pos_img0[0])*(x - self.pos_img0[0]) + self.pos_plot0[0],\
+                       lambda y: (self.pos_plot1[1] - self.pos_plot0[1])/(self.pos_img1[1]-self.pos_img0[1])*(y - self.pos_img0[1]) + self.pos_plot0[1]]
+
+            self.extent = [trans_f[0](0), \
+                           trans_f[0](self.width), \
+                           trans_f[1](self.height),\
+                           trans_f[1](0),]
+            print(self.extent)
         def show(self,ax,as_ratio=1,ymag=1):
             if self.toshow:
+                self.reshape()
                 #self.rotate(self.rotrad)
                 #as_ratio_mod = (self.extent[1]-self.extent[0])/(self.extent[3]-self.extent[2])*as_ratio
                 ax.imshow(self.output_data,alpha=self.alpha,extent=[self.extent[0],self.extent[1],self.extent[3],self.extent[2]],aspect='auto')#,aspect=ymag)
@@ -104,38 +121,39 @@ class BackImgControl_Height():
             self.input_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
             self.input_frame.grid(column=0, row=1, sticky=(tk.E,tk.W))
 
-            self.xmin_l = ttk.Label(self.input_frame, text='xmin')
-            self.xmax_l = ttk.Label(self.input_frame, text='xmax')
-            self.ymin_l = ttk.Label(self.input_frame, text='ymin')
-            self.ymax_l = ttk.Label(self.input_frame, text='ymax')
+            self.x0_l = ttk.Label(self.input_frame, text='x0')
+            self.x1_l = ttk.Label(self.input_frame, text='x1')
+            self.y0_l = ttk.Label(self.input_frame, text='y0')
+            self.y1_l = ttk.Label(self.input_frame, text='y1')
             
-            self.rot_l = ttk.Label(self.input_frame, text='rotation')
+            #self.rot_l = ttk.Label(self.input_frame, text='rotation')
             self.alpha_l = ttk.Label(self.input_frame, text='alpha')
-            '''
-            self.xo_l = ttk.Label(self.input_frame, text='x0')
-            self.yo_l = ttk.Label(self.input_frame, text='y0')
-            self.xsh_l = ttk.Label(self.input_frame, text='xshift')
-            self.ysh_l = ttk.Label(self.input_frame, text='yshift')
-            self.scale_l = ttk.Label(self.input_frame, text='scale')
-            '''
+            
+            self.d0_l = ttk.Label(self.input_frame, text='dist0')
+            self.d1_l = ttk.Label(self.input_frame, text='dist1')
+            self.h0_l = ttk.Label(self.input_frame, text='h0')
+            self.h1_l = ttk.Label(self.input_frame, text='h1')
+            #self.scale_l = ttk.Label(self.input_frame, text='scale')
 
+            self.x0_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
+            self.y0_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
+            self.x1_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
+            self.y1_l.grid(column=2, row=1, sticky=(tk.E,tk.W))
             
-            self.xmin_l.grid(column=0, row=0, sticky=(tk.E,tk.W))
-            self.xmax_l.grid(column=0, row=1, sticky=(tk.E,tk.W))
-            self.ymin_l.grid(column=2, row=0, sticky=(tk.E,tk.W))
-            self.ymax_l.grid(column=2, row=1, sticky=(tk.E,tk.W))
-            
-            self.rot_l.grid(column=0, row=4, sticky=(tk.E,tk.W))
+            #self.rot_l.grid(column=0, row=4, sticky=(tk.E,tk.W))
             self.alpha_l.grid(column=2, row=4, sticky=(tk.E,tk.W))
-            '''
-            self.xo_l.grid(column=0, row=2, sticky=(tk.E,tk.W))
-            self.yo_l.grid(column=2, row=2, sticky=(tk.E,tk.W))
-            self.xsh_l.grid(column=0, row=3, sticky=(tk.E,tk.W))
-            self.ysh_l.grid(column=2, row=3, sticky=(tk.E,tk.W))
-            self.scale_l.grid(column=0, row=5, sticky=(tk.E,tk.W))
-            '''
+            
+            self.d0_l.grid(column=0, row=2, sticky=(tk.E,tk.W))
+            self.h0_l.grid(column=2, row=2, sticky=(tk.E,tk.W))
+            self.d1_l.grid(column=0, row=3, sticky=(tk.E,tk.W))
+            self.h1_l.grid(column=2, row=3, sticky=(tk.E,tk.W))
+            #self.scale_l.grid(column=0, row=5, sticky=(tk.E,tk.W))
 
-            self.extent = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+            #self.extent = [tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+            self.pos_img0 = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+            self.pos_img1 = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+            self.pos_plot0 = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
+            self.pos_plot1 = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
             self.rot_v = tk.DoubleVar(value=0)
             self.alpha_v = tk.DoubleVar(value=0)
             self.toshow_v = tk.BooleanVar(value=False)
@@ -144,38 +162,38 @@ class BackImgControl_Height():
             self.scale_v = tk.DoubleVar(value=1)
 
             
-            self.xmin_e = ttk.Entry(self.input_frame, textvariable=self.extent[0],width=5)
-            self.xmax_e = ttk.Entry(self.input_frame, textvariable=self.extent[1],width=5)
-            self.ymin_e = ttk.Entry(self.input_frame, textvariable=self.extent[2],width=5)
-            self.ymax_e = ttk.Entry(self.input_frame, textvariable=self.extent[3],width=5)
+            self.x0_e = ttk.Entry(self.input_frame, textvariable=self.pos_img0[0],width=5)
+            self.x1_e = ttk.Entry(self.input_frame, textvariable=self.pos_img1[0],width=5)
+            self.y0_e = ttk.Entry(self.input_frame, textvariable=self.pos_img0[1],width=5)
+            self.y1_e = ttk.Entry(self.input_frame, textvariable=self.pos_img1[1],width=5)
             
-            '''
-            self.xo_e = ttk.Entry(self.input_frame, textvariable=self.origin[0],width=5)
-            self.yo_e = ttk.Entry(self.input_frame, textvariable=self.origin[1],width=5)
-            self.xsh_e = ttk.Entry(self.input_frame, textvariable=self.shift[0],width=5)
-            self.ysh_e = ttk.Entry(self.input_frame, textvariable=self.shift[1],width=5)
-            '''
-            self.rot_e = ttk.Entry(self.input_frame, textvariable=self.rot_v,width=5)
+            
+            self.d0_e = ttk.Entry(self.input_frame, textvariable=self.pos_plot0[0],width=5)
+            self.d1_e = ttk.Entry(self.input_frame, textvariable=self.pos_plot1[0],width=5)
+            self.h0_e = ttk.Entry(self.input_frame, textvariable=self.pos_plot0[1],width=5)
+            self.h1_e = ttk.Entry(self.input_frame, textvariable=self.pos_plot1[1],width=5)
+            
+            #self.rot_e = ttk.Entry(self.input_frame, textvariable=self.rot_v,width=5)
             self.alpha_e = ttk.Entry(self.input_frame, textvariable=self.alpha_v,width=5)
-            self.scale_e = ttk.Entry(self.input_frame, textvariable=self.scale_v,width=5)
+            #self.scale_e = ttk.Entry(self.input_frame, textvariable=self.scale_v,width=5)
             self.show_chk = ttk.Checkbutton(self.input_frame, text='Show', variable=self.toshow_v)
 
             
-            self.xmin_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
-            self.xmax_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
-            self.ymin_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
-            self.ymax_e.grid(column=3, row=1, sticky=(tk.E,tk.W))
+            self.x0_e.grid(column=1, row=0, sticky=(tk.E,tk.W))
+            self.y0_e.grid(column=3, row=0, sticky=(tk.E,tk.W))
+            self.x1_e.grid(column=1, row=1, sticky=(tk.E,tk.W))
+            self.y1_e.grid(column=3, row=1, sticky=(tk.E,tk.W))
             
-            self.rot_e.grid(column=1, row=4, sticky=(tk.E,tk.W))
+            #self.rot_e.grid(column=1, row=4, sticky=(tk.E,tk.W))
             self.alpha_e.grid(column=3, row=4, sticky=(tk.E,tk.W))
             self.show_chk.grid(column=3, row=5, sticky=(tk.E,tk.W))
-            '''
-            self.xo_e.grid(column=1, row=2, sticky=(tk.E,tk.W))
-            self.yo_e.grid(column=3, row=2, sticky=(tk.E,tk.W))
-            self.xsh_e.grid(column=1, row=3, sticky=(tk.E,tk.W))
-            self.ysh_e.grid(column=3, row=3, sticky=(tk.E,tk.W))
-            self.scale_e.grid(column=1, row=5, sticky=(tk.E,tk.W))
-            '''
+            
+            self.d0_e.grid(column=1, row=2, sticky=(tk.E,tk.W))
+            self.h0_e.grid(column=3, row=2, sticky=(tk.E,tk.W))
+            self.d1_e.grid(column=1, row=3, sticky=(tk.E,tk.W))
+            self.h1_e.grid(column=3, row=3, sticky=(tk.E,tk.W))
+            #self.scale_e.grid(column=1, row=5, sticky=(tk.E,tk.W))
+            
 
             self.button_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
             self.button_frame.grid(column=0, row=2, sticky=(tk.E,tk.W))
@@ -211,10 +229,18 @@ class BackImgControl_Height():
     def showimg(self):
 
         selected = str(self.imglist_sb.selection()[0])
+        '''
         for i in [0,1,2,3]:
             tmp = self.extent[i].get()
             print(tmp)
             self.imgs[selected].extent[i] = float(tmp)
+        '''
+        for i in [0,1]:
+            self.imgs[selected].pos_img0[i]=float(self.pos_img0[i].get())
+            self.imgs[selected].pos_img1[i]=float(self.pos_img1[i].get())
+            self.imgs[selected].pos_plot0[i]=float(self.pos_plot0[i].get())
+            self.imgs[selected].pos_plot1[i]=float(self.pos_plot1[i].get())
+            
         self.imgs[selected].alpha = self.alpha_v.get()
         self.imgs[selected].toshow = self.toshow_v.get()
         '''
@@ -235,9 +261,12 @@ class BackImgControl_Height():
         if len(self.imglist_sb.selection())>0:
             selected = str(self.imglist_sb.selection()[0])
             #print('Hi',event,selected)
-            for i in [0,1,2,3]:
-                self.extent[i].set(self.imgs[selected].extent[i])
-            self.rot_v.set(self.imgs[selected].rotrad)
+            for i in [0,1]:
+                self.pos_img0[i].set(self.imgs[selected].pos_img0[i])
+                self.pos_img1[i].set(self.imgs[selected].pos_img1[i])
+                self.pos_plot0[i].set(self.imgs[selected].pos_plot0[i])
+                self.pos_plot1[i].set(self.imgs[selected].pos_plot1[i])
+            #self.rot_v.set(self.imgs[selected].rotrad)
             self.alpha_v.set(self.imgs[selected].alpha)
             self.toshow_v.set(self.imgs[selected].toshow)
             '''
