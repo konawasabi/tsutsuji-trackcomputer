@@ -234,11 +234,13 @@ class mainwindow(ttk.Frame):
         
         self.menu_file = tk.Menu(self.menubar)
         self.menu_compute = tk.Menu(self.menubar)
+        self.menu_height = tk.Menu(self.menubar)
         self.menu_option = tk.Menu(self.menubar)
         self.menu_help = tk.Menu(self.menubar)
         
         self.menubar.add_cascade(menu=self.menu_file, label='ファイル')
         self.menubar.add_cascade(menu=self.menu_compute, label='メイン処理')
+        self.menubar.add_cascade(menu=self.menu_height, label='Height')
         self.menubar.add_cascade(menu=self.menu_option, label='オプション')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
@@ -251,6 +253,13 @@ class mainwindow(ttk.Frame):
         self.menu_compute.add_command(label='Generate', command=self.generate_output, accelerator='Control+G')
         self.menu_compute.add_separator()
         self.menu_compute.add_command(label='Replot', command=self.drawall, accelerator='Return')
+
+        self.menu_height.add_command(label='Display...', command=self.heightwindow.create_window)
+        self.menu_height.add_command(label='Measure...', command=self.heightwindow.measureUI.create_window)
+        self.menu_height.add_separator()
+        self.menu_height.add_command(label='Backimg...', command=self.heightwindow.backimg.create_window)
+        self.menu_height.add_command(label='Load Backimg...', command=self.heightwindow.backimg.load_setting)
+        self.menu_height.add_command(label='Save Backimg...', command=self.heightwindow.backimg.save_setting)
         
         self.menu_option.add_command(label='Backimg...', command=self.backimgctrl.create_window)
         self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
@@ -261,8 +270,6 @@ class mainwindow(ttk.Frame):
         self.menu_option.add_command(label='Export Maptile...', command=self.staticmapctrl.export)
         self.menu_option.add_separator()
         self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
-        self.menu_option.add_separator()
-        self.menu_option.add_command(label='Height...', command=self.heightwindow.create_window)
         
         self.menu_help.add_command(label='ヘルプ...', command=self.open_webdocument)
         self.menu_help.add_command(label='Tsutsujiについて...', command=self.aboutwindow)

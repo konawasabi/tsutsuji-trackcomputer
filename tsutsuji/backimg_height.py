@@ -208,11 +208,13 @@ class BackImgControl_Height():
             self.button_close.grid(column=0, row=1, sticky=(tk.S))
             '''
 
+            '''
             self.button_save = ttk.Button(self.button_frame, text="Save", command=self.save_setting)
             self.button_save.grid(column=0, row=1, sticky=(tk.E,tk.S))
             self.button_load = ttk.Button(self.button_frame, text="Load", command=self.load_setting)
             self.button_load.grid(column=1, row=1, sticky=(tk.E,tk.S))
-
+            '''
+            
             self.master.focus_set()
         else:
             self.sendtopmost()
