@@ -240,7 +240,7 @@ class mainwindow(ttk.Frame):
         
         self.menubar.add_cascade(menu=self.menu_file, label='ファイル')
         self.menubar.add_cascade(menu=self.menu_compute, label='メイン処理')
-        self.menubar.add_cascade(menu=self.menu_height, label='Height')
+        self.menubar.add_cascade(menu=self.menu_height, label='高度')
         self.menubar.add_cascade(menu=self.menu_option, label='オプション')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         

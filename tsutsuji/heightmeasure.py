@@ -29,6 +29,7 @@ from kobushi import trackcoordinate
 
 from . import drawcursor
 from . import math
+from . import heightsolver
 
 '''
 from . import solver
@@ -213,6 +214,7 @@ class Interface():
         self.cursorlist_column = ('Track', 'Distance', 'Height', 'Gradient', 'Color')
         self.cursors = {}
         self.cursorcolors = itertools.cycle(['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf'])
+        self.heightsolver = None
     def create_window(self):
         if self.master is None:
             self.master = tk.Toplevel(self.mainwindow.master)
@@ -317,6 +319,11 @@ class Interface():
         self.grad_b.grid(column=1, row=0,sticky=(tk.N, tk.E, tk.W))
         self.move_b.grid(column=2, row=0,sticky=(tk.N, tk.E, tk.W))
         self.del_b.grid(column=10, row=0,sticky=(tk.N, tk.E, tk.W))
+
+        self.solver_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.solver_frame.grid(column=0, row=3,sticky=(tk.E, tk.W))
+        self.heightsolver = heightsolver.heightSolverUI(self.solver_frame)
+        self.heightsolver.create_widget()
         
     def closewindow(self):
         if self.master is not None:
