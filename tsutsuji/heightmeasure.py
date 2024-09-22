@@ -322,7 +322,7 @@ class Interface():
 
         self.solver_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.solver_frame.grid(column=0, row=3,sticky=(tk.E, tk.W))
-        self.heightsolver = heightsolver.heightSolverUI(self.solver_frame)
+        self.heightsolver = heightsolver.heightSolverUI(self.solver_frame, self.cursors)
         self.heightsolver.create_widget()
         
     def closewindow(self):
@@ -339,6 +339,7 @@ class Interface():
         self.cursors[iid] = self.unitCursor(self,self.mainwindow.ax_height,self.mainwindow.fig_canvas,color_temp,self.mainwindow.sendtopmost,self.sendtopmost,iid,self.mainwindow.fig_height)
         self.setcursorvalue(iid,'Track',self.edit_vals['Track'].get())
         self.setcursorvalue(iid,'Color',color_temp)
+        self.heightsolver.make_cursorlist()
         self.movecursor(iid_argv = iid)
     def setcursorvalue(self,iid,key,value):
         self.cursors[iid].set_value(key,value)
@@ -407,6 +408,8 @@ class Interface():
             self.cursorlist.delete(selected)
             self.cursors[selected].deleteobj()
             del self.cursors[selected]
+        
+        self.heightsolver.make_cursorlist()
     def resumecursor(self,iid):
         self.cursorlist.insert('','end',iid=iid,text=iid,\
                                values=(self.cursors[iid].get_value('Track'),\
@@ -419,7 +422,8 @@ class Interface():
                                   self.mainwindow.fig_canvas,\
                                   self.cursors[iid].get_value('Color'),\
                                   self.mainwindow.sendtopmost,\
-                                  self.sendtopmost)
+                                  self.sendtopmost,\
+                                  self.mainwindow.fig_height)
         self.cursors[iid].setobj()
         self.cursors[iid].setpos(self.cursors[iid].get_value('Distance'),self.cursors[iid].get_value('Height'),direct=True)
     def editcursor(self,iid=None):
@@ -482,7 +486,7 @@ class Interface():
         self.cursors[iid].set_value(key, self.edit_vals[key].get())
         self.setcursorvalue(iid,key,self.edit_vals[key].get())
         self.cursors[iid].setcolor(self.edit_vals[key].get())
-        
+        self.heightsolver.make_cursorlist()
     def make_trackkeylist(self):
         currentval = self.edit_vals['Track'].get()
 

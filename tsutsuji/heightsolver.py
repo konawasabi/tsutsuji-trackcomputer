@@ -34,10 +34,35 @@ from . import solver
 from . import curvetrackplot
 
 class heightSolverUI():
-    def __init__(self, parent):
+    def __init__(self, parent, cursorobj):
         self.parentframe = parent
+        self.cursorobj = cursorobj
     def create_widget(self):
         self.parentframe['borderwidth'] = 1
         self.parentframe['relief'] = 'solid'
         self.title = ttk.Label(self.parentframe, text='Gradient Solver',font=tk.font.Font(weight='bold'))
         self.title.grid(column=0, row=0, sticky=(tk.E,tk.W))
+
+        self.cursorframe = ttk.Frame(self.parentframe, padding='3 3 3 3')
+        self.cursorframe.grid(column=0, row=1, sticky=(tk.E,tk.W))
+        
+        self.cursor_vals = ('α', 'β', 'γ')
+        self.cursor_widgets = {}
+        pos=0
+        for key in self.cursor_vals:
+            self.cursor_widgets[key] = {}
+            self.cursor_widgets[key]['label'] = ttk.Label(self.cursorframe, text=key)
+            self.cursor_widgets[key]['label'].grid(column=pos*2, row=0, sticky=(tk.E,tk.W))
+            self.cursor_widgets[key]['var'] = tk.StringVar()
+            self.cursor_widgets[key]['cb'] = ttk.Combobox(self.cursorframe, textvariable=self.cursor_widgets[key]['var'], width=4)
+            self.cursor_widgets[key]['cb'].grid(column=pos*2+1, row=0, sticky=(tk.E,tk.W))
+            pos+=1
+        self.make_cursorlist()
+        
+    def make_cursorlist(self):
+        for key in self.cursor_vals:
+            #currentval = self.cursor_widgets[key]['var'].get()
+            self.cursor_widgets[key]['cb']['values'] = tuple(self.cursorobj.keys())
+        
+            
+            
