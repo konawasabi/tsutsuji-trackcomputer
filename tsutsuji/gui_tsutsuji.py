@@ -71,7 +71,7 @@ class mainwindow(ttk.Frame):
     def __init__(self, master):
         self.parent = master
         super().__init__(master, padding='3 3 3 3')
-        self.master.title('Tsutsuji')
+        self.master.title('Tsutsuji trackcomputer ver. {:s}'.format(__version__))
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.master.columnconfigure(0, weight=1)
         self.master.rowconfigure(0, weight=1)
