@@ -178,11 +178,9 @@ class heightSolverUI():
         param_str += '[Gradient fitting]\n'
         param_str += 'Inputs:\n'
         param_str += '   Fitmode:          {:s}\n'.format(fitmode)
-        param_str += '   Cursor α,β:       {:s}, {:s}\n'.format(iidA, iidB)
-        param_str += '   Distance α:       {:f}\n'.format(posA[0])
-        param_str += '   Gradient α:       {:f}\n'.format(posA[1])
-        param_str += '   Distance β:       {:f}\n'.format(posB[0])
-        param_str += '   Gradient β:       {:f}\n'.format(posB[1])
+        param_str += '   Cursor values:    (Distance, Gradient)\n'
+        param_str += '      α ({:s}):      ({:f}, {:f})\n'.format(iidA,posA[0],posA[1])
+        param_str += '      β ({:s}):      ({:f}, {:f})\n'.format(iidB,posB[0],posB[1])
         param_str += '   VCL α:            {:f}\n'.format(lenVC_A)
         param_str += '      (RVC α:        {:f})\n'.format(R_A)
         param_str += 'Results:\n'
