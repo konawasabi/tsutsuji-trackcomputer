@@ -322,7 +322,7 @@ class Interface():
 
         self.solver_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.solver_frame.grid(column=0, row=3,sticky=(tk.E, tk.W))
-        self.heightsolver = heightsolver.heightSolverUI(self.solver_frame, self.cursors)
+        self.heightsolver = heightsolver.heightSolverUI(self.solver_frame, self.cursors, self.mainwindow.ax_height, self.mainwindow.fig_canvas)
         self.heightsolver.create_widget()
         
     def closewindow(self):

@@ -134,3 +134,23 @@ class trackplot():
         else:
             tc1_tmp=(np.array([[0,0]]),0,0)    
         return tc1_tmp[1]
+    
+class slopetrackplot():
+    def __init__(self):
+        self.gradgen = trackcoordinate.gradient()
+        #self.result=np.array([[0,0]])
+    def generate_single(self,A,phiA,phiB,lenVC1,slen=0):
+        grA = np.tan(phiA)*1000
+        grB = np.tan(phiB)*1000
+
+        straightA = self.gradgen.straight(slen,grA)
+        VCA = self.gradgen.transition(lenVC1, grA, grB)
+        
+        result = np.vstack((np.array([0,0]),straightA))
+        result = np.vstack((result, result[-1] + VCA))
+
+        #result = np.dot(self.curvegen.rotate(phiA), result.T).T
+        result += A
+        return result
+
+        

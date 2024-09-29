@@ -34,9 +34,13 @@ from . import solver
 from . import curvetrackplot
 
 class heightSolverUI():
-    def __init__(self, parent, cursorobj):
+    def __init__(self, parent, cursorobj, ax, fig_canvas):
         self.parentframe = parent
         self.cursorobj = cursorobj
+        self.solver = solver.solver()
+        self.slgen = curvetrackplot.slopetrackplot()
+        self.ax = ax
+        self.fig_canvas = fig_canvas
     def create_widget(self):
         self.parentframe['borderwidth'] = 1
         self.parentframe['relief'] = 'solid'
@@ -92,14 +96,14 @@ class heightSolverUI():
         self.fitmode_label.grid(column=0, row=0, sticky=(tk.E))
         self.fitmode_list = ('1. α(fix)->β(free)',\
                              '2. α(free)->β(fix)',\
-                             '3. α(free)->β(free)')
+                             '3. α(free)->β(free), VCLα(fix)')
         self.fitmode_v = tk.StringVar(value=self.fitmode_list[0])
         self.fitmode_cb = ttk.Combobox(self.modeframe,textvariable=self.fitmode_v,height=len(self.fitmode_list),width=28)
         self.fitmode_cb.grid(column=1, row=0, sticky=(tk.E))
         self.fitmode_cb['values'] = self.fitmode_list
         self.fitmode_cb.state(["readonly"])
 
-        self.doit_b = ttk.Button(self.modeframe, text='Do It',command=None)
+        self.doit_b = ttk.Button(self.modeframe, text='Do It',command=self.execsolver)
         self.doit_b.grid(column=1, row=1, sticky=(tk.E,tk.W))
 
         self.mapsyntax_v = tk.BooleanVar(value=True)
@@ -110,6 +114,41 @@ class heightSolverUI():
         for key in self.cursor_vals:
             #currentval = self.cursor_widgets[key]['var'].get()
             self.cursor_widgets[key]['cb']['values'] = tuple(self.cursorobj.keys())
+    def execsolver(self):
+        mode = self.fitmode_v.get()
+        iid_A = self.cursor_widgets['α']['var'].get()
+        iid_B = self.cursor_widgets['β']['var'].get()
+        iid_C = self.cursor_widgets['γ']['var'].get()
+
+        lenVC_A = self.params_widgets['VCL α']['var'].get()
+        lenVC_B = self.params_widgets['VCL β']['var'].get()
+        grad1 = self.params_widgets['Gr. 1']['var'].get()
+
+        cursor_tmp = self.cursorobj[iid_A].values
+        pos_tmp = np.array([cursor_tmp['Distance'],cursor_tmp['Height']])
+        phi_tmp = cursor_tmp['Angle']
+        posA = pos_tmp
+        phiA = phi_tmp
+
+        cursor_tmp = self.cursorobj[iid_B].values
+        pos_tmp = np.array([cursor_tmp['Distance'],cursor_tmp['Height']])
+        phi_tmp = cursor_tmp['Angle']
+        posB = pos_tmp
+        phiB = phi_tmp
+
+        R = lenVC_A/(phiB - phiA)
+
+        print(mode, iid_A, iid_B, iid_C, lenVC_A, lenVC_B, grad1)
+        print(posA, posB, phiA, phiB, R)
+
+        result = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',R)
+        print(result)
+
+        trackpos = self.slgen.generate_single(posA,phiA,phiB,lenVC_A,slen=result[0])
+        print(trackpos)
+        self.ax.plot(trackpos[:,0], trackpos[:,1])
+        self.fig_canvas.draw()
         
+            
             
             
