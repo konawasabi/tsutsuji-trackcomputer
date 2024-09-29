@@ -129,25 +129,50 @@ class heightSolverUI():
         phi_tmp = cursor_tmp['Angle']
         posA = pos_tmp
         phiA = phi_tmp
+        grA = cursor_tmp['Gradient']
 
         cursor_tmp = self.cursorobj[iid_B].values
         pos_tmp = np.array([cursor_tmp['Distance'],cursor_tmp['Height']])
         phi_tmp = cursor_tmp['Angle']
         posB = pos_tmp
         phiB = phi_tmp
+        grB = cursor_tmp['Gradient']
 
         R = lenVC_A/(phiB - phiA)
 
-        print(mode, iid_A, iid_B, iid_C, lenVC_A, lenVC_B, grad1)
-        print(posA, posB, phiA, phiB, R)
+        #print(mode, iid_A, iid_B, iid_C, lenVC_A, lenVC_B, grad1)
+        #print(posA, posB, phiA, phiB, R)
 
         result = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',R)
-        print(result)
+        #print(result)
 
         trackpos = self.slgen.generate_single(posA,phiA,phiB,lenVC_A,slen=result[0])
-        print(trackpos)
+        #print(trackpos)
+        if self.mapsyntax_v.get():
+            mapsyntax = self.generate_mapsyntax(result, posA[0], grA, grB, lenVC_A)
+            print()
+            print(mapsyntax)
         self.ax.plot(trackpos[:,0], trackpos[:,1])
         self.fig_canvas.draw()
+    def generate_mapsyntax(self, result, distA, grA, grB, lenVC_A):
+        syntax_str = ''
+        syntax_str += '$pt_a = {:f};'.format(distA) + '\n'
+
+        shift = result[0]
+        tmp_dist = shift
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp_dist>=0 else '',tmp_dist) + '\n'
+
+        syntax_str += 'Gradient.Interpolate({:f});'.format(grA)+'\n'
+
+        tmp_dist = shift + lenVC_A
+        syntax_str += '$pt_a {:s}{:f};'.format('+' if tmp_dist>=0 else '',tmp_dist) + '\n'
+
+        syntax_str += 'Gradient.Interpolate({:f});'.format(grB)+'\n'
+
+        return syntax_str
+        
+        
+        
         
             
             
