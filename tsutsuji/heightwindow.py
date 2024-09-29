@@ -41,6 +41,9 @@ class HeightWindow():
         self.height_lim_v = [tk.DoubleVar(value=0),tk.DoubleVar(value=0)]
         self.dlim_auto_v = tk.BooleanVar(value=True)
         self.hlim_auto_v = tk.BooleanVar(value=True)
+        self.menu_height = None
+
+        self.menu_disable_list = ('Measure...', 'Backimg...', 'Load Backimg...', 'Save Backimg...')
 
         self.plot_marker_ctrl_v = {}
         position = 0
@@ -59,6 +62,10 @@ class HeightWindow():
             self.master.rowconfigure(0, weight=1)
 
             self.create_widgets()
+
+            if self.menu_height is not None:
+                for label in self.menu_disable_list:
+                    self.menu_height.entryconfigure(label, state='active')
         else:
             self.sendtopmost()
     def create_widgets(self):
@@ -167,6 +174,9 @@ class HeightWindow():
         self.master.withdraw()
         self.measureUI.closewindow()
         self.master = None
+        if self.menu_height is not None:
+            for label in self.menu_disable_list:
+                self.menu_height.entryconfigure(label, state='disabled')
     def sendtopmost(self,event=None):
         self.master.lift()
         self.master.focus_force()
@@ -220,4 +230,16 @@ class HeightWindow():
             self.fig_canvas.draw()
     def reloadcfg(self):
         self.measureUI.reload_trackkeys()
+    def create_menu(self):
+        if self.menu_height is None:
+            self.menu_height = self.mainwindow.menu_height
+            self.menu_height.add_command(label='Display...', command=self.create_window)
+            self.menu_height.add_command(label='Measure...', command=self.measureUI.create_window)
+            self.menu_height.add_separator()
+            self.menu_height.add_command(label='Backimg...', command=self.backimg.create_window)
+            self.menu_height.add_command(label='Load Backimg...', command=self.backimg.load_setting)
+            self.menu_height.add_command(label='Save Backimg...', command=self.backimg.save_setting)
+
+            for label in self.menu_disable_list:
+                self.menu_height.entryconfigure(label, state='disabled')
         

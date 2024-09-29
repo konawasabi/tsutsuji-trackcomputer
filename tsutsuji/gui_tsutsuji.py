@@ -254,12 +254,7 @@ class mainwindow(ttk.Frame):
         self.menu_compute.add_separator()
         self.menu_compute.add_command(label='Replot', command=self.drawall, accelerator='Return')
 
-        self.menu_height.add_command(label='Display...', command=self.heightwindow.create_window)
-        self.menu_height.add_command(label='Measure...', command=self.heightwindow.measureUI.create_window)
-        self.menu_height.add_separator()
-        self.menu_height.add_command(label='Backimg...', command=self.heightwindow.backimg.create_window)
-        self.menu_height.add_command(label='Load Backimg...', command=self.heightwindow.backimg.load_setting)
-        self.menu_height.add_command(label='Save Backimg...', command=self.heightwindow.backimg.save_setting)
+        self.heightwindow.create_menu()
         
         self.menu_option.add_command(label='Backimg...', command=self.backimgctrl.create_window)
         self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)

@@ -46,6 +46,7 @@ class heightSolverUI():
         self.parentframe['relief'] = 'solid'
         self.title = ttk.Label(self.parentframe, text='Gradient Solver',font=tk.font.Font(weight='bold'))
         self.title.grid(column=0, row=0, sticky=(tk.E,tk.W))
+        self.parentframe.columnconfigure(2, weight=1)
 
         self.spacerframe_1 = ttk.Frame(self.parentframe, padding='3 3 3 3')
         self.spacerframe_1.grid(column=1, row=0, sticky=(tk.E,tk.W))
