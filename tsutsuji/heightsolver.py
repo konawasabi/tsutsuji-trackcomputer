@@ -140,20 +140,20 @@ class heightSolverUI():
 
         R = lenVC_A/(phiB - phiA)
 
-        #print(mode, iid_A, iid_B, iid_C, lenVC_A, lenVC_B, grad1)
-        #print(posA, posB, phiA, phiB, R)
-
         result = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',R)
-        #print(result)
 
         trackpos = self.slgen.generate_single(posA,phiA,phiB,lenVC_A,slen=result[0])
-        #print(trackpos)
-        if self.mapsyntax_v.get():
-            mapsyntax = self.generate_mapsyntax(result, posA[0], grA, grB, lenVC_A)
-            print()
-            print(mapsyntax)
         self.ax.plot(trackpos[:,0], trackpos[:,1])
         self.fig_canvas.draw()
+
+        param_str = self.gen_paramstr_single(mode, result, iid_A, iid_B, posA, posB, lenVC_A, R)
+        print()
+        print(param_str)
+        
+        if self.mapsyntax_v.get():
+            mapsyntax = self.generate_mapsyntax(result, posA[0], grA, grB, lenVC_A)
+            print(mapsyntax)
+            
     def generate_mapsyntax(self, result, distA, grA, grB, lenVC_A):
         syntax_str = ''
         syntax_str += '$pt_a = {:f};'.format(distA) + '\n'
@@ -170,6 +170,24 @@ class heightSolverUI():
         syntax_str += 'Gradient.Interpolate({:f});'.format(grB)+'\n'
 
         return syntax_str
+    def gen_paramstr_single(self, fitmode, result, iidA, iidB, posA, posB, lenVC_A, R_A):
+        param_str = ''
+
+        #param_str += '\n'
+        param_str += '[Gradient fitting]\n'
+        param_str += 'Inputs:\n'
+        param_str += '   Fitmode:          {:s}\n'.format(fitmode)
+        param_str += '   Cursor α,β:       {:s}, {:s}\n'.format(iidA, iidB)
+        param_str += '   Distance α:       {:f}\n'.format(posA[0])
+        param_str += '   Gradient α:       {:f}\n'.format(posA[1])
+        param_str += '   Distance β:       {:f}\n'.format(posB[0])
+        param_str += '   Gradient β:       {:f}\n'.format(posB[1])
+        param_str += '   VCL α:            {:f}\n'.format(lenVC_A)
+        param_str += '      (RVC α:        {:f})\n'.format(R_A)
+        param_str += 'Results:\n'
+        #param_str += '   startPt:          ({:f}, {:f})\n'.format(result[1][0][0], result[1][0][1])
+        param_str += '   shift from pt. α: {:f}\n'.format(result[0])
+        return param_str
         
         
         
