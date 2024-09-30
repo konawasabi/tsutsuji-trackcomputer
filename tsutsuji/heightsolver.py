@@ -71,7 +71,7 @@ class heightSolverUI():
         self.paramsframe = ttk.Frame(self.parentframe, padding='3 3 3 3')
         self.paramsframe.grid(column=0, row=1, sticky=(tk.E,tk.W))
 
-        self.params_vals = ('VCL α', 'VCL β', 'Gr. 1')
+        self.params_vals = ('VCL α', 'VCL β', 'R α', 'R β')#, 'Gr. 1')
         self.params_widgets = {}
         pos=0
         row=0
@@ -95,9 +95,10 @@ class heightSolverUI():
 
         self.fitmode_label = ttk.Label(self.modeframe,text='mode')
         self.fitmode_label.grid(column=0, row=0, sticky=(tk.E))
-        self.fitmode_list = ('1. α(fix)->β(free)',\
-                             '2. α(free)->β(fix)',\
-                             '3. α(free)->β(free), VCLα(fix)')
+        self.fitmode_list = ('1. α->β, given VCLα',\
+                             '2. α->β, given Rα',\
+                             '3. α->β->γ, given VCLα,β',\
+                             '4. α->β->γ, given Rα,β',)
         self.fitmode_v = tk.StringVar(value=self.fitmode_list[0])
         self.fitmode_cb = ttk.Combobox(self.modeframe,textvariable=self.fitmode_v,height=len(self.fitmode_list),width=28)
         self.fitmode_cb.grid(column=1, row=0, sticky=(tk.E))
@@ -123,8 +124,10 @@ class heightSolverUI():
 
         lenVC_A = self.params_widgets['VCL α']['var'].get()
         lenVC_B = self.params_widgets['VCL β']['var'].get()
-        grad1 = self.params_widgets['Gr. 1']['var'].get()
-
+        #grad1 = self.params_widgets['Gr. 1']['var'].get()
+        RA = self.params_widgets['R α']['var'].get()
+        RB = self.params_widgets['R β']['var'].get()
+   
         cursor_tmp = self.cursorobj[iid_A].values
         pos_tmp = np.array([cursor_tmp['Distance'],cursor_tmp['Height']])
         phi_tmp = cursor_tmp['Angle']
@@ -139,21 +142,67 @@ class heightSolverUI():
         phiB = phi_tmp
         grB = cursor_tmp['Gradient']
 
-        R = lenVC_A/(phiB - phiA)
+        if '1.' in mode or '2.' in mode:
+            if '1.' in mode:
+                RA = lenVC_A/(phiB - phiA)
+            else:
+                if (phiB - phiA)<0:
+                    RA = abs(RA)*(-1)
+                else:
+                    RA = abs(RA)
+                lenVC_A = RA*(phiB - phiA)
+            result = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',RA)
 
-        result = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',R)
+            trackpos = self.slgen.generate_single(posA,phiA,phiB,lenVC_A,slen=result[0])
+            self.ax.plot(trackpos[:,0], trackpos[:,1])
+            self.fig_canvas.draw()
 
-        trackpos = self.slgen.generate_single(posA,phiA,phiB,lenVC_A,slen=result[0])
-        self.ax.plot(trackpos[:,0], trackpos[:,1])
-        self.fig_canvas.draw()
+            param_str = self.gen_paramstr_single(mode, result, iid_A, iid_B, posA, posB, lenVC_A, RA)
+            print()
+            print(param_str)
 
-        param_str = self.gen_paramstr_single(mode, result, iid_A, iid_B, posA, posB, lenVC_A, R)
-        print()
-        print(param_str)
+            if self.mapsyntax_v.get():
+                mapsyntax = self.generate_mapsyntax(result, posA[0], grA, grB, lenVC_A)
+                print(mapsyntax)
+        elif '3.' in mode or '4.' in mode:
+            cursor_tmp = self.cursorobj[iid_C].values
+            pos_tmp = np.array([cursor_tmp['Distance'],cursor_tmp['Height']])
+            phi_tmp = cursor_tmp['Angle']
+            posC = pos_tmp
+            phiC = phi_tmp
+            grC = cursor_tmp['Gradient']
+
+            if '3.' in mode:
+                RA = lenVC_A/(phiB - phiA)
+                RB = lenVC_B/(phiC - phiB)
+            else:
+                if (phiB - phiA)<0:
+                    RA = abs(RA)*(-1)
+                else:
+                    RA = abs(RA)
+                if (phiC - phiB)<0:
+                    RB = abs(RB)*(-1)
+                else:
+                    RB = abs(RB)
+                lenVC_A = RA*(phiB - phiA)
+                lenVC_B = RB*(phiC - phiB)
+                
+                
+
+            resultA = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',RA)
+            trackposA = self.slgen.generate_single(posA,phiA,phiB,lenVC_A,slen=resultA[0])
+            resultB = self.solver.curvetrack_relocation(posB,phiB,posC,phiC,0,0,'line',RB)
+            trackposB = self.slgen.generate_single(posB,phiB,phiC,lenVC_B,slen=resultB[0])
+            #print(resultA)
+            #print(resultB)
+            #print(trackposA)
+            #print(trackposB)
+
+            trackpos = np.vstack((trackposA,trackposB))
+
+            self.ax.plot(trackpos[:,0], trackpos[:,1])
+            self.fig_canvas.draw()
         
-        if self.mapsyntax_v.get():
-            mapsyntax = self.generate_mapsyntax(result, posA[0], grA, grB, lenVC_A)
-            print(mapsyntax)
             
     def generate_mapsyntax(self, result, distA, grA, grB, lenVC_A):
         syntax_str = ''
