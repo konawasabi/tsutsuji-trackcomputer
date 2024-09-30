@@ -162,7 +162,7 @@ class heightSolverUI():
             print(param_str)
 
             if self.mapsyntax_v.get():
-                mapsyntax = self.generate_mapsyntax(result, posA[0], grA, grB, lenVC_A)
+                mapsyntax = self.generate_mapsyntax_single(result, posA[0], grA, grB, lenVC_A)
                 print(mapsyntax)
         elif '3.' in mode or '4.' in mode:
             cursor_tmp = self.cursorobj[iid_C].values
@@ -186,8 +186,6 @@ class heightSolverUI():
                     RB = abs(RB)
                 lenVC_A = RA*(phiB - phiA)
                 lenVC_B = RB*(phiC - phiB)
-                
-                
 
             resultA = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',RA)
             trackposA = self.slgen.generate_single(posA,phiA,phiB,lenVC_A,slen=resultA[0])
@@ -198,13 +196,24 @@ class heightSolverUI():
             #print(trackposA)
             #print(trackposB)
 
+            len_endslopeAtoB = np.linalg.norm(posB-resultA[1][0])
+            print(len_endslopeAtoB, posB[0]-resultA[1][0][0])
+
             trackpos = np.vstack((trackposA,trackposB))
 
             self.ax.plot(trackpos[:,0], trackpos[:,1])
             self.fig_canvas.draw()
-        
+
+            param_str = self.gen_paramstr_double(mode, resultA, resultB, iid_A, iid_B, iid_C, posA, posB, posC, lenVC_A, lenVC_B, RA, RB)#, len_endslopeAtoB)
+            print()
+            print(param_str)
+
+            if self.mapsyntax_v.get():
+                mapsyntax = self.generate_mapsyntax_single(resultA, posA[0], grA, grB, lenVC_A)
+                mapsyntax += self.generate_mapsyntax_single(resultB, posB[0], grB, grC, lenVC_B)
+                print(mapsyntax)
             
-    def generate_mapsyntax(self, result, distA, grA, grB, lenVC_A):
+    def generate_mapsyntax_single(self, result, distA, grA, grB, lenVC_A):
         syntax_str = ''
         syntax_str += '$pt_a = {:f};'.format(distA) + '\n'
 
@@ -235,6 +244,26 @@ class heightSolverUI():
         param_str += 'Results:\n'
         #param_str += '   startPt:          ({:f}, {:f})\n'.format(result[1][0][0], result[1][0][1])
         param_str += '   shift from pt. α: {:f}\n'.format(result[0])
+        return param_str
+    def gen_paramstr_double(self, fitmode, resultA, resultB, iidA, iidB, iidC, posA, posB, posC, lenVC_A, lenVC_B, R_A, R_B):
+        param_str = ''
+
+        #param_str += '\n'
+        param_str += '[Gradient fitting]\n'
+        param_str += 'Inputs:\n'
+        param_str += '   Fitmode:          {:s}\n'.format(fitmode)
+        param_str += '   Cursor values:    (Distance, Gradient)\n'
+        param_str += '      α ({:s}):      ({:f}, {:f})\n'.format(iidA,posA[0],posA[1])
+        param_str += '      β ({:s}):      ({:f}, {:f})\n'.format(iidB,posB[0],posB[1])
+        param_str += '      γ ({:s}):      ({:f}, {:f})\n'.format(iidC,posC[0],posC[1])
+        param_str += '   VCL α:            {:f}\n'.format(lenVC_A)
+        param_str += '      (RVC α:        {:f})\n'.format(R_A)
+        param_str += '   VCL β:            {:f}\n'.format(lenVC_B)
+        param_str += '      (RVC β:        {:f})\n'.format(R_B)
+        param_str += 'Results:\n'
+        #param_str += '   startPt:          ({:f}, {:f})\n'.format(result[1][0][0], result[1][0][1])
+        param_str += '   shift from pt. α: {:f}\n'.format(resultA[0])
+        param_str += '   shift from pt. β: {:f}\n'.format(resultB[0])
         return param_str
         
         
