@@ -64,46 +64,10 @@ class arrow():
         self.move_id = self.canvas.mpl_connect('motion_notify_event',self.move)
 
         self.pointed_pos = np.array([x,y])
-
-        '''
-        self.track_key = self.p.values[3].get()
-        self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
-        self.p.parentwindow.sendtopmost()
-        '''
     def move(self,event):
         if event.xdata is not None and event.ydata is not None:
             self.setpos(event.xdata,event.ydata)
-        '''
-        position = np.array([event.xdata,event.ydata])
-        if event.xdata is not None and event.ydata is not None:
-            if self.track_key == '@absolute':
-                vector = (position - self.pointed_pos)
-                element = vector/np.sqrt(vector[0]**2+vector[1]**2)
-                self.lastmousepoint = np.array([event.xdata, event.ydata])
-            else:
-                v_marker = (position - self.pointed_pos)
-                v_track = np.array([np.cos(self.marker.prev_trackpos[4]),np.sin(self.marker.prev_trackpos[4])])
-                if np.dot(v_marker, v_track) > 0:
-                    vector = v_track
-                    element = vector
-                else:
-                    vector = np.array([np.cos(self.marker.prev_trackpos[4]-np.pi),np.sin(self.marker.prev_trackpos[4]-np.pi)])
-                    element = vector
-            self.setobj(element)
-            if self.track_key == '@absolute':
-                self.settangent(position)
-            self.canvas.draw()
-
-            sin = vector[1]/np.sqrt(vector[0]**2+vector[1]**2)
-            cos = vector[0]/np.sqrt(vector[0]**2+vector[1]**2)
-            theta = np.arccos(cos) if sin > 0 else -np.arccos(cos)
-            self.p.values[2].set(np.rad2deg(theta))
-            self.p.values_toshow[2].set('{:.3f}'.format(np.rad2deg(theta)))
-            self.p.parent.setdistance()
-        '''
     def press(self,event):
-        #if event.xdata is not None and event.ydata is not None:
-        #    self.setpos(event.xdata,event.ydata)
         self.pressfunc(self)
         self.ch_measure()
         self.canvas.mpl_disconnect(self.press_id)
@@ -123,12 +87,6 @@ class arrow():
     def setobj(self,element,reset=False):
         if self.pointerdir == None or reset:
             if reset:
-                #self.pointed_pos = np.array([self.p.values[0].get(),self.p.values[1].get()])
-                #element = (np.cos(np.deg2rad(self.p.values[2].get())),np.sin(np.deg2rad(self.p.values[2].get())))
-                #marker_pos = self.marker.markerpos.get_lines()[0].get_data()
-                #self.pointed_pos = np.array([marker_pos[0][0],marker_pos[1][0]])
-                #self.pointed_pos = np.array(position)
-                #element = (1,0)
                 pass
             figsize = self.figure.get_size_inches()
             self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],\
@@ -136,19 +94,6 @@ class arrow():
         else:
             self.pointerdir.set_UVC(element[0],element[1])
     def settangent(self,pointerpos,origin,reset=False):
-        '''
-        if self.p.values[3].get() == '@absolute':
-            if reset:
-                pointerpos = self.lastmousepoint
-            origin = np.array([self.p.values[0].get(),self.p.values[1].get()])
-            diff = pointerpos - origin
-            diagonal = np.dot(math.rotate(np.pi),diff) + origin
-
-            if self.tangentline == None or reset:
-                self.tangentline, = self.ax.plot([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]],'k--',alpha=0.25)
-            else:
-                self.tangentline.set_data([diagonal[0],pointerpos[0]],[diagonal[1],pointerpos[1]])
-        '''
         if reset:
             pointerpos = self.lastmousepoint
         diff = pointerpos - origin
