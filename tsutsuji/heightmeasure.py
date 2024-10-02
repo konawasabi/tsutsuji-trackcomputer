@@ -77,13 +77,15 @@ class arrow():
             position = np.array([x,y])
         else:
             position = self.posfunc(x,y)
-        vector = (position - self.pointed_pos)
-        element = vector/np.sqrt(vector[0]**2+vector[1]**2)
-        self.lastmousepoint = np.array([x, y])
-        self.setobj(element)
-        if self.drawtangent and direct == False:
-            self.settangent(position,self.pointed_pos)
-        self.canvas.draw()
+
+        if position != (None, None):
+            vector = (position - self.pointed_pos)
+            element = vector/np.sqrt(vector[0]**2+vector[1]**2)
+            self.lastmousepoint = np.array([x, y])
+            self.setobj(element)
+            if self.drawtangent and direct == False:
+                self.settangent(position,self.pointed_pos)
+            self.canvas.draw()
     def setobj(self,element,reset=False):
         if self.pointerdir == None or reset:
             if reset:
@@ -476,30 +478,32 @@ class Interface():
         def abspos(x, y, ox, oy):
             if x-ox > 0:
                 grad = (y-oy)/(x-ox)*1000
+                self.setcursorvalue(iid, 'Gradient', grad)
+                self.setcursorvalue(iid, 'Angle', self.pos2angle(x,y,ox,oy))
+                return (x, y)
             else:
-                grad = -(y-oy)/(x-ox)*1000
-            self.setcursorvalue(iid, 'Gradient', grad)
-            self.setcursorvalue(iid, 'Angle', self.pos2angle(x,y,ox,oy))
-            return (x, y)
+                #grad = -(y-oy)/(x-ox)*1000
+                return (None, None)
         def listselect():
             self.cursorlist.focus(item=iid)
             self.cursorlist.selection_set(iid)
         def trackpos(x, y, ox, oy, key):
             result = self.trackdata
         
-            if x >= result[0]:
+            if x > result[0]:
                 rx = 1
                 grad = result[6]
                 ry = rx*result[6]/1000
+                self.setcursorvalue(iid, 'Gradient', grad)
+                self.setcursorvalue(iid, 'Angle', self.pos2angle(rx+ox,ry+oy,ox,oy))
+                #print(grad,ox,oy,rx,ry,x,y)
+                return (ox+rx, oy+ry)
             else:
-                rx = -1
-                grad = -result[6]
-                ry = rx*result[6]/1000
-                
-            self.setcursorvalue(iid, 'Gradient', grad)
-            self.setcursorvalue(iid, 'Angle', self.pos2angle(rx+ox,ry+oy,ox,oy))
-            #print(grad,ox,oy,rx,ry,x,y)
-            return (ox+rx, oy+ry)
+                #rx = -1
+                #grad = -result[6]
+                #ry = rx*result[6]/1000
+                return (None, None)
+            
         if iid_argv is None:
             iid = self.edit_vals['ID'].get()
         else:
