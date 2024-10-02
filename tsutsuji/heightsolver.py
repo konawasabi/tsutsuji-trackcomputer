@@ -196,8 +196,8 @@ class heightSolverUI():
             #print(trackposA)
             #print(trackposB)
 
-            len_endslopeAtoB = np.linalg.norm(posB-resultA[1][0])
-            print(len_endslopeAtoB, posB[0]-resultA[1][0][0])
+            #len_endslopeAtoB = np.linalg.norm(posB-resultA[1][0])
+            #print(len_endslopeAtoB, posB[0]-resultA[1][0][0])
 
             trackpos = np.vstack((trackposA,trackposB))
 

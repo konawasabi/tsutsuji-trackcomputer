@@ -86,10 +86,11 @@ class arrow():
             if self.drawtangent and direct == False:
                 self.settangent(position,self.pointed_pos)
             self.canvas.draw()
-    def setobj(self,element,reset=False):
+    def setobj(self,element,reset=False,origin=None):
         if self.pointerdir == None or reset:
             if reset:
-                pass
+                self.deleteobj()
+                self.pointed_pos = origin
             figsize = self.figure.get_size_inches()
             self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],\
                                              angles='xy',scale=2,scale_units='inches',width=0.0025*7/figsize[0])
@@ -144,7 +145,9 @@ class Interface():
         def setpos(self,x,y,direct=False,angle=None):
             self.marker.setpos(x,y,direct)
             if angle is not None:
-                self.arrow.setobj((np.cos(angle),np.sin(angle)))
+                self.arrow.setobj((np.cos(angle),np.sin(angle)),origin=(x,y),reset = direct)
+            else:
+                self.arrow.setobj((np.cos(self.values['angle']),np.sin(self.values['angle'])),origin=(x,y),reset = direct)
         def setobj(self):
             self.marker.setobj()
         def deleteobj(self):
