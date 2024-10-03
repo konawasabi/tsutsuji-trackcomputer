@@ -151,9 +151,13 @@ class heightSolverUI():
                 else:
                     RA = abs(RA)
                 lenVC_A = RA*(phiB - phiA)
-            result = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',RA)
 
-            trackpos = self.slgen.generate_single(posA,phiA,phiB,lenVC_A,slen=result[0])
+            if lenVC_A != 0:
+                result = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',RA)
+            else:
+                result = math.crosspoint_2lines(posA,np.array([np.cos(phiA),np.sin(phiA)]),posB,np.array([np.cos(phiB),np.sin(phiB)]))
+
+            trackpos = self.slgen.generate_single(posA,phiA,posB,phiB,lenVC_A,slen=result[0])
             self.ax.plot(trackpos[:,0], trackpos[:,1])
             self.fig_canvas.draw()
 
@@ -187,10 +191,17 @@ class heightSolverUI():
                 lenVC_A = RA*(phiB - phiA)
                 lenVC_B = RB*(phiC - phiB)
 
-            resultA = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',RA)
-            trackposA = self.slgen.generate_single(posA,phiA,phiB,lenVC_A,slen=resultA[0])
-            resultB = self.solver.curvetrack_relocation(posB,phiB,posC,phiC,0,0,'line',RB)
-            trackposB = self.slgen.generate_single(posB,phiB,phiC,lenVC_B,slen=resultB[0])
+            if lenVC_A != 0:
+                resultA = self.solver.curvetrack_relocation(posA,phiA,posB,phiB,0,0,'line',RA)
+            else:
+                resultA = math.crosspoint_2lines(posA,np.array([np.cos(phiA),np.sin(phiA)]),posB,np.array([np.cos(phiB),np.sin(phiB)]))
+            trackposA = self.slgen.generate_single(posA,phiA,posB,phiB,lenVC_A,slen=resultA[0])
+
+            if lenVC_B != 0:
+                resultB = self.solver.curvetrack_relocation(posB,phiB,posC,phiC,0,0,'line',RB)
+            else:
+                resultB = math.crosspoint_2lines(posB,np.array([np.cos(phiB),np.sin(phiB)]),posC,np.array([np.cos(phiC),np.sin(phiC)]))
+            trackposB = self.slgen.generate_single(posB,phiB,posC,phiC,lenVC_B,slen=resultB[0])
             #print(resultA)
             #print(resultB)
             #print(trackposA)
