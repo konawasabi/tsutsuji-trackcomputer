@@ -381,7 +381,26 @@ def py2lat(y, z, L=85.05112878):
     return 180/np.pi*(np.arcsin(np.tanh(-np.pi/(2**(z+7))*y+np.arctanh(np.sin(np.pi/180*L)))))
 
 def crosspoint_2lines(A, eA, B, eB):
-    '''直線A+αeA と直線B+βeAの交点を求める
+    '''2直線X, Yの交点Pを求める
+
+    Args:
+         A  (ndarray): 直線Xの通過点
+         eA (ndarray): 直線Xの単位ベクトル
+         B  (ndarray): 直線Yの通過点
+         eB (ndarray): 直線Yの単位ベクトル
+
+    Return:
+        (ndarray, ndarray): (PAの距離, 点Pの座標)
     '''
     alpha = (np.dot(eA,eB)*np.dot(A-B,eB)-np.dot(A-B,eA))/(1-(np.dot(eA,eB))**2)
     return (alpha,A+alpha*eA)
+
+def phi2el(phi):
+    '''角度phi [rad]の単位ベクトルを返す
+    Args:
+        phi (float): 求める単位ベクトルが座標軸に対してなす角 [rad]
+    Return:
+        np.array([float, float])
+    '''
+
+    return np.array([np.cos(phi),np.sin(phi)])
