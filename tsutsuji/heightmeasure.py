@@ -403,7 +403,12 @@ class Interface():
                                   self.sendtopmost,\
                                   self.mainwindow.fig_height)
         self.cursors[iid].setobj()
-        self.cursors[iid].setpos(self.cursors[iid].get_value('Distance'),self.cursors[iid].get_value('Height'),direct=True)
+        if self.cursors[iid].get_value('Track') == '@absolute':
+            self.cursors[iid].setpos(self.cursors[iid].get_value('Distance'),self.cursors[iid].get_value('Height'),direct=True)
+        else:
+            gradient = self.cursors[iid].get_value('Gradient')
+            angle = np.atan(gradient/1000)
+            self.cursors[iid].setpos(self.cursors[iid].get_value('Distance'),self.cursors[iid].get_value('Height'),direct=True,angle=angle)
     def editcursor(self,iid=None):
         if iid is None:
             iid = self.edit_vals['ID'].get()
@@ -519,7 +524,7 @@ class Interface():
             self.cursorlist.focus(item=iid)
             self.cursorlist.selection_set(iid)
         def trackpos(x, y, ox, oy, key):
-            result = self.trackdata
+            result = self.nearestpoint(ox,oy,key)
         
             if x > result[0]:
                 rx = 1
