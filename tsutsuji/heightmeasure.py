@@ -22,8 +22,10 @@ import numpy as np
 import tkinter as tk
 from tkinter import ttk
 import tkinter.colorchooser as colorchooser
+import tkinter.filedialog as filedialog
 import re
 import itertools
+import configparser
 
 from kobushi import trackcoordinate
 
@@ -266,10 +268,16 @@ class Interface():
         self.move_b = ttk.Button(self.button_frame, text='Move', command=self.movecursor)
         self.del_b = ttk.Button(self.button_frame, text='Delete', command=self.deletecursor)
 
+        self.load_b = ttk.Button(self.button_frame, text='Load', command=self.loadCursorData)
+        self.save_b = ttk.Button(self.button_frame, text='Save', command=self.saveCursorData)
+
         self.add_b.grid(column=0, row=0,sticky=(tk.N, tk.E, tk.W))
         self.grad_b.grid(column=1, row=0,sticky=(tk.N, tk.E, tk.W))
         self.move_b.grid(column=2, row=0,sticky=(tk.N, tk.E, tk.W))
         self.del_b.grid(column=10, row=0,sticky=(tk.N, tk.E, tk.W))
+        
+        self.load_b.grid(column=0, row=1,sticky=(tk.N, tk.E, tk.W))
+        self.save_b.grid(column=1, row=1,sticky=(tk.N, tk.E, tk.W))
 
         self.solver_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.solver_frame.grid(column=0, row=3,sticky=(tk.E, tk.W))
@@ -373,6 +381,12 @@ class Interface():
             self.cursors[selected].deleteobj()
             del self.cursors[selected]
         
+        self.heightsolver.make_cursorlist()
+    def deleteAllCursor(self):
+        for iid in self.cursors.keys():
+            self.cursorlist.delete(selected)
+            self.cursors[selected].deleteobj()
+            del self.cursors[selected]
         self.heightsolver.make_cursorlist()
     def resumecursor(self,iid):
         self.cursorlist.insert('','end',iid=iid,text=iid,\
@@ -542,3 +556,40 @@ class Interface():
             return temp_angle
         else:
             return np.pi + temp_angle
+    def saveCursorData(self,filepath=None):
+        config = configparser.ConfigParser()
+        for key in self.cursors.keys():
+            config[key] = {'iid': self.cursors[key].iid, **self.cursors[key].values}
+        if filepath is None:
+            filepath = filedialog.asksaveasfilename()
+        if filepath != '':
+            with open(filepath, 'w') as fp:
+                config.write(fp)
+    def loadCursorData(self,filepath=None):
+        if filepath is None:
+            filepath = filedialog.askopenfilename()
+        if filepath != '': 
+            config = configparser.ConfigParser()
+            config.read(filepath)
+            self.deleteAllCursor()
+            for key in config.sections():
+                iid = config[key]['iid']
+                self.cursors[iid] = self.unitCursor(self,\
+                                                    self.mainwindow.ax_height,\
+                                                    self.mainwindow.fig_canvas,\
+                                                    '#000000',\
+                                                    self.mainwindow.sendtopmost,\
+                                                    self.sendtopmost,iid,\
+                                                    self.mainwindow.fig_height)
+                for label in ('Track', 'Distance', 'Height', 'Gradient', 'Color', 'Angle'):
+                    if label in ('Distance', 'Height', 'Gradient', 'Angle'): 
+                        data = float(config[key][label])
+                    else:
+                        data = config[key][label]
+                    self.cursors[iid].set_value(label,data)
+                #self.cursors[iid].setcolor(self.cursors[iid].get_value('Color'))
+                self.resumecursor(iid)
+            self.heightsolver.make_cursorlist()
+
+                
+                
