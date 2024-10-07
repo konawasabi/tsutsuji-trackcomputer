@@ -85,7 +85,7 @@ class arrow():
             self.setobj(element)
             if self.drawtangent and direct == False:
                 self.settangent(position,self.pointed_pos)
-            self.canvas.draw()
+        self.canvas.draw()
     def setobj(self,element,reset=False,origin=None):
         if self.pointerdir == None or reset:
             if reset:
@@ -94,6 +94,7 @@ class arrow():
             figsize = self.figure.get_size_inches()
             self.pointerdir = self.ax.quiver(self.pointed_pos[0],self.pointed_pos[1],element[0],element[1],\
                                              angles='xy',scale=2,scale_units='inches',width=0.0025*7/figsize[0])
+            self.canvas.draw()
         else:
             self.pointerdir.set_UVC(element[0],element[1])
     def settangent(self,pointerpos,origin,reset=False):
@@ -147,7 +148,7 @@ class Interface():
             if angle is not None:
                 self.arrow.setobj((np.cos(angle),np.sin(angle)),origin=(x,y),reset = direct)
             else:
-                self.arrow.setobj((np.cos(self.values['angle']),np.sin(self.values['angle'])),origin=(x,y),reset = direct)
+                self.arrow.setobj((np.cos(self.values['Angle']),np.sin(self.values['Angle'])),origin=(x,y),reset = direct)
         def setobj(self):
             self.marker.setobj()
         def deleteobj(self):
@@ -325,16 +326,29 @@ class Interface():
         def listselect():
             self.cursorlist.focus(item=iid)
             self.cursorlist.selection_set(iid)
-        def click():
-            marker_dist = self.cursors[iid].get_value('Distance')
-            marker_height = self.cursors[iid].get_value('Height')
-            self.cursors[iid].arrow.start(lambda x,y: (x,y),lambda x: print('end'),marker_dist, marker_height)
+        def click_abs():
+            #marker_dist = self.cursors[iid].get_value('Distance')
+            #marker_height = self.cursors[iid].get_value('Height')
+            #self.cursors[iid].arrow.start(lambda x,y: (x,y),lambda x: print('end'),marker_dist, marker_height)
+            height = self.cursors[iid].get_value('Height')
+            dist = self.cursors[iid].get_value('Distance')
+            angle = self.cursors[iid].get_value('Angle')
+            #print(dist,height,angle)
+            self.cursors[iid].setpos(dist,height,direct=True)
+            listselect()
+        def click_track():
+            height = self.cursors[iid].get_value('Height')
+            dist = self.cursors[iid].get_value('Distance')
+            gradient = self.cursors[iid].get_value('Gradient')
+            angle = np.atan(gradient/1000)
+            self.cursors[iid].setpos(dist,height,direct=True,angle=angle)
+            listselect()
 
         trackkey = self.edit_vals['Track'].get()
         if trackkey == '@absolute':
-            self.cursors[iid].marker.start(lambda x,y: abspos(x,y), lambda self: listselect())
+            self.cursors[iid].marker.start(lambda x,y: abspos(x,y), lambda self: click_abs())
         else:
-            self.cursors[iid].marker.start(lambda x,y: trackpos(x,y,trackkey), lambda self: listselect())
+            self.cursors[iid].marker.start(lambda x,y: trackpos(x,y,trackkey), lambda self: click_track())
     def nearestpoint(self, x,y,track_key):
         inputpos = np.array([x,y])
         if '@' not in track_key:
