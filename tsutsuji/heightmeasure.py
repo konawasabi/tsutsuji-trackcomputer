@@ -383,10 +383,10 @@ class Interface():
         
         self.heightsolver.make_cursorlist()
     def deleteAllCursor(self):
-        for iid in self.cursors.keys():
-            self.cursorlist.delete(selected)
-            self.cursors[selected].deleteobj()
-            del self.cursors[selected]
+        for iid in tuple(self.cursors.keys()):
+            self.cursorlist.delete(iid)
+            self.cursors[iid].deleteobj()
+            del self.cursors[iid]
         self.heightsolver.make_cursorlist()
     def resumecursor(self,iid):
         self.cursorlist.insert('','end',iid=iid,text=iid,\
