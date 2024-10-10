@@ -23,6 +23,7 @@ import numpy as np
 import tkinter as tk
 from tkinter import ttk
 import tkinter.colorchooser as colorchooser
+import tkinter.scrolledtext as scrolledtext
 import re
 import itertools
 
@@ -33,6 +34,38 @@ from . import math
 from . import solver
 from . import curvetrackplot
 
+
+
+class solverDataManager():
+    class solverDataElement():
+        def __init__(self, id, trackcolor, trackpos, syntax_str, params_str):
+            self.id = id
+            self.trackcolor = trackcolor
+
+            self.trackpos = trackpos
+            self.syntax_str = syntax_str
+            self.params_str = params_str
+    def __init__(self):
+        self.coloriter = itertools.cycle(['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf'])
+        self.iditer = itertools.count(0)
+        self.data = {}
+    def add(self, trackpos, syntax_str, params_str, id=None, trackcolor=None):
+        if id is None:
+            id = next(self.iditer())
+        if trackcolor is None:
+            trackcolor = next(self.coloriter)
+
+        self.data[id] = solverDataElement(id, trackcolor, trackpos, syntax_str, params_str)
+        return (id, trackcolor)
+    def delete(self, id):
+        del self.data[id]
+    def set_trackcolor(self, id, color=None):
+        if color is None:
+            color = colorchooser.askcolor(color=self.data[id].trackcolor)
+        self.data[id].trackcolor = color
+
+        
+        
 class heightSolverUI():
     def __init__(self, parent, cursorobj, ax, fig_canvas):
         self.parentframe = parent
@@ -41,6 +74,7 @@ class heightSolverUI():
         self.slgen = curvetrackplot.slopetrackplot()
         self.ax = ax
         self.fig_canvas = fig_canvas
+        self.solverdata = solverDataManager()
     def create_widget(self):
         self.parentframe['borderwidth'] = 1
         self.parentframe['relief'] = 'solid'
@@ -48,11 +82,11 @@ class heightSolverUI():
         self.title.grid(column=0, row=0, sticky=(tk.E,tk.W))
         self.parentframe.columnconfigure(2, weight=1)
 
-        self.spacerframe_1 = ttk.Frame(self.parentframe, padding='3 3 3 3')
-        self.spacerframe_1.grid(column=1, row=0, sticky=(tk.E,tk.W))
+        self.controlframe = ttk.Frame(self.parentframe, padding='3 3 3 3')
+        self.controlframe.grid(column=0, row=1, sticky=(tk.E,tk.W))
 
-        self.cursorframe = ttk.Frame(self.parentframe, padding='3 3 3 3')
-        self.cursorframe.grid(column=2, row=0, sticky=(tk.E))
+        self.cursorframe = ttk.Frame(self.controlframe, padding='3 3 3 3')
+        self.cursorframe.grid(column=1, row=0, sticky=(tk.E))
         
         self.cursor_vals = ('α', 'β', 'γ')
         self.cursor_widgets = {}
@@ -68,7 +102,7 @@ class heightSolverUI():
             self.cursor_widgets[key]['cb'].state(["readonly"])
         self.make_cursorlist()
 
-        self.paramsframe = ttk.Frame(self.parentframe, padding='3 3 3 3')
+        self.paramsframe = ttk.Frame(self.controlframe, padding='3 3 3 3')
         self.paramsframe.grid(column=0, row=1, sticky=(tk.E,tk.W))
 
         self.params_vals = ('VCL α', 'VCL β', 'R α', 'R β')#, 'Gr. 1')
@@ -87,11 +121,8 @@ class heightSolverUI():
                 pos = 0
                 row+=1
 
-        self.spacerframe_2 = ttk.Frame(self.parentframe, padding='3 3 3 3')
-        self.spacerframe_2.grid(column=1, row=1, sticky=(tk.E,tk.W))
-
-        self.modeframe = ttk.Frame(self.parentframe, padding='3 3 3 3')
-        self.modeframe.grid(column=2, row=1, sticky=(tk.E))
+        self.modeframe = ttk.Frame(self.controlframe, padding='3 3 3 3')
+        self.modeframe.grid(column=1, row=1, sticky=(tk.E))
 
         self.fitmode_label = ttk.Label(self.modeframe,text='mode')
         self.fitmode_label.grid(column=0, row=0, sticky=(tk.E))
@@ -111,6 +142,47 @@ class heightSolverUI():
         self.mapsyntax_v = tk.BooleanVar(value=True)
         self.mapsyntax_b = ttk.Checkbutton(self.modeframe, text='mapsyntax', variable=self.mapsyntax_v,onvalue=True,offvalue=False)
         self.mapsyntax_b.grid(column=0, row=1, sticky=(tk.E))
+
+        self.managerframe = ttk.Frame(self.parentframe, padding='3 3 3 3')
+        self.managerframe.grid(column=0, row=2, sticky=(tk.E,tk.W))
+
+        self.solverdatatreeframe = ttk.Frame(self.managerframe, padding='3 3 3 3')
+        self.solverdatatreeframe.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+
+        self.solverdatatree = ttk.Treeview(self.solverdatatreeframe, column=('Color'), height=5)
+        self.solverdatatree.grid(column=0,row=0, sticky=(tk.E, tk.W))
+
+        self.solverdatatree.column('#0',width=50)
+        self.solverdatatree.column('Color',width=50)
+        self.solverdatatree.heading('#0',text='ID')
+        self.solverdatatree.heading('Color',text='Color')
+
+        self.solverdatatree_scrollbar = ttk.Scrollbar(self.solverdatatreeframe, orient=tk.VERTICAL, command=self.solverdatatree.yview)
+        self.solverdatatree_scrollbar.grid(column=1,row=0,sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.solverdatatree.configure(yscrollcommand=self.solverdatatree_scrollbar.set)
+
+        self.managerbuttonsframe = ttk.Frame(self.solverdatatreeframe, padding='3 3 3 3')
+        self.managerbuttonsframe.grid(column=0, row=1, sticky=(tk.W,tk.E))
+
+        self.manager_del_b = ttk.Button(self.managerbuttonsframe, text='Delete',command=None)
+        self.manager_del_b.grid(column=1, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.manager_color_b = ttk.Button(self.managerbuttonsframe, text='Color',command=None)
+        self.manager_color_b.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+
+        self.textboxframe =  ttk.Frame(self.managerframe, padding='3 3 3 3')
+        self.textboxframe.grid(column=2, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+
+        self.paramsboxlabel = ttk.Label(self.textboxframe, text='Parameters',font=tk.font.Font(weight='bold'))
+        self.paramsboxlabel.grid(column=0,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.paramsbox = scrolledtext.ScrolledText(self.textboxframe,width=40,height=10)
+        self.paramsbox.grid(column=0,row=1, sticky=(tk.N,tk.W,tk.E,tk.S))
+
+        self.syntaxboxlabel = ttk.Label(self.textboxframe, text='Syntax',font=tk.font.Font(weight='bold'))
+        self.syntaxboxlabel.grid(column=1,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.syntaxbox = scrolledtext.ScrolledText(self.textboxframe,width=40,height=10)
+        self.syntaxbox.grid(column=1,row=1, sticky=(tk.N,tk.W,tk.E,tk.S))
+
+        
             
     def make_cursorlist(self):
         for key in self.cursor_vals:
