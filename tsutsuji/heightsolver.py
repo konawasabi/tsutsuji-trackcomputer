@@ -51,12 +51,12 @@ class solverDataManager():
         self.data = {}
     def add(self, trackpos, syntax_str, params_str, id=None, trackcolor=None):
         if id is None:
-            id = next(self.iditer())
+            id = next(self.iditer)
         if trackcolor is None:
             trackcolor = next(self.coloriter)
 
-        self.data[id] = solverDataElement(id, trackcolor, trackpos, syntax_str, params_str)
-        return (id, trackcolor)
+        self.data[id] = self.solverDataElement(id, trackcolor, trackpos, syntax_str, params_str)
+        return id, trackcolor
     def delete(self, id):
         del self.data[id]
     def set_trackcolor(self, id, color=None):
@@ -147,7 +147,7 @@ class heightSolverUI():
         self.managerframe.grid(column=0, row=2, sticky=(tk.E,tk.W))
 
         self.solverdatatreeframe = ttk.Frame(self.managerframe, padding='3 3 3 3')
-        self.solverdatatreeframe.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.solverdatatreeframe.grid(column=1, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         self.solverdatatree = ttk.Treeview(self.solverdatatreeframe, column=('Color'), height=5)
         self.solverdatatree.grid(column=0,row=0, sticky=(tk.E, tk.W))
@@ -170,16 +170,16 @@ class heightSolverUI():
         self.manager_color_b.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         self.textboxframe =  ttk.Frame(self.managerframe, padding='3 3 3 3')
-        self.textboxframe.grid(column=2, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.textboxframe.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         self.paramsboxlabel = ttk.Label(self.textboxframe, text='Parameters',font=tk.font.Font(weight='bold'))
         self.paramsboxlabel.grid(column=0,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
-        self.paramsbox = scrolledtext.ScrolledText(self.textboxframe,width=40,height=10)
+        self.paramsbox = scrolledtext.ScrolledText(self.textboxframe,width=40,height=10)#,state='disabled')
         self.paramsbox.grid(column=0,row=1, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         self.syntaxboxlabel = ttk.Label(self.textboxframe, text='Syntax',font=tk.font.Font(weight='bold'))
         self.syntaxboxlabel.grid(column=1,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
-        self.syntaxbox = scrolledtext.ScrolledText(self.textboxframe,width=40,height=10)
+        self.syntaxbox = scrolledtext.ScrolledText(self.textboxframe,width=40,height=10)#,state='disabled')
         self.syntaxbox.grid(column=1,row=1, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         
@@ -230,16 +230,16 @@ class heightSolverUI():
                 result = math.crosspoint_2lines(posA,math.phi2el(phiA),posB,math.phi2el(phiB))
 
             trackpos = self.slgen.generate_single(posA,phiA,posB,phiB,lenVC_A,slen=result[0])
-            self.ax.plot(trackpos[:,0], trackpos[:,1])
-            self.fig_canvas.draw()
+            #self.ax.plot(trackpos[:,0], trackpos[:,1])
+            #self.fig_canvas.draw()
 
             param_str = self.gen_paramstr_single(mode, result, iid_A, iid_B, posA, posB, lenVC_A, RA)
-            print()
-            print(param_str)
+            #print()
+            #print(param_str)
 
-            if self.mapsyntax_v.get():
-                mapsyntax = self.generate_mapsyntax_single(result, posA[0], grA, grB, lenVC_A)
-                print(mapsyntax)
+            #if self.mapsyntax_v.get():
+            mapsyntax = self.generate_mapsyntax_single(result, posA[0], grA, grB, lenVC_A)
+            #print(mapsyntax)
         elif '3.' in mode or '4.' in mode:
             cursor_tmp = self.cursorobj[iid_C].values
             pos_tmp = np.array([cursor_tmp['Distance'],cursor_tmp['Height']])
@@ -284,17 +284,26 @@ class heightSolverUI():
 
             trackpos = np.vstack((trackposA,trackposB))
 
-            self.ax.plot(trackpos[:,0], trackpos[:,1])
-            self.fig_canvas.draw()
-
             param_str = self.gen_paramstr_double(mode, resultA, resultB, iid_A, iid_B, iid_C, posA, posB, posC, lenVC_A, lenVC_B, RA, RB)#, len_endslopeAtoB)
-            print()
-            print(param_str)
+            #print()
+            #print(param_str)
 
-            if self.mapsyntax_v.get():
-                mapsyntax = self.generate_mapsyntax_single(resultA, posA[0], grA, grB, lenVC_A)
-                mapsyntax += self.generate_mapsyntax_single(resultB, posB[0], grB, grC, lenVC_B)
-                print(mapsyntax)
+            mapsyntax = self.generate_mapsyntax_single(resultA, posA[0], grA, grB, lenVC_A)
+            mapsyntax += self.generate_mapsyntax_single(resultB, posB[0], grB, grC, lenVC_B)
+            #print(mapsyntax)
+
+        id, color = self.solverdata.add(trackpos, mapsyntax, param_str)
+
+        self.solverdatatree.insert('','end',iid=id,text=id,values=(color))
+
+        self.paramsbox.delete(0.,tk.END)
+        self.paramsbox.insert(0.,param_str)
+
+        self.syntaxbox.delete(0.,tk.END)
+        self.syntaxbox.insert(0.,mapsyntax)
+
+        self.ax.plot(trackpos[:,0], trackpos[:,1],color=color)
+        self.fig_canvas.draw()
             
     def generate_mapsyntax_single(self, result, distA, grA, grB, lenVC_A):
         syntax_str = ''
