@@ -38,31 +38,46 @@ from . import curvetrackplot
 
 class solverDataManager():
     class solverDataElement():
-        def __init__(self, id, trackcolor, trackpos, syntax_str, params_str):
+        def __init__(self, id, trackcolor, trackpos, syntax_str, params_str, plotobj = None):
             self.id = id
             self.trackcolor = trackcolor
 
             self.trackpos = trackpos
             self.syntax_str = syntax_str
             self.params_str = params_str
-    def __init__(self):
+
+            self.plotobj = plotobj
+    def __init__(self, ax, fig_canvas):
         self.coloriter = itertools.cycle(['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf'])
         self.iditer = itertools.count(0)
         self.data = {}
+
+        self.ax = ax
+        self.fig_canvas = fig_canvas
     def add(self, trackpos, syntax_str, params_str, id=None, trackcolor=None):
         if id is None:
-            id = next(self.iditer)
+            id = str(next(self.iditer))
         if trackcolor is None:
             trackcolor = next(self.coloriter)
 
         self.data[id] = self.solverDataElement(id, trackcolor, trackpos, syntax_str, params_str)
         return id, trackcolor
     def delete(self, id):
+        plotobj = self.data[id].plotobj
+        plotobj.remove()
         del self.data[id]
+        self.fig_canvas.draw()
     def set_trackcolor(self, id, color=None):
         if color is None:
             color = colorchooser.askcolor(color=self.data[id].trackcolor)
-        self.data[id].trackcolor = color
+        self.data[id].trackcolor = color[1]
+    def plot_track(self, id):
+        self.data[id].plotobj, = self.ax.plot(self.data[id].trackpos[:,0],self.data[id].trackpos[:,1],color = self.data[id].trackcolor)
+        self.fig_canvas.draw()
+    def set_plotcolor(self, id, color=None):
+        self.set_trackcolor(id,color)
+        self.data[id].plotobj.set_color(self.data[id].trackcolor)
+        self.fig_canvas.draw()
 
         
         
@@ -74,7 +89,7 @@ class heightSolverUI():
         self.slgen = curvetrackplot.slopetrackplot()
         self.ax = ax
         self.fig_canvas = fig_canvas
-        self.solverdata = solverDataManager()
+        self.solverdata = solverDataManager(ax, fig_canvas)
     def create_widget(self):
         self.parentframe['borderwidth'] = 1
         self.parentframe['relief'] = 'solid'
@@ -152,6 +167,7 @@ class heightSolverUI():
         self.solverdatatree = ttk.Treeview(self.solverdatatreeframe, column=('Color'), height=5)
         self.solverdatatree.grid(column=0,row=0, sticky=(tk.E, tk.W))
 
+        self.solverdatatree.bind('<<TreeviewSelect>>',self.click_solverdatatree)
         self.solverdatatree.column('#0',width=50)
         self.solverdatatree.column('Color',width=50)
         self.solverdatatree.heading('#0',text='ID')
@@ -164,9 +180,9 @@ class heightSolverUI():
         self.managerbuttonsframe = ttk.Frame(self.solverdatatreeframe, padding='3 3 3 3')
         self.managerbuttonsframe.grid(column=0, row=1, sticky=(tk.W,tk.E))
 
-        self.manager_del_b = ttk.Button(self.managerbuttonsframe, text='Delete',command=None)
+        self.manager_del_b = ttk.Button(self.managerbuttonsframe, text='Delete',command=self.delete_solverdatatree_data)
         self.manager_del_b.grid(column=1, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
-        self.manager_color_b = ttk.Button(self.managerbuttonsframe, text='Color',command=None)
+        self.manager_color_b = ttk.Button(self.managerbuttonsframe, text='Color',command=self.set_solverdatatree_color)
         self.manager_color_b.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         self.textboxframe =  ttk.Frame(self.managerframe, padding='3 3 3 3')
@@ -293,17 +309,13 @@ class heightSolverUI():
             #print(mapsyntax)
 
         id, color = self.solverdata.add(trackpos, mapsyntax, param_str)
+        self.solverdata.plot_track(id)
 
         self.solverdatatree.insert('','end',iid=id,text=id,values=(color))
+        self.solverdatatree.focus(item=id)
+        self.solverdatatree.selection_set(id)
 
-        self.paramsbox.delete(0.,tk.END)
-        self.paramsbox.insert(0.,param_str)
 
-        self.syntaxbox.delete(0.,tk.END)
-        self.syntaxbox.insert(0.,mapsyntax)
-
-        self.ax.plot(trackpos[:,0], trackpos[:,1],color=color)
-        self.fig_canvas.draw()
             
     def generate_mapsyntax_single(self, result, distA, grA, grB, lenVC_A):
         syntax_str = ''
@@ -357,6 +369,24 @@ class heightSolverUI():
         param_str += '   shift from pt. α: {:f}\n'.format(resultA[0])
         param_str += '   shift from pt. β: {:f}\n'.format(resultB[0])
         return param_str
+    def click_solverdatatree(self,event=None):
+        if event is not None:
+            id = self.solverdatatree.focus()
+            self.paramsbox.delete(0.,tk.END)
+            self.syntaxbox.delete(0.,tk.END)
+            if id in self.solverdata.data.keys():
+                self.paramsbox.insert(0.,self.solverdata.data[id].params_str)
+                self.syntaxbox.insert(0.,self.solverdata.data[id].syntax_str)
+    def set_solverdatatree_color(self,event=None):
+        id = self.solverdatatree.focus()
+        self.solverdata.set_plotcolor(id)
+        self.solverdatatree.item(id,values=(self.solverdata.data[id].trackcolor))
+    def delete_solverdatatree_data(self,event=None):
+        id = self.solverdatatree.focus()
+        self.solverdatatree.delete(id)
+        self.solverdata.delete(id)
+        
+        
         
         
         
