@@ -324,6 +324,7 @@ class Interface():
             self.setcursorvalue(iid,'Distance',result[0])
             self.setcursorvalue(iid,'Height',result[3])
             self.setcursorvalue(iid,'Gradient',result[6])
+            self.setcursorvalue(iid,'Angle',np.atan(result[6]/1000))
             self.trackdata = result
             return (result[0],result[3])
         
