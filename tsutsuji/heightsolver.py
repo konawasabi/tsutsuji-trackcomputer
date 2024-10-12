@@ -400,15 +400,24 @@ class heightSolverUI():
             parent = ET.SubElement(root, 'Height')
             elem_id = ET.SubElement(parent, 'id')
             elem_id.text = id
+            
+            trackpos_str = ''
+            for i in data.trackpos:
+                trackpos_str += '{:f}, {:f}\n'.format(i[0],i[1])
 
             elem_trackcolor = ET.SubElement(parent, 'trackcolor')
             elem_trackcolor.text = data.trackcolor
+
+            elem_trackpos = ET.SubElement(parent, 'trackpos')
+            elem_trackpos.text = trackpos_str
 
             elem_syntax_str = ET.SubElement(parent, 'syntax_str')
             elem_syntax_str.text = data.syntax_str
 
             elem_params_str = ET.SubElement(parent, 'params_str')
             elem_params_str.text = data.params_str
+
+
 
         print(ET.tostring(root, 'utf-8'))
         return root
