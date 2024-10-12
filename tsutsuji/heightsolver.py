@@ -74,10 +74,16 @@ class solverDataManager():
     def plot_track(self, id):
         self.data[id].plotobj, = self.ax.plot(self.data[id].trackpos[:,0],self.data[id].trackpos[:,1],color = self.data[id].trackcolor)
         self.fig_canvas.draw()
+    def replot_all(self):
+        if self.ax is not None and self.fig_canvas is not None:
+            for id in self.data.keys():
+                self.data[id].plotobj, = self.ax.plot(self.data[id].trackpos[:,0],self.data[id].trackpos[:,1],color = self.data[id].trackcolor)
+            self.fig_canvas.draw()
     def set_plotcolor(self, id, color=None):
         self.set_trackcolor(id,color)
         self.data[id].plotobj.set_color(self.data[id].trackcolor)
         self.fig_canvas.draw()
+    
 
         
         
@@ -89,8 +95,13 @@ class heightSolverUI():
         self.slgen = curvetrackplot.slopetrackplot()
         self.ax = ax
         self.fig_canvas = fig_canvas
-        self.solverdata = solverDataManager(ax, fig_canvas)
-    def create_widget(self):
+        self.solverdata = solverDataManager(self.ax, self.fig_canvas)
+    def create_widget(self, parentframe, ax, fig_canvas):
+        self.parentframe = parentframe
+        self.ax = ax
+        self.fig_canvas = fig_canvas
+        self.solverdata.ax = self.ax
+        self.solverdata.fig_canvas = self.fig_canvas
         self.parentframe['borderwidth'] = 1
         self.parentframe['relief'] = 'solid'
         self.title = ttk.Label(self.parentframe, text='Gradient Solver',font=tk.font.Font(weight='bold'))
@@ -176,6 +187,10 @@ class heightSolverUI():
         self.solverdatatree_scrollbar = ttk.Scrollbar(self.solverdatatreeframe, orient=tk.VERTICAL, command=self.solverdatatree.yview)
         self.solverdatatree_scrollbar.grid(column=1,row=0,sticky=(tk.N,tk.W,tk.E,tk.S))
         self.solverdatatree.configure(yscrollcommand=self.solverdatatree_scrollbar.set)
+
+        for id in self.solverdata.data.keys():
+            color = self.solverdata.data[id].trackcolor
+            self.solverdatatree.insert('','end',iid=id,text=id,values=(color))
 
         self.managerbuttonsframe = ttk.Frame(self.solverdatatreeframe, padding='3 3 3 3')
         self.managerbuttonsframe.grid(column=0, row=1, sticky=(tk.W,tk.E))
@@ -385,6 +400,8 @@ class heightSolverUI():
         id = self.solverdatatree.focus()
         self.solverdatatree.delete(id)
         self.solverdata.delete(id)
+    def replot(self):
+        self.solverdata.replot_all()
         
         
         

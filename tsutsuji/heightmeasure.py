@@ -167,7 +167,7 @@ class Interface():
         self.cursorlist_column = ('Track', 'Distance', 'Height', 'Gradient', 'Color')
         self.cursors = {}
         self.cursorcolors = itertools.cycle(['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf'])
-        self.heightsolver = None
+        self.heightsolver = heightsolver.heightSolverUI(None, self.cursors, None, None)
     def create_window(self):
         if self.master is None:
             self.master = tk.Toplevel(self.mainwindow.master)
@@ -281,8 +281,7 @@ class Interface():
 
         self.solver_frame = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.solver_frame.grid(column=0, row=3,sticky=(tk.E, tk.W))
-        self.heightsolver = heightsolver.heightSolverUI(self.solver_frame, self.cursors, self.mainwindow.ax_height, self.mainwindow.fig_canvas)
-        self.heightsolver.create_widget()
+        self.heightsolver.create_widget(self.solver_frame,self.mainwindow.ax_height, self.mainwindow.fig_canvas)
         
     def closewindow(self):
         if self.master is not None:
@@ -505,6 +504,7 @@ class Interface():
             self.cursors[key].deleteobj()
             self.cursors[key].setobj()
             self.cursors[key].setpos(float(data[1]),float(data[2]),direct=True,angle=self.cursors[key].get_value('Angle'))
+        self.heightsolver.replot()
         self.mainwindow.fig_canvas.draw()
     def choosecursorcolor(self,event=None):
         inputdata = colorchooser.askcolor(color=self.edit_vals['Color'].get())
