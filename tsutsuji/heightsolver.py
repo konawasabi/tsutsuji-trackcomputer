@@ -205,13 +205,13 @@ class heightSolverUI():
 
         self.paramsboxlabel = ttk.Label(self.textboxframe, text='Parameters',font=tk.font.Font(weight='bold'))
         self.paramsboxlabel.grid(column=0,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
-        self.paramsbox = scrolledtext.ScrolledText(self.textboxframe,width=40,height=10)#,state='disabled')
+        self.paramsbox = scrolledtext.ScrolledText(self.textboxframe,width=60,height=4)#,state='disabled')
         self.paramsbox.grid(column=0,row=1, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         self.syntaxboxlabel = ttk.Label(self.textboxframe, text='Syntax',font=tk.font.Font(weight='bold'))
-        self.syntaxboxlabel.grid(column=1,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
-        self.syntaxbox = scrolledtext.ScrolledText(self.textboxframe,width=40,height=10)#,state='disabled')
-        self.syntaxbox.grid(column=1,row=1, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.syntaxboxlabel.grid(column=0,row=2, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.syntaxbox = scrolledtext.ScrolledText(self.textboxframe,width=60,height=4)#,state='disabled')
+        self.syntaxbox.grid(column=0,row=3, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         
             
@@ -305,23 +305,13 @@ class heightSolverUI():
             else:
                 resultB = math.crosspoint_2lines(posB,math.phi2el(phiB),posC,math.phi2el(phiC))
             trackposB = self.slgen.generate_single(posB,phiB,posC,phiC,lenVC_B,slen=resultB[0])
-            #print(resultA)
-            #print(resultB)
-            #print(trackposA)
-            #print(trackposB)
-
-            #len_endslopeAtoB = np.linalg.norm(posB-resultA[1][0])
-            #print(len_endslopeAtoB, posB[0]-resultA[1][0][0])
 
             trackpos = np.vstack((trackposA,trackposB))
 
             param_str = self.gen_paramstr_double(mode, resultA, resultB, iid_A, iid_B, iid_C, posA, posB, posC, lenVC_A, lenVC_B, RA, RB)#, len_endslopeAtoB)
-            #print()
-            #print(param_str)
 
             mapsyntax = self.generate_mapsyntax_single(resultA, posA[0], grA, grB, lenVC_A)
             mapsyntax += self.generate_mapsyntax_single(resultB, posB[0], grB, grC, lenVC_B)
-            #print(mapsyntax)
 
         id, color = self.solverdata.add(trackpos, mapsyntax, param_str)
         self.solverdata.plot_track(id)
@@ -329,9 +319,7 @@ class heightSolverUI():
         self.solverdatatree.insert('','end',iid=id,text=id,values=(color))
         self.solverdatatree.focus(item=id)
         self.solverdatatree.selection_set(id)
-
-
-            
+        
     def generate_mapsyntax_single(self, result, distA, grA, grB, lenVC_A):
         syntax_str = ''
         syntax_str += '$pt_a = {:f};'.format(distA) + '\n'
