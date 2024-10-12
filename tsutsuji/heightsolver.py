@@ -26,6 +26,7 @@ import tkinter.colorchooser as colorchooser
 import tkinter.scrolledtext as scrolledtext
 import re
 import itertools
+import xml.etree.ElementTree as ET
 
 from kobushi import trackcoordinate
 
@@ -199,6 +200,8 @@ class heightSolverUI():
         self.manager_del_b.grid(column=1, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
         self.manager_color_b = ttk.Button(self.managerbuttonsframe, text='Color',command=self.set_solverdatatree_color)
         self.manager_color_b.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.manager_xml_b = ttk.Button(self.managerbuttonsframe, text='XML', command=self.save_solverdata_xml)
+        self.manager_xml_b.grid(column=2,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         self.textboxframe =  ttk.Frame(self.managerframe, padding='3 3 3 3')
         self.textboxframe.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
@@ -390,7 +393,25 @@ class heightSolverUI():
         self.solverdata.delete(id)
     def replot(self):
         self.solverdata.replot_all()
-        
+    def save_solverdata_xml(self):
+        root = ET.Element('SolverData')
+        for id in self.solverdata.data.keys():
+            data = self.solverdata.data[id]
+            parent = ET.SubElement(root, 'Height')
+            elem_id = ET.SubElement(parent, 'id')
+            elem_id.text = id
+
+            elem_trackcolor = ET.SubElement(parent, 'trackcolor')
+            elem_trackcolor.text = data.trackcolor
+
+            elem_syntax_str = ET.SubElement(parent, 'syntax_str')
+            elem_syntax_str.text = data.syntax_str
+
+            elem_params_str = ET.SubElement(parent, 'params_str')
+            elem_params_str.text = data.params_str
+
+        print(ET.tostring(root, 'utf-8'))
+        return root
         
         
         

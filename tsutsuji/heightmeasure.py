@@ -26,6 +26,7 @@ import tkinter.filedialog as filedialog
 import re
 import itertools
 import configparser
+import xml.etree.ElementTree as ET
 
 from kobushi import trackcoordinate
 
