@@ -202,6 +202,8 @@ class heightSolverUI():
         self.manager_color_b.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
         self.manager_xml_b = ttk.Button(self.managerbuttonsframe, text='XML', command=self.save_solverdata_xml)
         self.manager_xml_b.grid(column=2,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.manager_xmlread_b = ttk.Button(self.managerbuttonsframe, text='XMLread', command=self.load_solverdata_xml)
+        self.manager_xmlread_b.grid(column=3,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         self.textboxframe =  ttk.Frame(self.managerframe, padding='3 3 3 3')
         self.textboxframe.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
@@ -400,32 +402,51 @@ class heightSolverUI():
             parent = ET.SubElement(root, 'Height')
             elem_id = ET.SubElement(parent, 'id')
             elem_id.text = id
-            
-            trackpos_str = ''
-            for i in data.trackpos:
-                trackpos_str += '{:f}, {:f}\n'.format(i[0],i[1])
 
             elem_trackcolor = ET.SubElement(parent, 'trackcolor')
             elem_trackcolor.text = data.trackcolor
 
             elem_trackpos = ET.SubElement(parent, 'trackpos')
-            elem_trackpos.text = trackpos_str
+            for i in data.trackpos:
+                tmp_elem = ET.SubElement(elem_trackpos, 'position')
+                tmp_elem.text = '{:f}, {:f}'.format(i[0],i[1])
 
             elem_syntax_str = ET.SubElement(parent, 'syntax_str')
-            elem_syntax_str.text = data.syntax_str
+            elem_syntax_str.text = '{:s}'.format(data.syntax_str)
 
             elem_params_str = ET.SubElement(parent, 'params_str')
-            elem_params_str.text = data.params_str
+            elem_params_str.text =  '{:s}'.format(data.params_str)
 
-
-
-        print(ET.tostring(root, 'utf-8'))
+        #print(ET.tostring(root, 'utf-8'))
+        #tree = ET.ElementTree(root)
+        #tree.write('../solverdata.xml')
         return root
-        
-        
-        
-        
-        
-            
-            
-            
+    def load_solverdata_xml(self,tree=None):
+        tree = ET.parse('../solverdata.xml')
+        root = tree.getroot()
+        for SolverData in root.iter('SolverData'):
+            for Height in SolverData.iter('Height'):
+                id = Height.find('id').text
+                trackcolor = Height.find('trackcolor').text
+                syntax_str = Height.find('syntax_str').text
+                params_str = Height.find('params_str').text
+
+                trackpos_parent = Height.find('trackpos')
+                trackpos = []
+                for pos_elem in trackpos_parent.iter('position'):
+                    #print(trackpos_elem)
+                    elem_split = pos_elem.text.split(',')
+                    trackpos.append([float(elem_split[0]), float(elem_split[1])])
+                trackpos = np.array(trackpos)
+
+                self.solverdata.add(trackpos, syntax_str, params_str, id=id, trackcolor=trackcolor)
+
+                self.solverdata.plot_track(id)
+                self.solverdatatree.insert('','end',iid=id,text=id,values=(trackcolor))
+                '''
+                print(id)
+                print(trackcolor)
+                print(trackpos)
+                print(syntax_str)
+                print(params_str)
+                '''          
