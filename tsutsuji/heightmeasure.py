@@ -564,6 +564,8 @@ class Interface():
         else:
             return np.pi + temp_angle
     def saveCursorData(self,filepath=None):
+        self.saveCursorData_xml(filepath=filepath)
+    def saveCursorData_cfg(self,filepath=None):
         config = configparser.ConfigParser()
         for key in self.cursors.keys():
             config[key] = {'iid': self.cursors[key].iid, **self.cursors[key].values}
@@ -572,7 +574,41 @@ class Interface():
         if filepath != '':
             with open(filepath, 'w') as fp:
                 config.write(fp)
+    def saveCursorData_xml(self,filepath=None):
+        root = ET.Element('Cursor')
+
+        for key in self.cursors.keys():
+            parent = ET.SubElement(root, 'cHeight')
+            
+            elem_iid = ET.SubElement(parent, 'iid')
+            elem_iid.text = self.cursors[key].iid
+
+            elem_Track = ET.SubElement(parent, 'Track')
+            elem_Track.text = self.cursors[key].values['Track']
+
+            elem_Distance = ET.SubElement(parent, 'Distance')
+            elem_Distance.text = str(self.cursors[key].values['Distance'])
+
+            elem_Height = ET.SubElement(parent, 'Height')
+            elem_Height.text = str(self.cursors[key].values['Height'])
+            
+            elem_Gradient = ET.SubElement(parent, 'Gradient')
+            elem_Gradient.text = str(self.cursors[key].values['Gradient'])
+
+            elem_Color = ET.SubElement(parent, 'Color')
+            elem_Color.text = self.cursors[key].values['Color']
+            
+            elem_Angle = ET.SubElement(parent, 'Angle')
+            elem_Angle.text = str(self.cursors[key].values['Angle'])
+
+        if filepath is None:
+            filepath = filedialog.asksaveasfilename()
+        if filepath != '':
+            tree = ET.ElementTree(root)
+            tree.write(filepath)
     def loadCursorData(self,filepath=None):
+        self.loadCursorData_xml(filepath=filepath)
+    def loadCursorData_cfg(self,filepath=None):
         if filepath is None:
             filepath = filedialog.askopenfilename()
         if filepath != '': 
@@ -596,6 +632,30 @@ class Interface():
                     self.cursors[iid].set_value(label,data)
                 #self.cursors[iid].setcolor(self.cursors[iid].get_value('Color'))
                 self.resumecursor(iid)
+            self.heightsolver.make_cursorlist()
+    def loadCursorData_xml(self,filepath=None):
+        if filepath is None:
+            filepath = filedialog.askopenfilename()
+        if filepath != '':
+            tree = ET.parse(filepath)
+            root = tree.getroot()
+            for Cursor in root.iter('Cursor'):
+                for Height in Cursor.iter('cHeight'):
+                    iid = Height.find('iid').text
+                    self.cursors[iid] = self.unitCursor(self,\
+                                                        self.mainwindow.ax_height,\
+                                                        self.mainwindow.fig_canvas,\
+                                                        '#000000',\
+                                                        self.mainwindow.sendtopmost,\
+                                                        self.sendtopmost,iid,\
+                                                        self.mainwindow.fig_height)
+                    for label in ('Track', 'Distance', 'Height', 'Gradient', 'Color', 'Angle'):
+                        if label in ('Distance', 'Height', 'Gradient', 'Angle'): 
+                            data = float(Height.find(label).text)
+                        else:
+                            data = Height.find(label).text
+                        self.cursors[iid].set_value(label,data)
+                    self.resumecursor(iid)
             self.heightsolver.make_cursorlist()
 
                 
