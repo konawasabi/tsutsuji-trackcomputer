@@ -27,6 +27,7 @@ import re
 import itertools
 import configparser
 import xml.etree.ElementTree as ET
+import xml.dom.minidom as minidom
 
 from kobushi import trackcoordinate
 
@@ -570,8 +571,11 @@ class Interface():
         if filepath is None:
             filepath = filedialog.asksaveasfilename()
         if filepath != '':
-            tree = ET.ElementTree(base)
-            tree.write(filepath)
+            #tree = ET.ElementTree(base)
+            reparse = minidom.parseString(ET.tostring(base, 'utf-8'))
+            with open(filepath, 'w') as fp:
+                reparse.writexml(fp, encoding='utf-8', newl='\n', indent='', addindent='  ')
+            #tree.write(filepath)
     def saveCursorData_cfg(self,filepath=None):
         config = configparser.ConfigParser()
         for key in self.cursors.keys():
