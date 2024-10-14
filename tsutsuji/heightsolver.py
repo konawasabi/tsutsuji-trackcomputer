@@ -200,10 +200,12 @@ class heightSolverUI():
         self.manager_del_b.grid(column=1, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
         self.manager_color_b = ttk.Button(self.managerbuttonsframe, text='Color',command=self.set_solverdatatree_color)
         self.manager_color_b.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        '''
         self.manager_xml_b = ttk.Button(self.managerbuttonsframe, text='XML', command=self.save_solverdata_xml)
         self.manager_xml_b.grid(column=2,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
         self.manager_xmlread_b = ttk.Button(self.managerbuttonsframe, text='XMLread', command=self.load_solverdata_xml)
         self.manager_xmlread_b.grid(column=3,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        '''
 
         self.textboxframe =  ttk.Frame(self.managerframe, padding='3 3 3 3')
         self.textboxframe.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
@@ -395,8 +397,8 @@ class heightSolverUI():
         self.solverdata.delete(id)
     def replot(self):
         self.solverdata.replot_all()
-    def save_solverdata_xml(self):
-        root = ET.Element('SolverData')
+    def save_solverdata_xml(self,base):
+        root = ET.SubElement(base,'SolverData')
         for id in self.solverdata.data.keys():
             data = self.solverdata.data[id]
             parent = ET.SubElement(root, 'Height')
@@ -416,14 +418,8 @@ class heightSolverUI():
 
             elem_params_str = ET.SubElement(parent, 'params_str')
             elem_params_str.text =  '{:s}'.format(data.params_str)
-
-        #print(ET.tostring(root, 'utf-8'))
-        #tree = ET.ElementTree(root)
-        #tree.write('../solverdata.xml')
-        return root
-    def load_solverdata_xml(self,tree=None):
-        tree = ET.parse('../solverdata.xml')
-        root = tree.getroot()
+        return base
+    def load_solverdata_xml(self,root):
         for SolverData in root.iter('SolverData'):
             for Height in SolverData.iter('Height'):
                 id = Height.find('id').text
@@ -442,11 +438,4 @@ class heightSolverUI():
                 self.solverdata.add(trackpos, syntax_str, params_str, id=id, trackcolor=trackcolor)
 
                 self.solverdata.plot_track(id)
-                self.solverdatatree.insert('','end',iid=id,text=id,values=(trackcolor))
-                '''
-                print(id)
-                print(trackcolor)
-                print(trackpos)
-                print(syntax_str)
-                print(params_str)
-                '''          
+                self.solverdatatree.insert('','end',iid=id,text=id,values=(trackcolor))        
