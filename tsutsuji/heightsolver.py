@@ -210,15 +210,25 @@ class heightSolverUI():
         self.textboxframe =  ttk.Frame(self.managerframe, padding='3 3 3 3')
         self.textboxframe.grid(column=0, row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
 
-        self.paramsboxlabel = ttk.Label(self.textboxframe, text='Parameters',font=tk.font.Font(weight='bold'))
+        self.paramsboxlabelframe = ttk.Frame(self.textboxframe, padding='3 3 3 3')
+        self.paramsboxlabelframe.grid(column=0,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.paramsboxlabel = ttk.Label(self.paramsboxlabelframe, text='Parameters',font=tk.font.Font(weight='bold'))
         self.paramsboxlabel.grid(column=0,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
         self.paramsbox = scrolledtext.ScrolledText(self.textboxframe,width=60,height=4)#,state='disabled')
         self.paramsbox.grid(column=0,row=1, sticky=(tk.N,tk.W,tk.E,tk.S))
 
-        self.syntaxboxlabel = ttk.Label(self.textboxframe, text='Syntax',font=tk.font.Font(weight='bold'))
-        self.syntaxboxlabel.grid(column=0,row=2, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.copyparams_b = ttk.Button(self.paramsboxlabelframe, text='Copy params', command = lambda: self.setClipboard(self.paramsbox.get("1.0", "end-1c")))
+        self.copyparams_b.grid(column=1,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
+
+        self.syntaxboxlabelframe = ttk.Frame(self.textboxframe, padding='3 3 3 3')
+        self.syntaxboxlabelframe.grid(column=0,row=2, sticky=(tk.N,tk.W,tk.E,tk.S))
+        self.syntaxboxlabel = ttk.Label(self.syntaxboxlabelframe, text='Syntax',font=tk.font.Font(weight='bold'))
+        self.syntaxboxlabel.grid(column=0,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
         self.syntaxbox = scrolledtext.ScrolledText(self.textboxframe,width=60,height=4)#,state='disabled')
         self.syntaxbox.grid(column=0,row=3, sticky=(tk.N,tk.W,tk.E,tk.S))
+        
+        self.copysyntax_b = ttk.Button(self.syntaxboxlabelframe, text='Copy syntax', command = lambda: self.setClipboard(self.syntaxbox.get("1.0", "end-1c")))
+        self.copysyntax_b.grid(column=1,row=0, sticky=(tk.N,tk.W,tk.E,tk.S))
 
         
             
@@ -439,3 +449,6 @@ class heightSolverUI():
 
                 self.solverdata.plot_track(id)
                 self.solverdatatree.insert('','end',iid=id,text=id,values=(trackcolor))        
+    def setClipboard(self, string):
+        self.parentframe.clipboard_clear()
+        self.parentframe.clipboard_append(string)
