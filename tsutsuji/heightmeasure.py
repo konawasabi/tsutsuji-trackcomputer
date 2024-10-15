@@ -369,12 +369,27 @@ class Interface():
             track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
         elif '@KML_' in track_key or '@CSV_' in track_key:
             track_data_tmp = self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track[track_key]['result']
+        elif '@GT_' in track_key:
+            track_key_rmat = track_key.split('@GT_')[-1]
+            track_data_tmp = self.mainwindow.mainwindow.trackcontrol.generated_othertrack[track_key_rmat]['data'] # trackcontrol.rel_track_radius_cp[key]の方が適切？(z相対座標が入っている)
 
 
         track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
         distance = (track_data - inputpos)**2
         min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
         result = track_data_tmp[min_dist_ix]
+
+        if '@GT_' not in track_key:
+            track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
+            distance = (track_data - inputpos)**2
+            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+            result = track_data_tmp[min_dist_ix]
+        else:
+            track_data = np.vstack((track_data_tmp[:,3],track_data_tmp[:,5])).T
+            distance = (track_data - inputpos)**2
+            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+            result_tmp = track_data_tmp[min_dist_ix]
+            result = [result_tmp[0],result_tmp[4],0,result_tmp[6],0,0,0]
         return result
     def deletecursor(self):
         selected = self.cursorlist.focus()
@@ -438,13 +453,26 @@ class Interface():
                 track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'][child_tr]['result']
             elif '@KML_' in track_key or '@CSV_' in track_key:
                 track_data_tmp = self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track[track_key]['result']
-            track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
-            distance = (track_data - inputpos)**2
-            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
-            result = track_data_tmp[min_dist_ix]
-            dist = result[0]
-            height = result[3]
-            gradient = result[6]
+            elif '@GT_' in track_key:
+                track_key_rmat = track_key.split('@GT_')[-1]
+                track_data_tmp = self.mainwindow.mainwindow.trackcontrol.generated_othertrack[track_key_rmat]['data']
+
+            if '@GT_' not in track_key:
+                track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
+                distance = (track_data - inputpos)**2
+                min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+                result = track_data_tmp[min_dist_ix]
+                dist = result[0]
+                height = result[3]
+                gradient = result[6]
+            else:
+                track_data = np.vstack((track_data_tmp[:,3],track_data_tmp[:,5])).T
+                distance = (track_data - inputpos)**2
+                min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
+                result = track_data_tmp[min_dist_ix]
+                dist = result[3]
+                height = result[6]
+                gradient = 0
 
         key = 'Distance'
         self.cursors[iid].set_value(key, dist)
@@ -475,15 +503,23 @@ class Interface():
     def make_trackkeylist(self):
         currentval = self.edit_vals['Track'].get()
 
+        # Track構文で記述した他軌道
         owot_keys = []
         for parent_tr in self.mainwindow.mainwindow.trackcontrol.track.keys():
             for child_tr in self.mainwindow.mainwindow.trackcontrol.track[parent_tr]['othertrack'].keys():
                 owot_keys.append('@OT_{:s}@_{:s}'.format(parent_tr,child_tr))
 
+        # generateした他軌道
+        gt_keys = []
+        if self.mainwindow.mainwindow.trackcontrol.generated_othertrack is not None:
+            for key in self.mainwindow.mainwindow.trackcontrol.generated_othertrack.keys():
+                gt_keys.append('@GT_{:s}'.format(key))
+
         self.edit_entries['Track']['values'] = tuple(['@absolute'])\
             +tuple(self.mainwindow.mainwindow.trackcontrol.track.keys())\
             +tuple(self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track.keys())\
-            +tuple(owot_keys)
+            +tuple(owot_keys)\
+            +tuple(gt_keys)
 
         if currentval not in self.edit_entries['Track']['values']:
             self.edit_vals['Track'].set('@absolute')
@@ -666,6 +702,5 @@ class Interface():
                     self.cursors[iid].set_value(label,data)
                 self.resumecursor(iid)
         self.heightsolver.make_cursorlist()
-
                 
                 
