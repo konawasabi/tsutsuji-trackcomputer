@@ -49,7 +49,7 @@ class Kml2track():
                         data.append([float(tmp[0]),float(tmp[1]),float(0)])
 
         output = []
-        for i in range(1,len(data)):
+        for i in range(0,len(data)):
             tmp = math.calc_pl2xy(data[i][1],data[i][0],data[0][1],data[0][0])
             output.append([tmp[0],tmp[1],data[i][2]])
 
@@ -81,7 +81,8 @@ class Kml2track():
         distance = 0
         theta = 0
         result = []
-        data_rot = [[conf['x'],conf['y'],conf['z']]]
+        #data_rot = [[conf['x'],conf['y'],conf['z']]]
+        data_rot = []
         for ix in range(0,len(data)):
             elem_rot = np.dot(math.rotate(np.deg2rad(conf['angle'])),\
                               np.array([data[ix][0],data[ix][1]]))
