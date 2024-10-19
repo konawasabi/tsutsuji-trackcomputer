@@ -359,7 +359,7 @@ class Interface():
             self.cursors[iid].marker.start(lambda x,y: abspos(x,y), lambda self: click_abs())
         else:
             self.cursors[iid].marker.start(lambda x,y: trackpos(x,y,trackkey), lambda self: click_track())
-    def nearestpoint(self, x,y,track_key):
+    def nearestpoint(self, x,y,track_key, cancel_offset_dist = True):
         inputpos = np.array([x,y])
         if '@' not in track_key:
             track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result']
@@ -371,25 +371,19 @@ class Interface():
             track_data_tmp = self.mainwindow.mainwindow.trackcontrol.pointsequence_track.track[track_key]['result']
         elif '@GT_' in track_key:
             track_key_rmat = track_key.split('@GT_')[-1]
-            track_data_tmp = self.mainwindow.mainwindow.trackcontrol.generated_othertrack[track_key_rmat]['data'] # trackcontrol.rel_track_radius_cp[key]の方が適切？(z相対座標が入っている)
-
+            track_data_tmp = np.copy(self.mainwindow.mainwindow.trackcontrol.generated_othertrack[track_key_rmat]['data']) # trackcontrol.rel_track_radius_cp[key]の方が適切？(z相対座標が入っている)
+            if cancel_offset_dist:
+                track_data_tmp[:,0] -= self.mainwindow.mainwindow.trackcontrol.conf.general['origin_distance']
 
         track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
         distance = (track_data - inputpos)**2
         min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
-        result = track_data_tmp[min_dist_ix]
-
+        
         if '@GT_' not in track_key:
-            track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
-            distance = (track_data - inputpos)**2
-            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
             result = track_data_tmp[min_dist_ix]
         else:
-            track_data = np.vstack((track_data_tmp[:,3],track_data_tmp[:,5])).T
-            distance = (track_data - inputpos)**2
-            min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))
             result_tmp = track_data_tmp[min_dist_ix]
-            result = [result_tmp[0],result_tmp[4],0,result_tmp[6],0,0,0]
+            result = [result_tmp[0],0,0,result_tmp[3],0,0,0]
         return result
     def deletecursor(self):
         selected = self.cursorlist.focus()
@@ -457,7 +451,7 @@ class Interface():
                 track_key_rmat = track_key.split('@GT_')[-1]
                 track_data_tmp = self.mainwindow.mainwindow.trackcontrol.generated_othertrack[track_key_rmat]['data']
 
-            if '@GT_' not in track_key:
+            if True: #'@GT_' not in track_key:
                 track_data = np.vstack((track_data_tmp[:,0],track_data_tmp[:,3])).T
                 distance = (track_data - inputpos)**2
                 min_dist_ix = np.argmin(np.sqrt(distance[:,0]+distance[:,1]))

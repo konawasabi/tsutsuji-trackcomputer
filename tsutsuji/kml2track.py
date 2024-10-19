@@ -81,7 +81,6 @@ class Kml2track():
         distance = 0
         theta = 0
         result = []
-        #data_rot = [[conf['x'],conf['y'],conf['z']]]
         data_rot = []
         for ix in range(0,len(data)):
             elem_rot = np.dot(math.rotate(np.deg2rad(conf['angle'])),\

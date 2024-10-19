@@ -396,10 +396,13 @@ class TrackControl():
     def plot2d(self, ax):
         self._plot2d_base(ax, (1,2))
         self.pointsequence_track.plot2d(ax)
-    def plot2d_height(self, ax):
-        self._plot2d_base(ax, (0,3))
+    def plot2d_height(self, ax, cancel_offset_dist = True):
+        if False:
+            import pdb
+            pdb.set_trace()
+        self._plot2d_base(ax, (0,3), cancel_offset_dist = cancel_offset_dist)
         self.pointsequence_track.plot2d_height(ax)
-    def _plot2d_base(self, ax, col_ix):
+    def _plot2d_base(self, ax, col_ix, cancel_offset_dist = True):
         if len(self.track) > 0:
             for i in self.conf.track_keys:
                 if self.track[i]['toshow']:
@@ -418,8 +421,10 @@ class TrackControl():
         if self.generated_othertrack is not None:
             for otrack in self.generated_othertrack.keys():
                 if self.generated_othertrack[otrack]['toshow']:
-                    tmp = self.generated_othertrack[otrack]['data']
+                    tmp = np.copy(self.generated_othertrack[otrack]['data'])
                     tmp = tmp[tmp[:,0]<=self.generated_othertrack[otrack]['distrange']['max']]
+                    if cancel_offset_dist:
+                        tmp[:,0] -= self.conf.general['origin_distance']
                     ax.plot(tmp[:,col_ix[0]],tmp[:,col_ix[1]],color=self.generated_othertrack[otrack]['color'])
     def drawarea(self, extent_input = None):
         extent = [0,0,0,0] if extent_input == None else extent_input
