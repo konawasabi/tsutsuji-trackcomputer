@@ -383,7 +383,12 @@ class Interface():
             result = track_data_tmp[min_dist_ix]
         else:
             result_tmp = track_data_tmp[min_dist_ix]
-            result = [result_tmp[0],0,0,result_tmp[3],0,0,0]
+            if min_dist_ix < len(track_data_tmp):
+                sabun2next = lambda i: (track_data_tmp[min_dist_ix+1][i]-result_tmp[i])
+                grad_tmp = sabun2next(3)/sabun2next(0)*1000
+            else:
+                grad_tmp = 0
+            result = [result_tmp[0],0,0,result_tmp[3],0,0,grad_tmp]
         return result
     def deletecursor(self):
         selected = self.cursorlist.focus()
@@ -439,6 +444,11 @@ class Interface():
             gradient = self.edit_vals['Gradient'].get()
         else:
             inputpos = np.array([dist,0])
+            result = self.nearestpoint(dist,0,track_key)
+            dist = result[0]
+            height = result[3]
+            gradient = result[6]
+            '''
             if '@' not in track_key:
                 track_data_tmp = self.mainwindow.mainwindow.trackcontrol.track[track_key]['result']
             elif '@OT_' in track_key:
@@ -467,6 +477,7 @@ class Interface():
                 dist = result[3]
                 height = result[6]
                 gradient = 0
+            '''
 
         key = 'Distance'
         self.cursors[iid].set_value(key, dist)
