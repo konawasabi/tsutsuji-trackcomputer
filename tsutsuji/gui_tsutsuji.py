@@ -48,6 +48,7 @@ from . import measure
 from ._version import __version__
 from . import trackwindow
 from . import heightwindow
+from . import kp_offset
 
 class Catcher: # tkinter内で起きた例外をキャッチする
     def __init__(self, func, subst, widget):
@@ -265,6 +266,8 @@ class mainwindow(ttk.Frame):
         self.menu_option.add_command(label='Export Maptile...', command=self.staticmapctrl.export)
         self.menu_option.add_separator()
         self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
+        self.menu_option.add_separator()
+        self.menu_option.add_command(label='Handling kiloposts...', command = lambda: kp_offset.GUI(self))
         
         self.menu_help.add_command(label='ヘルプ...', command=self.open_webdocument)
         self.menu_help.add_command(label='Tsutsujiについて...', command=self.aboutwindow)
