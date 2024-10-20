@@ -22,9 +22,6 @@ import sys
 import pathlib
 import re
 import argparse
-import tkinter as tk
-from tkinter import ttk
-import tkinter.filedialog as filedialog
 
 from lark import Lark, Transformer, v_args, Visitor
 
@@ -156,105 +153,6 @@ def procpath(pathstr):
     inroot = input_path.parent
     return input_path, inroot
 
-class GUI():
-    def __init__(self, mainwindow):
-        self.mainwindow = mainwindow
-        self.master = tk.Toplevel(self.mainwindow)
-        self.master.title('Handling kiloposts')
-        self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
-
-        self.create_widgets()
-        self.sendtopmost()
-    def create_widgets(self):
-        self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
-        self.mainframe.columnconfigure(0,weight=1)
-        self.mainframe.rowconfigure(0,weight=1)
-        self.mainframe.grid(column=0, row=0,sticky=(tk.N, tk.W, tk.E, tk.S))
-
-        # ---
-
-        self.fileframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.fileframe.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-
-        self.input_v = tk.StringVar()
-        self.output_v = tk.StringVar()
-
-        self.input_b = ttk.Button(self.fileframe, text='Input', command=self.setinputpath)
-        self.output_b = ttk.Button(self.fileframe, text='Output', command=self.setoutputpath)
-        self.input_e = ttk.Entry(self.fileframe, textvariable=self.input_v,width=80)
-        self.output_e = ttk.Entry(self.fileframe, textvariable=self.output_v,width=80)
-
-        self.input_b.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.input_e.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.output_b.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.output_e.grid(column=1, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-
-        # ---
-
-        self.modeframe = ttk.Labelframe(self.mainframe, padding='3 3 3 3', text='Mode')
-        self.modeframe.grid(column=0, row=1, sticky = (tk.N, tk.W,  tk.S))
-
-        self.mode_v = tk.StringVar(value='0')
-
-        self.mode0_rb = ttk.Radiobutton(self.modeframe, text='0. evaluate', value='0', variable=self.mode_v)
-        self.mode1_rb = ttk.Radiobutton(self.modeframe, text='1. new variable', value='1', variable=self.mode_v)
-        self.mode2_rb = ttk.Radiobutton(self.modeframe, text='2. offset', value='2', variable=self.mode_v)
-        self.mode3_rb = ttk.Radiobutton(self.modeframe, text='3. new variable & offset', value='3', variable=self.mode_v)
-        self.mode4_rb = ttk.Radiobutton(self.modeframe, text='4. invert', value='4', variable=self.mode_v)
-        self.mode0_rb.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.mode1_rb.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.mode2_rb.grid(column=2, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.mode3_rb.grid(column=3, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.mode4_rb.grid(column=4, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-
-        # ---
-
-        self.paramframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.paramframe.grid(column=0, row=2, sticky = (tk.N, tk.W,  tk.S))
-
-        self.newlabel_v = tk.StringVar()
-        self.newlabel_l = ttk.Label(self.paramframe, text='Variable name')
-        self.newlabel_e = ttk.Entry(self.paramframe, textvariable=self.newlabel_v,width=20)
-        self.newlabel_dist_v = tk.DoubleVar()
-        self.newlabel_dist_l = ttk.Label(self.paramframe, text='Value')
-        self.newlabel_dist_e = ttk.Entry(self.paramframe, textvariable=self.newlabel_dist_v,width=10)
-        self.offsetdist_v = tk.DoubleVar()
-        self.offsetdist_l = ttk.Label(self.paramframe, text='Offset value')
-        self.offsetdist_e = ttk.Entry(self.paramframe, textvariable=self.offsetdist_v,width=10)
-        self.newlabel_l.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.newlabel_e.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.newlabel_dist_l.grid(column=2, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.newlabel_dist_e.grid(column=3, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        
-        self.offsetdist_l.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.offsetdist_e.grid(column=1, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-
-        # ---
-
-        self.buttonframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.buttonframe.grid(column=0, row=3, sticky = (tk.N, tk.W,  tk.S))
-
-        self.doit_b = ttk.Button(self.buttonframe, text='Do It')
-        self.doit_b.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-    def closewindow(self):
-        self.master.withdraw()
-    def sendtopmost(self, event=None):
-        self.master.lift()
-        self.master.focus_force()
-    def setinputpath(self):
-        path = filedialog.askopenfilename(initialdir=self.input_v.get())
-        if path != '':
-            self.input_v.set(path)
-            pathobj = pathlib.Path(path)
-            
-            self.output_v.set(str(pathobj.parent.joinpath('result').joinpath(pathobj.name)))
-    def setoutputpath(self):
-        path = filedialog.asksaveasfilename(initialdir=self.output_v.get())
-        if path != '':
-            self.output_v.set(path)
-        
-        
-
 if __name__ == '__main__':
     argp = argparse.ArgumentParser()
     argp.add_argument('filepath', metavar='FILE', type=str, help='input map file', nargs='?')
@@ -273,3 +171,5 @@ if __name__ == '__main__':
     result = []
     readfile(str(input_path), '$'+args.label, args.distance,  result, inroot, inverse_kp = args.invert)
     writefile(result, outroot)
+    
+
