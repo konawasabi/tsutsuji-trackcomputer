@@ -41,6 +41,8 @@ class GUI():
 
         self.create_widgets()
         self.sendtopmost()
+
+        self.kphandling = KilopostHandling()
     def create_widgets(self):
         self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
         self.mainframe.columnconfigure(0,weight=1)
@@ -110,7 +112,7 @@ class GUI():
         self.buttonframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.buttonframe.grid(column=0, row=3, sticky = (tk.N, tk.W,  tk.S))
 
-        self.doit_b = ttk.Button(self.buttonframe, text='Do It')
+        self.doit_b = ttk.Button(self.buttonframe, text='Do It', command=self.doit)
         self.doit_b.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
     def closewindow(self):
         self.master.withdraw()
@@ -128,6 +130,12 @@ class GUI():
         path = filedialog.asksaveasfilename(initialdir=self.output_v.get())
         if path != '':
             self.output_v.set(path)
+    def doit(self):
+        filename, input_root = self.kphandling.procpath(self.input_v.get())
+        result = self.kphandling.readfile(filename,input_root)
+
+        for data in result:
+            print(data['data'])
 
 
 @v_args(inline=True)
@@ -140,5 +148,111 @@ class MapInterpreter(mapinterpreter.ParseMap):
         pass
         
 class KilopostHandling():
-    def __init__():
-        self.mapinterp = MapInterpreter(None, None, prompt=True)
+    def __init__(self):
+        self.grammer = lgr.loadmapgrammer()
+        self.parser = Lark(self.grammer, parser='lalr')
+        self.initialize_interpreter()
+    def initialize_interpreter(self):
+        self.mapinterp = MapInterpreter(None,None,prompt=True)
+    
+    def readfile(self,filename, input_root, mode='0', initialize=None, newExpression=None, include_file=None):
+        '''マップファイルを読み込み、距離程を書き換える
+
+        Parameters:
+        -----
+        filename : str
+          読み込むファイルへのパス
+        input_root : pathlib.Path
+          読み込むファイルの親ディレクトリへのパス
+        mode : str
+          動作モード
+          '0': 変数、式で記述された距離程を数値に置き換える
+          '1': newExpressionで指定した形式で距離程を書き換える
+        initialize : str
+          ファイル冒頭に追加するマップ要素（newExpressionで使用する変数の初期化を想定）
+        newExpression : str
+          mode='1'で使用。距離程を書き換える数式。
+        include_file : str
+          マップファイル内include要素の引数を指定する
+        -----
+
+        result_listのフォーマット
+          [{'filename':str, 'data':str}, ...]
+
+        '''
+
+        if include_file is None:
+            self.initialize_interpreter()
+        result_list = []
+
+        path, rootpath, header_enc = lhe.loadheader(filename, 'BveTs Map ',2)
+        fp = open(path,'r',encoding=header_enc)
+        fp.readline()
+        fbuff = fp.read()
+        fp.close()
+
+        output = 'BveTs Map 2.02\n'
+
+        rem_comm = re.split('#.*\n',fbuff)
+        comm = re.findall('#.*\n',fbuff)
+
+        if mode == '1':
+            output += '{:s}\n'.format(initialize)
+
+        ix_comm = 0
+        for item in rem_comm:
+            statements = item.split(';')
+            for elem in statements:
+                pre_elem = re.match('^\s*',elem).group(0)                
+                elem = re.sub('^\s*','',elem)
+                result = self.mapinterp.transform(self.mapinterp.parser.parse(elem+';'))
+                if len(elem)>0:
+                    tree = self.parser.parse(elem+';')
+                    if tree.data == 'include_file':
+                        print('include')
+                        result_list += readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
+                                                input_root, result_list, tr_params, trackkey, \
+                                                include_file=re.sub('\'','',tree.children[0].children[0]))
+                        output += pre_elem + elem + ';'
+                    elif tree.data == 'set_distance':
+                        output += pre_elem + '{:f};'.format(self.mapinterp.environment.predef_vars['distance'])
+                    else:
+                        output += pre_elem + elem + ';'
+                else:
+                    output += pre_elem
+
+            if ix_comm < len(comm):
+                output += comm[ix_comm]
+                ix_comm+=1
+
+        result_list.append({'filename':filename, 'include_file':include_file, 'data':output})
+        return result_list
+    def writefile(self,result, output_root):
+        ''' readfileで生成したresult_listをファイルに出力する
+
+        Parameters:
+        -----
+        result : list
+          readfileが出力するresult_list
+        output_root : pathlib.Path
+          データを出力するディレクトリへのパス
+        '''
+        for data in result:
+            if data['include_file'] is None:
+                os.makedirs(output_root,exist_ok=True)
+                fp = open(output_root.joinpath(pathlib.Path(data['filename']).name),'w')
+            else:
+                os.makedirs(output_root.joinpath(pathlib.Path(data['include_file']).parent),exist_ok=True)
+                fp = open(output_root.joinpath(data['include_file']),'w')
+            fp.write(data['data'])
+            fp.close()
+
+            if False:
+                print(data['filename'])
+                print(data['data'])
+    def procpath(self,pathstr):
+        ''' readfileへ渡すPathオブジェクトを生成する
+        '''
+        input_path = pathlib.Path(pathstr)
+        inroot = input_path.parent
+        return input_path, inroot
