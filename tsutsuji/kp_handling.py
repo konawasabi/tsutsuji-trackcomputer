@@ -75,16 +75,16 @@ class GUI():
         self.mode_v = tk.StringVar(value='0')
 
         self.mode0_rb = ttk.Radiobutton(self.modeframe, text='0. evaluate', value='0', variable=self.mode_v)
-        self.mode1_rb = ttk.Radiobutton(self.modeframe, text='1. new expression', value='1', variable=self.mode_v)
+        self.mode1_rb = ttk.Radiobutton(self.modeframe, text='1. new variable', value='1', variable=self.mode_v)
+        self.mode2_rb = ttk.Radiobutton(self.modeframe, text='2. offset by new expression', value='2', variable=self.mode_v)
         '''
-        self.mode2_rb = ttk.Radiobutton(self.modeframe, text='2. offset', value='2', variable=self.mode_v)
         self.mode3_rb = ttk.Radiobutton(self.modeframe, text='3. new variable & offset', value='3', variable=self.mode_v)
         self.mode4_rb = ttk.Radiobutton(self.modeframe, text='4. invert', value='4', variable=self.mode_v)
         '''
         self.mode0_rb.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode1_rb.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        '''
         self.mode2_rb.grid(column=2, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        '''
         self.mode3_rb.grid(column=3, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode4_rb.grid(column=4, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         '''
@@ -99,13 +99,13 @@ class GUI():
         self.decval_e = ttk.Entry(self.paramframe, textvariable=self.decval_v,width=80)
 
         self.newexpr_v = tk.StringVar()
-        self.newexpr_l = ttk.Label(self.paramframe, text='New expression')
+        self.newexpr_l = ttk.Label(self.paramframe, text='New variable/expression')
         self.newexpr_e = ttk.Entry(self.paramframe, textvariable=self.newexpr_v,width=80)
         self.decval_l.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.decval_e.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.decval_e.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
         
-        self.newexpr_l.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.newexpr_e.grid(column=1, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.newexpr_l.grid(column=0, row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.newexpr_e.grid(column=0, row=3, sticky = (tk.N, tk.W, tk.E, tk.S))
 
         # ---
 
@@ -132,7 +132,11 @@ class GUI():
             self.output_v.set(path)
     def doit(self):
         filename, input_root = self.kphandling.procpath(self.input_v.get())
-        result = self.kphandling.readfile(filename,input_root)
+        result = self.kphandling.readfile(filename,\
+                                          input_root,\
+                                          mode=self.mode_v.get(),\
+                                          initialize=self.decval_v.get(),\
+                                          newExpression=self.newexpr_v.get())
 
         for data in result:
             print(data['data'])
@@ -196,8 +200,12 @@ class KilopostHandling():
         rem_comm = re.split('#.*\n',fbuff)
         comm = re.findall('#.*\n',fbuff)
 
-        if mode == '1':
-            output += '{:s}\n'.format(initialize)
+        if include_file is None and (mode == '1' or mode == '2'):
+            if mode == '2':
+                for elem in initialize.split(';'):
+                    elem = re.sub('^\s*','',elem)
+                    result = self.mapinterp.transform(self.mapinterp.parser.parse(elem+';'))
+            output += '\n{:s}\n'.format(initialize)
 
         ix_comm = 0
         for item in rem_comm:
@@ -215,7 +223,15 @@ class KilopostHandling():
                                                 include_file=re.sub('\'','',tree.children[0].children[0]))
                         output += pre_elem + elem + ';'
                     elif tree.data == 'set_distance':
-                        output += pre_elem + '{:f};'.format(self.mapinterp.environment.predef_vars['distance'])
+                        evaluated_kp = self.mapinterp.environment.predef_vars['distance']
+                        if mode == '0':
+                            output += pre_elem + '{:f};'.format(evaluated_kp)
+                        elif mode == '1':
+                            output += pre_elem + '{:s};'.format(newExpression.replace('distance','{:f}'.format(evaluated_kp)))
+                        elif mode == '2':
+                            offset_expr_tree = self.mapinterp.parser.parse('{:s};'.format(newExpression))
+                            new_kp = self.mapinterp.transform(offset_expr_tree.children[0])
+                            output += pre_elem + '{:f};'.format(new_kp)
                     else:
                         output += pre_elem + elem + ';'
                 else:
