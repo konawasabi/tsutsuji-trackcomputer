@@ -31,6 +31,7 @@ class GUI():
         self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
 
         self.create_widgets()
+        self.make_trackkeylist()
         self.sendtopmost()
     def create_widgets(self):
         self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
@@ -93,3 +94,17 @@ class GUI():
         path = filedialog.asksaveasfilename(initialdir=self.output_v.get())
         if path != '':
             self.output_v.set(path)
+    def make_trackkeylist(self):
+
+        # Track構文で記述した他軌道
+        owot_keys = []
+        for parent_tr in self.mainwindow.trackcontrol.track.keys():
+            for child_tr in self.mainwindow.trackcontrol.track[parent_tr]['othertrack'].keys():
+                owot_keys.append('@OT_{:s}@_{:s}'.format(parent_tr,child_tr))
+
+        trackkeylist = tuple(self.mainwindow.trackcontrol.track.keys())\
+            +tuple(self.mainwindow.trackcontrol.pointsequence_track.track.keys())\
+            +tuple(owot_keys)
+
+        self.base_tr_e['values'] = trackkeylist
+        self.tgt_tr_e['values'] = trackkeylist
