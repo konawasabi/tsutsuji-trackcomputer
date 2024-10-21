@@ -1,0 +1,95 @@
+#
+#    Copyright 2024 konawasabi
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+
+'''
+'''
+
+import re
+
+import tkinter as tk
+from tkinter import ttk
+import tkinter.filedialog as filedialog
+
+class GUI():
+    def __init__(self, mainwindow):
+        self.mainwindow = mainwindow
+        self.master = tk.Toplevel(self.mainwindow)
+        self.master.title('Mediantrack generator')
+        self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
+
+        self.create_widgets()
+        self.sendtopmost()
+    def create_widgets(self):
+        self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
+        self.mainframe.columnconfigure(0,weight=1)
+        self.mainframe.rowconfigure(0,weight=1)
+        self.mainframe.grid(column=0, row=0,sticky=(tk.N, tk.W, tk.E, tk.S))
+
+        # ---
+
+        self.fileframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.fileframe.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+
+        self.output_v = tk.StringVar()
+
+        self.output_b = ttk.Button(self.fileframe, text='Output', command=self.setoutputpath)
+        self.output_e = ttk.Entry(self.fileframe, textvariable=self.output_v,width=80)
+
+        self.output_b.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.output_e.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+
+        # ---
+
+        self.paramsframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.paramsframe.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+
+        self.base_tr_v = tk.StringVar()
+        self.tgt_tr_v = tk.StringVar()
+        self.base_tr_e = ttk.Combobox(self.paramsframe, textvariable = self.base_tr_v)
+        self.tgt_tr_e = ttk.Combobox(self.paramsframe, textvariable = self.tgt_tr_v)
+        self.base_tr_l = ttk.Label(self.paramsframe, text='Base')
+        self.tgt_tr_l = ttk.Label(self.paramsframe, text='Target')
+
+        self.base_tr_l.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.base_tr_e.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.tgt_tr_l.grid(column=2,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.tgt_tr_e.grid(column=3,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+
+        self.ratio_v = tk.DoubleVar(value=0.5)
+        self.ratio_e = ttk.Entry(self.paramsframe, textvariable=self.ratio_v)
+        self.ratio_l = ttk.Label(self.paramsframe, text='Ratio')
+        
+        self.ratio_l.grid(column=0,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.ratio_e.grid(column=1,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+
+        # ---
+        
+        self.ctrlframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.ctrlframe.grid(column=0, row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
+        
+        self.doit_b = ttk.Button(self.ctrlframe, text='Do It', command=None)
+        self.doit_b.grid(column=0,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+
+        
+    def closewindow(self):
+        self.master.withdraw()
+    def sendtopmost(self, event=None):
+        self.master.lift()
+        self.master.focus_force()
+    def setoutputpath(self):
+        path = filedialog.asksaveasfilename(initialdir=self.output_v.get())
+        if path != '':
+            self.output_v.set(path)
