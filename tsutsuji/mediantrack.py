@@ -42,7 +42,7 @@ class GUI():
         # ---
 
         self.fileframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.fileframe.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.fileframe.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
 
         self.output_v = tk.StringVar()
 
@@ -55,7 +55,7 @@ class GUI():
         # ---
 
         self.paramsframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.paramsframe.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.paramsframe.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
 
         self.base_tr_v = tk.StringVar()
         self.tgt_tr_v = tk.StringVar()
@@ -69,12 +69,26 @@ class GUI():
         self.tgt_tr_l.grid(column=2,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.tgt_tr_e.grid(column=3,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
 
+        self.kp_start_v = tk.DoubleVar(value=0.5)
+        self.kp_start_e = ttk.Entry(self.paramsframe, textvariable=self.kp_start_v)
+        self.kp_start_l = ttk.Label(self.paramsframe, text='Start')
+
+        self.kp_end_v = tk.DoubleVar(value=0.5)
+        self.kp_end_e = ttk.Entry(self.paramsframe, textvariable=self.kp_end_v)
+        self.kp_end_l = ttk.Label(self.paramsframe, text='End')
+        
+        self.kp_start_l.grid(column=0,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.kp_start_e.grid(column=1,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+
+        self.kp_end_l.grid(column=2,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.kp_end_e.grid(column=3,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+
         self.ratio_v = tk.DoubleVar(value=0.5)
         self.ratio_e = ttk.Entry(self.paramsframe, textvariable=self.ratio_v)
         self.ratio_l = ttk.Label(self.paramsframe, text='Ratio')
         
-        self.ratio_l.grid(column=0,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.ratio_e.grid(column=1,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.ratio_l.grid(column=0,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.ratio_e.grid(column=1,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
 
         # ---
         
