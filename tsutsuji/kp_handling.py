@@ -125,7 +125,7 @@ class GUI():
             self.input_v.set(path)
             pathobj = pathlib.Path(path)
             
-            self.output_v.set(str(pathobj.parent.joinpath('result')))#.joinpath(pathobj.name)))
+            self.output_v.set(str(pathobj.parent.joinpath('result/')))#.joinpath(pathobj.name)))
     def setoutputpath(self):
         path = filedialog.asksaveasfilename(initialdir=self.output_v.get())
         if path != '':
@@ -138,8 +138,9 @@ class GUI():
                                           initialize=self.decval_v.get(),\
                                           newExpression=self.newexpr_v.get())
 
-        for data in result:
-            print(data['data'])
+        #for data in result:
+        #    print(data['data'])
+        self.kphandling.writefile(result, pathlib.Path(self.output_v.get()))
 
 
 @v_args(inline=True)
@@ -205,7 +206,7 @@ class KilopostHandling():
                 for elem in initialize.split(';'):
                     elem = re.sub('^\s*','',elem)
                     result = self.mapinterp.transform(self.mapinterp.parser.parse(elem+';'))
-            output += '\n{:s}\n'.format(initialize)
+            output += '\n# added by kilopost handling\n{:s}\n'.format(initialize)
 
         ix_comm = 0
         for item in rem_comm:
@@ -217,10 +218,13 @@ class KilopostHandling():
                 if len(elem)>0:
                     tree = self.parser.parse(elem+';')
                     if tree.data == 'include_file':
-                        print('include')
-                        result_list += readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
-                                                input_root, result_list, tr_params, trackkey, \
-                                                include_file=re.sub('\'','',tree.children[0].children[0]))
+                        #print('include')
+                        result_list += self.readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
+                                                     input_root,
+                                                     mode=mode, \
+                                                     initialize=initialize,\
+                                                     newExpression=newExpression,\
+                                                     include_file=re.sub('\'','',tree.children[0].children[0]))
                         output += pre_elem + elem + ';'
                     elif tree.data == 'set_distance':
                         evaluated_kp = self.mapinterp.environment.predef_vars['distance']
