@@ -304,7 +304,7 @@ class TrackControl():
         if to_calc is None:
             calc_track = self.get_trackkeys(owntrack)
         else:
-            calc_track = to_calc
+            calc_track = [to_calc]
         for tr in calc_track:
             self.rel_track_radius[tr] = []
 
@@ -345,7 +345,7 @@ class TrackControl():
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
-        if cp_dist == None:
+        if cp_dist is None:
             cp_dist = []
             for dat in self.track[owntrack]['data'].own_track.data:
                 cp_dist.append(dat['distance'])
@@ -866,4 +866,31 @@ class TrackControl():
                 mapdata = mapdata[m.span()[1]:]
         
         return result
+    def generate_mediantrack(self,basetrack,targettrack,newtrackkey,divratio,start,end,interval):
+        self.rel_track[targettrack] = self.relativepoint_single(targettrack,owntrack=basetrack)
+
+        self.rel_track[targettrack][:,2] *= divratio
+        self.rel_track[targettrack][:,3] *= divratio
+        
+        self.relativeradius(to_calc=targettrack,owntrack=basetrack)
+        self.relativeradius_cp(to_calc=targettrack,\
+                               owntrack=basetrack,\
+                               cp_dist=np.arange(start,end,interval))
+        output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
+        digit_str = '{:.'+'{:d}'.format(self.conf.general['output_digit'])+'f}'
+        for data in self.rel_track_radius_cp[targettrack]:
+            if '@' not in targettrack or '@OT' in targettrack or (('@KML' in targettrack or '@CSV' in targettrack) and self.pointsequence_track.track[targettrack]['conf']['calc_relrad']):
+                output_map['x'] += (digit_str+';\n').format(data[0])
+                output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[3],data[2])
+                output_map['y'] += ('{:f};\n').format(data[0])
+                output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[6],data[5])
+            else:
+                output_map['x'] += ('{:f};\n').format(data[0])
+                output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[3],0)
+                output_map['y'] += (digit_str+';\n').format(data[0])
+                output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[6],0)
+        return output_map
+        
+
+        
         
