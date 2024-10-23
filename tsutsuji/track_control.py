@@ -889,8 +889,38 @@ class TrackControl():
                 output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[3],0)
                 output_map['y'] += (digit_str+';\n').format(data[0])
                 output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[6],0)
+                
+            cp_dist = {}
+            pos_cp = {}
+            relativecp = {}
+            for key in ['cant','interpolate_func','center','gauge']:
+                cp_dist[key], pos_cp[key] = self.takecp(targettrack,elem=key,supplemental=False)
+                relativecp[key] =  self.convert_relativecp(targettrack,pos_cp[key])
+
+            if len(relativecp['cant'])>0:
+                for data in self.convert_cant_with_relativecp(targettrack,relativecp['cant'][:,3]):
+                    output_map['cant'] += (digit_str+';\n').format(data[0])
+                    output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(newtrackkey,data[1])
+
+            
+            key = 'interpolate_func'
+            if len(relativecp[key])>0:
+                for index in range(len(relativecp[key])):
+                    output_map[key] += (digit_str+';\n').format(relativecp[key][index][3])
+                    output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(newtrackkey,int(pos_cp[key][index][7]))
+            
+            key = 'center'
+            if len(relativecp[key])>0:
+                for index in range(len(relativecp[key])):
+                    output_map[key] += (digit_str+';\n').format(relativecp[key][index][3])
+                    output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(newtrackkey,pos_cp[key][index][9])
+
+            key = 'gauge'
+            if len(relativecp[key])>0:
+                for index in range(len(relativecp[key])):
+                    output_map[key] += (digit_str+';\n').format(relativecp[key][index][3])
+                    output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(newtrackkey,pos_cp[key][index][10])
         return output_map
-        
 
         
         
