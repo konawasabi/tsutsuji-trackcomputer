@@ -151,11 +151,21 @@ class GUI():
             self.output_v.set(path)
     def doit(self):
         filename, input_root = self.kphandling.procpath(self.input_v.get())
+        if self.startkp_en_v.get():
+            startkp = self.startkp_v.get()
+        else:
+            startkp = None
+        if self.endkp_en_v.get():
+            endkp = self.endkp_v.get()
+        else:
+            endkp = None
+        
         result = self.kphandling.readfile(filename,\
                                           input_root,\
                                           mode=self.mode_v.get(),\
                                           initialize=self.decval_v.get(),\
-                                          newExpression=self.newexpr_v.get())
+                                          newExpression=self.newexpr_v.get(),\
+                                          kprange=(startkp,endkp))
 
         #for data in result:
         #    print(data['data'])
@@ -179,7 +189,7 @@ class KilopostHandling():
     def initialize_interpreter(self):
         self.mapinterp = MapInterpreter(None,None,prompt=True)
     
-    def readfile(self,filename, input_root, mode='0', initialize=None, newExpression=None, include_file=None):
+    def readfile(self,filename, input_root, mode='0', initialize=None, newExpression=None, include_file=None,kprange=(None,None)):
         '''マップファイルを読み込み、距離程を書き換える
 
         Parameters:
@@ -198,6 +208,8 @@ class KilopostHandling():
           mode='1'で使用。距離程を書き換える数式。
         include_file : str
           マップファイル内include要素の引数を指定する
+        kprange : (float, float)
+          処理を行う距離程範囲を指定する。（距離程は変換前の値）
         -----
 
         result_listのフォーマット
@@ -243,20 +255,24 @@ class KilopostHandling():
                                                      mode=mode, \
                                                      initialize=initialize,\
                                                      newExpression=newExpression,\
-                                                     include_file=re.sub('\'','',tree.children[0].children[0]))
+                                                     include_file=re.sub('\'','',tree.children[0].children[0]),\
+                                                     kprange=kprange)
                         output += pre_elem + elem + ';'
-                    elif tree.data == 'set_distance':
-                        evaluated_kp = self.mapinterp.environment.predef_vars['distance']
-                        if mode == '0':
-                            output += pre_elem + '{:f};'.format(evaluated_kp)
-                        elif mode == '1':
-                            output += pre_elem + '{:s};'.format(newExpression.replace('distance','{:f}'.format(evaluated_kp)))
-                        elif mode == '2':
-                            offset_expr_tree = self.mapinterp.parser.parse('{:s};'.format(newExpression))
-                            new_kp = self.mapinterp.transform(offset_expr_tree.children[0])
-                            output += pre_elem + '{:f};'.format(new_kp)
-                    else:
-                        output += pre_elem + elem + ';'
+                    if ((kprange[0] is not None and kprange[0] <= self.mapinterp.environment.predef_vars['distance']) or kprange[0] is None) and \
+                       ((kprange[1] is not None and kprange[1] >= self.mapinterp.environment.predef_vars['distance']) or kprange[1] is None):
+                        
+                        if tree.data == 'set_distance':
+                            evaluated_kp = self.mapinterp.environment.predef_vars['distance']
+                            if mode == '0':
+                                output += pre_elem + '{:f};'.format(evaluated_kp)
+                            elif mode == '1':
+                                output += pre_elem + '{:s};'.format(newExpression.replace('distance','{:f}'.format(evaluated_kp)))
+                            elif mode == '2':
+                                offset_expr_tree = self.mapinterp.parser.parse('{:s};'.format(newExpression))
+                                new_kp = self.mapinterp.transform(offset_expr_tree.children[0])
+                                output += pre_elem + '{:f};'.format(new_kp)
+                        else:
+                            output += pre_elem + elem + ';'
                 else:
                     output += pre_elem
 
