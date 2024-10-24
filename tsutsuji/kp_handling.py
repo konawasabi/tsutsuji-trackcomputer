@@ -107,6 +107,25 @@ class GUI():
         self.newexpr_l.grid(column=0, row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.newexpr_e.grid(column=0, row=3, sticky = (tk.N, tk.W, tk.E, tk.S))
 
+        self.kprangeframe = ttk.Labelframe(self.paramframe, padding='3 3 3 3', text='Kilopost range')
+        self.kprangeframe.grid(column=0, row=4, sticky = (tk.N, tk.W,  tk.S))
+
+        self.startkp_v = tk.DoubleVar()
+        self.startkp_en_v = tk.BooleanVar(value=False)
+        self.startkp_b = ttk.Checkbutton(self.kprangeframe, text='start', variable=self.startkp_en_v, onvalue=True, offvalue=False)
+        self.startkp_e = ttk.Entry(self.kprangeframe, textvariable=self.startkp_v,width=10)
+
+        self.endkp_v = tk.DoubleVar()
+        self.endkp_en_v = tk.BooleanVar(value=False)
+        self.endkp_b = ttk.Checkbutton(self.kprangeframe, text='end', variable=self.endkp_en_v, onvalue=True, offvalue=False)
+        self.endkp_e = ttk.Entry(self.kprangeframe, textvariable=self.endkp_v,width=10)
+
+        self.startkp_b.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.startkp_e.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        
+        self.endkp_b.grid(column=2, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.endkp_e.grid(column=3, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+
         # ---
 
         self.buttonframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
