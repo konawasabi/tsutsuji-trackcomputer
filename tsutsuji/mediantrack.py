@@ -30,6 +30,8 @@ class GUI():
         self.master.title('Mediantrack generator')
         self.master.protocol('WM_DELETE_WINDOW', self.closewindow)
 
+        self.trackcontrol = self.mainwindow.trackcontrol
+
         self.create_widgets()
         self.make_trackkeylist()
         self.sendtopmost()
@@ -125,22 +127,25 @@ class GUI():
 
         # Track構文で記述した他軌道
         owot_keys = []
-        for parent_tr in self.mainwindow.trackcontrol.track.keys():
-            for child_tr in self.mainwindow.trackcontrol.track[parent_tr]['othertrack'].keys():
+        for parent_tr in self.trackcontrol.track.keys():
+            for child_tr in self.trackcontrol.track[parent_tr]['othertrack'].keys():
                 owot_keys.append('@OT_{:s}@_{:s}'.format(parent_tr,child_tr))
 
-        trackkeylist = tuple(self.mainwindow.trackcontrol.track.keys())\
-            +tuple(self.mainwindow.trackcontrol.pointsequence_track.track.keys())\
+        trackkeylist = tuple(self.trackcontrol.track.keys())\
+            +tuple(self.trackcontrol.pointsequence_track.track.keys())\
             +tuple(owot_keys)
 
         self.base_tr_e['values'] = trackkeylist
         self.tgt_tr_e['values'] = trackkeylist
     def doit(self):
-        result = self.mainwindow.trackcontrol.generate_mediantrack(self.base_tr_v.get(),\
-                                                                   self.tgt_tr_v.get(),\
-                                                                   self.new_tr_v.get(),\
-                                                                   self.ratio_v.get(),\
-                                                                   self.kp_start_v.get(),\
-                                                                   self.kp_end_v.get(),\
-                                                                   self.kp_interval_v.get())
-        print(result['x'])
+        result_elem,result_map = self.trackcontrol.generate_mediantrack(self.base_tr_v.get(),\
+                                                                        self.tgt_tr_v.get(),\
+                                                                        self.new_tr_v.get(),\
+                                                                        self.ratio_v.get(),\
+                                                                        self.kp_start_v.get(),\
+                                                                        self.kp_end_v.get(),\
+                                                                        self.kp_interval_v.get())
+
+        with open(self.output_v.get(), 'w') as fp:
+            fp.write(result_map)
+        

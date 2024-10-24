@@ -876,51 +876,86 @@ class TrackControl():
         self.relativeradius_cp(to_calc=targettrack,\
                                owntrack=basetrack,\
                                cp_dist=np.arange(start,end,interval))
+        
+        output_mapelem = self.generate_tracksyntax(targettrack,\
+                                                   '',\
+                                                   '{:.'+'{:d}'.format(self.conf.general['output_digit'])+'f}',\
+                                                   output_trackkey = newtrackkey)
+        output_mapstr = self.generate_mapstrings(output_mapelem,\
+                                                 targettrack,\
+                                                 '',\
+                                                 output_trackkey = newtrackkey)
+        return output_mapelem, output_mapstr
+    def generate_tracksyntax(self,tr,kp_val,digit_str,output_trackkey=None):
+        if output_trackkey is None:
+            output_trackkey = tr
         output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
-        digit_str = '{:.'+'{:d}'.format(self.conf.general['output_digit'])+'f}'
-        for data in self.rel_track_radius_cp[targettrack]:
-            if '@' not in targettrack or '@OT' in targettrack or (('@KML' in targettrack or '@CSV' in targettrack) and self.pointsequence_track.track[targettrack]['conf']['calc_relrad']):
-                output_map['x'] += (digit_str+';\n').format(data[0])
-                output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[3],data[2])
-                output_map['y'] += ('{:f};\n').format(data[0])
-                output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[6],data[5])
+            
+        for data in self.rel_track_radius_cp[tr]:
+            if '@' not in tr or '@OT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
+                output_map['x'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(output_trackkey,data[3],data[2])
+                output_map['y'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(output_trackkey,data[6],data[5])
             else:
-                output_map['x'] += ('{:f};\n').format(data[0])
-                output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[3],0)
-                output_map['y'] += (digit_str+';\n').format(data[0])
-                output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(newtrackkey,data[6],0)
+                output_map['x'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(output_trackkey,data[3],0)
+                output_map['y'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(output_trackkey,data[6],0)
+
+        cp_dist = {}
+        pos_cp = {}
+        relativecp = {}
+        for key in ['cant','interpolate_func','center','gauge']:
+            cp_dist[key], pos_cp[key] = self.takecp(tr,elem=key,supplemental=False)
+            relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
+
+        if len(relativecp['cant'])>0:
+            for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
+                output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(output_trackkey,data[1])
+
+
+        key = 'interpolate_func'
+        if len(relativecp[key])>0:
+            for index in range(len(relativecp[key])):
+                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(output_trackkey,int(pos_cp[key][index][7]))
+
+        key = 'center'
+        if len(relativecp[key])>0:
+            for index in range(len(relativecp[key])):
+                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][9])
+
+        key = 'gauge'
+        if len(relativecp[key])>0:
+            for index in range(len(relativecp[key])):
+                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][10])
                 
-            cp_dist = {}
-            pos_cp = {}
-            relativecp = {}
-            for key in ['cant','interpolate_func','center','gauge']:
-                cp_dist[key], pos_cp[key] = self.takecp(targettrack,elem=key,supplemental=False)
-                relativecp[key] =  self.convert_relativecp(targettrack,pos_cp[key])
-
-            if len(relativecp['cant'])>0:
-                for data in self.convert_cant_with_relativecp(targettrack,relativecp['cant'][:,3]):
-                    output_map['cant'] += (digit_str+';\n').format(data[0])
-                    output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(newtrackkey,data[1])
-
-            
-            key = 'interpolate_func'
-            if len(relativecp[key])>0:
-                for index in range(len(relativecp[key])):
-                    output_map[key] += (digit_str+';\n').format(relativecp[key][index][3])
-                    output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(newtrackkey,int(pos_cp[key][index][7]))
-            
-            key = 'center'
-            if len(relativecp[key])>0:
-                for index in range(len(relativecp[key])):
-                    output_map[key] += (digit_str+';\n').format(relativecp[key][index][3])
-                    output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(newtrackkey,pos_cp[key][index][9])
-
-            key = 'gauge'
-            if len(relativecp[key])>0:
-                for index in range(len(relativecp[key])):
-                    output_map[key] += (digit_str+';\n').format(relativecp[key][index][3])
-                    output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(newtrackkey,pos_cp[key][index][10])
         return output_map
+    def generate_mapstrings(self,output_map,tr,kp_val,output_trackkey=None):
+        if output_trackkey is None:
+            output_trackkey = tr
+            
+        output_file = ''
+        output_file += 'BveTs Map 2.02:utf-8\n\n'
+        # 他軌道構文印字
+        if kp_val != '':
+            output_file += '# offset\n'
+            output_file += ('${:s} = {:f};\n').format(self.conf.general['offset_variable'],self.conf.general['origin_distance'])+'\n'
+        output_file += ('# Track[\'{:s}\'].X\n').format(output_trackkey)
+        output_file += output_map['x']+'\n'
+        output_file += ('# Track[\'{:s}\'].Y\n').format(output_trackkey)
+        output_file += output_map['y']+'\n'
+        output_file += ('# Track[\'{:s}\'].Cant.Interpolate\n').format(output_trackkey)
+        output_file += output_map['cant']+'\n'
+        output_file += ('# Track[\'{:s}\'].Cant.SetFunction\n').format(output_trackkey)
+        output_file += output_map['interpolate_func']+'\n'
+        output_file += ('# Track[\'{:s}\'].Cant.SetCenter\n').format(output_trackkey)
+        output_file += output_map['center']+'\n'
+        output_file += ('# Track[\'{:s}\'].Cant.SetGauge\n').format(output_trackkey)
+        output_file += output_map['gauge']+'\n'
 
-        
-        
+        return output_file
