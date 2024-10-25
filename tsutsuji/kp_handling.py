@@ -72,20 +72,20 @@ class GUI():
         self.modeframe = ttk.Labelframe(self.mainframe, padding='3 3 3 3', text='Mode')
         self.modeframe.grid(column=0, row=1, sticky = (tk.N, tk.W,  tk.S))
 
-        self.mode_v = tk.StringVar(value='0')
+        self.mode_v = tk.StringVar(value='3')
 
-        self.mode0_rb = ttk.Radiobutton(self.modeframe, text='0. evaluate', value='0', variable=self.mode_v)
-        self.mode1_rb = ttk.Radiobutton(self.modeframe, text='1. new variable', value='1', variable=self.mode_v)
-        self.mode2_rb = ttk.Radiobutton(self.modeframe, text='2. offset by new expression', value='2', variable=self.mode_v)
+        self.mode3_rb = ttk.Radiobutton(self.modeframe, text='0. echo', value='3', variable=self.mode_v)
+        self.mode0_rb = ttk.Radiobutton(self.modeframe, text='1. evaluate', value='0', variable=self.mode_v)
+        self.mode1_rb = ttk.Radiobutton(self.modeframe, text='2. new variable', value='1', variable=self.mode_v)
+        self.mode2_rb = ttk.Radiobutton(self.modeframe, text='3. conversion by new expression', value='2', variable=self.mode_v)
         '''
-        self.mode3_rb = ttk.Radiobutton(self.modeframe, text='3. new variable & offset', value='3', variable=self.mode_v)
         self.mode4_rb = ttk.Radiobutton(self.modeframe, text='4. invert', value='4', variable=self.mode_v)
         '''
-        self.mode0_rb.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.mode1_rb.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.mode2_rb.grid(column=2, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.mode3_rb.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.mode0_rb.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.mode1_rb.grid(column=2, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.mode2_rb.grid(column=3, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         '''
-        self.mode3_rb.grid(column=3, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode4_rb.grid(column=4, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         '''
 
@@ -248,16 +248,6 @@ class KilopostHandling():
                 result = self.mapinterp.transform(self.mapinterp.parser.parse(elem+';'))
                 if len(elem)>0:
                     tree = self.parser.parse(elem+';')
-                    if tree.data == 'include_file':
-                        #print('include')
-                        result_list += self.readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
-                                                     input_root,
-                                                     mode=mode, \
-                                                     initialize=initialize,\
-                                                     newExpression=newExpression,\
-                                                     include_file=re.sub('\'','',tree.children[0].children[0]),\
-                                                     kprange=kprange)
-                        output += pre_elem + elem + ';'
                     if ((kprange[0] is not None and kprange[0] <= self.mapinterp.environment.predef_vars['distance']) or kprange[0] is None) and \
                        ((kprange[1] is not None and kprange[1] >= self.mapinterp.environment.predef_vars['distance']) or kprange[1] is None):
                         
@@ -271,6 +261,18 @@ class KilopostHandling():
                                 offset_expr_tree = self.mapinterp.parser.parse('{:s};'.format(newExpression))
                                 new_kp = self.mapinterp.transform(offset_expr_tree.children[0])
                                 output += pre_elem + '{:f};'.format(new_kp)
+                            elif mode == '3':
+                                output += pre_elem + elem + ';'
+                        elif tree.data == 'include_file':
+                            #print('include')
+                            result_list += self.readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
+                                                         input_root,
+                                                         mode=mode, \
+                                                         initialize=initialize,\
+                                                         newExpression=newExpression,\
+                                                         include_file=re.sub('\'','',tree.children[0].children[0]),\
+                                                         kprange=kprange)
+                            output += pre_elem + elem + ';'
                         else:
                             output += pre_elem + elem + ';'
                 else:
