@@ -78,16 +78,11 @@ class GUI():
         self.mode0_rb = ttk.Radiobutton(self.modeframe, text='1. evaluate', value='0', variable=self.mode_v)
         self.mode1_rb = ttk.Radiobutton(self.modeframe, text='2. new variable', value='1', variable=self.mode_v)
         self.mode2_rb = ttk.Radiobutton(self.modeframe, text='3. conversion by new expression', value='2', variable=self.mode_v)
-        '''
-        self.mode4_rb = ttk.Radiobutton(self.modeframe, text='4. invert', value='4', variable=self.mode_v)
-        '''
+
         self.mode3_rb.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode0_rb.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode1_rb.grid(column=2, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode2_rb.grid(column=3, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        '''
-        self.mode4_rb.grid(column=4, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        '''
 
         # ---
 
@@ -144,7 +139,7 @@ class GUI():
             self.input_v.set(path)
             pathobj = pathlib.Path(path)
             
-            self.output_v.set(str(pathobj.parent.joinpath('result/')))#.joinpath(pathobj.name)))
+            self.output_v.set(str(pathobj.parent.joinpath('result/')))
     def setoutputpath(self):
         path = filedialog.asksaveasfilename(initialdir=self.output_v.get())
         if path != '':
@@ -167,8 +162,6 @@ class GUI():
                                           newExpression=self.newexpr_v.get(),\
                                           kprange=(startkp,endkp))
 
-        #for data in result:
-        #    print(data['data'])
         self.kphandling.writefile(result, pathlib.Path(self.output_v.get()))
 
 
@@ -264,7 +257,6 @@ class KilopostHandling():
                             elif mode == '3':
                                 output += pre_elem + elem + ';'
                         elif tree.data == 'include_file':
-                            #print('include')
                             result_list += self.readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
                                                          input_root,
                                                          mode=mode, \
