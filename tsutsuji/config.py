@@ -47,10 +47,12 @@ class Config():
                         'backimg':None,\
                         'backimg_height':None,\
                         'check_u':True,\
-                        'output_digit':3}
+                        'output_digit':3,\
+                        'limit_curvatureradius':1e4,\
+                        'limit_differentialerror':1e-3}
         if '@TSUTSUJI_GENERAL' in sections:
             for k in self.cp.options('@TSUTSUJI_GENERAL'):
-                if k in ['origin_distance', 'unit_length']:
+                if k in ['origin_distance', 'unit_length', 'limit_curvatureradius', 'limit_differentialerror']:
                     self.general[k] = float(self.cp['@TSUTSUJI_GENERAL'][k])
                 elif k in ['output_digit']:
                     self.general[k] = int(self.cp['@TSUTSUJI_GENERAL'][k])

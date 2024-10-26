@@ -43,6 +43,8 @@ class TrackControl():
         self.generated_othertrack = None
         self.pointsequence_track = kml2track.Kml2track()
         self.exclude_tracks = []
+        self.limit_curvatureradius = 1e4
+        self.limit_differentialerror = 1e-2
     def loadcfg(self,path):
         '''cfgファイルの読み込み
         '''
@@ -153,7 +155,8 @@ class TrackControl():
                     otdata['result'] = np.array(result_theta)
 
         self.pointsequence_track.load_files(self.conf)
-            
+        self.limit_curvatureradius = self.conf.general['limit_curvatureradius']
+        self.limit_differentialerror = self.conf.general['limit_differentialerror']
             
     def relativepoint_single(self,to_calc,owntrack=None,parent_track=None,check_U=True):
         '''owntrackを基準とした相対座標への変換
@@ -335,9 +338,9 @@ class TrackControl():
                 
                 self.rel_track_radius[tr].append([pos[0][0],\
                                                   curvature,\
-                                                  1/curvature if np.abs(1/curvature) < 1e4 else 0,\
+                                                  1/curvature if np.abs(1/curvature) < self.limit_curvatureradius else 0,\
                                                   curvature_z,\
-                                                  1/curvature_z if np.abs(1/curvature_z) < 1e4 else 0])
+                                                  1/curvature_z if np.abs(1/curvature_z) < self.limit_curvatureradius else 0])
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
     def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None):
@@ -371,10 +374,10 @@ class TrackControl():
                 zval = math.interpolate_with_dist(self.rel_track[tr],3,cp_dist[ix])
                 self.rel_track_radius_cp[tr].append([cp_dist[ix],\
                                                      curvature_section,\
-                                                     1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,\
+                                                     1/curvature_section if np.abs(1/curvature_section) < self.limit_curvatureradius else 0,\
                                                      yval,\
                                                      curvature_section_z,\
-                                                     1/curvature_section_z if np.abs(1/curvature_section_z) < 1e4 else 0,\
+                                                     1/curvature_section_z if np.abs(1/curvature_section_z) < self.limit_curvatureradius else 0,\
                                                      zval])
                 ix+=1
 
@@ -387,10 +390,10 @@ class TrackControl():
             curvature_section_z = np.inf
             self.rel_track_radius_cp[tr].append([cp_dist[ix],\
                                      curvature_section,\
-                                     1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,\
+                                     1/curvature_section if np.abs(1/curvature_section) < self.limit_curvatureradius else 0,\
                                      yval,\
                                      curvature_section_z,\
-                                     1/curvature_section_z if np.abs(1/curvature_section_z) < 1e4 else 0,\
+                                     1/curvature_section_z if np.abs(1/curvature_section_z) < self.limit_curvatureradius else 0,\
                                      zval])
             self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
     def plot2d(self, ax):
