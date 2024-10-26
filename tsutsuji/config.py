@@ -104,18 +104,19 @@ class Config():
 
         for tk in keys:
             track_data[tk] = {'absolute_coordinate':True,\
-                                    'x':0,\
-                                    'y':0,\
-                                    'z':0,\
-                                    'angle':0,\
-                                    'endpoint':0,\
-                                    'file':None,\
-                                    'parent_track':None,\
-                                    'origin_kilopost':None,\
-                                    'isowntrack':False,\
-                                    'supplemental_cp':[],\
-                                    'color':linecolor_default[color_ix%10],\
-                                    'calc_relrad':False}
+                              'x':0,\
+                              'y':0,\
+                              'z':0,\
+                              'angle':0,\
+                              'endpoint':0,\
+                              'file':None,\
+                              'parent_track':None,\
+                              'origin_kilopost':None,\
+                              'isowntrack':False,\
+                              'supplemental_cp':[],\
+                              'color':linecolor_default[color_ix%10],\
+                              'calc_relrad':False,\
+                              'mapelement_enable':{'x':True,'y':True,'cant':True,'interpolate_func':True,'center':True,'gauge':True}}
             for k in self.cp.options(tk):
                 if k.lower() == 'file':
                     track_data[tk][k] = self.path_parent.joinpath(pathlib.Path(self.cp[tk][k]))
@@ -126,6 +127,9 @@ class Config():
                 elif k.lower() in ['supplemental_cp']:
                     for supcp in self.cp[tk][k].split(','):
                         track_data[tk][k].append(float(supcp))
+                elif 'mapelement_enable' in k.lower():
+                    key = k.lower().split('mapelement_enable_')[-1]
+                    track_data[tk]['mapelement_enable'][key] = True if self.cp[tk][k].lower() == 'true' else False
                 else:
                     track_data[tk][k] = self.cp[tk][k]
             color_ix +=1

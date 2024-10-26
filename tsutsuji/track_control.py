@@ -880,17 +880,32 @@ class TrackControl():
         if kp_val != '':
             output_file += '# offset\n'
             output_file += ('${:s} = {:f};\n').format(self.conf.general['offset_variable'],self.conf.general['origin_distance'])+'\n'
-        output_file += ('# Track[\'{:s}\'].X\n').format(output_trackkey)
-        output_file += output_map['x']+'\n'
-        output_file += ('# Track[\'{:s}\'].Y\n').format(output_trackkey)
-        output_file += output_map['y']+'\n'
-        output_file += ('# Track[\'{:s}\'].Cant.Interpolate\n').format(output_trackkey)
-        output_file += output_map['cant']+'\n'
-        output_file += ('# Track[\'{:s}\'].Cant.SetFunction\n').format(output_trackkey)
-        output_file += output_map['interpolate_func']+'\n'
-        output_file += ('# Track[\'{:s}\'].Cant.SetCenter\n').format(output_trackkey)
-        output_file += output_map['center']+'\n'
-        output_file += ('# Track[\'{:s}\'].Cant.SetGauge\n').format(output_trackkey)
-        output_file += output_map['gauge']+'\n'
+
+        if '@OT_' in tr:
+            mapelement_enable = self.conf.track_data[re.search('(?<=@OT_).+(?=@)',tr).group(0)]['mapelement_enable']
+        elif '@KML_' in tr:
+            mapelement_enable = {'x':True,'y':True,'cant':True,'interpolate_func':True,'center':True,'gauge':True}
+        elif '@CSV_' in tr:
+            mapelement_enable = {'x':True,'y':True,'cant':True,'interpolate_func':True,'center':True,'gauge':True}
+        else:
+            mapelement_enable = self.conf.track_data[tr]['mapelement_enable']
+        if mapelement_enable['x']:
+            output_file += ('# Track[\'{:s}\'].X\n').format(output_trackkey)
+            output_file += output_map['x']+'\n'
+        if mapelement_enable['y']:
+            output_file += ('# Track[\'{:s}\'].Y\n').format(output_trackkey)
+            output_file += output_map['y']+'\n'
+        if mapelement_enable['cant']:
+            output_file += ('# Track[\'{:s}\'].Cant.Interpolate\n').format(output_trackkey)
+            output_file += output_map['cant']+'\n'
+        if mapelement_enable['interpolate_func']:
+            output_file += ('# Track[\'{:s}\'].Cant.SetFunction\n').format(output_trackkey)
+            output_file += output_map['interpolate_func']+'\n'
+        if mapelement_enable['center']:
+            output_file += ('# Track[\'{:s}\'].Cant.SetCenter\n').format(output_trackkey)
+            output_file += output_map['center']+'\n'
+        if mapelement_enable['gauge']:
+            output_file += ('# Track[\'{:s}\'].Cant.SetGauge\n').format(output_trackkey)
+            output_file += output_map['gauge']+'\n'
 
         return output_file
