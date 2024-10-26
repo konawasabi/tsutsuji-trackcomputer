@@ -5,6 +5,35 @@
 - プロット画面
   - 任意角度への回転
   
+## [1.8.0] - 2024-10-xx
+
+- 新機能
+  - 軌道高度ウィンドウ
+	- 軌道毎の距離程-高度プロット
+	- 背景画像の表示
+	- Measure, Gradient solver
+	  - カーソルは任意個数設定可能
+	  - solver実行結果は任意個数保持可能
+	  - カーソルデータ、solver実行結果の保存、読み込みに対応
+		- 平面図側のMeasure/solverも同様にアップデートの方針
+  - Handling kilopost
+    - 指定したマップファイルの距離程を操作する
+	  - cfgファイルでの指定とは独立して使用可能
+	- 主な機能
+	  - 指定した距離程範囲にある要素のみ抽出
+	  - 変数で記述された距離程を数値に変換
+	  - 指定した数式で距離程を書き換え
+  - Generate mediantrack
+    - 2軌道の中間点を通る他軌道を生成する
+	- 通過点の比率は変更可能
+- 機能追加
+  - Generateにて出力されるTrack要素について、出力するサブ要素を選択できるように変更
+    - X, Y, Cant, SetCenter, SetFunction, SetGaugeの各要素ごとに、出力可否をcfgファイルで設定
+	- 各Trackセクション, mapelement_enable_x, _y, _cant, _interpolate_func, _center, _gauge で指定
+  - 相対半径値の上限をcfgファイルで設定できるように変更
+	- [@TSUTSUJI_GENERAL]セクション, limit_curvatureradius で指定
+    - 計算された相対半径が上限よりも大きい場合は0として出力する
+
 ## [1.7.5] - 2024-07-29
 
 - matplotlib ver 3.9.0以降がインストールされている環境でMeasure, pos.カーソルが正常動作するように修正
@@ -203,6 +232,7 @@
 
 - 1st release
 
+[1.8.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.5...ver1.8.0
 [1.7.5]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4.1...ver1.7.5
 [1.7.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4...ver1.7.4.1
 [1.7.4]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.3...ver1.7.4
