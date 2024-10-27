@@ -158,3 +158,4 @@ Measure ボタン
 
 高度プロット上の座標を調べるMeasureウィンドウを開きます。
 詳しくは :doc:`reference_heightmeasure` を参照してください。
+
