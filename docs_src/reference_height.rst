@@ -77,8 +77,6 @@ Backimg ボタン
 		   
 高度プロットウィンドウの背景画像を管理するウィンドウを表示します。
 
-.. _ref_height_menu_measure:
-
 
 ファイル操作
 ^^^^^^^^^^^^^
@@ -134,7 +132,22 @@ filepathリストで選択した画像毎に下記のパラメータを設定で
 * Show
 
   * チェックした画像を表示する
-  
+
+.. _ref_height_menu_savebackimg:
+
+設定保存
+^^^^^^^^^
+
+メニュー/高度/Save backimg... で、高度ウィンドウ背景画像の設定をファイルに書き出します。
+
+.. _ref_height_menu_loadbackimg:
+
+設定読み込み
+^^^^^^^^^^^^
+
+メニュー/高度/Load backimg... で、保存した高度ウィンドウ背景画像の設定ファイルを読み込みます。
+
+.. _ref_height_menu_measure:
 
 Measure ボタン
 --------------
@@ -143,45 +156,5 @@ Measure ボタン
 .. image:: ./files/height_measure.png
 	   :scale: 60%
 
-設定保存
-^^^^^^^^^
-
-メニュー/高度/Save backimg... で、高度ウィンドウ背景画像の設定をファイルに書き出します。
-
-設定読み込み
-^^^^^^^^^^^^
-
-メニュー/高度/Load backimg... で、保存した高度ウィンドウ背景画像の設定ファイルを読み込みます。
-
-
-メニュー
----------
-
-Display...
-+++++++++++
-
-
-Measure...
-+++++++++++
-
-aaa
-
-
-Backimg...
-+++++++++++
-
-bbb
-
-.. _ref_height_menu_loadbackimg:
-
-Load Backimg...
-++++++++++++++++
-
-ccc
-
-.. _ref_height_menu_savebackimg:
-
-Save Backimg...
-++++++++++++++++
-
-ddd
+高度プロット上の座標を調べるMeasureウィンドウを開きます。
+詳しくは :doc:`reference_heightmeasure` を参照してください。

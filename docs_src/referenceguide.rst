@@ -10,6 +10,7 @@ Reference Guide
    ./reference_menu
    ./reference_measure
    ./reference_height
+   ./reference_heightmeasure
    ./handlingkp
    ./mediantrack
    ./cfgfileformat

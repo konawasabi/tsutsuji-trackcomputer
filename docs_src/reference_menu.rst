@@ -60,16 +60,18 @@ Measure...
 
 .. image:: ./files/height_measure.png
 	   :scale: 60%
-
-:ref:`ref_height_menu_measure` を参照してください。
+		   
+高度プロット上の座標を調べるMeasureウィンドウを開きます。
+詳細は :doc:`reference_heightmeasure` を参照してください。
 
 Backimg...
 +++++++++++
 
 .. image:: ./files/height_backimg.png
 	   :scale: 60%
-
-:ref:`ref_height_menu_backimg` を参照してください。
+		   
+高度プロットウィンドウの背景画像を管理するウィンドウを表示します。
+詳細は :ref:`ref_height_menu_backimg` を参照してください。
 
 Load Backimg...
 ++++++++++++++++
