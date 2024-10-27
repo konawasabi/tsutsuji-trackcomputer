@@ -44,6 +44,44 @@ Replot
 プロットウィンドウの再描画を行います。
 メインウィンドウのReplotボタンと同じ動作をします。
 
+高度
+----------
+
+Display...
++++++++++++
+
+.. image:: ./files/height_window.png
+	   :scale: 60%
+
+:doc:`reference_height` を表示します。
+
+Measure...
+++++++++++++++++
+
+.. image:: ./files/height_measure.png
+	   :scale: 60%
+
+:ref:`ref_height_menu_measure` を参照してください。
+
+Backimg...
++++++++++++
+
+.. image:: ./files/height_backimg.png
+	   :scale: 60%
+
+:ref:`ref_height_menu_backimg` を参照してください。
+
+Load Backimg...
+++++++++++++++++
+
+:ref:`ref_height_menu_loadbackimg` を参照してください。
+
+Save Backimg...
+++++++++++++++++
+
+:ref:`ref_height_menu_savebackimg` を参照してください。
+
+
 オプション
 ----------
 
@@ -228,6 +266,26 @@ Color
 
 各軌道に割り当てられた色を表示します。
 ■■■をクリックするとカラーピッカーが表示され、割り当てる色を変更できます。
+
+----
+
+Handling kiloposts...
+++++++++++++++++++++++
+
+.. image:: ./files/handlingkp.png
+	   :scale: 60%
+		   
+:doc:`handlingkp` を開きます。
+
+----
+
+Mediantrack...
++++++++++++++++
+
+.. image:: ./files/mediantrack.png
+	   :scale: 60%
+		   
+:doc:`mediantrack` を開きます。
 
 
 ヘルプ
