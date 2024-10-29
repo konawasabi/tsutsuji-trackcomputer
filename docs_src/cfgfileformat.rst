@@ -48,7 +48,14 @@ backimg
 * type: filepath
 * 線形データ読み込み時に表示する背景画像設定ファイルへのパス
 
-  * オプションメニュー -> Save Backimg... で出力されるファイルを指定する
+  * オプションメニュー -> Save Backimg... で出力したファイルを指定する
+
+backimg_height
+=================
+* type: filepath
+* 高度ウィンドウへ表示する背景画像設定ファイルへのパス
+
+  * 高度メニュー -> Save Backimg... で出力したファイルを指定する
 
 output_digit
 ==============
@@ -66,6 +73,14 @@ check_u
 
 
 .. image:: ./files/cfgformat_checkU.png
+
+limit_curvatureradius
+======================
+* type: float
+* 出力する相対半径の上限値を設定する
+
+  * 計算結果の絶対値がこの値を超えた場合、相対半径は0として出力される
+  * デフォルトでは 1e4  
 
 
 ************
