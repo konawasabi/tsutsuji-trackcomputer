@@ -207,6 +207,44 @@ calc_relrad
     
 * **kml/csvファイルに対する軌道のみ有効**
 
+
+mapelement_enable_x
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].X` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
+mapelement_enable_y
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Y` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
+mapelement_enable_cant
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Cant.Interpolate` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
+mapelement_enable_interpolate_func
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Cant.SetFunction` 要素を出力するかどうか設定する
+* デフォルトではTrue
+  
+mapelement_enable_center
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Cant.SetCenter` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
+mapelement_enable_gauge
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Cant.SetGauge` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
+
 .. _ref_cfg_maptile:
 
 ************
