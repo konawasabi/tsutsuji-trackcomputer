@@ -267,6 +267,8 @@ class KilopostHandling():
                             output += pre_elem + elem + ';'
                         else:
                             output += pre_elem + elem + ';'
+                    elif tree.data == 'set_variable':
+                        output += pre_elem + elem + ';'
                 else:
                     output += pre_elem
 
