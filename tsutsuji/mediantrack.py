@@ -127,6 +127,7 @@ class GUI():
 
         # Track構文で記述した他軌道
         owot_keys = []
+        
         for parent_tr in self.trackcontrol.track.keys():
             for child_tr in self.trackcontrol.track[parent_tr]['othertrack'].keys():
                 owot_keys.append('@OT_{:s}@_{:s}'.format(parent_tr,child_tr))
@@ -135,7 +136,7 @@ class GUI():
             +tuple(self.trackcontrol.pointsequence_track.track.keys())\
             +tuple(owot_keys)
 
-        self.base_tr_e['values'] = trackkeylist
+        self.base_tr_e['values'] = tuple(self.trackcontrol.track.keys())
         self.tgt_tr_e['values'] = trackkeylist
     def doit(self):
         result_elem,result_map = self.trackcontrol.generate_mediantrack(self.base_tr_v.get(),\
