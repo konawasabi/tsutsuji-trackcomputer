@@ -23,9 +23,61 @@ input: `/hoge/fuga/piyo.txt` である場合、デフォルトではoutput: `/ho
 include要素(ディレクティブ)の扱い
 ==============================
 
-指定したmapファイルにinclude要素が含まれていた場合も、include要素が指定するmapファイルに対して同様の処理を行い、input側のディレクトリ構成、ファイル名を極力維持して結果を出力します。
+指定したmapファイルにinclude要素が含まれていた場合、include要素が指定するmapファイルに対しても同様の処理を行い、input側のディレクトリ構成、ファイル名を極力維持して結果を出力します。
 
-ただし、ref:`ref_handlingkp_kprange` で距離程範囲を設定していた場合で、include要素の直前の距離程がその範囲外にある場合、そのinclude要素が指定するmapファイルは一切処理されませんので注意してください。
+ただし、 :ref:`ref_handlingkp_kprange` で距離程範囲を設定していた場合で、include要素の直前の距離程がその範囲外にある場合、そのinclude要素が指定するmapファイルは一切処理されませんので注意してください。
+
+例
+++++
+
+Input
+~~~~~~~
+
+filepath::
+
+  /hoge/fuga/piyo.txt
+  
+
+kilopost range::
+
+  start: 100
+  end: 200
+
+  
+map::
+
+  0;
+  include "foo/bar.txt";
+
+  100;
+  include "baz.txt";
+
+  150;
+  include "foo/bar/qux.txt";
+
+  300;
+  include "foobar.txt";
+
+  
+output
+~~~~~~~
+
+* 出力されるファイルのディレクトリ構成
+
+  * /hoge/fuga/results
+    
+    * piyo.txt
+    * baz.txt
+    * foo/
+      
+      * bar/
+
+	* qux.txt
+
+* 実行されないinclude要素
+  
+  * `include "foo/bar.txt";`
+  * `include "foobar.txt";`
 
 
 .. _ref_handlingkp_mode:
