@@ -229,7 +229,7 @@ class Interface():
 
         i = 'ID'
         self.edit_vals[i] = tk.StringVar(value='')
-        self.edit_entries[i] = ttk.Entry(self.edit_frame, textvariable = self.edit_vals[i],width=5)
+        self.edit_entries[i] = ttk.Entry(self.edit_frame, textvariable = self.edit_vals[i],width=5,state='readonly')
 
         i = 'Track'
         self.edit_vals[i] = tk.StringVar(value='')
