@@ -1,19 +1,18 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>CurveTrack Solver &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -24,7 +23,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -51,9 +50,9 @@
           <div class="body" role="main">
             
   <section id="curvetrack-solver">
-<h1>CurveTrack Solver<a class="headerlink" href="#curvetrack-solver" title="Permalink to this heading">¶</a></h1>
+<h1>CurveTrack Solver<a class="headerlink" href="#curvetrack-solver" title="Link to this heading">¶</a></h1>
 <section id="id1">
-<h2>はじめに<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<h2>はじめに<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
 <p>このセクションでは、Measureウィンドウの機能の一つである <a class="reference internal" href="reference_measure.html#ref-measure-ctsolver"><span class="std std-ref">CurveTrack Solver</span></a> について、いくつかの使用シーンごとに使用手順を紹介します。</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -63,7 +62,7 @@ Windows上で動作させた場合と若干インターフェースの見た目�
 </div>
 </section>
 <section id="id2">
-<h2>航空写真から曲線半径・曲線長を求める<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<h2>航空写真から曲線半径・曲線長を求める<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="tutorial_backimg.html"><span class="doc">背景画像</span></a> として表示した航空写真や地図上に記された曲線軌道から曲線半径・曲線長を計算します。
 基本的な使い方は次の通りです。</p>
 <ol class="arabic simple">
@@ -76,11 +75,13 @@ Windows上で動作させた場合と若干インターフェースの見た目�
 </ol>
 </li>
 </ol>
-<a class="reference internal image-reference" href="_images/ctsolver_fitradius.png"><img alt="_images/ctsolver_fitradius.png" src="_images/ctsolver_fitradius.png" style="width: 426.0px; height: 258.59999999999997px;" /></a>
+<a class="reference internal image-reference" href="_images/ctsolver_fitradius.png"><img alt="_images/ctsolver_fitradius.png" src="_images/ctsolver_fitradius.png" style="width: 426.0px; height: 258.59999999999997px;" />
+</a>
 <p>これで、カーソルA, B間を結ぶ最適な曲線軌道の曲線半径・曲線長が計算されます。
 計算結果はプロットウィンドウに図示され、同時に、計算に用いた各種パラメータと、Curve構文で表した計算結果がターミナルに表示されます。
 以下、プロットウィンドウの表示例とターミナルへの出力例を示します。</p>
-<a class="reference internal image-reference" href="_images/ctsolver_mode1.png"><img alt="_images/ctsolver_mode1.png" src="_images/ctsolver_mode1.png" style="width: 489.6px; height: 272.8px;" /></a>
+<a class="reference internal image-reference" href="_images/ctsolver_mode1.png"><img alt="_images/ctsolver_mode1.png" src="_images/ctsolver_mode1.png" style="width: 489.6px; height: 272.8px;" />
+</a>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Curve fitting]
 Inputs:
 Fitmode:          1. α(fix)-&gt;β(free), R(free)
@@ -116,11 +117,12 @@ Curve.Interpolate(0.000000,0.000000);
 <p>なお、この方法は、軌道の方向がx軸と平行でない場合はあまり効果がないので注意してください。</p>
 </div>
 <section id="mode">
-<h3>計算Modeについて<a class="headerlink" href="#mode" title="Permalink to this heading">¶</a></h3>
+<h3>計算Modeについて<a class="headerlink" href="#mode" title="Link to this heading">¶</a></h3>
 <p>前節では計算Modeとして1. α(fix)-&gt;β(free), R(free), 2. α(free)-&gt;β(fix), R(free)の2つを挙げました。
 1.はカーソルAを始点としてカーソルBの延長線上に終点をもつ曲線を求めるモード、2.はカーソルBを終点としてカーソルAの延長線上に始点をもつ曲線を求めるモード(1.の逆)です。</p>
 <p>Mode 1,2の概略図を次に示します。</p>
-<a class="reference internal image-reference" href="_images/ctsolver_mode1-2.png"><img alt="_images/ctsolver_mode1-2.png" src="_images/ctsolver_mode1-2.png" style="width: 409.8px; height: 183.6px;" /></a>
+<a class="reference internal image-reference" href="_images/ctsolver_mode1-2.png"><img alt="_images/ctsolver_mode1-2.png" src="_images/ctsolver_mode1-2.png" style="width: 409.8px; height: 183.6px;" />
+</a>
 <p>原理的には、カーソルA,Bが曲線軌道の端点に一致していれば、Mode1,2の計算結果は一致します。
 しかし実際には、2つのカーソルを曲線軌道の端点に正確に合わせることは難しく、上図で示したように2つの計算結果が一致しない可能性は高くなります。
 （ここでは、カーソルBが曲線軌道の終点から左側にずれている場合を示しています）</p>
@@ -128,7 +130,7 @@ Curve.Interpolate(0.000000,0.000000);
 <p>なお、各Modeの内容については <span class="xref std std-ref">こちら</span> も参照してください。</p>
 </section>
 <section id="id3">
-<h3>緩和曲線の扱い<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<h3>緩和曲線の扱い<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <p>デフォルトでは、上記の手順で計算される軌道は単純な円軌道で、始点・終点に緩和曲線は付いていません。</p>
 <p>緩和曲線のついた曲線軌道を求める場合は、TCL α, TCL βフィールドにそれぞれの側の緩和曲線長さを入力し、逓減関数をline/sinから選んでDo Itを実行します。</p>
 <p>なお、Version 1.2.0では、緩和曲線長さを自動で求める機能は未実装です。
@@ -144,7 +146,7 @@ Curve.Interpolate(0.000000,0.000000);
 </section>
 </section>
 <section id="id4">
-<h2>曲線軌道の始点・曲線長を求める<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<h2>曲線軌道の始点・曲線長を求める<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <p>事前の調査によって曲線半径がすでに判明している場合に、2つのカーソルで示した位置を結ぶ最適な曲線軌道を求める方法です。
 Mode3を使って、曲線軌道の始点・曲線長を計算します。</p>
 <ol class="arabic simple">
@@ -160,7 +162,8 @@ Mode3を使って、曲線軌道の始点・曲線長を計算します。</p>
 <p>実行結果はMode1,2と同様に、プロットウィンドウとターミナルに以下のように出力されます。</p>
 <p>ここで、 <cite>shift</cite> は、カーソルAから実際の曲線始点までの距離を表します。
 Curve構文による出力では <cite>shift</cite> の値を考慮して距離程が決められています。</p>
-<a class="reference internal image-reference" href="_images/ctsolver_mode3.png"><img alt="_images/ctsolver_mode3.png" src="_images/ctsolver_mode3.png" style="width: 312.0px; height: 146.0px;" /></a>
+<a class="reference internal image-reference" href="_images/ctsolver_mode3.png"><img alt="_images/ctsolver_mode3.png" src="_images/ctsolver_mode3.png" style="width: 312.0px; height: 146.0px;" />
+</a>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Curve fitting]
 Inputs:
    Fitmode:          3. α(free)-&gt;β(free), R(fix)
@@ -191,16 +194,18 @@ Curve.Interpolate(0.000000,0.000000);
 </div>
 </section>
 <section id="id5">
-<h2>他の軌道への合流<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<h2>他の軌道への合流<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
 <p>下図の様に、右に向かって近づきつつある2つの軌道を、(A) 一つの軌道に合流させる、(B) 一定の間隔を保って並走させる場合の手順を説明します。
 ここで、上側の軌道を <cite>up</cite> 、下側の軌道を <cite>down</cite> とします。</p>
-<a class="reference internal image-reference" href="_images/ctsolver_merging.png"><img alt="_images/ctsolver_merging.png" src="_images/ctsolver_merging.png" style="width: 539.5px; height: 142.0px;" /></a>
+<a class="reference internal image-reference" href="_images/ctsolver_merging.png"><img alt="_images/ctsolver_merging.png" src="_images/ctsolver_merging.png" style="width: 539.5px; height: 142.0px;" />
+</a>
 <ol class="arabic">
 <li><p>カーソルAを軌道 <cite>up</cite> の右端に合わせる</p>
 <ol class="lowerroman">
 <li><p>カーソルAのTrackリストから <cite>up</cite> を選択する</p>
 <ul>
-<li><a class="reference internal image-reference" href="_images/ctsolver_trackmenu.png"><img alt="_images/ctsolver_trackmenu.png" src="_images/ctsolver_trackmenu.png" style="width: 385.2px; height: 103.2px;" /></a>
+<li><a class="reference internal image-reference" href="_images/ctsolver_trackmenu.png"><img alt="_images/ctsolver_trackmenu.png" src="_images/ctsolver_trackmenu.png" style="width: 385.2px; height: 103.2px;" />
+</a>
 </li>
 <li><p>これで、カーソルは軌道 <cite>up</cite> 上の点のみを移動できる様になる</p></li>
 </ul>
@@ -235,7 +240,8 @@ Curve.Interpolate(0.000000,0.000000);
 <li><p>表示されたset offsetウィンドウに、カーソルを平行移動させる距離を入力する</p>
 <ul>
 <li><p>ここではy = -3.8 [m]とする</p></li>
-<li><a class="reference internal image-reference" href="_images/ctsolver_val.png"><img alt="_images/ctsolver_val.png" src="_images/ctsolver_val.png" style="width: 180.6px; height: 105.6px;" /></a>
+<li><a class="reference internal image-reference" href="_images/ctsolver_val.png"><img alt="_images/ctsolver_val.png" src="_images/ctsolver_val.png" style="width: 180.6px; height: 105.6px;" />
+</a>
 </li>
 <li><p>set offsetでは以下の座標系を使うことに注意する</p>
 <ul>
@@ -278,13 +284,14 @@ Curve.Interpolate(0.000000,0.000000);
 </ol>
 </section>
 <section id="tutorial-ctsolver-crossover">
-<span id="id6"></span><h2>渡り線<a class="headerlink" href="#tutorial-ctsolver-crossover" title="Permalink to this heading">¶</a></h2>
+<span id="id6"></span><h2>渡り線<a class="headerlink" href="#tutorial-ctsolver-crossover" title="Link to this heading">¶</a></h2>
 <p>下図の様に、複線軌道に片渡り線を追加する手順を説明します。
 ここでは、上側軌道: <cite>up</cite>, 下側軌道: <cite>down</cite>, 渡り線: <cite>cross</cite> とします。
 また、複線間隔は3.8mとし、分岐器として狭軌の8番分岐器を想定しています。</p>
 <p>サンプルデータを <a class="reference download internal" download="" href="_downloads/b138db52366054928898adf362937c52/tutorial_ctsolver_cross_sample.zip"><code class="xref download docutils literal notranslate"><span class="pre">tutorial_ctsolver_cross_sample.zip</span> <span class="pre">(3.0</span> <span class="pre">KB)</span></code></a> からダウンロードできます。
 tsutsujiでco.cfgファイルを読み込むと、下図下側の線形が表示されます。</p>
-<a class="reference internal image-reference" href="_images/ctsolver_crossover.png"><img alt="_images/ctsolver_crossover.png" src="_images/ctsolver_crossover.png" style="width: 419.5px; height: 227.5px;" /></a>
+<a class="reference internal image-reference" href="_images/ctsolver_crossover.png"><img alt="_images/ctsolver_crossover.png" src="_images/ctsolver_crossover.png" style="width: 419.5px; height: 227.5px;" />
+</a>
 <ol class="arabic">
 <li><p>渡り線の始点にカーソルAをセットする</p>
 <ol class="lowerroman simple">
@@ -294,7 +301,8 @@ tsutsujiでco.cfgファイルを読み込むと、下図下側の線形が表示
 </li>
 <li><p>1つ目の分岐器を計算する</p>
 <ul>
-<li><a class="reference internal image-reference" href="_images/ctsolver_crossover_switch1.png"><img alt="_images/ctsolver_crossover_switch1.png" src="_images/ctsolver_crossover_switch1.png" style="width: 460.79999999999995px; height: 96.0px;" /></a>
+<li><a class="reference internal image-reference" href="_images/ctsolver_crossover_switch1.png"><img alt="_images/ctsolver_crossover_switch1.png" src="_images/ctsolver_crossover_switch1.png" style="width: 460.79999999999995px; height: 96.0px;" />
+</a>
 </li>
 </ul>
 <ol class="lowerroman">
@@ -304,7 +312,8 @@ tsutsujiでco.cfgファイルを読み込むと、下図下側の線形が表示
 <li><p>Modeとして <strong>4. α(fix), R(fix), CCL(fix)</strong> を選択してDo Itをクリック</p></li>
 <li><p>カーソルAを起点とした曲線軌道が計算され、軌道終点にカーソルBがセットされる</p>
 <ul>
-<li><a class="reference internal image-reference" href="_images/ctsolver_crossover_switch1_result.png"><img alt="_images/ctsolver_crossover_switch1_result.png" src="_images/ctsolver_crossover_switch1_result.png" style="width: 175.79999999999998px; height: 52.8px;" /></a>
+<li><a class="reference internal image-reference" href="_images/ctsolver_crossover_switch1_result.png"><img alt="_images/ctsolver_crossover_switch1_result.png" src="_images/ctsolver_crossover_switch1_result.png" style="width: 175.79999999999998px; height: 52.8px;" />
+</a>
 </li>
 <li><p>ターミナル出力は <a class="reference internal" href="#tut-ctsolver-co-sw1"><span class="std std-ref">こちら</span></a></p></li>
 </ul>
@@ -319,7 +328,8 @@ tsutsujiでco.cfgファイルを読み込むと、下図下側の線形が表示
 <li><p>Modeとして <strong>3. α(free)-&gt;β(free), R(fix)</strong> を選択してDo Itをクリック</p></li>
 <li><p>カーソルB, Cを接線とする曲線軌道が計算される</p>
 <ul>
-<li><a class="reference internal image-reference" href="_images/ctsolver_crossover_switch2_result.png"><img alt="_images/ctsolver_crossover_switch2_result.png" src="_images/ctsolver_crossover_switch2_result.png" style="width: 415.2px; height: 76.2px;" /></a>
+<li><a class="reference internal image-reference" href="_images/ctsolver_crossover_switch2_result.png"><img alt="_images/ctsolver_crossover_switch2_result.png" src="_images/ctsolver_crossover_switch2_result.png" style="width: 415.2px; height: 76.2px;" />
+</a>
 </li>
 <li><p>ターミナル出力は <a class="reference internal" href="#tut-ctsolver-co-sw2"><span class="std std-ref">こちら</span></a></p></li>
 <li><p>ここで、shift = 15.77 m は、1つ目の分岐器終点(カーソルB)から2つ目の分岐器始点までの距離を表す</p></li>
@@ -361,7 +371,7 @@ Curve.Interpolate(0.000000,0.000000);
 </li>
 </ol>
 <section id="id7">
-<h3>ターミナル出力例<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
+<h3>ターミナル出力例<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
 <p id="tut-ctsolver-co-sw1">分岐器1つ目</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Curve fitting]
 Inputs:
@@ -441,7 +451,7 @@ Curve.Interpolate(0.000000,0.000000);
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
@@ -481,7 +491,7 @@ Curve.Interpolate(0.000000,0.000000);
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -489,13 +499,13 @@ Curve.Interpolate(0.000000,0.000000);
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -516,8 +526,8 @@ Curve.Interpolate(0.000000,0.000000);
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

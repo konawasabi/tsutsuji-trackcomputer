@@ -171,3 +171,5 @@ if __name__ == '__main__':
     result = []
     readfile(str(input_path), '$'+args.label, args.distance,  result, inroot, inverse_kp = args.invert)
     writefile(result, outroot)
+    
+

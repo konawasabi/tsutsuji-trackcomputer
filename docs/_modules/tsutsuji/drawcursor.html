@@ -1,18 +1,17 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tsutsuji.drawcursor &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -21,7 +20,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -43,7 +42,7 @@
             
   <h1>Source code for tsutsuji.drawcursor</h1><div class="highlight"><pre>
 <span></span><span class="c1">#</span>
-<span class="c1">#    Copyright 2021-2023 konawasabi</span>
+<span class="c1">#    Copyright 2021-2024 konawasabi</span>
 <span class="c1">#</span>
 <span class="c1">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1">#    you may not use this file except in compliance with the License.</span>
@@ -68,10 +67,14 @@
 
 <span class="kn">from</span> <span class="nn">kobushi</span> <span class="kn">import</span> <span class="n">dialog_multifields</span>
 
-<div class="viewcode-block" id="cursor"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.cursor">[docs]</a><span class="k">class</span> <span class="nc">cursor</span><span class="p">():</span>
+<div class="viewcode-block" id="cursor">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.cursor">[docs]</a>
+<span class="k">class</span> <span class="nc">cursor</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">parent</span>
-<div class="viewcode-block" id="cursor.point_and_dir"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.cursor.point_and_dir">[docs]</a>    <span class="k">def</span> <span class="nf">point_and_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="cursor.point_and_dir">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.cursor.point_and_dir">[docs]</a>
+    <span class="k">def</span> <span class="nf">point_and_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">click_1st</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
             <span class="k">nonlocal</span> <span class="n">pointed_pos</span><span class="p">,</span><span class="n">press2nd_id</span><span class="p">,</span><span class="n">motion_id</span>
             <span class="n">pointerpos</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span><span class="n">event</span><span class="o">.</span><span class="n">ydata</span><span class="p">)</span>
@@ -104,7 +107,10 @@
         <span class="n">press2nd_id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">motion_id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">pointed_pos</span> <span class="o">=</span> <span class="kc">None</span></div>
-<div class="viewcode-block" id="cursor.distance2pos"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.cursor.distance2pos">[docs]</a>    <span class="k">def</span> <span class="nf">distance2pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="cursor.distance2pos">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.cursor.distance2pos">[docs]</a>
+    <span class="k">def</span> <span class="nf">distance2pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">click_1st</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
             <span class="k">nonlocal</span> <span class="n">pointerpos1</span><span class="p">,</span><span class="n">pointerpos2</span><span class="p">,</span><span class="n">pointed_pos</span><span class="p">,</span><span class="n">press1st_id</span><span class="p">,</span><span class="n">click_num</span>
             <span class="k">if</span> <span class="n">click_num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -127,9 +133,13 @@
         <span class="n">pointerpos2</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">ax_plane</span><span class="o">.</span><span class="n">plot</span><span class="p">([],[],</span><span class="s1">&#39;bx&#39;</span><span class="p">)</span>
         <span class="n">press1st_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">fig_canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;button_press_event&#39;</span><span class="p">,</span><span class="n">click_1st</span><span class="p">)</span>
         <span class="n">pointed_pos</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">click_num</span> <span class="o">=</span> <span class="mi">0</span></div></div>
+        <span class="n">click_num</span> <span class="o">=</span> <span class="mi">0</span></div>
+</div>
 
-<div class="viewcode-block" id="marker"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker">[docs]</a><span class="k">class</span> <span class="nc">marker</span><span class="p">():</span>
+
+<div class="viewcode-block" id="marker">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker">[docs]</a>
+<span class="k">class</span> <span class="nc">marker</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">,</span><span class="n">color</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parentwindow</span><span class="o">.</span><span class="n">ax_plane</span>
@@ -138,7 +148,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setmarkerobj</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prev_trackpos</span> <span class="o">=</span> <span class="kc">None</span>
-<div class="viewcode-block" id="marker.start"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="marker.start">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">!=</span> <span class="s1">&#39;@absolute&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">track_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">track_key</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
@@ -151,13 +163,19 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">press_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;button_press_event&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">press</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">move_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;motion_notify_event&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">)</span></div>
-<div class="viewcode-block" id="marker.setpos"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.setpos">[docs]</a>    <span class="k">def</span> <span class="nf">setpos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker.setpos">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.setpos">[docs]</a>
+    <span class="k">def</span> <span class="nf">setpos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">setdistance</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
-<div class="viewcode-block" id="marker.move"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker.move">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.move">[docs]</a>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
         <span class="n">xpos</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">xdata</span>
         <span class="n">ypos</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">ydata</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">==</span> <span class="s1">&#39;@absolute&#39;</span><span class="p">:</span>
@@ -165,7 +183,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nearestpoint</span><span class="p">(</span><span class="n">xpos</span><span class="p">,</span><span class="n">ypos</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setpos</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
-<div class="viewcode-block" id="marker.press"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.press">[docs]</a>    <span class="k">def</span> <span class="nf">press</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker.press">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.press">[docs]</a>
+    <span class="k">def</span> <span class="nf">press</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
         <span class="n">xpos</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">xdata</span>
         <span class="n">ypos</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">ydata</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">==</span> <span class="s1">&#39;@absolute&#39;</span><span class="p">:</span>
@@ -176,7 +197,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">prev_trackpos</span> <span class="o">=</span> <span class="n">result</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">press_id</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_id</span><span class="p">)</span></div>
-<div class="viewcode-block" id="marker.nearestpoint"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.nearestpoint">[docs]</a>    <span class="k">def</span> <span class="nf">nearestpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker.nearestpoint">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.nearestpoint">[docs]</a>
+    <span class="k">def</span> <span class="nf">nearestpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
         <span class="n">inputpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">])</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">track_data</span> <span class="o">-</span> <span class="n">inputpos</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">min_dist_ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">distance</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">distance</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]))</span>
@@ -186,12 +210,19 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="n">parent_tr</span><span class="p">][</span><span class="s1">&#39;othertrack&#39;</span><span class="p">][</span><span class="n">child_tr</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="n">min_dist_ix</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">track_key</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="n">min_dist_ix</span><span class="p">]</span></div>
-<div class="viewcode-block" id="marker.setmarkerobj"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.setmarkerobj">[docs]</a>    <span class="k">def</span> <span class="nf">setmarkerobj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker.setmarkerobj">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker.setmarkerobj">[docs]</a>
+    <span class="k">def</span> <span class="nf">setmarkerobj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],[],</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="o">+</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pos</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">())</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">())</span></div>
+</div>
+
         
-<div class="viewcode-block" id="arrow"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow">[docs]</a><span class="k">class</span> <span class="nc">arrow</span><span class="p">():</span>
+<div class="viewcode-block" id="arrow">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow">[docs]</a>
+<span class="k">class</span> <span class="nc">arrow</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">,</span><span class="n">marker</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parentwindow</span><span class="o">.</span><span class="n">ax_plane</span>
@@ -201,7 +232,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pointerdir</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tangentline</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lastmousepoint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<div class="viewcode-block" id="arrow.start"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="arrow.start">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointerdir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pointerdir</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pointerdir</span> <span class="o">=</span> <span class="kc">None</span>
@@ -213,7 +246,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parentwindow</span><span class="o">.</span><span class="n">sendtopmost</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">press_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;button_press_event&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">press</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">move_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;motion_notify_event&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">)</span></div>
-<div class="viewcode-block" id="arrow.move"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+
+<div class="viewcode-block" id="arrow.move">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.move">[docs]</a>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
         <span class="n">position</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">event</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span><span class="n">event</span><span class="o">.</span><span class="n">ydata</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">xdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">ydata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">==</span> <span class="s1">&#39;@absolute&#39;</span><span class="p">:</span>
@@ -240,12 +276,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values_toshow</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">)))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">setdistance</span><span class="p">()</span></div>
-<div class="viewcode-block" id="arrow.press"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.press">[docs]</a>    <span class="k">def</span> <span class="nf">press</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+
+<div class="viewcode-block" id="arrow.press">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.press">[docs]</a>
+    <span class="k">def</span> <span class="nf">press</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">printdirection</span><span class="p">(</span><span class="n">mycursor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">sendtopmost</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">press_id</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_id</span><span class="p">)</span></div>
-<div class="viewcode-block" id="arrow.setobj"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.setobj">[docs]</a>    <span class="k">def</span> <span class="nf">setobj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">element</span><span class="p">,</span><span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="arrow.setobj">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.setobj">[docs]</a>
+    <span class="k">def</span> <span class="nf">setobj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">element</span><span class="p">,</span><span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointerdir</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">reset</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">reset</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">pointed_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()])</span>
@@ -255,7 +297,10 @@
                                              <span class="n">angles</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span><span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">scale_units</span><span class="o">=</span><span class="s1">&#39;inches&#39;</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mf">0.0025</span><span class="o">*</span><span class="mi">7</span><span class="o">/</span><span class="n">figsize</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pointerdir</span><span class="o">.</span><span class="n">set_UVC</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">element</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
-<div class="viewcode-block" id="arrow.settangent"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.settangent">[docs]</a>    <span class="k">def</span> <span class="nf">settangent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pointerpos</span><span class="p">,</span><span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="arrow.settangent">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.settangent">[docs]</a>
+    <span class="k">def</span> <span class="nf">settangent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pointerpos</span><span class="p">,</span><span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;@absolute&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">reset</span><span class="p">:</span>
                 <span class="n">pointerpos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastmousepoint</span>
@@ -267,54 +312,99 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">tangentline</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">diagonal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pointerpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]],[</span><span class="n">diagonal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">pointerpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="s1">&#39;k--&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tangentline</span><span class="o">.</span><span class="n">set_data</span><span class="p">([</span><span class="n">diagonal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pointerpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]],[</span><span class="n">diagonal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">pointerpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span></div>
-<div class="viewcode-block" id="arrow.set_direct"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.set_direct">[docs]</a>    <span class="k">def</span> <span class="nf">set_direct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="arrow.set_direct">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.arrow.set_direct">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_direct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointerdir</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pointerdir</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pointerdir</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setobj</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1">#self.p.parent.printdirection()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
+</div>
 
-<div class="viewcode-block" id="marker_simple"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple">[docs]</a><span class="k">class</span> <span class="nc">marker_simple</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">,</span><span class="n">ax</span><span class="p">,</span><span class="n">canvas</span><span class="p">,</span><span class="n">color</span><span class="p">,</span><span class="n">ch_main</span><span class="p">,</span><span class="n">ch_measure</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_simple">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple">[docs]</a>
+<span class="k">class</span> <span class="nc">marker_simple</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">,</span><span class="n">ax</span><span class="p">,</span><span class="n">canvas</span><span class="p">,</span><span class="n">color</span><span class="p">,</span><span class="n">ch_main</span><span class="p">,</span><span class="n">ch_measure</span><span class="p">,</span><span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="n">canvas</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ch_main</span> <span class="o">=</span> <span class="n">ch_main</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ch_measure</span> <span class="o">=</span> <span class="n">ch_measure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setobj</span><span class="p">()</span>
-<div class="viewcode-block" id="marker_simple.start"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">posfunc</span><span class="p">,</span><span class="n">pressfunc</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#self.deleteobj()</span>
+        <span class="k">pass</span>
+<div class="viewcode-block" id="marker_simple.start">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">posfunc</span><span class="p">,</span><span class="n">pressfunc</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">posfunc</span> <span class="o">=</span> <span class="n">posfunc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pressfunc</span> <span class="o">=</span> <span class="n">pressfunc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ch_main</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">press_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;button_press_event&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">press</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">move_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;motion_notify_event&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">)</span></div>
-<div class="viewcode-block" id="marker_simple.move"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_simple.move">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.move">[docs]</a>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">xdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">ydata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setpos</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span><span class="n">event</span><span class="o">.</span><span class="n">ydata</span><span class="p">)</span></div>
-<div class="viewcode-block" id="marker_simple.press"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.press">[docs]</a>    <span class="k">def</span> <span class="nf">press</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_simple.press">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.press">[docs]</a>
+    <span class="k">def</span> <span class="nf">press</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">xdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">ydata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setpos</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">xdata</span><span class="p">,</span><span class="n">event</span><span class="o">.</span><span class="n">ydata</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pressfunc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ch_measure</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">press_id</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_id</span><span class="p">)</span></div>
-<div class="viewcode-block" id="marker_simple.setpos"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.setpos">[docs]</a>    <span class="k">def</span> <span class="nf">setpos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_simple.setpos">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.setpos">[docs]</a>
+    <span class="k">def</span> <span class="nf">setpos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">direct</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">xout</span> <span class="o">=</span> <span class="n">x</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">yout</span> <span class="o">=</span> <span class="n">y</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">xout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posfunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xout</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">yout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="o">.</span><span class="n">set_data</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">xout</span><span class="p">],[</span><span class="bp">self</span><span class="o">.</span><span class="n">yout</span><span class="p">])</span>
         <span class="c1">#self.annotate.set(text =&#39;({:.1f},{:.1f})&#39;.format(self.xout,self.yout), position=(self.xout,self.yout))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
-<div class="viewcode-block" id="marker_simple.setobj"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.setobj">[docs]</a>    <span class="k">def</span> <span class="nf">setobj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],[],</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="o">+</span><span class="s1">&#39;x&#39;</span><span class="p">)</span></div></div>
-        <span class="c1">#self.annotate = self.ax.text(0,0,&#39;&#39;)</span>
 
-<div class="viewcode-block" id="marker_pos"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos">[docs]</a><span class="k">class</span> <span class="nc">marker_pos</span><span class="p">():</span>
+<div class="viewcode-block" id="marker_simple.setobj">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.setobj">[docs]</a>
+    <span class="k">def</span> <span class="nf">setobj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;#&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],[],</span><span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],[],</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="o">+</span><span class="s1">&#39;x&#39;</span><span class="p">)</span></div>
+
+        <span class="c1">#self.annotate = self.ax.text(0,0,&#39;&#39;)</span>
+<div class="viewcode-block" id="marker_simple.deleteobj">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.deleteobj">[docs]</a>
+    <span class="k">def</span> <span class="nf">deleteobj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">marker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span>
+        <span class="n">marker</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="marker_simple.setcolor">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_simple.setcolor">[docs]</a>
+    <span class="k">def</span> <span class="nf">setcolor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">color</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markerpos</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="marker_pos">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos">[docs]</a>
+<span class="k">class</span> <span class="nc">marker_pos</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">,</span><span class="n">color</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parentwindow</span><span class="o">.</span><span class="n">ax_plane</span>
@@ -324,7 +414,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span> <span class="o">=</span> <span class="n">marker_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parentwindow</span><span class="o">.</span><span class="n">sendtopmost</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">sendtopmost</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span><span class="o">.</span><span class="n">posfunc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">posfunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span><span class="o">.</span><span class="n">pressfunc</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">pressfunc</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-<div class="viewcode-block" id="marker_pos.start"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="marker_pos.start">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="k">if</span> <span class="s1">&#39;@&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">track_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">track_key</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
@@ -337,11 +429,20 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">track_data</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">posfunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">pressfunc</span><span class="p">(</span><span class="n">p</span><span class="p">))</span></div>
-<div class="viewcode-block" id="marker_pos.move"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_pos.move">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.move">[docs]</a>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
-<div class="viewcode-block" id="marker_pos.press"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.press">[docs]</a>    <span class="k">def</span> <span class="nf">press</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_pos.press">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.press">[docs]</a>
+    <span class="k">def</span> <span class="nf">press</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
-<div class="viewcode-block" id="marker_pos.nearestpoint"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.nearestpoint">[docs]</a>    <span class="k">def</span> <span class="nf">nearestpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_pos.nearestpoint">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.nearestpoint">[docs]</a>
+    <span class="k">def</span> <span class="nf">nearestpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
         <span class="n">inputpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">])</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">track_data</span> <span class="o">-</span> <span class="n">inputpos</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">min_dist_ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">distance</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">distance</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]))</span>
@@ -354,12 +455,18 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">pointsequence_track</span><span class="o">.</span><span class="n">track</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">track_key</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="n">min_dist_ix</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">result</span></div>
-<div class="viewcode-block" id="marker_pos.setmarkerobj"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.setmarkerobj">[docs]</a>    <span class="k">def</span> <span class="nf">setmarkerobj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_pos.setmarkerobj">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.setmarkerobj">[docs]</a>
+    <span class="k">def</span> <span class="nf">setmarkerobj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span><span class="o">.</span><span class="n">setobj</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">pos</span><span class="p">:</span>
             <span class="c1">#self.markerobj.setpos(self.p.values[0].get(),self.p.values[1].get())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_direct</span><span class="p">(</span><span class="n">replot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
-<div class="viewcode-block" id="marker_pos.posfunc"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.posfunc">[docs]</a>    <span class="k">def</span> <span class="nf">posfunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xpos</span><span class="p">,</span><span class="n">ypos</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_pos.posfunc">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.posfunc">[docs]</a>
+    <span class="k">def</span> <span class="nf">posfunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xpos</span><span class="p">,</span><span class="n">ypos</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">==</span> <span class="s1">&#39;@absolute&#39;</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">xpos</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">ypos</span>
@@ -378,11 +485,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values_toshow</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kp</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">setdistance</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span></div>
-<div class="viewcode-block" id="marker_pos.pressfunc"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.pressfunc">[docs]</a>    <span class="k">def</span> <span class="nf">pressfunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_pos.pressfunc">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.pressfunc">[docs]</a>
+    <span class="k">def</span> <span class="nf">pressfunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">printdistance</span><span class="p">(</span><span class="n">mycursor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">!=</span> <span class="s1">&#39;@absolute&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prev_trackpos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nearestpoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span><span class="o">.</span><span class="n">xout</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span><span class="o">.</span><span class="n">yout</span><span class="p">)</span></div>
-<div class="viewcode-block" id="marker_pos.set_direct"><a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.set_direct">[docs]</a>    <span class="k">def</span> <span class="nf">set_direct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">replot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="marker_pos.set_direct">
+<a class="viewcode-back" href="../../tsutsuji.drawcursor.html#tsutsuji.drawcursor.marker_pos.set_direct">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_direct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">replot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">track_key</span> <span class="o">==</span> <span class="s1">&#39;@absolute&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">track_data</span> <span class="o">=</span> <span class="kc">None</span>
@@ -448,7 +561,9 @@
                 
         <span class="bp">self</span><span class="o">.</span><span class="n">markerobj</span><span class="o">.</span><span class="n">setpos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span><span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">replot</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">setdistance</span><span class="p">()</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">setdistance</span><span class="p">()</span></div>
+</div>
+
             <span class="c1">#self.p.parent.printdistance()</span>
 </pre></div>
 
@@ -456,9 +571,9 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -466,13 +581,13 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -487,8 +602,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

@@ -1,19 +1,18 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Maptile &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -25,7 +24,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -52,15 +51,15 @@
           <div class="body" role="main">
             
   <section id="maptile">
-<h1>Maptile<a class="headerlink" href="#maptile" title="Permalink to this heading">¶</a></h1>
+<h1>Maptile<a class="headerlink" href="#maptile" title="Link to this heading">¶</a></h1>
 <section id="id1">
-<h2>はじめに<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<h2>はじめに<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
 <p>このセクションでは、国土地理院、OpenStreetMapなどが提供するマップタイルを、プロットウィンドウの表示範囲に合わせて自動で取得・表示するMaptile機能の使用手順を紹介します。</p>
 <p>マップタイル自体の説明については、例えば <a class="reference external" href="https://maps.gsi.go.jp/development/siyou.html">国土地理院 地理院タイルについて</a> を参照してください。</p>
 <p><strong>マップタイルの利用に際しては、それぞれのタイル提供元の利用規約に従ってください。</strong></p>
 </section>
 <section id="id3">
-<h2>基準点の座標を調べる<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<h2>基準点の座標を調べる<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
 <p>最初に、Tsutsuji上の点(x0, y0)に対応するマップタイル上の地点の緯度・経度を調べます。
 デフォルトでは、(x0, y0) = (0, 0)ですが、必要に応じてx0, y0の値は自由に変更できます。</p>
 <p><a class="reference external" href="https://maps.gsi.go.jp/">地理院地図</a> で調べる場合は、調べたい地点をウィンドウ中央に表示して、画面左下の↗️アイコンをクリックすると座標情報が表示されます。</p>
@@ -73,7 +72,7 @@
 </div>
 </section>
 <section id="cfg">
-<h2>cfgファイルの準備<a class="headerlink" href="#cfg" title="Permalink to this heading">¶</a></h2>
+<h2>cfgファイルの準備<a class="headerlink" href="#cfg" title="Link to this heading">¶</a></h2>
 <p>用意した座標データをもとに、cfgファイルの[&#64;MAPTILE]セクションに関係するパラメータを記述します。
 記述例は以下の通りです。
 設定できるパラメータの詳細は <a class="reference internal" href="cfgfileformat.html#ref-cfg-maptile"><span class="std std-ref">[&#64;MAPTILE]</span></a> を参照してください。</p>
@@ -96,9 +95,10 @@ autozoom = False
 <p>なお、オプションメニューからMaptile...を実行すれば、cfgファイルを編集せずにmaptileパラメータを設定できます。
 この際、toshowチェックボックスを選択することを忘れないでください。
 チェックが入っていない場合、マップタイルが取得・表示されません。</p>
-<a class="reference internal image-reference" href="_images/maptileparamwindow.png"><img alt="_images/maptileparamwindow.png" src="_images/maptileparamwindow.png" style="width: 246.6px; height: 141.6px;" /></a>
+<a class="reference internal image-reference" href="_images/maptileparamwindow.png"><img alt="_images/maptileparamwindow.png" src="_images/maptileparamwindow.png" style="width: 246.6px; height: 141.6px;" />
+</a>
 <section id="url">
-<h3>テンプレートURLについて<a class="headerlink" href="#url" title="Permalink to this heading">¶</a></h3>
+<h3>テンプレートURLについて<a class="headerlink" href="#url" title="Link to this heading">¶</a></h3>
 <p>国土地理院タイルを使う場合、主なテンプレートURLは以下の通りです。
 その他の国土地理院タイルについては <a class="reference external" href="https://maps.gsi.go.jp/development/ichiran.html">https://maps.gsi.go.jp/development/ichiran.html</a> を参照してください。</p>
 <ul class="simple">
@@ -110,15 +110,17 @@ autozoom = False
 </section>
 </section>
 <section id="tsutsuji">
-<h2>tsutsuji上での操作方法<a class="headerlink" href="#tsutsuji" title="Permalink to this heading">¶</a></h2>
+<h2>tsutsuji上での操作方法<a class="headerlink" href="#tsutsuji" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="tutorial_first.html"><span class="doc">Tutorial 基本機能</span></a> で紹介したサンプルcfgファイルに、上記の[&#64;MAPTILE]セクションを追加すると、Tsutsujiのプロットウィンドウは以下のようになります。</p>
-<a class="reference internal image-reference" href="_images/maptile_1.png"><img alt="_images/maptile_1.png" src="_images/maptile_1.png" style="width: 490.40000000000003px; height: 274.0px;" /></a>
+<a class="reference internal image-reference" href="_images/maptile_1.png"><img alt="_images/maptile_1.png" src="_images/maptile_1.png" style="width: 490.40000000000003px; height: 274.0px;" />
+</a>
 <p>この状態から、矢印キーでx軸負の方向に移動すると、やがて下図のように取得したマップタイルの範囲外に到達します。
 新しいマップタイルを取得するには、オプションメニューからRefresh Maptile(ショートカット: Shift + Enter)を実行します。
 矢印キーやscale、Y mag.の値によるプロット範囲の変更と、新しいマップタイルの取得は連動していませんので、必要に応じてRefresh Maptileを実行してください。</p>
-<a class="reference internal image-reference" href="_images/maptile_2.png"><img alt="_images/maptile_2.png" src="_images/maptile_2.png" style="width: 489.6px; height: 273.2px;" /></a>
+<a class="reference internal image-reference" href="_images/maptile_2.png"><img alt="_images/maptile_2.png" src="_images/maptile_2.png" style="width: 489.6px; height: 273.2px;" />
+</a>
 <section id="id5">
-<h3>ズームレベルの選択<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<h3>ズームレベルの選択<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
 <p>マップタイルでは、ズームレベルという数値によってタイルの縮尺を表現しており、ズームレベルが1増えるごとに、タイル1枚の縮尺が1/2となります。
 ズームレベルとタイル一辺の距離には、大まかに次の表の関係があります。
 （基準となる緯度・経度によって値は若干変化します）</p>
@@ -163,7 +165,7 @@ autozoom = False
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
@@ -201,7 +203,7 @@ autozoom = False
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -209,13 +211,13 @@ autozoom = False
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -236,8 +238,8 @@ autozoom = False
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

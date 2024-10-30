@@ -1,19 +1,18 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>メニュー &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -24,7 +23,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -51,51 +50,83 @@
           <div class="body" role="main">
             
   <section id="id1">
-<h1>メニュー<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h1>
+<h1>メニュー<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
 <section id="id2">
-<h2>ファイル<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<h2>ファイル<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <section id="id3">
-<h3>開く...<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<h3>開く...<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <p>cfgファイルを指定するファイルダイアログを表示します。
 指定したcfgファイルに基づいて各mapファイルを読み込み、各軌道毎の座標データをプロットウィンドウに表示します。
 cfgファイルの詳細については、 <a class="reference internal" href="cfgfileformat.html"><span class="doc">CFG file format</span></a> を参照してください。</p>
 </section>
 <section id="id4">
-<h3>リロード<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
+<h3>リロード<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
 <p>一旦開いたcfgファイルを再読み込みします。
 cfgファイルで指定された各mapファイルも全て再読み込みされ、軌道座標データを再構築します。</p>
 </section>
 <section id="id5">
-<h3>終了<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<h3>終了<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
 <p>Tsutsujiを終了します。</p>
 </section>
 </section>
 <section id="id6">
-<h2>メイン処理<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h2>
+<h2>メイン処理<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
 <section id="measure">
-<h3>Measure...<a class="headerlink" href="#measure" title="Permalink to this heading">¶</a></h3>
+<h3>Measure...<a class="headerlink" href="#measure" title="Link to this heading">¶</a></h3>
 <p>Measureウィンドウを開きます。
 メインウィンドウのMeasureボタンと同じ動作をします。</p>
 </section>
 <section id="generate">
-<h3>Generate<a class="headerlink" href="#generate" title="Permalink to this heading">¶</a></h3>
+<h3>Generate<a class="headerlink" href="#generate" title="Link to this heading">¶</a></h3>
 <p>cfgファイルの設定に従い、他軌道構文データを出力します。
 メインウィンドウのGenerateボタンと同じ動作をします。</p>
 </section>
 <section id="replot">
-<h3>Replot<a class="headerlink" href="#replot" title="Permalink to this heading">¶</a></h3>
+<h3>Replot<a class="headerlink" href="#replot" title="Link to this heading">¶</a></h3>
 <p>プロットウィンドウの再描画を行います。
 メインウィンドウのReplotボタンと同じ動作をします。</p>
 </section>
 </section>
 <section id="id7">
-<h2>オプション<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h2>
-<section id="backimg">
-<h3>Backimg...<a class="headerlink" href="#backimg" title="Permalink to this heading">¶</a></h3>
-<a class="reference internal image-reference" href="_images/backimg.png"><img alt="_images/backimg.png" src="_images/backimg.png" style="width: 306.59999999999997px; height: 159.6px;" /></a>
-<p>プロットウィンドウの背景に表示する画像を管理するBackground imagesウィンドウを開きます。</p>
+<h2>高度<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<section id="display">
+<h3>Display...<a class="headerlink" href="#display" title="Link to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/height_window.png"><img alt="_images/height_window.png" src="_images/height_window.png" style="width: 595.1999999999999px; height: 328.8px;" />
+</a>
+<p><a class="reference internal" href="reference_height.html"><span class="doc">高度ウィンドウ</span></a> を表示します。</p>
+</section>
 <section id="id8">
-<h4>ファイル操作<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h4>
+<h3>Measure...<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/height_measure.png"><img alt="_images/height_measure.png" src="_images/height_measure.png" style="width: 379.8px; height: 338.4px;" />
+</a>
+<p>高度プロット上の座標を調べるMeasureウィンドウを開きます。
+詳細は <a class="reference internal" href="reference_heightmeasure.html"><span class="doc">Measureウィンドウ(高度)</span></a> を参照してください。</p>
+</section>
+<section id="backimg">
+<h3>Backimg...<a class="headerlink" href="#backimg" title="Link to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/height_backimg.png"><img alt="_images/height_backimg.png" src="_images/height_backimg.png" style="width: 306.59999999999997px; height: 184.79999999999998px;" />
+</a>
+<p>高度プロットウィンドウの背景画像を管理するウィンドウを表示します。
+詳細は <a class="reference internal" href="reference_height.html#ref-height-menu-backimg"><span class="std std-ref">Backimg ボタン</span></a> を参照してください。</p>
+</section>
+<section id="load-backimg">
+<h3>Load Backimg...<a class="headerlink" href="#load-backimg" title="Link to this heading">¶</a></h3>
+<p><a class="reference internal" href="reference_height.html#ref-height-menu-loadbackimg"><span class="std std-ref">設定読み込み</span></a> を参照してください。</p>
+</section>
+<section id="save-backimg">
+<h3>Save Backimg...<a class="headerlink" href="#save-backimg" title="Link to this heading">¶</a></h3>
+<p><a class="reference internal" href="reference_height.html#ref-height-menu-savebackimg"><span class="std std-ref">設定保存</span></a> を参照してください。</p>
+</section>
+</section>
+<section id="id9">
+<h2>オプション<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h2>
+<section id="id10">
+<h3>Backimg...<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/backimg.png"><img alt="_images/backimg.png" src="_images/backimg.png" style="width: 306.59999999999997px; height: 159.6px;" />
+</a>
+<p>プロットウィンドウの背景に表示する画像を管理するBackground imagesウィンドウを開きます。</p>
+<section id="id11">
+<h4>ファイル操作<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h4>
 <ul class="simple">
 <li><p>Add</p>
 <ul>
@@ -115,8 +146,8 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 </li>
 </ul>
 </section>
-<section id="id9">
-<h4>表示パラメータ<a class="headerlink" href="#id9" title="Permalink to this heading">¶</a></h4>
+<section id="id12">
+<h4>表示パラメータ<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h4>
 <p>filepathリストで選択した画像毎に下記のパラメータを設定できます。</p>
 <ul class="simple">
 <li><p>x0, y0</p>
@@ -161,18 +192,19 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 </ul>
 </section>
 </section>
-<section id="load-backimg">
-<h3>Load Backimg...<a class="headerlink" href="#load-backimg" title="Permalink to this heading">¶</a></h3>
+<section id="id13">
+<h3>Load Backimg...<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
 <p>Save Backimg...で書き出した設定ファイルを読み込みます。</p>
 </section>
-<section id="save-backimg">
-<h3>Save Backimg...<a class="headerlink" href="#save-backimg" title="Permalink to this heading">¶</a></h3>
+<section id="id14">
+<h3>Save Backimg...<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
 <p>現在読み込まれている背景画像の設定をファイルに書き出します。</p>
 </section>
 <hr class="docutils" />
 <section id="maptile">
-<h3>Maptile...<a class="headerlink" href="#maptile" title="Permalink to this heading">¶</a></h3>
-<a class="reference internal image-reference" href="_images/maptileparamwindow.png"><img alt="_images/maptileparamwindow.png" src="_images/maptileparamwindow.png" style="width: 246.6px; height: 141.6px;" /></a>
+<h3>Maptile...<a class="headerlink" href="#maptile" title="Link to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/maptileparamwindow.png"><img alt="_images/maptileparamwindow.png" src="_images/maptileparamwindow.png" style="width: 246.6px; height: 141.6px;" />
+</a>
 <p>背景画像として取得するマップタイルのパラメータ設定ウィンドウを開きます。</p>
 <p>設定できるパラメータの詳細は <a class="reference internal" href="cfgfileformat.html#ref-cfg-maptile"><span class="std std-ref">[&#64;MAPTILE]</span></a> を参照してください。</p>
 <ul class="simple">
@@ -214,7 +246,7 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 </ul>
 </section>
 <section id="refresh-maptile">
-<h3>Refresh Maptile<a class="headerlink" href="#refresh-maptile" title="Permalink to this heading">¶</a></h3>
+<h3>Refresh Maptile<a class="headerlink" href="#refresh-maptile" title="Link to this heading">¶</a></h3>
 <p>現在プロットウィンドウで表示している範囲に対応するマップタイルを取得し表示します。</p>
 <p>Maptile... にてtoshowがチェックされていない場合は、マップタイルの取得・表示を行いません。</p>
 <p>マップタイルの取得状況は次の要領でターミナルに印字されます。</p>
@@ -246,41 +278,56 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 </ul>
 </section>
 <section id="export-maptile">
-<h3>Export Maptile...<a class="headerlink" href="#export-maptile" title="Permalink to this heading">¶</a></h3>
+<h3>Export Maptile...<a class="headerlink" href="#export-maptile" title="Link to this heading">¶</a></h3>
 <p>現在プロットウィンドウで表示しているマップタイルをファイルに書き出します。
 実行すると、マップタイルの画像データとLoad Backimg...で読み込める設定ファイルを出力します。</p>
 </section>
 <hr class="docutils" />
 <section id="track">
-<h3>Track...<a class="headerlink" href="#track" title="Permalink to this heading">¶</a></h3>
-<a class="reference internal image-reference" href="_images/trackwindow.png"><img alt="_images/trackwindow.png" src="_images/trackwindow.png" style="width: 166.79999999999998px; height: 159.0px;" /></a>
+<h3>Track...<a class="headerlink" href="#track" title="Link to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/trackwindow.png"><img alt="_images/trackwindow.png" src="_images/trackwindow.png" style="width: 166.79999999999998px; height: 159.0px;" />
+</a>
 <p>軌道の描画設定を行うTrackウィンドウを開きます。</p>
-<section id="id10">
-<h4>ツリー構成<a class="headerlink" href="#id10" title="Permalink to this heading">¶</a></h4>
+<section id="id15">
+<h4>ツリー構成<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h4>
 <p>rootツリーには、cfgファイルで指定したmapファイルを表示します。</p>
 <p>generatedツリーには、Generateボタンで生成された他軌道データを表示します。</p>
 </section>
-<section id="id11">
-<h4>チェックボックス<a class="headerlink" href="#id11" title="Permalink to this heading">¶</a></h4>
+<section id="id16">
+<h4>チェックボックス<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h4>
 <p>チェックされた軌道をプロットウィンドウに描画します。
 最上段(root, generated)で全てのチェックを一括してOn/Offできます。
 デフォルトでは全てOnです。</p>
 </section>
 <section id="color">
-<h4>Color<a class="headerlink" href="#color" title="Permalink to this heading">¶</a></h4>
+<h4>Color<a class="headerlink" href="#color" title="Link to this heading">¶</a></h4>
 <p>各軌道に割り当てられた色を表示します。
 ■■■をクリックするとカラーピッカーが表示され、割り当てる色を変更できます。</p>
 </section>
 </section>
+<hr class="docutils" />
+<section id="handling-kiloposts">
+<h3>Handling kiloposts...<a class="headerlink" href="#handling-kiloposts" title="Link to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/handlingkp.png"><img alt="_images/handlingkp.png" src="_images/handlingkp.png" style="width: 345.59999999999997px; height: 181.79999999999998px;" />
+</a>
+<p><a class="reference internal" href="handlingkp.html"><span class="doc">Handling kiloposts</span></a> を開きます。</p>
 </section>
-<section id="id12">
-<h2>ヘルプ<a class="headerlink" href="#id12" title="Permalink to this heading">¶</a></h2>
-<section id="id13">
-<h3>ヘルプ...<a class="headerlink" href="#id13" title="Permalink to this heading">¶</a></h3>
+<hr class="docutils" />
+<section id="mediantrack">
+<h3>Mediantrack...<a class="headerlink" href="#mediantrack" title="Link to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/mediantrack.png"><img alt="_images/mediantrack.png" src="_images/mediantrack.png" style="width: 345.59999999999997px; height: 101.39999999999999px;" />
+</a>
+<p><a class="reference internal" href="mediantrack.html"><span class="doc">Mediantrack generator</span></a> を開きます。</p>
+</section>
+</section>
+<section id="id17">
+<h2>ヘルプ<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h2>
+<section id="id18">
+<h3>ヘルプ...<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
 <p>システム規定のwebブラウザで <a class="reference external" href="https://konawasabi.github.io/tsutsuji-trackcomputer/">https://konawasabi.github.io/tsutsuji-trackcomputer/</a> を表示します。</p>
 </section>
 <section id="tsutsuji">
-<h3>Tsutsujiについて...<a class="headerlink" href="#tsutsuji" title="Permalink to this heading">¶</a></h3>
+<h3>Tsutsujiについて...<a class="headerlink" href="#tsutsuji" title="Link to this heading">¶</a></h3>
 <p>バージョン情報を表示します。</p>
 </section>
 </section>
@@ -291,7 +338,7 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
@@ -309,27 +356,37 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
 <li><a class="reference internal" href="#replot">Replot</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id7">オプション</a><ul>
-<li><a class="reference internal" href="#backimg">Backimg...</a><ul>
-<li><a class="reference internal" href="#id8">ファイル操作</a></li>
-<li><a class="reference internal" href="#id9">表示パラメータ</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#id7">高度</a><ul>
+<li><a class="reference internal" href="#display">Display...</a></li>
+<li><a class="reference internal" href="#id8">Measure...</a></li>
+<li><a class="reference internal" href="#backimg">Backimg...</a></li>
 <li><a class="reference internal" href="#load-backimg">Load Backimg...</a></li>
 <li><a class="reference internal" href="#save-backimg">Save Backimg...</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id9">オプション</a><ul>
+<li><a class="reference internal" href="#id10">Backimg...</a><ul>
+<li><a class="reference internal" href="#id11">ファイル操作</a></li>
+<li><a class="reference internal" href="#id12">表示パラメータ</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id13">Load Backimg...</a></li>
+<li><a class="reference internal" href="#id14">Save Backimg...</a></li>
 <li><a class="reference internal" href="#maptile">Maptile...</a></li>
 <li><a class="reference internal" href="#refresh-maptile">Refresh Maptile</a></li>
 <li><a class="reference internal" href="#export-maptile">Export Maptile...</a></li>
 <li><a class="reference internal" href="#track">Track...</a><ul>
-<li><a class="reference internal" href="#id10">ツリー構成</a></li>
-<li><a class="reference internal" href="#id11">チェックボックス</a></li>
+<li><a class="reference internal" href="#id15">ツリー構成</a></li>
+<li><a class="reference internal" href="#id16">チェックボックス</a></li>
 <li><a class="reference internal" href="#color">Color</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#handling-kiloposts">Handling kiloposts...</a></li>
+<li><a class="reference internal" href="#mediantrack">Mediantrack...</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id12">ヘルプ</a><ul>
-<li><a class="reference internal" href="#id13">ヘルプ...</a></li>
+<li><a class="reference internal" href="#id17">ヘルプ</a><ul>
+<li><a class="reference internal" href="#id18">ヘルプ...</a></li>
 <li><a class="reference internal" href="#tsutsuji">Tsutsujiについて...</a></li>
 </ul>
 </li>
@@ -355,7 +412,7 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -363,13 +420,13 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -390,8 +447,8 @@ cfgファイルで指定された各mapファイルも全て再読み込みさ�
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

@@ -1,19 +1,18 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>5. honsen_up の構築 &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,7 +23,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -52,9 +51,9 @@
           <div class="body" role="main">
             
   <section id="honsen-up">
-<h1><span class="section-number">5. </span>honsen_up の構築<a class="headerlink" href="#honsen-up" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">5. </span>honsen_up の構築<a class="headerlink" href="#honsen-up" title="Link to this heading">¶</a></h1>
 <section id="id1">
-<h2><span class="section-number">5.1. </span>始点を決める<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">5.1. </span>始点を決める<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
 <p>honsen_down軌道の始点座標を求め、main.cfgに[honsen_up]セクションを追加する。</p>
 <ol class="arabic">
 <li><p>カーソルAのtrackをhonsen_downにセットする</p></li>
@@ -67,7 +66,7 @@
 <ul>
 <li><p>始点はhonsen_down軌道の距離程60m地点での値と同一、向きはtateyama_upと180°反対方向に設定される</p></li>
 <li><div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id5" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 [honsen_up]
 file = honsen_up.txt
@@ -88,7 +87,7 @@ endpoint = 1500
 <li><p>main.cfgと同じディレクトリに以下の内容でhonsen_up.txtを作成する</p>
 <ul>
 <li><div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id6" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BveTs Map 2.02:utf-8
 
 0;
@@ -103,7 +102,7 @@ Curve.SetFunction(0);
 </ol>
 </section>
 <section id="id2">
-<h2><span class="section-number">5.2. </span>富山寄り分岐器<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">5.2. </span>富山寄り分岐器<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <ol class="arabic">
 <li><p>カーソルAのtrackをhonsen_upにセットする</p></li>
 <li><p>カーソルAの位置、方向を距離程0mにセットする</p></li>
@@ -120,7 +119,7 @@ Curve.SetFunction(0);
 <li><p>ターミナルへの出力をhonsen_up.txtにコピーする</p>
 <ul>
 <li><div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id7" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 $pt_a = 0;
 $pt_a +0.000000;
@@ -141,14 +140,15 @@ Curve.Interpolate(0.000000,0);
 </li>
 <li><p>データをリロードする</p>
 <ul>
-<li><a class="reference internal image-reference" href="../_images/switch1.png"><img alt="../_images/switch1.png" src="../_images/switch1.png" style="width: 449.0px; height: 347.0px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/switch1.png"><img alt="../_images/switch1.png" src="../_images/switch1.png" style="width: 449.0px; height: 347.0px;" />
+</a>
 </li>
 </ul>
 </li>
 </ol>
 </section>
 <section id="id3">
-<h2><span class="section-number">5.3. </span>プラットホーム部<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">5.3. </span>プラットホーム部<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
 <p>honsen_downの場合と同様に、この曲線も現在のtsutsujiの機能では簡単に求めることができない。
 ここでは以下のようにして切り抜ける。</p>
 <ol class="arabic">
@@ -167,14 +167,15 @@ Curve.Interpolate(0.000000,0);
 <li><p>α: A, β: B, γ: C</p></li>
 <li><p>mapsyntax にチェック</p></li>
 <li><p>Mode: 6. α(fix)-&gt;β(free) via γ, R(free)</p></li>
-<li><a class="reference internal image-reference" href="../_images/form21.png"><img alt="../_images/form21.png" src="../_images/form21.png" style="width: 447.5px; height: 349.0px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/form21.png"><img alt="../_images/form21.png" src="../_images/form21.png" style="width: 447.5px; height: 349.0px;" />
+</a>
 </li>
 </ul>
 </li>
 <li><p>ターミナルへの出力をhonsen_up.txtにコピーする</p>
 <ul>
 <li><div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id8" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 $pt_a = 18.500000;
 $pt_a;
@@ -195,13 +196,14 @@ Curve.Interpolate(0.000000,0);
 </li>
 <li><p>データをリロードする</p>
 <ul>
-<li><a class="reference internal image-reference" href="../_images/form3.png"><img alt="../_images/form3.png" src="../_images/form3.png" style="width: 445.5px; height: 345.0px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/form3.png"><img alt="../_images/form3.png" src="../_images/form3.png" style="width: 445.5px; height: 345.0px;" />
+</a>
 </li>
 </ul>
 </li>
 </ol>
 <table class="docutils align-default" id="id9">
-<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id9" title="Link to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>カーソル</p></th>
 <th class="head"><p>x</p></th>
@@ -237,7 +239,7 @@ Curve.Interpolate(0.000000,0);
 </table>
 </section>
 <section id="id4">
-<h2><span class="section-number">5.4. </span>宇奈月寄り分岐器<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">5.4. </span>宇奈月寄り分岐器<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <p>honsen_downの場合と同様に、空中写真に対して現物合わせで寸法を求める。</p>
 <ol class="arabic">
 <li><p>カーソルAのtrackをhonsen_upにセットする</p></li>
@@ -257,14 +259,15 @@ Curve.Interpolate(0.000000,0);
 <li><p>α: A, β: B</p></li>
 <li><p>mapsyntax にチェック</p></li>
 <li><p>Mode: 2. α(free)-&gt;β(fix), R(free)</p></li>
-<li><a class="reference internal image-reference" href="../_images/switch2_1.png"><img alt="../_images/switch2_1.png" src="../_images/switch2_1.png" style="width: 449.0px; height: 345.0px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/switch2_1.png"><img alt="../_images/switch2_1.png" src="../_images/switch2_1.png" style="width: 449.0px; height: 345.0px;" />
+</a>
 </li>
 </ul>
 </li>
 <li><p>ターミナルへの出力をhonsen_up.txtにコピーする</p>
 <ul>
 <li><div class="literal-block-wrapper docutils container" id="id10">
-<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id10" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">honsen_up.txt</span><a class="headerlink" href="#id10" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 $pt_a = 226.000000;
 $pt_a +9.311951;
@@ -285,13 +288,14 @@ Curve.Interpolate(0.000000,0);
 </li>
 <li><p>データをリロードして完成</p>
 <ul>
-<li><a class="reference internal image-reference" href="../_images/switch2_2.png"><img alt="../_images/switch2_2.png" src="../_images/switch2_2.png" style="width: 448.0px; height: 344.0px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/switch2_2.png"><img alt="../_images/switch2_2.png" src="../_images/switch2_2.png" style="width: 448.0px; height: 344.0px;" />
+</a>
 </li>
 </ul>
 </li>
 </ol>
 <table class="docutils align-default" id="id11">
-<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id11" title="Link to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>カーソル</p></th>
 <th class="head"><p>x</p></th>
@@ -326,7 +330,7 @@ Curve.Interpolate(0.000000,0);
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -358,7 +362,7 @@ Curve.Interpolate(0.000000,0);
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -366,13 +370,13 @@ Curve.Interpolate(0.000000,0);
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -394,8 +398,8 @@ Curve.Interpolate(0.000000,0);
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

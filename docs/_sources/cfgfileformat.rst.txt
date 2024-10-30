@@ -48,7 +48,14 @@ backimg
 * type: filepath
 * 線形データ読み込み時に表示する背景画像設定ファイルへのパス
 
-  * オプションメニュー -> Save Backimg... で出力されるファイルを指定する
+  * オプションメニュー -> Save Backimg... で出力したファイルを指定する
+
+backimg_height
+=================
+* type: filepath
+* 高度ウィンドウへ表示する背景画像設定ファイルへのパス
+
+  * 高度メニュー -> Save Backimg... で出力したファイルを指定する
 
 output_digit
 ==============
@@ -66,6 +73,14 @@ check_u
 
 
 .. image:: ./files/cfgformat_checkU.png
+
+limit_curvatureradius
+======================
+* type: float
+* 出力する相対半径の上限値を設定する
+
+  * 計算結果の絶対値がこの値を超えた場合、相対半径は0として出力される
+  * デフォルトでは 1e4  
 
 
 ************
@@ -191,6 +206,44 @@ calc_relrad
   * 出力されるTrack構文の相対半径は全て0となる
     
 * **kml/csvファイルに対する軌道のみ有効**
+
+
+mapelement_enable_x
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].X` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
+mapelement_enable_y
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Y` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
+mapelement_enable_cant
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Cant.Interpolate` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
+mapelement_enable_interpolate_func
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Cant.SetFunction` 要素を出力するかどうか設定する
+* デフォルトではTrue
+  
+mapelement_enable_center
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Cant.SetCenter` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
+mapelement_enable_gauge
+=====================
+* type: bool
+* 他軌道構文として出力する際、 `Track[key].Cant.SetGauge` 要素を出力するかどうか設定する
+* デフォルトではTrue
+
 
 .. _ref_cfg_maptile:
 

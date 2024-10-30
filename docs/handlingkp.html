@@ -1,0 +1,505 @@
+
+<!DOCTYPE html>
+
+<html lang="jp" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Handling kiloposts &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
+    
+    <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Mediantrack generator" href="mediantrack.html" />
+    <link rel="prev" title="Measureウィンドウ(高度)" href="reference_heightmeasure.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mediantrack.html" title="Mediantrack generator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reference_heightmeasure.html" title="Measureウィンドウ(高度)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" accesskey="U">Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Handling kiloposts</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="handling-kiloposts">
+<h1>Handling kiloposts<a class="headerlink" href="#handling-kiloposts" title="Link to this heading">¶</a></h1>
+<img alt="_images/handlingkp.png" src="_images/handlingkp.png" />
+<p>inputで指定したmapファイルについて、距離程を書き換えて別ファイルに書き出す機能です。
+距離程の書き換え方法は <a class="reference internal" href="#ref-handlingkp-mode"><span class="std std-ref">Mode</span></a> に示す4モードから選択できます。
+この機能はtsutsujiのメイン機能とは独立して利用できます。</p>
+<section id="input">
+<h2>input<a class="headerlink" href="#input" title="Link to this heading">¶</a></h2>
+<p>距離程を書き換えたいmapファイルを指定します。</p>
+</section>
+<section id="output">
+<h2>output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h2>
+<p>距離程を書き換えたmapファイルを保存するディレクトリを指定します。</p>
+<p>input: <cite>/hoge/fuga/piyo.txt</cite> である場合、デフォルトではoutput: <cite>/hoge/fuga/result/</cite> が指定されます。
+新しく作成されたresultディレクトリ以下に、inputで指定したmapファイルと同じ名前のファイルとして変換結果が保存されます。</p>
+<section id="include">
+<h3>include要素(ディレクティブ)の扱い<a class="headerlink" href="#include" title="Link to this heading">¶</a></h3>
+<p>指定したmapファイルにinclude要素が含まれていた場合、include要素が指定するmapファイルに対しても同様の処理を行い、input側のディレクトリ構成、ファイル名を極力維持して結果を出力します。</p>
+<p>ただし、 <a class="reference internal" href="#ref-handlingkp-kprange"><span class="std std-ref">Kilopost range</span></a> で距離程範囲を設定していた場合で、include要素の直前の距離程がその範囲外にある場合、そのinclude要素が指定するmapファイルは一切処理されませんので注意してください。</p>
+<section id="id1">
+<h4>例<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
+<section id="id2">
+<h5>Input<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h5>
+<p>filepath:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">hoge</span><span class="o">/</span><span class="n">fuga</span><span class="o">/</span><span class="n">piyo</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>kilopost range:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">start</span><span class="p">:</span> <span class="mi">100</span>
+<span class="n">end</span><span class="p">:</span> <span class="mi">200</span>
+</pre></div>
+</div>
+<p>map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span><span class="p">;</span>
+<span class="n">include</span> <span class="s2">&quot;foo/bar.txt&quot;</span><span class="p">;</span>
+
+<span class="mi">100</span><span class="p">;</span>
+<span class="n">include</span> <span class="s2">&quot;baz.txt&quot;</span><span class="p">;</span>
+
+<span class="mi">150</span><span class="p">;</span>
+<span class="n">include</span> <span class="s2">&quot;foo/bar/qux.txt&quot;</span><span class="p">;</span>
+
+<span class="mi">300</span><span class="p">;</span>
+<span class="n">include</span> <span class="s2">&quot;foobar.txt&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h5>output<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h5>
+<ul class="simple">
+<li><p>出力されるファイルのディレクトリ構成</p>
+<ul>
+<li><p>/hoge/fuga/results</p>
+<ul>
+<li><p>piyo.txt</p></li>
+<li><p>baz.txt</p></li>
+<li><p>foo/</p>
+<ul>
+<li><p>bar/</p>
+<ul>
+<li><p>qux.txt</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>実行されないinclude要素</p>
+<ul>
+<li><p><cite>include &quot;foo/bar.txt&quot;;</cite></p></li>
+<li><p><cite>include &quot;foobar.txt&quot;;</cite></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+<section id="mode">
+<span id="ref-handlingkp-mode"></span><h2>Mode<a class="headerlink" href="#mode" title="Link to this heading">¶</a></h2>
+<section id="echo">
+<h3>0. echo<a class="headerlink" href="#echo" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>距離程の書き換えは行わず、inputファイルの内容をそのまま出力する</p></li>
+<li><p>後述の <a class="reference internal" href="#ref-handlingkp-kprange"><span class="std std-ref">Kilopost range</span></a> と組み合わせて、特定の距離程範囲にあるマップ要素を抽出する場合に使用できる</p></li>
+</ul>
+<section id="id4">
+<h4>使用例<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h4>
+<p>Kilopost range:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">start</span><span class="p">:</span> <span class="mi">700</span>
+<span class="n">end</span><span class="p">:</span> <span class="mi">800</span>
+</pre></div>
+</div>
+<p>input map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>346;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+368;
+Curve.Begin(-200,-0.07);
+370;
+Curve.BeginTransition();
+392;
+Curve.End();
+
+$foo = 700;
+$foo;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+$foo + 22;
+Curve.Begin(-200,-0.07);
+$foo + 24;
+Curve.BeginTransition();
+$foo + 46;
+Curve.End();
+
+$bar = 894;
+$bar;
+Curve.BeginTransition();
+Curve.SetCenter(1.067/2);
+$bar + 22;
+Curve.Begin(200,0.07);
+$bar + 24;
+Curve.BeginTransition();
+$bar + 46;
+Curve.End();
+</pre></div>
+</div>
+<p>output map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$foo = 700;
+$foo;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+$foo + 22;
+Curve.Begin(-200,-0.07);
+$foo + 24;
+Curve.BeginTransition();
+$foo + 46;
+Curve.End();
+$bar = 894;
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h4>注意点<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h4>
+<p><a class="reference internal" href="#ref-handlingkp-kprange"><span class="std std-ref">Kilopost range</span></a> の指定によらず、変数への代入要素(上記例での <cite>$foo = 700;</cite>, <cite>$bar = 894;</cite>)は必ず出力されます。
+mapファイルでの変数使用状況によっては、BveTs本体での読み込み時に意図しない結果となる可能性もあるので、距離程に変数を使用しているmapでは出力内容をよく確認することを推奨します。</p>
+</section>
+</section>
+<section id="evaluate">
+<h3>1. evaluate<a class="headerlink" href="#evaluate" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>変数、演算子、数学関数で記述された距離程を数値に変換する</p></li>
+</ul>
+<section id="id6">
+<h4>使用例<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h4>
+<p>input map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$foo = 700;
+$foo;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+$foo + 22;
+Curve.Begin(-200,-0.07);
+$foo + 24;
+Curve.BeginTransition();
+$foo + 46;
+Curve.End();
+</pre></div>
+</div>
+<p>output map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$foo = 700;
+700.000000;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+722.000000;
+Curve.Begin(-200,-0.07);
+724.000000;
+Curve.BeginTransition();
+746.000000;
+Curve.End();
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h4>注意点<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h4>
+<p>距離程から除去された変数 <cite>$foo</cite> への代入要素( <cite>$foo = 700;</cite> ) はそのまま出力されます。</p>
+</section>
+</section>
+<section id="new-variable">
+<h3>2. new variable<a class="headerlink" href="#new-variable" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>新しい変数で距離程をオフセットする場合を意図したモード</p></li>
+<li><p>次の要領で距離程の変換を行う</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>inputしたmap先頭に、initializationフィールドに入力した要素を挿入する</p></li>
+<li><p>距離程を数値に変換する(mode 1と同じ作用)</p></li>
+<li><p>New variable/expressionフィールドに入力した文字列で距離程を書き換える</p>
+<ul class="simple">
+<li><p>ここで入力した文字列中の <cite>distance</cite> のみ、その時点での距離程数値に置き換えられる</p></li>
+</ul>
+</li>
+</ol>
+<section id="id8">
+<h4>使用例<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h4>
+<p>initialization:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$piyo = 200;
+</pre></div>
+</div>
+<p>New variable/expression:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$piyo + distance *2
+</pre></div>
+</div>
+<p>input map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$foo = 700;
+$foo;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+$foo + 22;
+Curve.Begin(-200,-0.07);
+$foo + 24;
+Curve.BeginTransition();
+$foo + 46;
+Curve.End();
+</pre></div>
+</div>
+<p>output map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># added by kilopost handling
+$piyo = 200;
+
+$foo = 700;
+$piyo + 700.000000 *2;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+$piyo + 722.000000 *2;
+Curve.Begin(-200,-0.07);
+$piyo + 724.000000 *2;
+Curve.BeginTransition();
+$piyo + 746.000000 *2;
+Curve.End();
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h4>注意点<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h4>
+<p>距離程から除去された変数 <cite>$foo</cite> への代入要素( <cite>$foo = 700;</cite> ) はそのまま出力されます。</p>
+<p>initialization で新しい変数を定義する場合、変数名はinputファイル中で用いていないものとすることを推奨します。
+inputファイル中で用いているものと同じ変数名(ここでは <cite>$foo</cite> )を使うと、inputファイルにある <cite>$foo</cite> への代入要素( <cite>$foo = 700;</cite> )が残っているため予期しない動作をする可能性があります。</p>
+<p>New variable/expressionに入力する文字列の末尾には <cite>;</cite> をつけないでください。エラーとなる場合があります。</p>
+</section>
+</section>
+<section id="conversion-by-new-example">
+<h3>3. conversion by new example<a class="headerlink" href="#conversion-by-new-example" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>距離程を定数倍、定数加算する場合を意図したモード</p></li>
+<li><p>次の要領で距離程の変換を行う</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>inputしたmap先頭に、initializationフィールドに入力した要素を挿入する</p></li>
+<li><p>距離程を数値に変換する(mode 1,2と同じ作用)</p></li>
+<li><p>New variable/expressionフィールドに入力した数式で計算した数値に距離程を書き換える</p>
+<ul class="simple">
+<li><p>ここで入力する数式としては、BveTs本体で使用できる変数、演算子、数学関数が使用できます。</p></li>
+<li><p>数式中の <cite>distance</cite> は、その時点での距離程数値となる</p></li>
+</ul>
+</li>
+</ol>
+<section id="id10">
+<h4>使用例<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h4>
+<p>initialization:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$piyo = 200;
+</pre></div>
+</div>
+<p>New variable/expression:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$piyo + distance *2
+</pre></div>
+</div>
+<p>input map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$foo = 700;
+$foo;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+$foo + 22;
+Curve.Begin(-200,-0.07);
+$foo + 24;
+Curve.BeginTransition();
+$foo + 46;
+Curve.End();
+</pre></div>
+</div>
+<p>output map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># added by kilopost handling
+$piyo = 200;
+
+1600.000000;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+1644.000000;
+Curve.Begin(-200,-0.07);
+1648.000000;
+Curve.BeginTransition();
+1692.000000;
+Curve.End();
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h4>注意点<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h4>
+<p>距離程から除去された変数 <cite>$foo</cite> への代入要素( <cite>$foo = 700;</cite> ) はそのまま出力されます。</p>
+<p>initialization で新しい変数を定義する場合、変数名はinputファイル中で用いていないものとすることを推奨します。
+inputファイル中で用いているものと同じ変数名(ここでは <cite>$foo</cite> )を使うと、inputファイルにある <cite>$foo</cite> への代入要素( <cite>$foo = 700;</cite> )が残っているため本来の意図とは異なる動作をする可能性があります。</p>
+<p>New variable/expressionに入力する数式の末尾には <cite>;</cite> をつけないでください。エラーとなる場合があります。</p>
+</section>
+</section>
+</section>
+<section id="kilopost-range">
+<span id="ref-handlingkp-kprange"></span><h2>Kilopost range<a class="headerlink" href="#kilopost-range" title="Link to this heading">¶</a></h2>
+<p>変換処理を行い、ファイルへ書き出す距離程の下限、上限を設定します。
+ここでの距離程は、変換前の値（inputで指定したmapファイルの値）を指します。
+全てのモードでKilopost rangeの指定は有効です。</p>
+<section id="start">
+<h3>start<a class="headerlink" href="#start" title="Link to this heading">¶</a></h3>
+<p>チェックボックスにチェックを入れると、 <cite>距離程 &gt;= startの値</cite> の要素についてのみoutputファイルへ出力します。
+これより手前にある要素はoutputファイルへ出力されません。 <strong>(変数への代入要素を除く)</strong></p>
+<p>チェックボックスが空の場合、距離程の下限は設定されません。</p>
+</section>
+<section id="end">
+<h3>end<a class="headerlink" href="#end" title="Link to this heading">¶</a></h3>
+<p>チェックボックスにチェックを入れると、 <cite>距離程 &lt;= endの値</cite> の要素についてのみoutputファイルへ出力します。
+これより後ろにある要素はoutputファイルへ出力されません。 <strong>(変数への代入要素を除く)</strong></p>
+<p>チェックボックスが空の場合、距離程の上限は設定されません。</p>
+</section>
+</section>
+<section id="do-it">
+<h2>Do It<a class="headerlink" href="#do-it" title="Link to this heading">¶</a></h2>
+<p>上記の設定に基づいて、outputで指定したディレクトリへファイルを出力します。</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Handling kiloposts</a><ul>
+<li><a class="reference internal" href="#input">input</a></li>
+<li><a class="reference internal" href="#output">output</a><ul>
+<li><a class="reference internal" href="#include">include要素(ディレクティブ)の扱い</a><ul>
+<li><a class="reference internal" href="#id1">例</a><ul>
+<li><a class="reference internal" href="#id2">Input</a></li>
+<li><a class="reference internal" href="#id3">output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mode">Mode</a><ul>
+<li><a class="reference internal" href="#echo">0. echo</a><ul>
+<li><a class="reference internal" href="#id4">使用例</a></li>
+<li><a class="reference internal" href="#id5">注意点</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#evaluate">1. evaluate</a><ul>
+<li><a class="reference internal" href="#id6">使用例</a></li>
+<li><a class="reference internal" href="#id7">注意点</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#new-variable">2. new variable</a><ul>
+<li><a class="reference internal" href="#id8">使用例</a></li>
+<li><a class="reference internal" href="#id9">注意点</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#conversion-by-new-example">3. conversion by new example</a><ul>
+<li><a class="reference internal" href="#id10">使用例</a></li>
+<li><a class="reference internal" href="#id11">注意点</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#kilopost-range">Kilopost range</a><ul>
+<li><a class="reference internal" href="#start">start</a></li>
+<li><a class="reference internal" href="#end">end</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#do-it">Do It</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="reference_heightmeasure.html"
+                          title="previous chapter">Measureウィンドウ(高度)</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="mediantrack.html"
+                          title="next chapter">Mediantrack generator</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/handlingkp.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mediantrack.html" title="Mediantrack generator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reference_heightmeasure.html" title="Measureウィンドウ(高度)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" >Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Handling kiloposts</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>

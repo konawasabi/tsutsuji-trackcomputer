@@ -1,19 +1,18 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>6. 他軌道構文の出力 &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,7 +23,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -52,10 +51,11 @@
           <div class="body" role="main">
             
   <section id="id1">
-<h1><span class="section-number">6. </span>他軌道構文の出力<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">6. </span>他軌道構文の出力<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
 <p>メインウィンドウ右下の <strong>Generate</strong> ボタンをクリックすると、tateyama_up軌道を自軌道として各軌道を他軌道構文(Track)に変換する。</p>
 <p>他軌道への変換結果はmain.cfgと同じディレクトリのresult以下に保存され、同時にプロットウィンドウに黒線で表示される。</p>
-<a class="reference internal image-reference" href="../_images/gen1.png"><img alt="../_images/gen1.png" src="../_images/gen1.png" style="width: 444.5px; height: 344.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/gen1.png"><img alt="../_images/gen1.png" src="../_images/gen1.png" style="width: 444.5px; height: 344.0px;" />
+</a>
 <ul class="simple">
 <li><p>出力ファイル一覧</p>
 <ul>
@@ -79,7 +79,7 @@
 </li>
 </ul>
 <section id="supplemental-cp">
-<h2><span class="section-number">6.1. </span>supplemental_cpの設定<a class="headerlink" href="#supplemental-cp" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">6.1. </span>supplemental_cpの設定<a class="headerlink" href="#supplemental-cp" title="Link to this heading">¶</a></h2>
 <p>変換結果を見ると、honsen_up, honsen_down軌道について一部入力データからの乖離が大きい部分がある。</p>
 <p>tsutsujiでは、入力軌道データの自軌道要素(Curve, Gradient)が存在する距離程の座標を抽出して他軌道構文に変換している。
 このため、距離の長い曲線区間では距離程どうしの間隔が開くことがある。
@@ -87,9 +87,10 @@
 <p>このような場合は、main.cfgファイルの該当する軌道セクションにsupplemental_cpを追加する。
 supplemental_cpがセットされると、自軌道要素が存在する距離程に加えて、supplemental_cpで指定した距離程に対する座標を基に他軌道構文への変換を行う。</p>
 <p>main.cfgを下記のように変更して、データリロードののちGenerateを実行すると、下図のように最終的な変換結果が得られる。</p>
-<a class="reference internal image-reference" href="../_images/gen2.png"><img alt="../_images/gen2.png" src="../_images/gen2.png" style="width: 450.5px; height: 346.5px;" /></a>
+<a class="reference internal image-reference" href="../_images/gen2.png"><img alt="../_images/gen2.png" src="../_images/gen2.png" style="width: 450.5px; height: 346.5px;" />
+</a>
 <div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id2" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 [honsen_down]
 file = honsen_down.txt
@@ -130,7 +131,7 @@ endpoint = 300
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -159,7 +160,7 @@ endpoint = 300
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -167,13 +168,13 @@ endpoint = 300
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -195,8 +196,8 @@ endpoint = 300
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

@@ -5,6 +5,56 @@
 - プロット画面
   - 任意角度への回転
   
+## [1.8.0] - 2024-10-30
+
+- 新機能
+  - 軌道高度ウィンドウ
+	- 軌道毎の距離程-高度プロット
+	- 背景画像の表示
+	- Measure, Gradient solver
+	  - カーソルは任意個数設定可能
+	  - solver実行結果は任意個数保持可能
+	  - カーソルデータ、solver実行結果の保存、読み込みに対応
+		- 平面図側のMeasure/solverも同様にアップデートの方針
+  - Handling kilopost
+    - 指定したマップファイルの距離程を操作する
+	  - cfgファイルでの指定とは独立して使用可能
+	- 主な機能
+	  - 指定した距離程範囲にある要素のみ抽出
+	  - 変数で記述された距離程を数値に変換
+	  - 指定した数式で距離程を書き換え
+  - Mediantrack generator
+    - 2軌道の中間点を通る他軌道を生成する
+	- 通過点の比率は変更可能
+- 機能追加
+  - Generateにて出力されるTrack要素について、出力するサブ要素を選択できるように変更
+    - X, Y, Cant, SetCenter, SetFunction, SetGaugeの各要素ごとに、出力可否をcfgファイルで設定
+	- 各Trackセクション, mapelement_enable_x, _y, _cant, _interpolate_func, _center, _gauge で指定
+  - 相対半径値の上限をcfgファイルで設定できるように変更
+	- [@TSUTSUJI_GENERAL]セクション, limit_curvatureradius で指定
+    - 計算された相対半径が上限よりも大きい場合は0として出力する
+
+## [1.7.5] - 2024-07-29
+
+- matplotlib ver 3.9.0以降がインストールされている環境でMeasure, pos.カーソルが正常動作するように修正
+- CuveTrack Solver
+  - Mode 4,5にてAssign result to cursorを有効にした場合、対象となるカーソルのTrackが@absolute以外に指定されていた場合の挙動を変更
+	- これまでは、計算結果が対象カーソルに反映されなかった
+	- 本バージョンからは、計算結果（カーソル座標と方位）を対象カーソルに反映の上、Track: @absoluteに上書きする
+  
+## [1.7.4.1] - 2024-06-19
+
+- matplotlib ver. 3.9.0 がインストールされている環境下でMeasure, pos.カーソルが正常動作しない問題の暫定処置
+  - matlplotlibの要求バージョンの上限を3.8.4に設定
+  - tsutsuji本体のコードは変更なし
+  
+## [1.7.4] - 2023-11-19
+
+- ver. 1.7.3で追加した処理のバグフィックス
+  - 自軌道法線と対象軌道が2回交差する場合の処理が正しく動作しない問題を修正
+- [@TSUTSUJI_GENERAL]セクションのcheck_u = Falseでは、ver. 1.7.2以前の処理のみを実行
+  - 処理時間が増加したため、2回交差の可能性が少ない場合は処理を省略できるようにしている
+  
 ## [1.7.3] - 2023-11-11
 
 - 自軌道に対する各軌道の相対座標計算ルーチンの修正
@@ -182,6 +232,11 @@
 
 - 1st release
 
+[1.8.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.5...ver1.8.0
+[1.7.5]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4.1...ver1.7.5
+[1.7.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4...ver1.7.4.1
+[1.7.4]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.3...ver1.7.4
+[1.7.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.2...ver1.7.3
 [1.7.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.1...ver1.7.2
 [1.7.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.0...ver1.7.1
 [1.7.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.6.1...ver1.7.0

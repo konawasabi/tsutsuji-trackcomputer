@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2022 konawasabi
+#    Copyright 2021-2024 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ def mindist_crossline(position, phiA, track):
 
     Return:
         np.array:
-           [[alpha: 最小となる距離, sort_ix: 距離が最小となる点のインデックス],...]
+           [[sort_ix: 交点との距離が最小となる点のインデックス, alpha: positionから点列交点の距離, distance: 求めた交点から点列の距離],...]
         : 
     '''
 
@@ -146,13 +146,16 @@ def mindist_crossline(position, phiA, track):
     dist_v = (track - (alpha.reshape(-1,1)*eU + position))**2
     distance = np.sqrt(dist_v[:,0] + dist_v[:,1])
 
-    sort_ix = np.argsort(distance)
+    sort_ix = np.argsort(distance) # 点列と交点の距離が小さい順にソートしたインデックスを得る
 
+    '''
     result = []
     for i in range(0,5):
-        result.append([alpha[sort_ix[i]],sort_ix[i]])
+        result.append([alpha[sort_ix[i]],sort_ix[i],distance[sort_ix[i]]])
+    '''
+    
+    return np.vstack((sort_ix,alpha[sort_ix],distance[sort_ix])).T
 
-    return np.array(result)
 def angle_twov(phiA, phiB):
     ''' ベクトルA (方位角phiA)からベクトルB(方位角phiB)への方位角変化を求める
     '''
@@ -376,3 +379,28 @@ def py2lat(y, z, L=85.05112878):
         l: 緯度 [deg]
     '''
     return 180/np.pi*(np.arcsin(np.tanh(-np.pi/(2**(z+7))*y+np.arctanh(np.sin(np.pi/180*L)))))
+
+def crosspoint_2lines(A, eA, B, eB):
+    '''2直線X, Yの交点Pを求める
+
+    Args:
+         A  (ndarray): 直線Xの通過点
+         eA (ndarray): 直線Xの単位ベクトル
+         B  (ndarray): 直線Yの通過点
+         eB (ndarray): 直線Yの単位ベクトル
+
+    Return:
+        (ndarray, ndarray): (PAの距離, 点Pの座標)
+    '''
+    alpha = (np.dot(eA,eB)*np.dot(A-B,eB)-np.dot(A-B,eA))/(1-(np.dot(eA,eB))**2)
+    return (alpha,A+alpha*eA)
+
+def phi2el(phi):
+    '''角度phi [rad]の単位ベクトルを返す
+    Args:
+        phi (float): 求める単位ベクトルが座標軸に対してなす角 [rad]
+    Return:
+        np.array([float, float])
+    '''
+
+    return np.array([np.cos(phi),np.sin(phi)])

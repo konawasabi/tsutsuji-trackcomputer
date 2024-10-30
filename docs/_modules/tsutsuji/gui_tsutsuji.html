@@ -1,18 +1,17 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tsutsuji.gui_tsutsuji &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -21,7 +20,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -43,7 +42,7 @@
             
   <h1>Source code for tsutsuji.gui_tsutsuji</h1><div class="highlight"><pre>
 <span></span><span class="c1">#</span>
-<span class="c1">#    Copyright 2021-2023 konawasabi</span>
+<span class="c1">#    Copyright 2021-2024 konawasabi</span>
 <span class="c1">#</span>
 <span class="c1">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1">#    you may not use this file except in compliance with the License.</span>
@@ -66,6 +65,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">webbrowser</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
 <span class="kn">from</span> <span class="nn">tkinter</span> <span class="kn">import</span> <span class="n">ttk</span>
@@ -90,8 +90,13 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">measure</span>
 <span class="kn">from</span> <span class="nn">._version</span> <span class="kn">import</span> <span class="n">__version__</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">trackwindow</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">heightwindow</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">kp_handling</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">mediantrack</span>
 
-<div class="viewcode-block" id="Catcher"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.Catcher">[docs]</a><span class="k">class</span> <span class="nc">Catcher</span><span class="p">:</span> <span class="c1"># tkinter内で起きた例外をキャッチする</span>
+<div class="viewcode-block" id="Catcher">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.Catcher">[docs]</a>
+<span class="k">class</span> <span class="nc">Catcher</span><span class="p">:</span> <span class="c1"># tkinter内で起きた例外をキャッチする</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">subst</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subst</span> <span class="o">=</span> <span class="n">subst</span>
@@ -109,11 +114,14 @@
                 <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="c1"># 通常モードならダイアログ表示</span>
                 <span class="n">tk</span><span class="o">.</span><span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">e</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="mainwindow"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow">[docs]</a><span class="k">class</span> <span class="nc">mainwindow</span><span class="p">(</span><span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow">[docs]</a>
+<span class="k">class</span> <span class="nc">mainwindow</span><span class="p">(</span><span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">master</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">master</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;3 3 3 3&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Tsutsuji&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Tsutsuji trackcomputer ver. </span><span class="si">{:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">__version__</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">S</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">columnconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">rowconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -128,11 +136,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span> <span class="o">=</span> <span class="n">track_control</span><span class="o">.</span><span class="n">TrackControl</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">staticmapctrl</span> <span class="o">=</span> <span class="n">backimg</span><span class="o">.</span><span class="n">TileMapControl</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">heightwindow</span> <span class="o">=</span> <span class="n">heightwindow</span><span class="o">.</span><span class="n">HeightWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">create_widgets</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_menubar</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bind_keyevent</span><span class="p">()</span>
-<div class="viewcode-block" id="mainwindow.create_widgets"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.create_widgets">[docs]</a>    <span class="k">def</span> <span class="nf">create_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="mainwindow.create_widgets">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.create_widgets">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">font_title</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         
         <span class="c1"># プロットフレーム</span>
@@ -267,18 +279,23 @@
 
         <span class="c1"># プロットウィンドウ描画</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.create_menubar"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.create_menubar">[docs]</a>    <span class="k">def</span> <span class="nf">create_menubar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.create_menubar">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.create_menubar">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_menubar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">option_add</span><span class="p">(</span><span class="s1">&#39;*tearOff&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_compute</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu_height</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_help</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Menu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_file</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ファイル&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_compute</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;メイン処理&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_height</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;高度&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;オプション&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">add_cascade</span><span class="p">(</span><span class="n">menu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_help</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ヘルプ&#39;</span><span class="p">)</span>
         
@@ -291,6 +308,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_compute</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Generate&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_output</span><span class="p">,</span> <span class="n">accelerator</span><span class="o">=</span><span class="s1">&#39;Control+G&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_compute</span><span class="o">.</span><span class="n">add_separator</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_compute</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Replot&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">,</span> <span class="n">accelerator</span><span class="o">=</span><span class="s1">&#39;Return&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">heightwindow</span><span class="o">.</span><span class="n">create_menu</span><span class="p">()</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Backimg...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">create_window</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Load Backimg...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">load_setting</span><span class="p">)</span>
@@ -301,12 +320,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Export Maptile...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">staticmapctrl</span><span class="o">.</span><span class="n">export</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_separator</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Track...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">trackwindow</span><span class="o">.</span><span class="n">create_window</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_separator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Handling kiloposts...&#39;</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">kp_handling</span><span class="o">.</span><span class="n">GUI</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_separator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu_option</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mediantrack...&#39;</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">mediantrack</span><span class="o">.</span><span class="n">GUI</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_help</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;ヘルプ...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">open_webdocument</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_help</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tsutsujiについて...&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aboutwindow</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="p">[</span><span class="s1">&#39;menu&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span></div>
-<div class="viewcode-block" id="mainwindow.bind_keyevent"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.bind_keyevent">[docs]</a>    <span class="k">def</span> <span class="nf">bind_keyevent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.bind_keyevent">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.bind_keyevent">[docs]</a>
+    <span class="k">def</span> <span class="nf">bind_keyevent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Control-o&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opencfg</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Control-m&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">measure</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Control-g&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_output</span><span class="p">)</span>
@@ -319,13 +345,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Shift-Right&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">press_arrowkey</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Shift-Up&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">press_arrowkey</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Shift-Down&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">press_arrowkey</span><span class="p">)</span></div>
-<div class="viewcode-block" id="mainwindow.ask_quit"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.ask_quit">[docs]</a>    <span class="k">def</span> <span class="nf">ask_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ask</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.ask_quit">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.ask_quit">[docs]</a>
+    <span class="k">def</span> <span class="nf">ask_quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ask</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ask</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">tk</span><span class="o">.</span><span class="n">messagebox</span><span class="o">.</span><span class="n">askyesno</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;Tsutsuji を終了しますか？&#39;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.opencfg"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.opencfg">[docs]</a>    <span class="k">def</span> <span class="nf">opencfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.opencfg">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.opencfg">[docs]</a>
+    <span class="k">def</span> <span class="nf">opencfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">inputdir</span> <span class="o">=</span> <span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">()</span> <span class="k">if</span> <span class="n">in_dir</span> <span class="o">==</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">in_dir</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;loading&#39;</span><span class="p">,</span><span class="n">inputdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">loadcfg</span><span class="p">(</span><span class="n">inputdir</span><span class="p">)</span>
@@ -334,22 +366,36 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">load_setting</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;backimg&#39;</span><span class="p">])</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">conf_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">load_setting</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">conf_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;backimg_height&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">heightwindow</span><span class="o">.</span><span class="n">backimg</span><span class="o">.</span><span class="n">load_setting</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;backimg_height&#39;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">heightwindow</span><span class="o">.</span><span class="n">backimg</span><span class="o">.</span><span class="n">conf_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">heightwindow</span><span class="o">.</span><span class="n">backimg</span><span class="o">.</span><span class="n">load_setting</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heightwindow</span><span class="o">.</span><span class="n">backimg</span><span class="o">.</span><span class="n">conf_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackwindow</span><span class="o">.</span><span class="n">reset_treevalue</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">measurewindow</span><span class="o">.</span><span class="n">reload_trackkeys</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heightwindow</span><span class="o">.</span><span class="n">reloadcfg</span><span class="p">()</span>
 
         <span class="n">plotsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig_plane</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">staticmapctrl</span><span class="o">.</span><span class="n">setparams_fromcfg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">maptile</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">staticmapctrl</span><span class="o">.</span><span class="n">getimg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewp_scale_v</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span><span class="n">plotsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">plotsize</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.reloadcfg"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.reloadcfg">[docs]</a>    <span class="k">def</span> <span class="nf">reloadcfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.reloadcfg">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.reloadcfg">[docs]</a>
+    <span class="k">def</span> <span class="nf">reloadcfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">opencfg</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">event</span><span class="p">,</span><span class="n">in_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
-<div class="viewcode-block" id="mainwindow.draw2dplot"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.draw2dplot">[docs]</a>    <span class="k">def</span> <span class="nf">draw2dplot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.draw2dplot">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.draw2dplot">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw2dplot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">plot2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig_canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.drawall"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.drawall">[docs]</a>    <span class="k">def</span> <span class="nf">drawall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.drawall">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.drawall">[docs]</a>
+    <span class="k">def</span> <span class="nf">drawall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">plot2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_marker_ctrl</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -380,8 +426,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">backimgctrl</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="p">,</span><span class="n">as_ratio</span><span class="o">=</span><span class="n">plotsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">plotsize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">ymag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aspectratio_v</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fig_canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.move_xy"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.move_xy">[docs]</a>    <span class="k">def</span> <span class="nf">move_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fig_canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">heightwindow</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="mainwindow.move_xy">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.move_xy">[docs]</a>
+    <span class="k">def</span> <span class="nf">move_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
         <span class="n">nowpos</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">viewpos_v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">viewpos_v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()]</span>
         <span class="n">plotsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig_plane</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
         <span class="n">windowratio</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">aspectratio_v</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">*</span><span class="n">plotsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">plotsize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -391,34 +442,65 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">viewpos_v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">nowpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">scalex</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewpos_v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">nowpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">scaley</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.measure"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.measure">[docs]</a>    <span class="k">def</span> <span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.measure">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.measure">[docs]</a>
+    <span class="k">def</span> <span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">measurewindow</span><span class="o">.</span><span class="n">create_widgets</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.draw_tracks_cp"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.draw_tracks_cp">[docs]</a>    <span class="k">def</span> <span class="nf">draw_tracks_cp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.draw_tracks_cp">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.draw_tracks_cp">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_tracks_cp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">plot_controlpoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax_plane</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig_canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.generate_output"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.generate_output">[docs]</a>    <span class="k">def</span> <span class="nf">generate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.generate_output">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.generate_output">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">generate_mapdata</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_othertrack</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.aboutwindow"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.aboutwindow">[docs]</a>    <span class="k">def</span> <span class="nf">aboutwindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.aboutwindow">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.aboutwindow">[docs]</a>
+    <span class="k">def</span> <span class="nf">aboutwindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">msg</span>  <span class="o">=</span> <span class="s1">&#39;Tsutsuji trackcomputer</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;Version &#39;</span><span class="o">+</span><span class="n">__version__</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
-        <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;Copyright © 2023 konawasabi</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;Copyright © 2024 konawasabi</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;Released under the Apache License, Version 2.0 .</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;https://www.apache.org/licenses/LICENSE-2.0&#39;</span>
         <span class="n">tk</span><span class="o">.</span><span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span></div>
-<div class="viewcode-block" id="mainwindow.open_webdocument"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.open_webdocument">[docs]</a>    <span class="k">def</span> <span class="nf">open_webdocument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.open_webdocument">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.open_webdocument">[docs]</a>
+    <span class="k">def</span> <span class="nf">open_webdocument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;https://konawasabi.github.io/tsutsuji-trackcomputer/&#39;</span><span class="p">)</span></div>
-<div class="viewcode-block" id="mainwindow.sendtopmost"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.sendtopmost">[docs]</a>    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.sendtopmost">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.sendtopmost">[docs]</a>
+    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">lift</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_force</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.get_othertrack"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.get_othertrack">[docs]</a>    <span class="k">def</span> <span class="nf">get_othertrack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.get_othertrack">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.get_othertrack">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_othertrack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">generate_otdata</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackwindow</span><span class="o">.</span><span class="n">reset_treevalue</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.press_return"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.press_return">[docs]</a>    <span class="k">def</span> <span class="nf">press_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.press_return">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.press_return">[docs]</a>
+    <span class="k">def</span> <span class="nf">press_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_force</span><span class="p">()</span></div>
-<div class="viewcode-block" id="mainwindow.press_arrowkey"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.press_arrowkey">[docs]</a>    <span class="k">def</span> <span class="nf">press_arrowkey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.press_arrowkey">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.press_arrowkey">[docs]</a>
+    <span class="k">def</span> <span class="nf">press_arrowkey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">keysym</span> <span class="o">==</span> <span class="s1">&#39;Left&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">move_xy</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">keysym</span> <span class="o">==</span> <span class="s1">&#39;Right&#39;</span><span class="p">:</span>
@@ -427,11 +509,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">move_xy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">keysym</span> <span class="o">==</span> <span class="s1">&#39;Down&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">move_xy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span></div>
-<div class="viewcode-block" id="mainwindow.getmaptile"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.getmaptile">[docs]</a>    <span class="k">def</span> <span class="nf">getmaptile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mainwindow.getmaptile">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.mainwindow.getmaptile">[docs]</a>
+    <span class="k">def</span> <span class="nf">getmaptile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">plotsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig_plane</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">staticmapctrl</span><span class="o">.</span><span class="n">getimg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewp_scale_v</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span><span class="n">plotsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">plotsize</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div></div>
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
+</div>
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../tsutsuji.gui_tsutsuji.html#tsutsuji.gui_tsutsuji.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">__debug__</span><span class="p">:</span>
         <span class="c1"># エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa</span>
         <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">):</span>
@@ -476,15 +565,16 @@
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">app</span><span class="o">.</span><span class="n">opencfg</span><span class="p">(</span><span class="n">in_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
         <span class="n">app</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -492,13 +582,13 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -513,8 +603,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

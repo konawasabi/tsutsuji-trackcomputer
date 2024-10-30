@@ -1,19 +1,18 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>背景画像 &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -24,7 +23,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -51,18 +50,20 @@
           <div class="body" role="main">
             
   <section id="id1">
-<h1>背景画像<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h1>
+<h1>背景画像<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
 <section id="id2">
-<h2>はじめに<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<h2>はじめに<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <p>このセクションでは、以下の画像をプロットウィンドウの背景(backimg)に表示し、表示倍率と回転角度を調整する手順を説明します。
 この機能は、航空写真や配線図を基にして軌道データを調整することを意図しています。</p>
-<a class="reference internal image-reference" href="_images/backimg_sample.png"><img alt="_images/backimg_sample.png" src="_images/backimg_sample.png" style="width: 473.75px; height: 195.75px;" /></a>
+<a class="reference internal image-reference" href="_images/backimg_sample.png"><img alt="_images/backimg_sample.png" src="_images/backimg_sample.png" style="width: 473.75px; height: 195.75px;" />
+</a>
 </section>
 <section id="id3">
-<h2>画像の読み込み<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<h2>画像の読み込み<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
 <p>オプションメニューからBackimg... を実行して、Background imagesウィンドウ(下記画像)を開きます。
 Addボタンを押して表示したい画像ファイルを選択すると、その画像がプロットウィンドウに表示されます。</p>
-<a class="reference internal image-reference" href="_images/backimg.png"><img alt="_images/backimg.png" src="_images/backimg.png" style="width: 383.25px; height: 199.5px;" /></a>
+<a class="reference internal image-reference" href="_images/backimg.png"><img alt="_images/backimg.png" src="_images/backimg.png" style="width: 383.25px; height: 199.5px;" />
+</a>
 <p>画像ファイルの形式は、少なくともpng, jpg, bmpに対応しています。
 matplotlibが扱えるフォーマットならば、これ以外の形式も読み込めるはずです。</p>
 <div class="admonition note">
@@ -73,13 +74,14 @@ matplotlibが扱えるフォーマットならば、これ以外の形式も読�
 </div>
 </section>
 <section id="id4">
-<h2>基準座標の測定<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<h2>基準座標の測定<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <p>読み込んだ画像について、十字マーク(オレンジ色)を座標原点として、軌道の方向をx軸正の向きに合わせるため、該当部分の画像上での座標と方角を測定します。</p>
 <p>メインウィンドウのMeasureボタンを押して、Measureウィンドウを開きます。</p>
 <p>カーソルAのPos. を実行して、出てきたx印カーソルを十字マークの中心に合わせてクリックします。
 続いて、Dir. を実行して、方角カーソルを軌道の方向に合わせてクリックします。
 これで、十字マーク周りの測定結果がMeasureウィンドウのx, y, dir.フィールドに表示されます。</p>
-<a class="reference internal image-reference" href="_images/backimg_measure.png"><img alt="_images/backimg_measure.png" src="_images/backimg_measure.png" style="width: 584.5px; height: 384.5px;" /></a>
+<a class="reference internal image-reference" href="_images/backimg_measure.png"><img alt="_images/backimg_measure.png" src="_images/backimg_measure.png" style="width: 584.5px; height: 384.5px;" />
+</a>
 <p>測定結果を背景画像に反映させます。
 Background imagesウィンドウを開いて、Filepathリストから先ほど読み込んだファイルを選択し、各パラメータを次の表のように設定してRefreshをクリックします。</p>
 <table class="docutils align-default">
@@ -104,7 +106,8 @@ Background imagesウィンドウを開いて、Filepathリストから先ほど�
 </tr>
 </tbody>
 </table>
-<a class="reference internal image-reference" href="_images/backimg_moved.png"><img alt="_images/backimg_moved.png" src="_images/backimg_moved.png" style="width: 583.0px; height: 384.5px;" /></a>
+<a class="reference internal image-reference" href="_images/backimg_moved.png"><img alt="_images/backimg_moved.png" src="_images/backimg_moved.png" style="width: 583.0px; height: 384.5px;" />
+</a>
 <p>上図のように、十字マークの位置が座標原点に移動し、軌道の向きとx軸の方向が一致します。</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -113,15 +116,17 @@ Background imagesウィンドウを開いて、Filepathリストから先ほど�
 </div>
 </section>
 <section id="id5">
-<h2>スケールの調整<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<h2>スケールの調整<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
 <p>背景画像を読み込んだ時点では、<strong>画像上の1pixel = プロットウィンドウ上の1m</strong> として扱われます。
 軌道データの調整に用いるためには、<strong>画像上の1m = プロットウィンドウ上の1m</strong> となるように画像の表示スケールを調整しなければなりません。</p>
 <p>このチュートリアルで用いているサンプル画像では、スケールバーとして使えるように左下に20m分の線路を配置してあります。
 この線路の長さをMeasure機能で測定して、pixel数と距離の関係を求めます。</p>
-<a class="reference internal image-reference" href="_images/backimg_scale.png"><img alt="_images/backimg_scale.png" src="_images/backimg_scale.png" style="width: 635.25px; height: 264.0px;" /></a>
+<a class="reference internal image-reference" href="_images/backimg_scale.png"><img alt="_images/backimg_scale.png" src="_images/backimg_scale.png" style="width: 635.25px; height: 264.0px;" />
+</a>
 <p>カーソルA, Bを20m線路の両端にセットすると、両カーソル間の距離は137.9pixelとわかります。
 この結果から、画像上での1pixelは <strong>20m / 137.9px = 0.145 m/pixel</strong> と求められます。</p>
-<a class="reference internal image-reference" href="_images/backimg_final.png"><img alt="_images/backimg_final.png" src="_images/backimg_final.png" style="width: 583.5px; height: 383.0px;" /></a>
+<a class="reference internal image-reference" href="_images/backimg_final.png"><img alt="_images/backimg_final.png" src="_images/backimg_final.png" style="width: 583.5px; height: 383.0px;" />
+</a>
 <p>得られた値(0.145)をBackground imagesウィンドウのscaleフィールドに入力して、Refreshを実行することで、上図の通り 画像上の1m = プロットウィンドウ上の1m にスケールが調整された背景画像が得られます。</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -135,7 +140,7 @@ Background imagesウィンドウを開いて、Filepathリストから先ほど�
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
@@ -167,7 +172,7 @@ Background imagesウィンドウを開いて、Filepathリストから先ほど�
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -175,13 +180,13 @@ Background imagesウィンドウを開いて、Filepathリストから先ほど�
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -202,8 +207,8 @@ Background imagesウィンドウを開いて、Filepathリストから先ほど�
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

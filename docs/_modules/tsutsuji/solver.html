@@ -1,21 +1,17 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tsutsuji.solver &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -24,7 +20,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -69,11 +65,15 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">math</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">curvetrackplot</span>
 
-<div class="viewcode-block" id="solver"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver">[docs]</a><span class="k">class</span> <span class="nc">solver</span><span class="p">():</span>
+<div class="viewcode-block" id="solver">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver">[docs]</a>
+<span class="k">class</span> <span class="nc">solver</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">curve_intermediate</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cgen</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">curve</span><span class="p">()</span>
-<div class="viewcode-block" id="solver.temporal_trackparam"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.temporal_trackparam">[docs]</a>    <span class="k">def</span> <span class="nf">temporal_trackparam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Rtmp</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">R0</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="solver.temporal_trackparam">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.temporal_trackparam">[docs]</a>
+    <span class="k">def</span> <span class="nf">temporal_trackparam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Rtmp</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">R0</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">delta_phi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">angle_twov</span><span class="p">(</span><span class="n">phiA</span><span class="p">,</span><span class="n">phiB</span><span class="p">)</span> <span class="c1">#曲線前後での方位変化</span>
             
         <span class="k">if</span><span class="p">(</span><span class="n">lenTC1</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">):</span>
@@ -106,9 +106,12 @@
         <span class="n">phi_tc2</span> <span class="o">=</span> <span class="n">phiA</span> <span class="o">+</span> <span class="n">tc1_tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cc_tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 出口側緩和曲線始端の方位角</span>
 
         <span class="k">return</span> <span class="n">tc1_tmp</span><span class="p">,</span> <span class="n">tc2_tmp</span><span class="p">,</span> <span class="n">cc_tmp</span><span class="p">,</span> <span class="n">phi_circular</span><span class="p">,</span> <span class="n">phi_tc2</span></div>
+
     
-<div class="viewcode-block" id="solver.curvetrack_relocation"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.curvetrack_relocation">[docs]</a>    <span class="k">def</span> <span class="nf">curvetrack_relocation</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">dx</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; A,Bを通る直線を結ぶ曲線軌道の始点を返す</span>
+<div class="viewcode-block" id="solver.curvetrack_relocation">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.curvetrack_relocation">[docs]</a>
+    <span class="k">def</span> <span class="nf">curvetrack_relocation</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">dx</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; A,Bを通る直線を結ぶ曲線軌道の始点を返す</span>
 <span class="sd">        A:        始点座標</span>
 <span class="sd">        phiA:     始点での軌道方位</span>
 <span class="sd">        B:        終点座標</span>
@@ -145,8 +148,11 @@
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">f1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">df</span>
             <span class="n">num</span> <span class="o">+=</span><span class="mi">1</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">num</span><span class="p">)</span></div>
-<div class="viewcode-block" id="solver.curvetrack_fit"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.curvetrack_fit">[docs]</a>    <span class="k">def</span> <span class="nf">curvetrack_fit</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">Rtmp</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span><span class="n">dr</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">R0</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; AB間を結ぶ曲線軌道の半径を返す</span>
+
+<div class="viewcode-block" id="solver.curvetrack_fit">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.curvetrack_fit">[docs]</a>
+    <span class="k">def</span> <span class="nf">curvetrack_fit</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">Rtmp</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span><span class="n">dr</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">R0</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; AB間を結ぶ曲線軌道の半径を返す</span>
 <span class="sd">        A:        始点座標</span>
 <span class="sd">        phiA:     始点での軌道方位</span>
 <span class="sd">        B:        終点座標</span>
@@ -184,8 +190,11 @@
             <span class="n">Rtmp</span> <span class="o">=</span> <span class="n">Rtmp</span> <span class="o">-</span> <span class="n">f1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">df</span>
             <span class="n">num</span> <span class="o">+=</span><span class="mi">1</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">Rtmp</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">num</span><span class="p">)</span></div>
-<div class="viewcode-block" id="solver.shift_by_TCL"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.shift_by_TCL">[docs]</a>    <span class="k">def</span> <span class="nf">shift_by_TCL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">TCLtmp</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">dl</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; AB間を結び、Cに最も近い点を通過する曲線軌道の半径、TCL, CCLを返す。</span>
+
+<div class="viewcode-block" id="solver.shift_by_TCL">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.shift_by_TCL">[docs]</a>
+    <span class="k">def</span> <span class="nf">shift_by_TCL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">TCLtmp</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">dl</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; AB間を結び、Cに最も近い点を通過する曲線軌道の半径、TCL, CCLを返す。</span>
 <span class="sd">        始点: A、終点: Bの延長線上となる曲線軌道について、点Cとの距離が最小となるR, TCLをニュートン法で求める。</span>
 <span class="sd">        A:        始点座標</span>
 <span class="sd">        phiA:     始点での軌道方位</span>
@@ -240,8 +249,11 @@
                <span class="n">num</span> <span class="o">+=</span><span class="mi">1</span>
             
         <span class="k">return</span> <span class="p">(</span><span class="n">transCL</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">num</span><span class="p">)</span></div>
-<div class="viewcode-block" id="solver.reverse_curve"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.reverse_curve">[docs]</a>    <span class="k">def</span> <span class="nf">reverse_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC11</span><span class="p">,</span><span class="n">lenTC12</span><span class="p">,</span><span class="n">lenTC21</span><span class="p">,</span><span class="n">lenTC22</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">len_interm</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">R1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">R2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">lenCC1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">lenCC2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="solver.reverse_curve">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.reverse_curve">[docs]</a>
+    <span class="k">def</span> <span class="nf">reverse_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC11</span><span class="p">,</span><span class="n">lenTC12</span><span class="p">,</span><span class="n">lenTC21</span><span class="p">,</span><span class="n">lenTC22</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">len_interm</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">R1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">R2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">lenCC1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">lenCC2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        [A]-TC-CC-TC-[C]-S-TC-CC-TC-[B]</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="n">C</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -255,8 +267,11 @@
 
         <span class="n">result_2nd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curvetrack_fit</span><span class="p">(</span><span class="n">Cdash</span><span class="p">,</span> <span class="n">phiC</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">phiB</span><span class="p">,</span> <span class="n">lenTC21</span><span class="p">,</span> <span class="n">lenTC22</span><span class="p">,</span> <span class="n">tranfunc</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">result_1st</span><span class="p">,</span><span class="n">result_2nd</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">Cdash</span><span class="p">,</span><span class="n">phiC</span><span class="p">)</span></div>
-<div class="viewcode-block" id="solver.compound_curve"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve">[docs]</a>    <span class="k">def</span> <span class="nf">compound_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">phiC</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dl</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="solver.compound_curve">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve">[docs]</a>
+    <span class="k">def</span> <span class="nf">compound_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">phiC</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dl</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        [A]-TC-CC-[C]-CC-TC-CC-TC-[B]</span>
 <span class="sd">        based on mode1</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -279,7 +294,7 @@
 
             <span class="n">CC1end</span> <span class="o">=</span> <span class="p">[</span><span class="n">A</span> <span class="o">+</span> <span class="n">tc1_tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cc_tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">phiA</span> <span class="o">+</span> <span class="n">tc1_tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cc_tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
 
-            <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">            </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            # 求めた曲線CC1と点Cの最短距離を求める</span>
 <span class="sd">            cc_tmp_array = self.cgen.circular_curve(CCL1tmp,\</span>
 <span class="sd">                                                    R1,\</span>
@@ -317,7 +332,7 @@
             <span class="k">if</span> <span class="n">CCL1</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">f1</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">f1</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># CCL1&lt;0 or phiCC2*R2(=CCL2)&lt;0</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;invalid parameters&#39;</span><span class="p">)</span>
 
-        <span class="sd">&#39;&#39;&#39;returns: </span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;returns: </span>
 <span class="sd">           CCL1</span>
 <span class="sd">           f1</span>
 <span class="sd">              residual</span>
@@ -327,8 +342,11 @@
 <span class="sd">           result_r1</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">CCL1</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">num</span><span class="p">,</span><span class="n">result_R1</span><span class="p">)</span></div>
-<div class="viewcode-block" id="solver.compound_curve_shiftStartPos"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve_shiftStartPos">[docs]</a>    <span class="k">def</span> <span class="nf">compound_curve_shiftStartPos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">phiC</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dl</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="solver.compound_curve_shiftStartPos">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve_shiftStartPos">[docs]</a>
+    <span class="k">def</span> <span class="nf">compound_curve_shiftStartPos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">phiC</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dl</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        [A]-TC-CC-[C]-CC-TC-CC-TC-[B]</span>
 <span class="sd">        based on mode2</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -351,7 +369,7 @@
 
             <span class="n">CC1end</span> <span class="o">=</span> <span class="p">[</span><span class="n">A</span> <span class="o">+</span> <span class="n">tc1_tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cc_tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">phiA</span> <span class="o">+</span> <span class="n">tc1_tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cc_tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
 
-            <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">            </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            # 求めた曲線CC1と点Cの最短距離を求める</span>
 <span class="sd">            cc_tmp_array = self.cgen.circular_curve(CCL1tmp,\</span>
 <span class="sd">                                                    R1,\</span>
@@ -394,7 +412,7 @@
             <span class="n">CCL1</span> <span class="o">=</span> <span class="n">CCL1</span> <span class="o">-</span> <span class="n">f1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">df</span>
             <span class="n">num</span> <span class="o">+=</span><span class="mi">1</span>
 
-        <span class="sd">&#39;&#39;&#39;returns: </span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;returns: </span>
 <span class="sd">           CCL1</span>
 <span class="sd">           f1</span>
 <span class="sd">              residual</span>
@@ -404,8 +422,11 @@
 <span class="sd">           result_r1</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">CCL1</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">num</span><span class="p">,</span><span class="n">result_R1</span><span class="p">,</span><span class="n">shift_fromA</span><span class="p">)</span></div>
-<div class="viewcode-block" id="solver.compound_curve_Linterm"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve_Linterm">[docs]</a>    <span class="k">def</span> <span class="nf">compound_curve_Linterm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">phiC</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">lenTC4</span><span class="p">,</span><span class="n">lenLint</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dl</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="solver.compound_curve_Linterm">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve_Linterm">[docs]</a>
+    <span class="k">def</span> <span class="nf">compound_curve_Linterm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">phiC</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">lenTC4</span><span class="p">,</span><span class="n">lenLint</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dl</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        [A]-TC-CC-TC-S-TC-CC-TC-[B]</span>
 <span class="sd">        based on mode1</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -468,7 +489,7 @@
             <span class="k">if</span> <span class="n">CCL1</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">f1</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">f1</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># CCL1&lt;0 or phiCC2*R2(=CCL2)&lt;0</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;invalid parameters&#39;</span><span class="p">)</span>
 
-        <span class="sd">&#39;&#39;&#39;returns: </span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;returns: </span>
 <span class="sd">           CCL1</span>
 <span class="sd">           f1</span>
 <span class="sd">              residual</span>
@@ -478,7 +499,10 @@
 <span class="sd">           result_r1</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">CCL1</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">num</span><span class="p">,</span><span class="n">result_R1</span><span class="p">)</span></div>
-<div class="viewcode-block" id="solver.compound_curve_givenR"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve_givenR">[docs]</a>    <span class="k">def</span> <span class="nf">compound_curve_givenR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">R1</span><span class="p">,</span><span class="n">R2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dphi</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+
+<div class="viewcode-block" id="solver.compound_curve_givenR">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve_givenR">[docs]</a>
+    <span class="k">def</span> <span class="nf">compound_curve_givenR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">R1</span><span class="p">,</span><span class="n">R2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dphi</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">phiCC1</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">R1</span><span class="p">,</span><span class="n">R2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">):</span>
             <span class="c1">#delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化</span>
             
@@ -552,7 +576,10 @@
             <span class="c1">#    raise Exception(&#39;invalid R1,R2 pair&#39;)</span>
             <span class="n">num</span> <span class="o">+=</span><span class="mi">1</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">phiCC1</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">num</span><span class="p">)</span></div>
-<div class="viewcode-block" id="solver.compound_curve_givenR_Lint"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve_givenR_Lint">[docs]</a>    <span class="k">def</span> <span class="nf">compound_curve_givenR_Lint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">lenTC4</span><span class="p">,</span><span class="n">lenLint</span><span class="p">,</span><span class="n">R1</span><span class="p">,</span><span class="n">R2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dphi</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+
+<div class="viewcode-block" id="solver.compound_curve_givenR_Lint">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.solver.compound_curve_givenR_Lint">[docs]</a>
+    <span class="k">def</span> <span class="nf">compound_curve_givenR_Lint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">lenTC4</span><span class="p">,</span><span class="n">lenLint</span><span class="p">,</span><span class="n">R1</span><span class="p">,</span><span class="n">R2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">dphi</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">num_max</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">phiCC1</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">lenTC4</span><span class="p">,</span><span class="n">lenLint</span><span class="p">,</span><span class="n">R1</span><span class="p">,</span><span class="n">R2</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">):</span>
             <span class="c1">#delta_phi = math.angle_twov(phiA,phiB) #曲線前後での方位変化</span>
             
@@ -644,9 +671,13 @@
             <span class="c1">#if phiCC1 * R1 &lt; 0 or f1[7] * R2 &lt; 0:</span>
             <span class="c1">#    raise Exception(&#39;invalid R1,R2 pair&#39;)</span>
             <span class="n">num</span> <span class="o">+=</span><span class="mi">1</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">phiCC1</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">num</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">phiCC1</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">num</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="IF"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF">[docs]</a><span class="k">class</span> <span class="nc">IF</span><span class="p">():</span>
+
+<div class="viewcode-block" id="IF">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF">[docs]</a>
+<span class="k">class</span> <span class="nc">IF</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">phiA</span><span class="p">,</span><span class="n">phiB</span><span class="p">,</span><span class="n">phiC</span><span class="p">,</span><span class="n">lenTC1</span><span class="p">,</span><span class="n">lenTC2</span><span class="p">,</span><span class="n">lenTC3</span><span class="p">,</span><span class="n">lenTC4</span><span class="p">,</span><span class="n">lenCC</span><span class="p">,</span><span class="n">lenLint</span><span class="p">,</span><span class="n">R_input</span><span class="p">,</span><span class="n">R2_input</span><span class="p">,</span><span class="n">tranfunc</span><span class="p">,</span><span class="n">fitmode</span><span class="p">,</span><span class="n">curve_fitmode_box</span><span class="p">,</span><span class="n">cursor_obj</span><span class="p">,</span><span class="n">cursor_f_name</span><span class="p">,</span><span class="n">cursor_t_name</span><span class="p">,</span><span class="n">cursor_via_name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trackp</span> <span class="o">=</span> <span class="n">curvetrackplot</span><span class="o">.</span><span class="n">trackplot</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sv</span> <span class="o">=</span> <span class="n">solver</span><span class="p">()</span>
@@ -676,7 +707,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cursor_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_obj</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor_f_name</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cursor_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_obj</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor_t_name</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cursor_via</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_obj</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor_via_name</span><span class="p">]</span>
-<div class="viewcode-block" id="IF.mode1"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode1">[docs]</a>    <span class="k">def</span> <span class="nf">mode1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="IF.mode1">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode1">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         
@@ -690,7 +723,10 @@
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mapsyntax</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode2"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode2">[docs]</a>    <span class="k">def</span> <span class="nf">mode2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.mode2">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode2">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         
@@ -706,7 +742,10 @@
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mapsyntax</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode3"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode3">[docs]</a>    <span class="k">def</span> <span class="nf">mode3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.mode3">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode3">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         
@@ -721,7 +760,10 @@
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mapsyntax</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode4_5"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode4_5">[docs]</a>    <span class="k">def</span> <span class="nf">mode4_5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">assigncursor</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.mode4_5">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode4_5">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode4_5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">assigncursor</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -748,14 +790,20 @@
             <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">[:,</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_end</span><span class="p">))</span>
+            <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;@absolute&#39;</span><span class="p">)</span>
+            <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
             <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">values_toshow</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
             <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">values_toshow</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">[:,</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
             <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">values_toshow</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_end</span><span class="p">)))</span>
+            <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">values_toshow</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
             <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">marker</span><span class="o">.</span><span class="n">set_direct</span><span class="p">()</span>
             <span class="n">tmp_cursor</span><span class="o">.</span><span class="n">arrow</span><span class="o">.</span><span class="n">set_direct</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode6"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode6">[docs]</a>    <span class="k">def</span> <span class="nf">mode6</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.mode6">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode6">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode6</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -770,7 +818,10 @@
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_paramstr_mode6_7</span><span class="p">()</span>
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mapsyntax</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode7"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode7">[docs]</a>    <span class="k">def</span> <span class="nf">mode7</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.mode7">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode7">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode7</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -787,7 +838,10 @@
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_paramstr_mode6_7</span><span class="p">()</span>
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mapsyntax</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode8"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode8">[docs]</a>    <span class="k">def</span> <span class="nf">mode8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">withCpos</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.mode8">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode8">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">withCpos</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
@@ -856,7 +910,10 @@
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_paramstr_mode8</span><span class="p">(</span><span class="n">withCpos</span><span class="o">=</span><span class="n">withCpos</span><span class="p">)</span>
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mapsyntax_reversecurve</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode9"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode9">[docs]</a>    <span class="k">def</span> <span class="nf">mode9</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.mode9">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode9">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode9</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -904,7 +961,10 @@
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mapsyntax_compoundcurve</span><span class="p">()</span>
         
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode10"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode10">[docs]</a>    <span class="k">def</span> <span class="nf">mode10</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 8-4</span>
+
+<div class="viewcode-block" id="IF.mode10">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode10">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode10</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 8-4</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -962,7 +1022,10 @@
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_paramstr_mode8</span><span class="p">(</span><span class="n">endpos</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">givenR</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">givenR2</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">givenLint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode11"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode11">[docs]</a>    <span class="k">def</span> <span class="nf">mode11</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 9-3</span>
+
+<div class="viewcode-block" id="IF.mode11">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode11">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode11</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 9-3</span>
         <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">pdb</span>
             <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
@@ -989,8 +1052,11 @@
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_paramstr_mode9</span><span class="p">(</span><span class="n">givenR</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">givenR2</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode12"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode12">[docs]</a>    <span class="k">def</span> <span class="nf">mode12</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 8-3</span>
-        <span class="sd">&#39;&#39;&#39; mode 9-2 + L_intermediate</span>
+
+<div class="viewcode-block" id="IF.mode12">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode12">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode12</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 8-3</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; mode 9-2 + L_intermediate</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">pdb</span>
@@ -1041,8 +1107,11 @@
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mapsyntax_reversecurve</span><span class="p">()</span>
         
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode13"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode13">[docs]</a>    <span class="k">def</span> <span class="nf">mode13</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 8-4</span>
-        <span class="sd">&#39;&#39;&#39; mode 9-3 + L_intermediate</span>
+
+<div class="viewcode-block" id="IF.mode13">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode13">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode13</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 8-4</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; mode 9-3 + L_intermediate</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">pdb</span>
@@ -1094,19 +1163,28 @@
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mapsyntax_reversecurve</span><span class="p">()</span>
         
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;track&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="n">parameter_str</span><span class="p">,</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span><span class="n">syntax_str</span><span class="p">}</span></div>
-<div class="viewcode-block" id="IF.mode9_12"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode9_12">[docs]</a>    <span class="k">def</span> <span class="nf">mode9_12</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span> <span class="c1"># 8-3, 9-2</span>
+
+<div class="viewcode-block" id="IF.mode9_12">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode9_12">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode9_12</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">givenR1</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span> <span class="c1"># 8-3, 9-2</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lenLint</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mode9</span><span class="p">(</span><span class="n">givenR1</span><span class="o">=</span><span class="n">givenR1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mode12</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">result</span></div>
-<div class="viewcode-block" id="IF.mode11_13"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode11_13">[docs]</a>    <span class="k">def</span> <span class="nf">mode11_13</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 8-4, 9-3</span>
+
+<div class="viewcode-block" id="IF.mode11_13">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.mode11_13">[docs]</a>
+    <span class="k">def</span> <span class="nf">mode11_13</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 8-4, 9-3</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lenLint</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mode11</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mode13</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">result</span></div>
-<div class="viewcode-block" id="IF.generate_mapsyntax"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.generate_mapsyntax">[docs]</a>    <span class="k">def</span> <span class="nf">generate_mapsyntax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.generate_mapsyntax">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.generate_mapsyntax">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_mapsyntax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="s1">&#39;$pt_a = </span><span class="si">{:f}</span><span class="s1">;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor_f</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_f</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;@absolute&#39;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitmode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;1.&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitmode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;6.&#39;</span><span class="p">):</span>
@@ -1135,7 +1213,10 @@
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="s1">&#39;Curve.Interpolate(</span><span class="si">{:f}</span><span class="s1">,0);&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         
         <span class="k">return</span> <span class="n">syntax_str</span></div>
-<div class="viewcode-block" id="IF.generate_mapsyntax_reversecurve"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.generate_mapsyntax_reversecurve">[docs]</a>    <span class="k">def</span> <span class="nf">generate_mapsyntax_reversecurve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">initial_shift</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.generate_mapsyntax_reversecurve">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.generate_mapsyntax_reversecurve">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_mapsyntax_reversecurve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">initial_shift</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="s1">&#39;$pt_a = </span><span class="si">{:f}</span><span class="s1">;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor_f</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> \
                                              <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_f</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;@absolute&#39;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -1182,7 +1263,10 @@
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="s1">&#39;Curve.Interpolate(</span><span class="si">{:f}</span><span class="s1">,0);&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         
         <span class="k">return</span> <span class="n">syntax_str</span></div>
-<div class="viewcode-block" id="IF.generate_mapsyntax_compoundcurve"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.generate_mapsyntax_compoundcurve">[docs]</a>    <span class="k">def</span> <span class="nf">generate_mapsyntax_compoundcurve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.generate_mapsyntax_compoundcurve">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.generate_mapsyntax_compoundcurve">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_mapsyntax_compoundcurve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">syntax_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="s1">&#39;$pt_a = </span><span class="si">{:f}</span><span class="s1">;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor_f</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> \
                                              <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_f</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;@absolute&#39;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -1215,7 +1299,10 @@
         <span class="n">syntax_str</span> <span class="o">+=</span> <span class="s1">&#39;Curve.Interpolate(</span><span class="si">{:f}</span><span class="s1">,0);&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         
         <span class="k">return</span> <span class="n">syntax_str</span></div>
-<div class="viewcode-block" id="IF.gen_paramstr_mode1_2"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode1_2">[docs]</a>    <span class="k">def</span> <span class="nf">gen_paramstr_mode1_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.gen_paramstr_mode1_2">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode1_2">[docs]</a>
+    <span class="k">def</span> <span class="nf">gen_paramstr_mode1_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;[Curve fitting]</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -1242,7 +1329,10 @@
             <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   shift from pt. α: </span><span class="si">{:f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_result</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
 
         <span class="k">return</span> <span class="n">parameter_str</span></div>
-<div class="viewcode-block" id="IF.gen_paramstr_mode3"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode3">[docs]</a>    <span class="k">def</span> <span class="nf">gen_paramstr_mode3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.gen_paramstr_mode3">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode3">[docs]</a>
+    <span class="k">def</span> <span class="nf">gen_paramstr_mode3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;[Curve fitting]&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -1262,7 +1352,10 @@
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   startpoint: (</span><span class="si">{:f}</span><span class="s1">, </span><span class="si">{:f}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A_result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">A_result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   shift:      </span><span class="si">{:f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_result</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">parameter_str</span></div>
-<div class="viewcode-block" id="IF.gen_paramstr_mode4_5"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode4_5">[docs]</a>    <span class="k">def</span> <span class="nf">gen_paramstr_mode4_5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.gen_paramstr_mode4_5">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode4_5">[docs]</a>
+    <span class="k">def</span> <span class="nf">gen_paramstr_mode4_5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">cursor_label</span> <span class="o">=</span> <span class="s1">&#39;α&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitmode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;4.&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;β&#39;</span>
         
@@ -1286,7 +1379,10 @@
             <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   startpoint: (</span><span class="si">{:f}</span><span class="s1">, </span><span class="si">{:f}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">trackp</span><span class="o">.</span><span class="n">result</span><span class="p">[:,</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
             <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   phi_start:  </span><span class="si">{:f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_end</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">parameter_str</span></div>
-<div class="viewcode-block" id="IF.gen_paramstr_mode6_7"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode6_7">[docs]</a>    <span class="k">def</span> <span class="nf">gen_paramstr_mode6_7</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.gen_paramstr_mode6_7">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode6_7">[docs]</a>
+    <span class="k">def</span> <span class="nf">gen_paramstr_mode6_7</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;[Curve fitting]&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;Inputs:&#39;</span> <span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -1310,7 +1406,10 @@
             <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   startpt:          (</span><span class="si">{:f}</span><span class="s1">, </span><span class="si">{:f}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
             <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   shift from pt. α: </span><span class="si">{:f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_result</span><span class="p">)</span> <span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">parameter_str</span></div>
-<div class="viewcode-block" id="IF.gen_paramstr_mode8"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode8">[docs]</a>    <span class="k">def</span> <span class="nf">gen_paramstr_mode8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">withCpos</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">endpos</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">givenR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">givenR2</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">givenLint</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.gen_paramstr_mode8">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode8">[docs]</a>
+    <span class="k">def</span> <span class="nf">gen_paramstr_mode8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">withCpos</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">endpos</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">givenR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">givenR2</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">givenLint</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;[Curve fitting]&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -1350,7 +1449,10 @@
             <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   startpt:   (</span><span class="si">{:f}</span><span class="s1">, </span><span class="si">{:f}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A_result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">A_result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   shift from pt. α: </span><span class="si">{:f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_result</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parameter_str</span></div>
-<div class="viewcode-block" id="IF.gen_paramstr_mode9"><a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode9">[docs]</a>    <span class="k">def</span> <span class="nf">gen_paramstr_mode9</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">givenR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">givenR2</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IF.gen_paramstr_mode9">
+<a class="viewcode-back" href="../../tsutsuji.solver.html#tsutsuji.solver.IF.gen_paramstr_mode9">[docs]</a>
+    <span class="k">def</span> <span class="nf">gen_paramstr_mode9</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">givenR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">givenR2</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">parameter_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;[Curve fitting]&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -1383,16 +1485,18 @@
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   endpt:     (</span><span class="si">{:f}</span><span class="s1">, </span><span class="si">{:f}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">endpos</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   shift from pt. α: </span><span class="si">{:f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_fromA</span><span class="p">)</span>
         <span class="n">parameter_str</span> <span class="o">+=</span> <span class="s1">&#39;   shift from pt. β: </span><span class="si">{:f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_result</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">parameter_str</span></div></div>
+        <span class="k">return</span> <span class="n">parameter_str</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -1400,13 +1504,13 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1421,8 +1525,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

@@ -1,18 +1,17 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tsutsuji.backimg &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -21,7 +20,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -43,7 +42,7 @@
             
   <h1>Source code for tsutsuji.backimg</h1><div class="highlight"><pre>
 <span></span><span class="c1">#</span>
-<span class="c1">#    Copyright 2021-2022 konawasabi</span>
+<span class="c1">#    Copyright 2021-2024 konawasabi</span>
 <span class="c1">#</span>
 <span class="c1">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1">#    you may not use this file except in compliance with the License.</span>
@@ -76,8 +75,12 @@
 
 <span class="kn">import</span> <span class="nn">configparser</span>
 
-<div class="viewcode-block" id="BackImgControl"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl">[docs]</a><span class="k">class</span> <span class="nc">BackImgControl</span><span class="p">():</span>
-<div class="viewcode-block" id="BackImgControl.BackImgData"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.BackImgData">[docs]</a>    <span class="k">class</span> <span class="nc">BackImgData</span><span class="p">():</span>
+<div class="viewcode-block" id="BackImgControl">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl">[docs]</a>
+<span class="k">class</span> <span class="nc">BackImgControl</span><span class="p">():</span>
+<div class="viewcode-block" id="BackImgControl.BackImgData">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.BackImgData">[docs]</a>
+    <span class="k">class</span> <span class="nc">BackImgData</span><span class="p">():</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -91,7 +94,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">width</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">height</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span>
-<div class="viewcode-block" id="BackImgControl.BackImgData.rotate"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.BackImgData.rotate">[docs]</a>        <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rad</span><span class="p">):</span>
+<div class="viewcode-block" id="BackImgControl.BackImgData.rotate">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.BackImgData.rotate">[docs]</a>
+        <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rad</span><span class="p">):</span>
             <span class="k">def</span> <span class="nf">rotmatrix</span><span class="p">(</span><span class="n">tau1</span><span class="p">):</span>
 <span class="w">                </span><span class="sd">&#39;&#39;&#39;２次元回転行列を返す。</span>
 <span class="sd">                tau1: 回転角度 [rad]</span>
@@ -112,19 +117,26 @@
             <span class="n">shape_rot</span> <span class="o">=</span> <span class="n">shape_rot</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
             
             <span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">shape_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">max</span><span class="p">(</span><span class="n">shape_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">min</span><span class="p">(</span><span class="n">shape_rot</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">max</span><span class="p">(</span><span class="n">shape_rot</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span></div>
-<div class="viewcode-block" id="BackImgControl.BackImgData.show"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.BackImgData.show">[docs]</a>        <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ax</span><span class="p">,</span><span class="n">as_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ymag</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BackImgControl.BackImgData.show">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.BackImgData.show">[docs]</a>
+        <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ax</span><span class="p">,</span><span class="n">as_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ymag</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toshow</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotrad</span><span class="p">)</span>
                 <span class="c1">#as_ratio_mod = (self.extent[1]-self.extent[0])/(self.extent[3]-self.extent[2])*as_ratio</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_data</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span><span class="n">aspect</span><span class="o">=</span><span class="n">ymag</span><span class="p">)</span></div></div>
+                <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_data</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span><span class="n">aspect</span><span class="o">=</span><span class="n">ymag</span><span class="p">)</span></div>
+</div>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mainwindow</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span> <span class="o">=</span> <span class="n">mainwindow</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conf_path</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="kc">None</span>
-<div class="viewcode-block" id="BackImgControl.create_window"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.create_window">[docs]</a>    <span class="k">def</span> <span class="nf">create_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BackImgControl.create_window">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.create_window">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">master</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainframe</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;3 3 3 3&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainframe</span><span class="o">.</span><span class="n">columnconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainframe</span><span class="o">.</span><span class="n">rowconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -230,7 +242,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_set</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sendtopmost</span><span class="p">()</span></div>
-<div class="viewcode-block" id="BackImgControl.newimg"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.newimg">[docs]</a>    <span class="k">def</span> <span class="nf">newimg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BackImgControl.newimg">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.newimg">[docs]</a>
+    <span class="k">def</span> <span class="nf">newimg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">inputdir</span> <span class="o">=</span> <span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">inputdir</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">inputdir</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BackImgData</span><span class="p">(</span><span class="n">inputdir</span><span class="p">)</span>
@@ -240,12 +255,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">,</span> <span class="n">inputdir</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">inputdir</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">selection_set</span><span class="p">(</span><span class="n">inputdir</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
-<div class="viewcode-block" id="BackImgControl.deleteimg"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.deleteimg">[docs]</a>    <span class="k">def</span> <span class="nf">deleteimg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BackImgControl.deleteimg">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.deleteimg">[docs]</a>
+    <span class="k">def</span> <span class="nf">deleteimg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">selected</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">selection</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">selected</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
-<div class="viewcode-block" id="BackImgControl.showimg"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.showimg">[docs]</a>    <span class="k">def</span> <span class="nf">showimg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BackImgControl.showimg">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.showimg">[docs]</a>
+    <span class="k">def</span> <span class="nf">showimg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="n">selected</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">selection</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span>
@@ -261,7 +282,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">selected</span><span class="p">]</span><span class="o">.</span><span class="n">rotrad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot_v</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
             <span class="c1">#self.imgs[selected].rotate(self.imgs[selected].rotrad)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
-<div class="viewcode-block" id="BackImgControl.clickimglist"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.clickimglist">[docs]</a>    <span class="k">def</span> <span class="nf">clickimglist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BackImgControl.clickimglist">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.clickimglist">[docs]</a>
+    <span class="k">def</span> <span class="nf">clickimglist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">selection</span><span class="p">())</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
             <span class="n">selected</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">selection</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
             <span class="c1">#print(&#39;Hi&#39;,event,selected)</span>
@@ -274,7 +298,10 @@
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">selected</span><span class="p">]</span><span class="o">.</span><span class="n">origin</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">shift</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">selected</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
-<div class="viewcode-block" id="BackImgControl.imgsarea"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.imgsarea">[docs]</a>    <span class="k">def</span> <span class="nf">imgsarea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extent_input</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BackImgControl.imgsarea">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.imgsarea">[docs]</a>
+    <span class="k">def</span> <span class="nf">imgsarea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extent_input</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">extent_input</span> <span class="o">==</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">extent_input</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
             <span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -283,7 +310,10 @@
             <span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">else</span> <span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
             <span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">else</span> <span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">extent</span></div>
-<div class="viewcode-block" id="BackImgControl.save_setting"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.save_setting">[docs]</a>    <span class="k">def</span> <span class="nf">save_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outputpath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BackImgControl.save_setting">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.save_setting">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outputpath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">outputpath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">outputpath</span> <span class="o">=</span> <span class="n">filedialog</span><span class="o">.</span><span class="n">asksaveasfilename</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">outputpath</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
@@ -298,9 +328,14 @@
                 <span class="n">fp</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s1">&#39;shift = </span><span class="si">{:f}</span><span class="s1">,</span><span class="si">{:f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">imgkey</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">imgkey</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
                 <span class="n">fp</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-<div class="viewcode-block" id="BackImgControl.load_setting"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.load_setting">[docs]</a>    <span class="k">def</span> <span class="nf">load_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BackImgControl.load_setting">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.load_setting">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">get_children</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="n">conf</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
         <span class="n">conf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conf_path</span> <span class="o">=</span> <span class="n">path</span>
@@ -318,15 +353,29 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">sections</span><span class="p">]</span><span class="o">.</span><span class="n">rotrad</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="n">sections</span><span class="p">][</span><span class="s1">&#39;rot&#39;</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">sections</span><span class="p">]</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="n">sections</span><span class="p">][</span><span class="s1">&#39;alpha&#39;</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imgs</span><span class="p">[</span><span class="n">sections</span><span class="p">]</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="n">sections</span><span class="p">][</span><span class="s1">&#39;scale&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">sections</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">imglist_sb</span><span class="o">.</span><span class="n">selection_set</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
-<div class="viewcode-block" id="BackImgControl.sendtopmost"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.sendtopmost">[docs]</a>    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BackImgControl.sendtopmost">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.sendtopmost">[docs]</a>
+    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">lift</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_force</span><span class="p">()</span></div>
-<div class="viewcode-block" id="BackImgControl.closewindow"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.closewindow">[docs]</a>    <span class="k">def</span> <span class="nf">closewindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="kc">None</span></div></div>
 
-<div class="viewcode-block" id="TileMapControl"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl">[docs]</a><span class="k">class</span> <span class="nc">TileMapControl</span><span class="p">():</span>
+<div class="viewcode-block" id="BackImgControl.closewindow">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.BackImgControl.closewindow">[docs]</a>
+    <span class="k">def</span> <span class="nf">closewindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TileMapControl">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl">[docs]</a>
+<span class="k">class</span> <span class="nc">TileMapControl</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mainwindow</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span> <span class="o">=</span> <span class="n">mainwindow</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="kc">None</span>
@@ -346,7 +395,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">img_cache</span> <span class="o">=</span> <span class="p">{}</span>
-<div class="viewcode-block" id="TileMapControl.create_paramwindow"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.create_paramwindow">[docs]</a>    <span class="k">def</span> <span class="nf">create_paramwindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="TileMapControl.create_paramwindow">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.create_paramwindow">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_paramwindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainframe</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;3 3 3 3&#39;</span><span class="p">)</span>
@@ -425,7 +476,10 @@
                 <span class="n">btn_col</span><span class="o">+=</span><span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sendtopmost</span><span class="p">()</span></div>
-<div class="viewcode-block" id="TileMapControl.getparameters"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.getparameters">[docs]</a>    <span class="k">def</span> <span class="nf">getparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TileMapControl.getparameters">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.getparameters">[docs]</a>
+    <span class="k">def</span> <span class="nf">getparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        for i in self.wd_variable.keys():</span>
 <span class="sd">            print(i, self.wd_variable[i].get())</span>
@@ -440,14 +494,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">toshow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wd_variable</span><span class="p">[</span><span class="s1">&#39;toshow&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">autozoom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wd_variable</span><span class="p">[</span><span class="s1">&#39;autozoom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">closewindow</span><span class="p">()</span></div>
-<div class="viewcode-block" id="TileMapControl.sendtopmost"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.sendtopmost">[docs]</a>    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TileMapControl.sendtopmost">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.sendtopmost">[docs]</a>
+    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">lift</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_force</span><span class="p">()</span></div>
-<div class="viewcode-block" id="TileMapControl.closewindow"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.closewindow">[docs]</a>    <span class="k">def</span> <span class="nf">closewindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TileMapControl.closewindow">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.closewindow">[docs]</a>
+    <span class="k">def</span> <span class="nf">closewindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">sendtopmost</span><span class="p">()</span></div>
-<div class="viewcode-block" id="TileMapControl.getimg"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.getimg">[docs]</a>    <span class="k">def</span> <span class="nf">getimg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalex</span><span class="p">,</span> <span class="n">as_ratio</span><span class="p">,</span> <span class="n">maptilenumwarning</span><span class="o">=</span><span class="mi">36</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TileMapControl.getimg">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.getimg">[docs]</a>
+    <span class="k">def</span> <span class="nf">getimg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalex</span><span class="p">,</span> <span class="n">as_ratio</span><span class="p">,</span> <span class="n">maptilenumwarning</span><span class="o">=</span><span class="mi">36</span><span class="p">):</span>
         <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">pdb</span>
             <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
@@ -578,10 +641,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="n">result</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">=</span> <span class="n">extent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;x</span><span class="si">{:d}</span><span class="s1">y</span><span class="si">{:d}</span><span class="s1">z</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span><span class="n">y_min</span><span class="p">,</span><span class="n">zoom</span><span class="p">)</span></div>
-<div class="viewcode-block" id="TileMapControl.showimg"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.showimg">[docs]</a>    <span class="k">def</span> <span class="nf">showimg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ax</span><span class="p">,</span><span class="n">as_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ymag</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TileMapControl.showimg">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.showimg">[docs]</a>
+    <span class="k">def</span> <span class="nf">showimg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ax</span><span class="p">,</span><span class="n">as_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ymag</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toshow</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span><span class="n">aspect</span><span class="o">=</span><span class="n">ymag</span><span class="p">)</span></div>
-<div class="viewcode-block" id="TileMapControl.setparams_fromcfg"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.setparams_fromcfg">[docs]</a>    <span class="k">def</span> <span class="nf">setparams_fromcfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfgd</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TileMapControl.setparams_fromcfg">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.setparams_fromcfg">[docs]</a>
+    <span class="k">def</span> <span class="nf">setparams_fromcfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfgd</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">cfgd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">toshow</span> <span class="o">=</span> <span class="n">cfgd</span><span class="p">[</span><span class="s1">&#39;toshow&#39;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">cfgd</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>
@@ -591,7 +660,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="n">cfgd</span><span class="p">[</span><span class="s1">&#39;zoomlevel&#39;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">autozoom</span> <span class="o">=</span> <span class="n">cfgd</span><span class="p">[</span><span class="s1">&#39;autozoom&#39;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">template_url</span> <span class="o">=</span> <span class="n">cfgd</span><span class="p">[</span><span class="s1">&#39;template_url&#39;</span><span class="p">]</span></div>
-<div class="viewcode-block" id="TileMapControl.export"><a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TileMapControl.export">
+<a class="viewcode-back" href="../../tsutsuji.backimg.html#tsutsuji.backimg.TileMapControl.export">[docs]</a>
+    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">filetype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">outputpath</span> <span class="o">=</span> <span class="n">filedialog</span><span class="o">.</span><span class="n">asksaveasfilename</span><span class="p">(</span><span class="n">initialfile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">filetype</span><span class="p">)</span>
@@ -606,16 +678,18 @@
                 <span class="n">fp</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s1">&#39;origin = </span><span class="si">{:f}</span><span class="s1">,</span><span class="si">{:f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
                 <span class="n">fp</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s1">&#39;shift = </span><span class="si">{:f}</span><span class="s1">,</span><span class="si">{:f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
                 <span class="n">fp</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+                <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -623,13 +697,13 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -644,8 +718,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

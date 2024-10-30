@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+
+<html lang="jp" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>高度ウィンドウ &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
+    
+    <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Measureウィンドウ(高度)" href="reference_heightmeasure.html" />
+    <link rel="prev" title="Measure ウィンドウ" href="reference_measure.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference_heightmeasure.html" title="Measureウィンドウ(高度)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reference_measure.html" title="Measure ウィンドウ"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" accesskey="U">Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">高度ウィンドウ</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1>高度ウィンドウ<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<a class="reference internal image-reference" href="_images/height_window.png"><img alt="_images/height_window.png" src="_images/height_window.png" style="width: 595.1999999999999px; height: 328.8px;" />
+</a>
+<section id="id2">
+<h2>プロットウィンドウ<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p>各軌道について、横軸：距離程 [m]、縦軸：高度 [m]としたプロットを表示します。</p>
+</section>
+<section id="replot">
+<h2>Replotボタン<a class="headerlink" href="#replot" title="Link to this heading">¶</a></h2>
+<p>プロットウィンドウの再描画を行います。
+このボタンを押した場合、高度プロットのみの再描画を行います。</p>
+</section>
+<section id="plot-control">
+<h2>Plot control<a class="headerlink" href="#plot-control" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>dist</p>
+<ul>
+<li><p>プロットする距離程範囲を指定する</p></li>
+<li><p>auto</p>
+<ul>
+<li><p>On:</p>
+<ul>
+<li><p>読み込んだ軌道が全て表示される範囲に自動設定する</p></li>
+</ul>
+</li>
+<li><p>Off</p>
+<ul>
+<li><p>min, maxへ入力した値が有効になる</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>ht.</p>
+<ul>
+<li><p>プロットする高度範囲を指定する</p></li>
+<li><p>auto</p>
+<ul>
+<li><p>On</p>
+<ul>
+<li><p>読み込んだ軌道が全て表示される範囲に自動設定する</p></li>
+</ul>
+</li>
+<li><p>Off</p>
+<ul>
+<li><p>min, maxへ入力した値が有効になる</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>←, →ボタン</p>
+<ul>
+<li><p>矢印の方向に表示範囲を移動する（距離程のみ）</p></li>
+<li><p>dist, autoがチェックされていない場合のみ有効</p></li>
+</ul>
+</li>
+<li><p>Symbols</p>
+<ul>
+<li><p>radius</p>
+<ul>
+<li><p>Curve要素が指定されている座標にマーカー(●)を描画する</p></li>
+</ul>
+</li>
+<li><p>gradient</p>
+<ul>
+<li><p>Gradient要素が指定されている座標にマーカー(▲)を描画する</p></li>
+</ul>
+</li>
+<li><p>supplemental_cp</p>
+<ul>
+<li><p>supplemental_cpが指定されている座標にマーカー(✖)を描画する</p></li>
+</ul>
+</li>
+<li><p>track</p>
+<ul>
+<li><p>track要素が指定されている座標にマーカー(+)を描画する</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="backimg">
+<span id="ref-height-menu-backimg"></span><h2>Backimg ボタン<a class="headerlink" href="#backimg" title="Link to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/height_backimg.png"><img alt="_images/height_backimg.png" src="_images/height_backimg.png" style="width: 306.59999999999997px; height: 184.79999999999998px;" />
+</a>
+<p>高度プロットウィンドウの背景画像を管理するウィンドウを表示します。</p>
+<section id="id3">
+<h3>ファイル操作<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Add</p>
+<ul>
+<li><p>ファイルダイアログを開き、表示したい画像ファイルを選択する</p></li>
+<li><p>選択した画像ファイルはfilepathリストに表示される</p></li>
+</ul>
+</li>
+<li><p>Delete</p>
+<ul>
+<li><p>filepathリストで選択した画像を削除する</p></li>
+</ul>
+</li>
+<li><p>Refresh</p>
+<ul>
+<li><p>変更した下記パラメータを反映する</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id4">
+<h3>表示パラメータ<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p>filepathリストで選択した画像毎に下記のパラメータを設定できます。</p>
+<ul class="simple">
+<li><p>x0, y0, x1, y1</p>
+<ul>
+<li><p>画像内で配置基準となる座標を指定</p>
+<ul>
+<li><p>x0: 距離程dist0となる座標</p></li>
+<li><p>x1: 距離程dist1となる座標</p></li>
+<li><p>y0: 高度h0となる座標</p></li>
+<li><p>y1: 高度h1となる座標</p></li>
+</ul>
+</li>
+<li><p><strong>画像左下を原点</strong> として[pixel]単位で指定</p></li>
+</ul>
+</li>
+<li><p>dist0, h0, dist1, h1</p>
+<ul>
+<li><p>プロットウィンドウ上で画像上の座標x0, y0, x1, y1が該当する座標を指定</p>
+<ul>
+<li><p>dist0: 画像上x=x0が位置する距離程</p></li>
+<li><p>dist1: 画像上x=x1が位置する距離程</p></li>
+<li><p>h0: 画像上y=y0が位置する高度</p></li>
+<li><p>h1: 画像上y=y1が位置する高度</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="align-default" id="id7">
+<a class="reference internal image-reference" href="_images/height_backimg_example_noxy.png"><img alt="_images/height_backimg_example_noxy.png" src="_images/height_backimg_example_noxy.png" style="width: 490.2px; height: 307.8px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">x0, y0, x1, y1とdist0, h0, dist1, h1 の位置関係</span><a class="headerlink" href="#id7" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p>alpha</p>
+<ul>
+<li><p>透過率を0~1で指定</p></li>
+</ul>
+</li>
+<li><p>Show</p>
+<ul>
+<li><p>チェックした画像を表示する</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="ref-height-menu-savebackimg">
+<span id="id5"></span><h3>設定保存<a class="headerlink" href="#ref-height-menu-savebackimg" title="Link to this heading">¶</a></h3>
+<p>メニュー/高度/Save backimg... で、高度ウィンドウ背景画像の設定をファイルに書き出します。</p>
+</section>
+<section id="ref-height-menu-loadbackimg">
+<span id="id6"></span><h3>設定読み込み<a class="headerlink" href="#ref-height-menu-loadbackimg" title="Link to this heading">¶</a></h3>
+<p>メニュー/高度/Load backimg... で、保存した高度ウィンドウ背景画像の設定ファイルを読み込みます。</p>
+</section>
+</section>
+<section id="measure">
+<span id="ref-height-menu-measure"></span><h2>Measure ボタン<a class="headerlink" href="#measure" title="Link to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/height_measure.png"><img alt="_images/height_measure.png" src="_images/height_measure.png" style="width: 379.8px; height: 338.4px;" />
+</a>
+<p>高度プロット上の座標を調べるMeasureウィンドウを開きます。
+詳しくは <a class="reference internal" href="reference_heightmeasure.html"><span class="doc">Measureウィンドウ(高度)</span></a> を参照してください。</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">高度ウィンドウ</a><ul>
+<li><a class="reference internal" href="#id2">プロットウィンドウ</a></li>
+<li><a class="reference internal" href="#replot">Replotボタン</a></li>
+<li><a class="reference internal" href="#plot-control">Plot control</a></li>
+<li><a class="reference internal" href="#backimg">Backimg ボタン</a><ul>
+<li><a class="reference internal" href="#id3">ファイル操作</a></li>
+<li><a class="reference internal" href="#id4">表示パラメータ</a></li>
+<li><a class="reference internal" href="#ref-height-menu-savebackimg">設定保存</a></li>
+<li><a class="reference internal" href="#ref-height-menu-loadbackimg">設定読み込み</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#measure">Measure ボタン</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="reference_measure.html"
+                          title="previous chapter">Measure ウィンドウ</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="reference_heightmeasure.html"
+                          title="next chapter">Measureウィンドウ(高度)</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/reference_height.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference_heightmeasure.html" title="Measureウィンドウ(高度)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reference_measure.html" title="Measure ウィンドウ"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" >Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">高度ウィンドウ</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>

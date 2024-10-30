@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2022 konawasabi
+#    Copyright 2021-2024 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ class BackImgControl():
         self.master = None
     def create_window(self):
         if self.master == None:
-            self.master = tk.Toplevel(self.mainwindow)
+            self.master = tk.Toplevel(self.mainwindow.master)
             self.mainframe = ttk.Frame(self.master, padding='3 3 3 3')
             self.mainframe.columnconfigure(0, weight=1)
             self.mainframe.rowconfigure(0, weight=1)
@@ -257,6 +257,8 @@ class BackImgControl():
     def load_setting(self,path=None):
         if path is None:
             path = filedialog.askopenfilename()
+            for key in self.imglist_sb.get_children():
+                self.imglist_sb.delete(key)
         conf = configparser.ConfigParser()
         conf.read(path)
         self.conf_path = path
@@ -274,6 +276,10 @@ class BackImgControl():
             self.imgs[sections].rotrad = float(conf[sections]['rot'])
             self.imgs[sections].alpha = float(conf[sections]['alpha'])
             self.imgs[sections].scale = float(conf[sections]['scale'])
+
+            if path is None:
+                self.imglist_sb.insert('',tk.END, sections, text=sections)
+                self.imglist_sb.selection_set(sections)
         self.mainwindow.drawall()
     def sendtopmost(self,event=None):
         self.master.lift()

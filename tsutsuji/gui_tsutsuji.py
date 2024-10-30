@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2023 konawasabi
+#    Copyright 2021-2024 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import pathlib
 import os
 import webbrowser
 import argparse
+import time
 
 import tkinter as tk
 from tkinter import ttk
@@ -46,6 +47,9 @@ from . import backimg
 from . import measure
 from ._version import __version__
 from . import trackwindow
+from . import heightwindow
+from . import kp_handling
+from . import mediantrack
 
 class Catcher: # tkinter内で起きた例外をキャッチする
     def __init__(self, func, subst, widget):
@@ -69,7 +73,7 @@ class mainwindow(ttk.Frame):
     def __init__(self, master):
         self.parent = master
         super().__init__(master, padding='3 3 3 3')
-        self.master.title('Tsutsuji')
+        self.master.title('Tsutsuji trackcomputer ver. {:s}'.format(__version__))
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.master.columnconfigure(0, weight=1)
         self.master.rowconfigure(0, weight=1)
@@ -84,6 +88,8 @@ class mainwindow(ttk.Frame):
         self.trackcontrol = track_control.TrackControl()
 
         self.staticmapctrl = backimg.TileMapControl(self)
+
+        self.heightwindow = heightwindow.HeightWindow(self)
         
         self.create_widgets()
         self.create_menubar()
@@ -230,11 +236,13 @@ class mainwindow(ttk.Frame):
         
         self.menu_file = tk.Menu(self.menubar)
         self.menu_compute = tk.Menu(self.menubar)
+        self.menu_height = tk.Menu(self.menubar)
         self.menu_option = tk.Menu(self.menubar)
         self.menu_help = tk.Menu(self.menubar)
         
         self.menubar.add_cascade(menu=self.menu_file, label='ファイル')
         self.menubar.add_cascade(menu=self.menu_compute, label='メイン処理')
+        self.menubar.add_cascade(menu=self.menu_height, label='高度')
         self.menubar.add_cascade(menu=self.menu_option, label='オプション')
         self.menubar.add_cascade(menu=self.menu_help, label='ヘルプ')
         
@@ -247,6 +255,8 @@ class mainwindow(ttk.Frame):
         self.menu_compute.add_command(label='Generate', command=self.generate_output, accelerator='Control+G')
         self.menu_compute.add_separator()
         self.menu_compute.add_command(label='Replot', command=self.drawall, accelerator='Return')
+
+        self.heightwindow.create_menu()
         
         self.menu_option.add_command(label='Backimg...', command=self.backimgctrl.create_window)
         self.menu_option.add_command(label='Load Backimg...', command=self.backimgctrl.load_setting)
@@ -257,6 +267,10 @@ class mainwindow(ttk.Frame):
         self.menu_option.add_command(label='Export Maptile...', command=self.staticmapctrl.export)
         self.menu_option.add_separator()
         self.menu_option.add_command(label='Track...', command=self.trackwindow.create_window)
+        self.menu_option.add_separator()
+        self.menu_option.add_command(label='Handling kiloposts...', command = lambda: kp_handling.GUI(self))
+        self.menu_option.add_separator()
+        self.menu_option.add_command(label='Mediantrack...', command = lambda: mediantrack.GUI(self))
         
         self.menu_help.add_command(label='ヘルプ...', command=self.open_webdocument)
         self.menu_help.add_command(label='Tsutsujiについて...', command=self.aboutwindow)
@@ -290,8 +304,13 @@ class mainwindow(ttk.Frame):
             self.backimgctrl.load_setting(path = self.trackcontrol.conf.general['backimg'])
         elif self.backimgctrl.conf_path is not None:
             self.backimgctrl.load_setting(path = self.backimgctrl.conf_path)
+        if self.trackcontrol.conf.general['backimg_height'] is not None:
+            self.heightwindow.backimg.load_setting(path = self.trackcontrol.conf.general['backimg_height'])
+        elif self.heightwindow.backimg.conf_path is not None:
+            self.heightwindow.backimg.load_setting(path = self.heightwindow.backimg.conf_path)
         self.trackwindow.reset_treevalue()
         self.measurewindow.reload_trackkeys()
+        self.heightwindow.reloadcfg()
 
         plotsize = self.fig_plane.get_size_inches()
         self.staticmapctrl.setparams_fromcfg(self.trackcontrol.conf.maptile)
@@ -337,6 +356,8 @@ class mainwindow(ttk.Frame):
 
         self.ax_plane.invert_yaxis()
         self.fig_canvas.draw()
+
+        self.heightwindow.drawall()
     def move_xy(self,x,y):
         nowpos = [self.viewpos_v[0].get(),self.viewpos_v[1].get()]
         plotsize = self.fig_plane.get_size_inches()
@@ -353,12 +374,16 @@ class mainwindow(ttk.Frame):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
     def generate_output(self, event=None):
+        if not __debug__:
+            start = time.time()
         self.trackcontrol.generate_mapdata()
+        if not __debug__:
+            print(time.time()-start)
         self.get_othertrack()
     def aboutwindow(self, event=None):
         msg  = 'Tsutsuji trackcomputer\n'
         msg += 'Version '+__version__+'\n\n'
-        msg += 'Copyright © 2023 konawasabi\n'
+        msg += 'Copyright © 2024 konawasabi\n'
         msg += 'Released under the Apache License, Version 2.0 .\n'
         msg += 'https://www.apache.org/licenses/LICENSE-2.0'
         tk.messagebox.showinfo(message=msg)

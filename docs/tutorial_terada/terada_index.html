@@ -1,19 +1,18 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>寺田駅を作る &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,7 +23,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -51,20 +50,21 @@
           <div class="body" role="main">
             
   <section id="id1">
-<h1>寺田駅を作る<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h1>
+<h1>寺田駅を作る<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
 <section id="id2">
-<h2>はじめに<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<h2>はじめに<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <p>ここでは、 <a class="reference external" href="https://www.chitetsu.co.jp/?station_info=寺田駅">富山地方鉄道 寺田駅</a> を題材として、国土地理院の空中写真(航空写真)から線形データを作成する手順を説明します。</p>
 <p>この作例では、立山線上り線を自軌道として構築し、これを基準に立山線下り線、本線上り・下り線をそれぞれ構築します。マップ平面図は下図の通りです。</p>
 <p>サンプルデータは <a class="reference download internal" download="" href="../_downloads/584835c452c2ece6998a67f3fbf4b379/terada_sample.zip"><code class="xref download docutils literal notranslate"><span class="pre">terada_sample.zip</span> <span class="pre">(3</span> <span class="pre">KB)</span></code></a> よりダウンロードできます。</p>
-<a class="reference internal image-reference" href="../_images/zentai.png"><img alt="../_images/zentai.png" src="../_images/zentai.png" style="width: 337.4px; height: 384.29999999999995px;" /></a>
+<a class="reference internal image-reference" href="../_images/zentai.png"><img alt="../_images/zentai.png" src="../_images/zentai.png" style="width: 337.4px; height: 384.29999999999995px;" />
+</a>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>本文章で掲載している地図・空中写真画像は、国土地理院標準地図、国土地理院シームレス空中写真を基に加工したものです。</p>
 </div>
 </section>
 <section id="id4">
-<h2>目次<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<h2>目次<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="preparecfg.html">1. 空中写真をTsutsujiに表示する</a><ul>
@@ -118,7 +118,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -148,7 +148,7 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -156,13 +156,13 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -183,8 +183,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

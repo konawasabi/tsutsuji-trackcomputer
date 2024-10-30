@@ -1,19 +1,18 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>3. tateyama_down の構築 &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -24,7 +23,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -52,16 +51,17 @@
           <div class="body" role="main">
             
   <section id="tateyama-down">
-<h1><span class="section-number">3. </span>tateyama_down の構築<a class="headerlink" href="#tateyama-down" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">3. </span>tateyama_down の構築<a class="headerlink" href="#tateyama-down" title="Link to this heading">¶</a></h1>
 <section id="id1">
-<h2><span class="section-number">3.1. </span>始点を決める<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.1. </span>始点を決める<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
 <p>tateyama_down軌道の始点座標を求め、main.cfgに[tateyama_down]セクションを追加する。</p>
 <ol class="arabic">
 <li><p>カーソルAのtrackをtateyama_upにセットする</p></li>
 <li><p>カーソルAを立山寄り分岐器の始端にセットし、その地点の距離程を読む</p>
 <ul>
 <li><p>ここでは165m</p></li>
-<li><a class="reference internal image-reference" href="../_images/setorigin.png"><img alt="../_images/setorigin.png" src="../_images/setorigin.png" style="width: 412.5px; height: 312.5px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/setorigin.png"><img alt="../_images/setorigin.png" src="../_images/setorigin.png" style="width: 412.5px; height: 312.5px;" />
+</a>
 </li>
 </ul>
 </li>
@@ -69,7 +69,7 @@
 <ul>
 <li><p>tateyama_down軌道の始点と向きは、tateyama_up軌道の距離程165m地点での値と同一に設定される</p></li>
 <li><div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id6" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 [tateyama_down]
 file = tateyama_down.txt
@@ -90,7 +90,7 @@ endpoint = 1500
 <li><p>main.cfgと同じディレクトリに以下の内容でtateyama_down.txtを作成する</p>
 <ul>
 <li><div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">tateyama_down.txt</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">tateyama_down.txt</span><a class="headerlink" href="#id7" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BveTs Map 2.02:utf-8
 
 0;
@@ -105,7 +105,7 @@ Curve.SetFunction(0);
 </ol>
 </section>
 <section id="id2">
-<h2><span class="section-number">3.2. </span>立山寄り分岐器<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.2. </span>立山寄り分岐器<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <ol class="arabic">
 <li><p>カーソルAのtrackをtateyama_downにセットする</p></li>
 <li><p>カーソルAの位置、方向を距離程0mにセットする</p></li>
@@ -122,7 +122,7 @@ Curve.SetFunction(0);
 <li><p>ターミナルへの出力をtateyama_down.txtにコピーする</p>
 <ul>
 <li><div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">tateyama_down.txt</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">tateyama_down.txt</span><a class="headerlink" href="#id8" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 $pt_a = 0;
 $pt_a +0.000000;
@@ -143,14 +143,15 @@ Curve.Interpolate(0.000000,0);
 </li>
 <li><p>データをリロードする</p>
 <ul>
-<li><a class="reference internal image-reference" href="../_images/switch11.png"><img alt="../_images/switch11.png" src="../_images/switch11.png" style="width: 414.5px; height: 314.5px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/switch11.png"><img alt="../_images/switch11.png" src="../_images/switch11.png" style="width: 414.5px; height: 314.5px;" />
+</a>
 </li>
 </ul>
 </li>
 </ol>
 </section>
 <section id="id3">
-<h2><span class="section-number">3.3. </span>プラットホーム部<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.3. </span>プラットホーム部<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
 <ol class="arabic">
 <li><p>カーソルAのtrackをtateyama_downにセットする</p></li>
 <li><p>カーソルAの位置・方向をプラットホームにかかる曲線の始点にセットする</p></li>
@@ -166,7 +167,8 @@ Curve.Interpolate(0.000000,0);
 <li><p>結果</p>
 <ul>
 <li><p>ややホームに寄り過ぎているので、緩和曲線を追加する</p></li>
-<li><a class="reference internal image-reference" href="../_images/form11.png"><img alt="../_images/form11.png" src="../_images/form11.png" style="width: 413.5px; height: 313.0px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/form11.png"><img alt="../_images/form11.png" src="../_images/form11.png" style="width: 413.5px; height: 313.0px;" />
+</a>
 </li>
 </ul>
 </li>
@@ -177,7 +179,8 @@ Curve.Interpolate(0.000000,0);
 <li><p>γ: C</p></li>
 <li><p>mapsyntax にチェック</p></li>
 <li><p>Mode: 6. α(fix)-&gt;β(free) via γ, R(free)</p></li>
-<li><a class="reference internal image-reference" href="../_images/form22.png"><img alt="../_images/form22.png" src="../_images/form22.png" style="width: 413.5px; height: 314.0px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/form22.png"><img alt="../_images/form22.png" src="../_images/form22.png" style="width: 413.5px; height: 314.0px;" />
+</a>
 </li>
 </ul>
 </li>
@@ -186,7 +189,7 @@ Curve.Interpolate(0.000000,0);
 <blockquote>
 <div><ul>
 <li><div class="literal-block-wrapper docutils container" id="id9">
-<div class="code-block-caption"><span class="caption-text">tateyama_down.txt</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">tateyama_down.txt</span><a class="headerlink" href="#id9" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 $pt_a = 43.000000;
 $pt_a;
@@ -209,7 +212,7 @@ Curve.Interpolate(0.000000,0);
 <li><p>データをリロードする</p></li>
 </ol>
 <table class="docutils align-default" id="id10">
-<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id10" title="Link to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>カーソル</p></th>
 <th class="head"><p>x</p></th>
@@ -245,7 +248,7 @@ Curve.Interpolate(0.000000,0);
 </table>
 </section>
 <section id="id4">
-<h2><span class="section-number">3.4. </span>富山寄り分岐器<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.4. </span>富山寄り分岐器<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <ol class="arabic">
 <li><p>カーソルAのtrackをtateyama_downにセットする</p></li>
 <li><p>カーソルAの位置・方向を分岐器の手前にセットする</p></li>
@@ -258,14 +261,15 @@ Curve.Interpolate(0.000000,0);
 <li><p>α: A, β: B</p></li>
 <li><p>mapsyntax にチェック</p></li>
 <li><p>Mode: 3. α(free)-&gt;β(free), R(fix)</p></li>
-<li><a class="reference internal image-reference" href="../_images/switch2.png"><img alt="../_images/switch2.png" src="../_images/switch2.png" style="width: 416.0px; height: 314.5px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/switch2.png"><img alt="../_images/switch2.png" src="../_images/switch2.png" style="width: 416.0px; height: 314.5px;" />
+</a>
 </li>
 </ul>
 </li>
 <li><p>ターミナルへの出力をtateyama_down.txtにコピーする</p>
 <ul>
 <li><div class="literal-block-wrapper docutils container" id="id11">
-<div class="code-block-caption"><span class="caption-text">tateyama_down.txt</span><a class="headerlink" href="#id11" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">tateyama_down.txt</span><a class="headerlink" href="#id11" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 $pt_a = 170.000000;
 $pt_a +16.075524;
@@ -287,7 +291,7 @@ Curve.Interpolate(0.000000,0);
 <li><p>データをリロードする</p></li>
 </ol>
 <table class="docutils align-default" id="id12">
-<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id12" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">(参考) 各カーソルの設定値</span><a class="headerlink" href="#id12" title="Link to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>カーソル</p></th>
 <th class="head"><p>x</p></th>
@@ -316,7 +320,7 @@ Curve.Interpolate(0.000000,0);
 </table>
 </section>
 <section id="id5">
-<h2><span class="section-number">3.5. </span>側線の終点を設定<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.5. </span>側線の終点を設定<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
 <p>main.cfgを修正して、tateyama_down軌道が側線車止めの位置で終点となるようにする。</p>
 <ol class="arabic">
 <li><p>カーソルAのtrackをtateyama_downにセットする</p></li>
@@ -329,7 +333,7 @@ Curve.Interpolate(0.000000,0);
 <li><p>main.cfgを以下のように修正する</p>
 <ul>
 <li><div class="literal-block-wrapper docutils container" id="id13">
-<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id13" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id13" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 [tateyama_down]
 file = tateyama_down.txt
@@ -349,7 +353,8 @@ angle = 0
 </li>
 <li><p>データをリロードして完成</p>
 <ul>
-<li><a class="reference internal image-reference" href="../_images/final.png"><img alt="../_images/final.png" src="../_images/final.png" style="width: 418.0px; height: 317.5px;" /></a>
+<li><a class="reference internal image-reference" href="../_images/final.png"><img alt="../_images/final.png" src="../_images/final.png" style="width: 418.0px; height: 317.5px;" />
+</a>
 </li>
 </ul>
 </li>
@@ -367,7 +372,7 @@ Bve Trainsimマップデータに仕上げる際は、割り当てているrepea
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -400,7 +405,7 @@ Bve Trainsimマップデータに仕上げる際は、割り当てているrepea
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -408,13 +413,13 @@ Bve Trainsimマップデータに仕上げる際は、割り当てているrepea
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -436,8 +441,8 @@ Bve Trainsimマップデータに仕上げる際は、割り当てているrepea
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

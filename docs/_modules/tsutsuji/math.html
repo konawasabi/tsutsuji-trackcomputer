@@ -1,18 +1,17 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tsutsuji.math &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -21,7 +20,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -43,7 +42,7 @@
             
   <h1>Source code for tsutsuji.math</h1><div class="highlight"><pre>
 <span></span><span class="c1">#</span>
-<span class="c1">#    Copyright 2021-2022 konawasabi</span>
+<span class="c1">#    Copyright 2021-2024 konawasabi</span>
 <span class="c1">#</span>
 <span class="c1">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1">#    you may not use this file except in compliance with the License.</span>
@@ -63,14 +62,19 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="rotate"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.rotate">[docs]</a><span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="n">tau1</span><span class="p">):</span>
+<div class="viewcode-block" id="rotate">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.rotate">[docs]</a>
+<span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="n">tau1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;２次元回転行列を返す。</span>
 
 <span class="sd">    tau1: 回転角度 [rad]</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">tau1</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">tau1</span><span class="p">)],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">tau1</span><span class="p">),</span>  <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">tau1</span><span class="p">)]])</span></div>
 
-<div class="viewcode-block" id="minimumdist"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.minimumdist">[docs]</a><span class="k">def</span> <span class="nf">minimumdist</span><span class="p">(</span><span class="n">track</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+
+<div class="viewcode-block" id="minimumdist">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.minimumdist">[docs]</a>
+<span class="k">def</span> <span class="nf">minimumdist</span><span class="p">(</span><span class="n">track</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;二次元曲線trackについて、座標pから最も近い曲線上の点を求める。</span>
 <span class="sd">    trackの点間は線形補間される。</span>
 <span class="sd">    </span>
@@ -129,7 +133,10 @@
 
     <span class="k">return</span> <span class="n">mindist</span><span class="p">,</span> <span class="n">crosspt</span><span class="p">,</span> <span class="n">min_ix</span><span class="p">,</span> <span class="n">second_min_ix</span></div>
 
-<div class="viewcode-block" id="cross_kilopost"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.cross_kilopost">[docs]</a><span class="k">def</span> <span class="nf">cross_kilopost</span><span class="p">(</span><span class="n">track</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+
+<div class="viewcode-block" id="cross_kilopost">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.cross_kilopost">[docs]</a>
+<span class="k">def</span> <span class="nf">cross_kilopost</span><span class="p">(</span><span class="n">track</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;minimumdistで求めたtrack上の最近傍点について、対応する距離程を求める。</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -150,7 +157,10 @@
         <span class="n">kilopost</span> <span class="o">=</span> <span class="n">track</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">kilopost</span></div>
 
-<div class="viewcode-block" id="cross_normal"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.cross_normal">[docs]</a><span class="k">def</span> <span class="nf">cross_normal</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">track</span><span class="p">):</span>
+
+<div class="viewcode-block" id="cross_normal">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.cross_normal">[docs]</a>
+<span class="k">def</span> <span class="nf">cross_normal</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">track</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;曲線trackの法線のうち、positionを通過するものを求める</span>
 
 <span class="sd">    Args:</span>
@@ -163,7 +173,10 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="mindist_crossline"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.mindist_crossline">[docs]</a><span class="k">def</span> <span class="nf">mindist_crossline</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">phiA</span><span class="p">,</span> <span class="n">track</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mindist_crossline">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.mindist_crossline">[docs]</a>
+<span class="k">def</span> <span class="nf">mindist_crossline</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">phiA</span><span class="p">,</span> <span class="n">track</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;曲線trackとpositionを通る方位角phiAの直線Uの交点について、positionとの距離が最小となるものを求める</span>
 
 <span class="sd">    track上の各点をT_k, positionをP, 座標原点Oとして、直線Uに沿う単位ベクトルをeUで表す。</span>
@@ -181,7 +194,7 @@
 
 <span class="sd">    Return:</span>
 <span class="sd">        np.array:</span>
-<span class="sd">           [[alpha: 最小となる距離, sort_ix: 距離が最小となる点のインデックス],...]</span>
+<span class="sd">           [[sort_ix: 交点との距離が最小となる点のインデックス, alpha: positionから点列交点の距離, distance: 求めた交点から点列の距離],...]</span>
 <span class="sd">        : </span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -190,21 +203,30 @@
     <span class="n">dist_v</span> <span class="o">=</span> <span class="p">(</span><span class="n">track</span> <span class="o">-</span> <span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">eU</span> <span class="o">+</span> <span class="n">position</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dist_v</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist_v</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="n">sort_ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+    <span class="n">sort_ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span> <span class="c1"># 点列と交点の距離が小さい順にソートしたインデックスを得る</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">):</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">alpha</span><span class="p">[</span><span class="n">sort_ix</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span><span class="n">sort_ix</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    result = []</span>
+<span class="sd">    for i in range(0,5):</span>
+<span class="sd">        result.append([alpha[sort_ix[i]],sort_ix[i],distance[sort_ix[i]]])</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">sort_ix</span><span class="p">,</span><span class="n">alpha</span><span class="p">[</span><span class="n">sort_ix</span><span class="p">],</span><span class="n">distance</span><span class="p">[</span><span class="n">sort_ix</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span></div>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
-<div class="viewcode-block" id="angle_twov"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.angle_twov">[docs]</a><span class="k">def</span> <span class="nf">angle_twov</span><span class="p">(</span><span class="n">phiA</span><span class="p">,</span> <span class="n">phiB</span><span class="p">):</span>
+
+<div class="viewcode-block" id="angle_twov">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.angle_twov">[docs]</a>
+<span class="k">def</span> <span class="nf">angle_twov</span><span class="p">(</span><span class="n">phiA</span><span class="p">,</span> <span class="n">phiB</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39; ベクトルA (方位角phiA)からベクトルB(方位角phiB)への方位角変化を求める</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">eA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phiA</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phiA</span><span class="p">)])</span>
     <span class="n">eB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phiB</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phiB</span><span class="p">)])</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eA</span><span class="p">,</span><span class="n">eB</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">eA</span><span class="p">,</span><span class="n">eB</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="interpolate_with_dist"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.interpolate_with_dist">[docs]</a><span class="k">def</span> <span class="nf">interpolate_with_dist</span><span class="p">(</span><span class="n">track</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">cp_dist</span><span class="p">):</span>
+
+<div class="viewcode-block" id="interpolate_with_dist">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.interpolate_with_dist">[docs]</a>
+<span class="k">def</span> <span class="nf">interpolate_with_dist</span><span class="p">(</span><span class="n">track</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">cp_dist</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">ix</span><span class="p">,</span><span class="n">typ</span><span class="p">,</span><span class="n">cp_dist</span><span class="p">,</span><span class="n">base</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="n">typ</span><span class="p">][</span><span class="n">ix</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">data</span><span class="p">[:,</span><span class="n">typ</span><span class="p">][</span><span class="n">ix</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="n">base</span><span class="p">][</span><span class="n">ix</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">data</span><span class="p">[:,</span><span class="n">base</span><span class="p">][</span><span class="n">ix</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">cp_dist</span><span class="o">-</span><span class="n">data</span><span class="p">[:,</span><span class="n">base</span><span class="p">][</span><span class="n">ix</span><span class="p">])</span><span class="o">+</span><span class="n">data</span><span class="p">[:,</span><span class="n">typ</span><span class="p">][</span><span class="n">ix</span><span class="p">]</span>
     <span class="n">min_ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">track</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">cp_dist</span><span class="p">))</span>
@@ -221,7 +243,10 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">track</span><span class="p">[</span><span class="n">min_ix</span><span class="p">][</span><span class="n">element</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="calc_pl2xy"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.calc_pl2xy">[docs]</a><span class="k">def</span> <span class="nf">calc_pl2xy</span><span class="p">(</span><span class="n">phi_deg</span><span class="p">,</span> <span class="n">lambda_deg</span><span class="p">,</span> <span class="n">phi0_deg</span><span class="p">,</span> <span class="n">lambda0_deg</span><span class="p">):</span>
+
+<div class="viewcode-block" id="calc_pl2xy">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.calc_pl2xy">[docs]</a>
+<span class="k">def</span> <span class="nf">calc_pl2xy</span><span class="p">(</span><span class="n">phi_deg</span><span class="p">,</span> <span class="n">lambda_deg</span><span class="p">,</span> <span class="n">phi0_deg</span><span class="p">,</span> <span class="n">lambda0_deg</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; 緯度経度を平面直角座標に変換する</span>
 <span class="sd">    - input:</span>
 <span class="sd">        (phi_deg, lambda_deg): 変換したい緯度・経度[度]（分・秒でなく小数であることに注意）</span>
@@ -295,7 +320,10 @@
     <span class="c1"># return</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="c1"># [m]</span></div>
 
-<div class="viewcode-block" id="calc_xy2pl"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.calc_xy2pl">[docs]</a><span class="k">def</span> <span class="nf">calc_xy2pl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">phi0_deg</span><span class="p">,</span> <span class="n">lambda0_deg</span><span class="p">):</span>
+
+<div class="viewcode-block" id="calc_xy2pl">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.calc_xy2pl">[docs]</a>
+<span class="k">def</span> <span class="nf">calc_xy2pl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">phi0_deg</span><span class="p">,</span> <span class="n">lambda0_deg</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; 平面直角座標を緯度経度に変換する</span>
 <span class="sd">    - input:</span>
 <span class="sd">        (x, y): 変換したいx, y座標[m]</span>
@@ -379,7 +407,10 @@
     <span class="c1"># ラジアンを度になおしてreturn</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">latitude</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">longitude</span><span class="p">)</span> <span class="c1"># [deg]</span></div>
 
-<div class="viewcode-block" id="long2px"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.long2px">[docs]</a><span class="k">def</span> <span class="nf">long2px</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+
+<div class="viewcode-block" id="long2px">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.long2px">[docs]</a>
+<span class="k">def</span> <span class="nf">long2px</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;経度をマップタイルのピクセル座標に変換する</span>
 <span class="sd">    - input:</span>
 <span class="sd">        l: 変換したい経度(longitude) [deg]</span>
@@ -389,7 +420,10 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">z</span><span class="o">+</span><span class="mi">7</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">l</span><span class="o">/</span><span class="mi">180</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="lat2py"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.lat2py">[docs]</a><span class="k">def</span> <span class="nf">lat2py</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">85.05112878</span><span class="p">):</span>
+
+<div class="viewcode-block" id="lat2py">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.lat2py">[docs]</a>
+<span class="k">def</span> <span class="nf">lat2py</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">85.05112878</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;緯度をマップタイルのピクセル座標に変換する</span>
 <span class="sd">    - input:</span>
 <span class="sd">        l: 変換したい緯度(latitude) [deg]</span>
@@ -400,7 +434,10 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">z</span><span class="o">+</span><span class="mi">7</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">arctanh</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="o">*</span><span class="n">l</span><span class="p">))</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">arctanh</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="o">*</span><span class="n">L</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="px2long"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.px2long">[docs]</a><span class="k">def</span> <span class="nf">px2long</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+
+<div class="viewcode-block" id="px2long">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.px2long">[docs]</a>
+<span class="k">def</span> <span class="nf">px2long</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;ピクセル座標を経度に変換する</span>
 <span class="sd">    - input:</span>
 <span class="sd">        x: 変換したいピクセル座標x成分 </span>
@@ -410,7 +447,10 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="mi">180</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">z</span><span class="o">+</span><span class="mi">7</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="py2lat"><a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.py2lat">[docs]</a><span class="k">def</span> <span class="nf">py2lat</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">85.05112878</span><span class="p">):</span>
+
+<div class="viewcode-block" id="py2lat">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.py2lat">[docs]</a>
+<span class="k">def</span> <span class="nf">py2lat</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">85.05112878</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;ピクセル座標を経度に変換する</span>
 <span class="sd">    - input:</span>
 <span class="sd">        y: 変換したいピクセル座標y成分</span>
@@ -420,15 +460,47 @@
 <span class="sd">        l: 緯度 [deg]</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">z</span><span class="o">+</span><span class="mi">7</span><span class="p">))</span><span class="o">*</span><span class="n">y</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">arctanh</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="o">*</span><span class="n">L</span><span class="p">)))))</span></div>
+
+
+<div class="viewcode-block" id="crosspoint_2lines">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.crosspoint_2lines">[docs]</a>
+<span class="k">def</span> <span class="nf">crosspoint_2lines</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">eA</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">eB</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;2直線X, Yの交点Pを求める</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">         A  (ndarray): 直線Xの通過点</span>
+<span class="sd">         eA (ndarray): 直線Xの単位ベクトル</span>
+<span class="sd">         B  (ndarray): 直線Yの通過点</span>
+<span class="sd">         eB (ndarray): 直線Yの単位ベクトル</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        (ndarray, ndarray): (PAの距離, 点Pの座標)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eA</span><span class="p">,</span><span class="n">eB</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">-</span><span class="n">B</span><span class="p">,</span><span class="n">eB</span><span class="p">)</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">-</span><span class="n">B</span><span class="p">,</span><span class="n">eA</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eA</span><span class="p">,</span><span class="n">eB</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="n">A</span><span class="o">+</span><span class="n">alpha</span><span class="o">*</span><span class="n">eA</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="phi2el">
+<a class="viewcode-back" href="../../tsutsuji.math.html#tsutsuji.math.phi2el">[docs]</a>
+<span class="k">def</span> <span class="nf">phi2el</span><span class="p">(</span><span class="n">phi</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;角度phi [rad]の単位ベクトルを返す</span>
+<span class="sd">    Args:</span>
+<span class="sd">        phi (float): 求める単位ベクトルが座標軸に対してなす角 [rad]</span>
+<span class="sd">    Return:</span>
+<span class="sd">        np.array([float, float])</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)])</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -436,13 +508,13 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -457,8 +529,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

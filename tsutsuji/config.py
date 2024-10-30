@@ -45,11 +45,14 @@ class Config():
                         'owntrack':None,\
                         'output_path':'./result',\
                         'backimg':None,\
+                        'backimg_height':None,\
                         'check_u':True,\
-                        'output_digit':3}
+                        'output_digit':3,\
+                        'limit_curvatureradius':1e4,\
+                        'limit_differentialerror':1e-3}
         if '@TSUTSUJI_GENERAL' in sections:
             for k in self.cp.options('@TSUTSUJI_GENERAL'):
-                if k in ['origin_distance', 'unit_length']:
+                if k in ['origin_distance', 'unit_length', 'limit_curvatureradius', 'limit_differentialerror']:
                     self.general[k] = float(self.cp['@TSUTSUJI_GENERAL'][k])
                 elif k in ['output_digit']:
                     self.general[k] = int(self.cp['@TSUTSUJI_GENERAL'][k])
@@ -61,6 +64,8 @@ class Config():
             self.general['output_path'] = self.path_parent.joinpath(pathlib.Path(self.general['output_path']))
             if self.general['backimg'] is not None:
                 self.general['backimg'] = self.path_parent.joinpath(pathlib.Path(self.general['backimg']))
+            if self.general['backimg_height'] is not None:
+                self.general['backimg_height'] = self.path_parent.joinpath(pathlib.Path(self.general['backimg_height']))
                 
         self.track_data = self.get_trackdata(self.track_keys)
         for tk in self.track_keys:
@@ -101,18 +106,19 @@ class Config():
 
         for tk in keys:
             track_data[tk] = {'absolute_coordinate':True,\
-                                    'x':0,\
-                                    'y':0,\
-                                    'z':0,\
-                                    'angle':0,\
-                                    'endpoint':0,\
-                                    'file':None,\
-                                    'parent_track':None,\
-                                    'origin_kilopost':None,\
-                                    'isowntrack':False,\
-                                    'supplemental_cp':[],\
-                                    'color':linecolor_default[color_ix%10],\
-                                    'calc_relrad':False}
+                              'x':0,\
+                              'y':0,\
+                              'z':0,\
+                              'angle':0,\
+                              'endpoint':0,\
+                              'file':None,\
+                              'parent_track':None,\
+                              'origin_kilopost':None,\
+                              'isowntrack':False,\
+                              'supplemental_cp':[],\
+                              'color':linecolor_default[color_ix%10],\
+                              'calc_relrad':False,\
+                              'mapelement_enable':{'x':True,'y':True,'cant':True,'interpolate_func':True,'center':True,'gauge':True}}
             for k in self.cp.options(tk):
                 if k.lower() == 'file':
                     track_data[tk][k] = self.path_parent.joinpath(pathlib.Path(self.cp[tk][k]))
@@ -123,6 +129,9 @@ class Config():
                 elif k.lower() in ['supplemental_cp']:
                     for supcp in self.cp[tk][k].split(','):
                         track_data[tk][k].append(float(supcp))
+                elif 'mapelement_enable' in k.lower():
+                    key = k.lower().split('mapelement_enable_')[-1]
+                    track_data[tk]['mapelement_enable'][key] = True if self.cp[tk][k].lower() == 'true' else False
                 else:
                     track_data[tk][k] = self.cp[tk][k]
             color_ix +=1

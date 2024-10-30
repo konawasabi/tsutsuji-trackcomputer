@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2023 konawasabi
+#    Copyright 2021-2024 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@ class TrackControl():
         self.generated_othertrack = None
         self.pointsequence_track = kml2track.Kml2track()
         self.exclude_tracks = []
+        self.limit_curvatureradius = 1e4
+        self.limit_differentialerror = 1e-2
     def loadcfg(self,path):
         '''cfgファイルの読み込み
         '''
@@ -153,9 +155,10 @@ class TrackControl():
                     otdata['result'] = np.array(result_theta)
 
         self.pointsequence_track.load_files(self.conf)
+        self.limit_curvatureradius = self.conf.general['limit_curvatureradius']
+        self.limit_differentialerror = self.conf.general['limit_differentialerror']
             
-            
-    def relativepoint_single(self,to_calc,owntrack=None,parent_track=None):
+    def relativepoint_single(self,to_calc,owntrack=None,parent_track=None,check_U=True):
         '''owntrackを基準とした相対座標への変換
 
         Args:
@@ -167,9 +170,10 @@ class TrackControl():
              ndarray
                  [[owntrack基準の距離程, 変換後x座標成分(=0), 変換後y座標成分, 変換後z座標成分, 対応する軌道の距離程,絶対座標x成分,絶対座標y成分,絶対座標z成分,カント], ...]
         '''
-        def interpolate(aroundzero,ix,typ,base='x_tr'):
-            return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
+    
         def take_relpos_std(src,tgt):
+            def interpolate(aroundzero,ix,typ,base='x_tr'):
+                return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
             len_tr = len(tgt)
             result = []
             tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
@@ -177,9 +181,8 @@ class TrackControl():
             for pos in src:
                 tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
 
-                min_vals = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = int(min_vals[np.argsort(np.abs(min_vals[:,0]))[0]][1])
-                min_ix = (np.array([min_ix_val]),)
+                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = min_ix[0][0]
 
                 if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
@@ -222,91 +225,89 @@ class TrackControl():
                                    tgt[:,3][min_ix][0],\
                                    tgt[:,8][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
             return result
-        def take_relpos_owot(src,tgt):
+        def take_relpos_std_vec(scr,tgt):
+            def interpolate_vec(data,ix,typ,base,dist):
+                return (data[ix+1][typ]-data[ix][typ])/(data[ix+1][base]-data[ix][base])*dist+data[ix][typ]
+            def cross_twolines(tgt_xy,min_ix,pos):
+                eB = (tgt_xy[min_ix+1] - tgt_xy[min_ix])/np.linalg.norm(tgt_xy[min_ix+1] - tgt_xy[min_ix])
+                eA = np.array([np.cos(pos[4]+np.pi/2),np.sin(pos[4]+np.pi/2)])
+                alpha = (np.dot((tgt_xy[min_ix] - pos[1:3]),eA)+np.dot(-(tgt_xy[min_ix] - pos[1:3]),eB)*np.dot(eA,eB))/(1-np.dot(eA,eB)**2)
+                beta = np.dot(-(tgt_xy[min_ix] - pos[1:3]),eB)+alpha*np.dot(eA,eB)
+                return alpha, beta, pos[1:3]+eA*alpha, tgt_xy[min_ix]+eB*beta
+            
             len_tr = len(tgt)
             result = []
-            tgt_xy = np.vstack((tgt[:,1],tgt[:,2]))
+            tgt_xy = np.vstack((tgt[:,1],tgt[:,2])).T
             # 自軌道に対する相対座標の算出
             for pos in src:
-                tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
+                tgt_norm_cross = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix = tgt_norm_cross[np.argsort(np.abs(tgt_norm_cross[0:10,1]**2 + tgt_norm_cross[0:10,2]**2))][:,0]
+                res = []
+                res_debug = []
+                for ix in range(int(min_ix[0])-5 if int(min_ix[0])-5>=0     else 0,\
+                                int(min_ix[0])+5 if int(min_ix[0])+5<len_tr-1 else len_tr-1):
+                    result_tmp = cross_twolines(tgt_xy,ix,pos)
+                    res.append(tuple([ix])+(result_tmp[0],result_tmp[1],result_tmp[2][0],result_tmp[2][1]))
+                    res_debug.append(tuple([ix])+result_tmp)
+                res = np.array(res)
 
-                min_vals = math.mindist_crossline(np.array([pos[1],pos[2]]),pos[4]+np.pi/2,tgt[:,1:3]) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = int(min_vals[np.argsort(np.abs(min_vals[:,0]))[0]][1])
-                min_ix = (np.array([min_ix_val]),)
+                if len(res[res[:,2]>=0])>0:
+                    res_mindist = res[np.argmin(res[res[:,2]>=0][:,2])]
                 
-                if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
-                    aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
-                                  'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
-                                  'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
-                                  'x_ab':tgt[:,1][min_ix_val-1:min_ix_val+2],\
-                                  'y_ab':tgt[:,2][min_ix_val-1:min_ix_val+2],\
-                                  'z_ab':tgt[:,3][min_ix_val-1:min_ix_val+2],\
-                                  'cant':tgt[:,8][min_ix_val-1:min_ix_val+2]}
-                    # aroundzero : [変換後x座標成分, 変換後y座標成分, 対応する軌道の距離程, 絶対座標x成分, 絶対座標y成分]
-                    signx = np.sign(aroundzero['x_tr'])
-                    if signx[0] != signx[1]:
-                        result.append([pos[0],\
-                                       0,\
-                                       interpolate(aroundzero,0,'y_tr'),\
-                                       interpolate(aroundzero,0,'z_ab') - pos[3],\
-                                       interpolate(aroundzero,0,'kp'),\
-                                       interpolate(aroundzero,0,'x_ab'),\
-                                       interpolate(aroundzero,0,'y_ab'),\
-                                       interpolate(aroundzero,0,'z_ab'),\
-                                       interpolate(aroundzero,0,'cant')])
-                    elif signx[1] != signx[2]:
-                        result.append([pos[0],\
-                                       0,\
-                                       interpolate(aroundzero,1,'y_tr'),\
-                                       interpolate(aroundzero,1,'z_ab') - pos[3],\
-                                       interpolate(aroundzero,1,'kp'),\
-                                       interpolate(aroundzero,1,'x_ab'),\
-                                       interpolate(aroundzero,1,'y_ab'),\
-                                       interpolate(aroundzero,1,'z_ab'),\
-                                       interpolate(aroundzero,1,'cant')])
-                else:
+                    kp_interp = tgt[int(res_mindist[0])][0]+res_mindist[2]
                     result.append([pos[0],\
-                                   tgt_xy_trans[0][min_ix][0],\
-                                   tgt_xy_trans[1][min_ix][0],\
-                                   tgt[:,3][min_ix][0] - pos[3],\
-                                   tgt[:,0][min_ix][0],\
-                                   tgt[:,1][min_ix][0],\
-                                   tgt[:,2][min_ix][0],\
-                                   tgt[:,3][min_ix][0],\
-                                   tgt[:,8][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+                                   0,\
+                                   res_mindist[1],\
+                                   interpolate_vec(tgt,int(res_mindist[0]),3,0,res_mindist[2]) - pos[3],\
+                                   kp_interp,\
+                                   interpolate_vec(tgt,int(res_mindist[0]),1,0,res_mindist[2]),\
+                                   interpolate_vec(tgt,int(res_mindist[0]),2,0,res_mindist[2]),\
+                                   interpolate_vec(tgt,int(res_mindist[0]),3,0,res_mindist[2]),\
+                                   interpolate_vec(tgt,int(res_mindist[0]),8,0,res_mindist[2])])
+                else:
+                    min_ix = int(res[0][0])
+                    result.append([pos[0],\
+                                0,\
+                                res[0][1],\
+                                tgt[:,3][min_ix] - pos[3],\
+                                tgt[:,0][min_ix],\
+                                tgt[:,1][min_ix],\
+                                tgt[:,2][min_ix],\
+                                tgt[:,3][min_ix],\
+                                tgt[:,8][min_ix]])
+                
             return result
-        
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         src = self.track[owntrack]['result']
         if parent_track is not None:
             tgt = self.track[parent_track]['othertrack'][to_calc]['result']
-            result = take_relpos_owot(src,tgt)
+            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
         elif '@' not in to_calc:
             tgt = self.track[to_calc]['result']
-            result = take_relpos_std(src,tgt)
+            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
         else:
             tgt = self.pointsequence_track.track[to_calc]['result']
-            result = take_relpos_std(src,tgt)
+            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
         return(np.array(result))
-    def relativepoint_all(self,owntrack=None):
+    def relativepoint_all(self,owntrack=None,check_U=True):
         '''読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。
 
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != owntrack]
         for tr in calc_track:
-            self.rel_track[tr]=self.relativepoint_single(tr,owntrack)
+            self.rel_track[tr]=self.relativepoint_single(tr,owntrack,check_U=check_U)
 
         calc_track = [i for i in self.conf.track_keys if i != owntrack]
         for tr in calc_track:
             for ottr in self.track[tr]['othertrack'].keys():
-                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr)
+                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr,check_U=check_U)
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         if to_calc is None:
             calc_track = self.get_trackkeys(owntrack)
         else:
-            calc_track = to_calc
+            calc_track = [to_calc]
         for tr in calc_track:
             self.rel_track_radius[tr] = []
 
@@ -337,9 +338,9 @@ class TrackControl():
                 
                 self.rel_track_radius[tr].append([pos[0][0],\
                                                   curvature,\
-                                                  1/curvature if np.abs(1/curvature) < 1e4 else 0,\
+                                                  1/curvature if np.abs(1/curvature) < self.limit_curvatureradius else 0,\
                                                   curvature_z,\
-                                                  1/curvature_z if np.abs(1/curvature_z) < 1e4 else 0])
+                                                  1/curvature_z if np.abs(1/curvature_z) < self.limit_curvatureradius else 0])
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
     def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None):
@@ -347,7 +348,7 @@ class TrackControl():
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys if i != owntrack] if to_calc == None else [to_calc]
-        if cp_dist == None:
+        if cp_dist is None:
             cp_dist = []
             for dat in self.track[owntrack]['data'].own_track.data:
                 cp_dist.append(dat['distance'])
@@ -373,10 +374,10 @@ class TrackControl():
                 zval = math.interpolate_with_dist(self.rel_track[tr],3,cp_dist[ix])
                 self.rel_track_radius_cp[tr].append([cp_dist[ix],\
                                                      curvature_section,\
-                                                     1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,\
+                                                     1/curvature_section if np.abs(1/curvature_section) < self.limit_curvatureradius else 0,\
                                                      yval,\
                                                      curvature_section_z,\
-                                                     1/curvature_section_z if np.abs(1/curvature_section_z) < 1e4 else 0,\
+                                                     1/curvature_section_z if np.abs(1/curvature_section_z) < self.limit_curvatureradius else 0,\
                                                      zval])
                 ix+=1
 
@@ -389,35 +390,45 @@ class TrackControl():
             curvature_section_z = np.inf
             self.rel_track_radius_cp[tr].append([cp_dist[ix],\
                                      curvature_section,\
-                                     1/curvature_section if np.abs(1/curvature_section) < 1e4 else 0,\
+                                     1/curvature_section if np.abs(1/curvature_section) < self.limit_curvatureradius else 0,\
                                      yval,\
                                      curvature_section_z,\
-                                     1/curvature_section_z if np.abs(1/curvature_section_z) < 1e4 else 0,\
+                                     1/curvature_section_z if np.abs(1/curvature_section_z) < self.limit_curvatureradius else 0,\
                                      zval])
             self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
     def plot2d(self, ax):
+        self._plot2d_base(ax, (1,2))
+        self.pointsequence_track.plot2d(ax)
+    def plot2d_height(self, ax, cancel_offset_dist = True):
+        if False:
+            import pdb
+            pdb.set_trace()
+        self._plot2d_base(ax, (0,3), cancel_offset_dist = cancel_offset_dist)
+        self.pointsequence_track.plot2d_height(ax)
+    def _plot2d_base(self, ax, col_ix, cancel_offset_dist = True):
         if len(self.track) > 0:
             for i in self.conf.track_keys:
                 if self.track[i]['toshow']:
                     tmp = self.track[i]['result']
-                    ax.plot(tmp[:,1],tmp[:,2],label=i,color=self.conf.track_data[i]['color'])
+                    ax.plot(tmp[:,col_ix[0]],tmp[:,col_ix[1]],label=i,color=self.conf.track_data[i]['color'])
                 if len(self.track[i]['othertrack'])>0:
                     for otkey in self.track[i]['othertrack'].keys():
                         if self.track[i]['othertrack'][otkey]['toshow']:
                             tmp = self.track[i]['othertrack'][otkey]['result']
-                            ax.plot(tmp[:,1],tmp[:,2],\
+                            ax.plot(tmp[:,col_ix[0]],tmp[:,col_ix[1]],\
                                     label='{:s}_{:s}'.format(i,otkey),\
                                     color=self.track[i]['othertrack'][otkey]['color'],\
                                     lw=1)
             #ax.invert_yaxis()
             #ax.set_aspect('equal')
-            self.pointsequence_track.plot2d(ax)
         if self.generated_othertrack is not None:
             for otrack in self.generated_othertrack.keys():
                 if self.generated_othertrack[otrack]['toshow']:
-                    tmp = self.generated_othertrack[otrack]['data']
+                    tmp = np.copy(self.generated_othertrack[otrack]['data'])
                     tmp = tmp[tmp[:,0]<=self.generated_othertrack[otrack]['distrange']['max']]
-                    ax.plot(tmp[:,1],tmp[:,2],color=self.generated_othertrack[otrack]['color'])
+                    if cancel_offset_dist:
+                        tmp[:,0] -= self.conf.general['origin_distance']
+                    ax.plot(tmp[:,col_ix[0]],tmp[:,col_ix[1]],color=self.generated_othertrack[otrack]['color'])
     def drawarea(self, extent_input = None):
         extent = [0,0,0,0] if extent_input == None else extent_input
         if len(self.track) > 0:
@@ -567,17 +578,15 @@ class TrackControl():
                 eOD = (inputpos - pos_orig)/np.linalg.norm(inputpos - pos_orig)
                 tmp_n = np.dot(dest_track - pos_orig, eOD)
                 tmp_dist_vect = (dest_track - (tmp_n.reshape(-1,1)*eOD+pos_orig))**2
-                #tmp_dist_vect = ( (tmp_n.reshape(-1,1)*eOD))**2
                 tmp_distance = np.sqrt(tmp_dist_vect[:,0]+tmp_dist_vect[:,1])
-                dist_minix = np.argmin(tmp_distance)
-                tmp_num = np.arange(0,len(tmp_distance))
-                tmp_result = np.delete(np.vstack((tmp_distance,tmp_num)),dist_minix,1)
-                dist_minix_2nd = int(tmp_result[1][np.argmin(tmp_result[0])])
-                
-                #print(tmp_n,np.linalg.norm(inputpos-pos_orig),tmp_distance)
-                #print(tmp_distance[dist_minix_2nd],tmp_n[dist_minix_2nd],np.linalg.norm(inputpos-pos_orig),dist_minix_2nd,dist_minix)
-                if tmp_n[dist_minix_2nd]<np.linalg.norm(inputpos-pos_orig): # ２番目に距離が小さい点がinputpos-pos_origより小さい場合は除外
-                    #print('skip')
+
+                dist_ix_sort = np.argsort(tmp_distance)
+                dist_minix = dist_ix_sort[0]
+                dist_minix_2nd = dist_ix_sort[1]
+
+                if not np.isnan(tmp_n[dist_minix_2nd]) and\
+                   int(tmp_n[dist_minix_2nd]) < int(np.linalg.norm(inputpos-pos_orig)) and\
+                   np.abs(tmp_n[dist_minix]-tmp_n[dist_minix_2nd])>10: # ２番目に距離が小さい点がinputpos-pos_origより小さい場合は除外
                     continue
                     
             resultcp.append([data[0],\
@@ -596,7 +605,7 @@ class TrackControl():
             import pdb
             pdb.set_trace()
 
-        self.relativepoint_all() # 全ての軌道データを自軌道基準の座標に変換
+        self.relativepoint_all(check_U=self.conf.general['check_u']) # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データについて自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
 
@@ -619,78 +628,13 @@ class TrackControl():
         # 他軌道構文生成
         digit_str = '{:.'+'{:d}'.format(self.conf.general['output_digit'])+'f}'
         for tr in [i for i in self.get_trackkeys(self.conf.owntrack) if i not in self.exclude_tracks]:
-            output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
             if self.conf.general['offset_variable'] is not None:
                 kp_val = '$'+self.conf.general['offset_variable']+' + '
             else:
                 kp_val = ''
-
-            for data in self.rel_track_radius_cp[tr]:
-                if '@' not in tr or '@OT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
-                    output_map['x'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
-                    output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(tr,data[3],data[2])
-                    output_map['y'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
-                    output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(tr,data[6],data[5])
-                else:
-                    output_map['x'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
-                    output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(tr,data[3],0)
-                    output_map['y'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
-                    output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(tr,data[6],0)
-
-            cp_dist = {}
-            pos_cp = {}
-            relativecp = {}
-            for key in ['cant','interpolate_func','center','gauge']:
-                cp_dist[key], pos_cp[key] = self.takecp(tr,elem=key,supplemental=False)
-                relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
-
-            if len(relativecp['cant'])>0:
-                '''
-                for data in self.rel_track[tr][np.isin(self.rel_track[tr][:,0],relativecp['cant'][:,0])]:
-                    output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
-                    output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(tr,data[8])
-                '''
-                for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
-                    output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
-                    output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(tr,data[1])
-
-            
-            key = 'interpolate_func'
-            if len(relativecp[key])>0:
-                for index in range(len(relativecp[key])):
-                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
-                    output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(tr,int(pos_cp[key][index][7]))
-            
-            key = 'center'
-            if len(relativecp[key])>0:
-                for index in range(len(relativecp[key])):
-                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
-                    output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(tr,pos_cp[key][index][9])
-
-            key = 'gauge'
-            if len(relativecp[key])>0:
-                for index in range(len(relativecp[key])):
-                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
-                    output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(tr,pos_cp[key][index][10])
-
-            output_file = ''
-            output_file += 'BveTs Map 2.02:utf-8\n\n'
-            # 他軌道構文印字
-            if kp_val != '':
-                output_file += '# offset\n'
-                output_file += ('${:s} = {:f};\n').format(self.conf.general['offset_variable'],self.conf.general['origin_distance'])+'\n'
-            output_file += ('# Track[\'{:s}\'].X\n').format(tr)
-            output_file += output_map['x']+'\n'
-            output_file += ('# Track[\'{:s}\'].Y\n').format(tr)
-            output_file += output_map['y']+'\n'
-            output_file += ('# Track[\'{:s}\'].Cant.Interpolate\n').format(tr)
-            output_file += output_map['cant']+'\n'
-            output_file += ('# Track[\'{:s}\'].Cant.SetFunction\n').format(tr)
-            output_file += output_map['interpolate_func']+'\n'
-            output_file += ('# Track[\'{:s}\'].Cant.SetCenter\n').format(tr)
-            output_file += output_map['center']+'\n'
-            output_file += ('# Track[\'{:s}\'].Cant.SetGauge\n').format(tr)
-            output_file += output_map['gauge']+'\n'
+                
+            output_map = self.generate_tracksyntax(tr,kp_val,digit_str)
+            output_file = self.generate_mapstrings(output_map,tr,kp_val)
 
             if '@' not in tr:
                 self.track[tr]['output_mapfile'] = output_file
@@ -738,6 +682,10 @@ class TrackControl():
                 cplist[data['key']].append(data['distance'])
         return cplist
     def plot_symbols(self, ax, symboltype, size=20):
+        self._plot_symbols_base(ax, symboltype, (1,2), size=size)
+    def plot_symbols_height(self, ax, symboltype, size=20):
+        self._plot_symbols_base(ax, symboltype, (0,3), size=size)
+    def _plot_symbols_base(self, ax, symboltype, col_ix, size=20):
         ''' 制御点座標をプロットする
         '''
         symbol_plot = {'radius':'o', 'gradient':'^', 'supplemental_cp':'x', 'track':'+'}
@@ -748,7 +696,7 @@ class TrackControl():
                         pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.conf.track_data[tr_l]['supplemental_cp'])]
                     else:
                         pos = self.track[tr_l]['result'][np.isin(self.track[tr_l]['result'][:,0],self.track[tr_l]['cplist_symbol'][symboltype])]
-                    ax.scatter(pos[:,1],pos[:,2],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
+                    ax.scatter(pos[:,col_ix[0]],pos[:,col_ix[1]],color=self.conf.track_data[tr_l]['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
                 elif symboltype == 'track':
                     for tr_ot in self.track[tr_l]['othertrack'].keys():
                         trackdata = self.track[tr_l]['othertrack'][tr_ot]
@@ -757,7 +705,7 @@ class TrackControl():
                             for cp in trackdata['tgen'].data:
                                 cp_dist.append(cp['distance'])
                             pos = trackdata['result'][np.isin(trackdata['result'][:,0],cp_dist)]
-                            ax.scatter(pos[:,1],pos[:,2],color=trackdata['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
+                            ax.scatter(pos[:,col_ix[0]],pos[:,col_ix[1]],color=trackdata['color'],marker=symbol_plot[symboltype],alpha=0.75,s=size)
                             
                         
                     
@@ -856,4 +804,111 @@ class TrackControl():
                 mapdata = mapdata[m.span()[1]:]
         
         return result
+    def generate_mediantrack(self,basetrack,targettrack,newtrackkey,divratio,start,end,interval):
+        self.rel_track[targettrack] = self.relativepoint_single(targettrack,owntrack=basetrack)
+
+        self.rel_track[targettrack][:,2] *= divratio
+        self.rel_track[targettrack][:,3] *= divratio
         
+        self.relativeradius(to_calc=targettrack,owntrack=basetrack)
+        self.relativeradius_cp(to_calc=targettrack,\
+                               owntrack=basetrack,\
+                               cp_dist=np.arange(start,end,interval))
+        
+        output_mapelem = self.generate_tracksyntax(targettrack,\
+                                                   '',\
+                                                   '{:.'+'{:d}'.format(self.conf.general['output_digit'])+'f}',\
+                                                   output_trackkey = newtrackkey)
+        output_mapstr = self.generate_mapstrings(output_mapelem,\
+                                                 targettrack,\
+                                                 '',\
+                                                 output_trackkey = newtrackkey)
+        return output_mapelem, output_mapstr
+    def generate_tracksyntax(self,tr,kp_val,digit_str,output_trackkey=None):
+        if output_trackkey is None:
+            output_trackkey = tr
+        output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
+            
+        for data in self.rel_track_radius_cp[tr]:
+            if '@' not in tr or '@OT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
+                output_map['x'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(output_trackkey,data[3],data[2])
+                output_map['y'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(output_trackkey,data[6],data[5])
+            else:
+                output_map['x'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['x'] += ('Track[\'{:s}\'].X.Interpolate('+digit_str+','+digit_str+');\n').format(output_trackkey,data[3],0)
+                output_map['y'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['y'] += ('Track[\'{:s}\'].Y.Interpolate('+digit_str+','+digit_str+');\n').format(output_trackkey,data[6],0)
+
+        cp_dist = {}
+        pos_cp = {}
+        relativecp = {}
+        for key in ['cant','interpolate_func','center','gauge']:
+            cp_dist[key], pos_cp[key] = self.takecp(tr,elem=key,supplemental=False)
+            relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
+
+        if len(relativecp['cant'])>0:
+            for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
+                output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(output_trackkey,data[1])
+
+
+        key = 'interpolate_func'
+        if len(relativecp[key])>0:
+            for index in range(len(relativecp[key])):
+                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(output_trackkey,int(pos_cp[key][index][7]))
+
+        key = 'center'
+        if len(relativecp[key])>0:
+            for index in range(len(relativecp[key])):
+                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][9])
+
+        key = 'gauge'
+        if len(relativecp[key])>0:
+            for index in range(len(relativecp[key])):
+                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][10])
+                
+        return output_map
+    def generate_mapstrings(self,output_map,tr,kp_val,output_trackkey=None):
+        if output_trackkey is None:
+            output_trackkey = tr
+            
+        output_file = ''
+        output_file += 'BveTs Map 2.02:utf-8\n\n'
+        # 他軌道構文印字
+        if kp_val != '':
+            output_file += '# offset\n'
+            output_file += ('${:s} = {:f};\n').format(self.conf.general['offset_variable'],self.conf.general['origin_distance'])+'\n'
+
+        if '@OT_' in tr:
+            mapelement_enable = self.conf.track_data[re.search('(?<=@OT_).+(?=@)',tr).group(0)]['mapelement_enable']
+        elif '@KML_' in tr:
+            mapelement_enable = {'x':True,'y':True,'cant':True,'interpolate_func':True,'center':True,'gauge':True}
+        elif '@CSV_' in tr:
+            mapelement_enable = {'x':True,'y':True,'cant':True,'interpolate_func':True,'center':True,'gauge':True}
+        else:
+            mapelement_enable = self.conf.track_data[tr]['mapelement_enable']
+        if mapelement_enable['x']:
+            output_file += ('# Track[\'{:s}\'].X\n').format(output_trackkey)
+            output_file += output_map['x']+'\n'
+        if mapelement_enable['y']:
+            output_file += ('# Track[\'{:s}\'].Y\n').format(output_trackkey)
+            output_file += output_map['y']+'\n'
+        if mapelement_enable['cant']:
+            output_file += ('# Track[\'{:s}\'].Cant.Interpolate\n').format(output_trackkey)
+            output_file += output_map['cant']+'\n'
+        if mapelement_enable['interpolate_func']:
+            output_file += ('# Track[\'{:s}\'].Cant.SetFunction\n').format(output_trackkey)
+            output_file += output_map['interpolate_func']+'\n'
+        if mapelement_enable['center']:
+            output_file += ('# Track[\'{:s}\'].Cant.SetCenter\n').format(output_trackkey)
+            output_file += output_map['center']+'\n'
+        if mapelement_enable['gauge']:
+            output_file += ('# Track[\'{:s}\'].Cant.SetGauge\n').format(output_trackkey)
+            output_file += output_map['gauge']+'\n'
+
+        return output_file

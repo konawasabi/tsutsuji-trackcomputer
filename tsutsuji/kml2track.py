@@ -49,7 +49,7 @@ class Kml2track():
                         data.append([float(tmp[0]),float(tmp[1]),float(0)])
 
         output = []
-        for i in range(1,len(data)):
+        for i in range(0,len(data)):
             tmp = math.calc_pl2xy(data[i][1],data[i][0],data[0][1],data[0][0])
             output.append([tmp[0],tmp[1],data[i][2]])
 
@@ -81,7 +81,7 @@ class Kml2track():
         distance = 0
         theta = 0
         result = []
-        data_rot = [[conf['x'],conf['y'],conf['z']]]
+        data_rot = []
         for ix in range(0,len(data)):
             elem_rot = np.dot(math.rotate(np.deg2rad(conf['angle'])),\
                               np.array([data[ix][0],data[ix][1]]))
@@ -107,10 +107,14 @@ class Kml2track():
         
         return result_np
     def plot2d(self, ax):
+        self._plot2d_base(ax, (1,2))
+    def plot2d_height(self, ax):
+        self._plot2d_base(ax, (0,3))
+    def _plot2d_base(self, ax, col_ix):
         for key in self.track.keys():
             if self.track[key]['toshow']:
                 tmp = self.track[key]['result']
-                ax.plot(tmp[:,1],tmp[:,2],label=key,color=self.track[key]['color'])
+                ax.plot(tmp[:,col_ix[0]],tmp[:,col_ix[1]],label=key,color=self.track[key]['color'])
     def drawarea(self, extent_orig):
         extent = extent_orig
         for key in self.track.keys():

@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+
+<html lang="jp" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Measureウィンドウ(高度) &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
+    
+    <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Handling kiloposts" href="handlingkp.html" />
+    <link rel="prev" title="高度ウィンドウ" href="reference_height.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="handlingkp.html" title="Handling kiloposts"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reference_height.html" title="高度ウィンドウ"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" accesskey="U">Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Measureウィンドウ(高度)</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="measure">
+<h1>Measureウィンドウ(高度)<a class="headerlink" href="#measure" title="Link to this heading">¶</a></h1>
+<a class="reference internal image-reference" href="_images/height_measure.png"><img alt="_images/height_measure.png" src="_images/height_measure.png" style="width: 379.8px; height: 338.4px;" />
+</a>
+<section id="id1">
+<h2>カーソル機能<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>プロットウィンドウ上の座標(距離, 高度)と勾配を調べる機能です。
+任意の数のカーソルを設定できます。</p>
+<section id="add">
+<h3>Addボタン<a class="headerlink" href="#add" title="Link to this heading">¶</a></h3>
+<img alt="_images/cursor_arrow.png" src="_images/cursor_arrow.png" />
+<p>Addボタンを押すと、プロットウィンドウ上に新しいx印カーソルを作成し、左クリックするまでの間マウスで位置を動かせます。
+新しく作成したカーソルにはIDが割り振られ、カーソルリスト(1)にデータが表示されます。
+カーソルが指し示す位置の距離程、高度は、カーソルリストのDistance, Heightフィールドに表示されます。</p>
+<p>Trackボックスで <cite>&#64;absolute</cite> が指定されている場合、カーソルはプロットウィンドウの任意の位置に動かせます。</p>
+<p>Trackボックスで <cite>任意の軌道キー</cite> を選択している場合、カーソルは選択した軌道上のみを動かせます。
+このとき、カーソルが示す地点の軌道勾配がGradientフィールドに表示されます。</p>
+</section>
+<section id="grad">
+<h3>Grad.ボタン<a class="headerlink" href="#grad" title="Link to this heading">¶</a></h3>
+<p>カーソルリストで選択したカーソルについて、方角カーソルをマウスで指し示した方向に動かせます。
+マウスを動かしている間、方角カーソルが示す角度に対応した勾配(単位: [‰])がリストのGradientフィールドに表示されます。
+方角カーソルは左クリックするまで動かせます。</p>
+<p>リストで選択したカーソルのTrack: <cite>&#64;absolute</cite> の場合、方角カーソルは距離程正の自由な方向（±90°以内）に向けられます。</p>
+<p>リストで選択したカーソルのTrack: <cite>任意の軌道キー</cite> の場合は、方角カーソルは動きません。</p>
+</section>
+<section id="move">
+<h3>Moveボタン<a class="headerlink" href="#move" title="Link to this heading">¶</a></h3>
+<p>カーソルリストで選択したカーソルについて、左クリックするまでの間マウスで示した位置に動かせます。</p>
+</section>
+<section id="edit">
+<h3>Editボタン<a class="headerlink" href="#edit" title="Link to this heading">¶</a></h3>
+<p>カーソルリストで選択したカーソルについて、パラメータをEditフィールド(2)で指定した値に変更します。</p>
+<p>Track: <cite>&#64;absolute</cite> の場合、Distance, Height, Gradient, Color全ての値を変更できます。</p>
+<p>Track: <cite>任意の軌道キー</cite> の場合は、Distance, Colorのみが変更可能です。</p>
+</section>
+<section id="delete">
+<h3>Deleteボタン<a class="headerlink" href="#delete" title="Link to this heading">¶</a></h3>
+<p>カーソルリストで選択したカーソルを削除します。</p>
+</section>
+<section id="load">
+<h3>Loadボタン<a class="headerlink" href="#load" title="Link to this heading">¶</a></h3>
+<p>下記Saveボタンで書き出したxmlファイルを読み込み、カーソル情報をカーソルリストとプロット画面に復元します。
+Gradient Solverの実行結果も同時に復元されます。</p>
+<p>Loadを実行すると、カーソルリスト・Solverリストの内容は消去され、xmlファイルから読み込んだ内容に書き換えられます。</p>
+</section>
+<section id="save">
+<h3>Saveボタン<a class="headerlink" href="#save" title="Link to this heading">¶</a></h3>
+<p>作成したカーソルの情報をxmlファイルに書き出します。
+同時に、Gradient Solverの実行結果も同じファイルに書き出します。</p>
+</section>
+</section>
+<section id="gradient-solver">
+<h2>Gradient Solver<a class="headerlink" href="#gradient-solver" title="Link to this heading">¶</a></h2>
+<p>α,β,γボックスで選択したカーソルを通る最適な勾配軌道を探索します。</p>
+<p>α,β,γに割り当てたいカーソルのIDをα,β,γボックスで選択し、計算Modeを選択してDo Itボタンを押すと、計算結果がプロットウィンドウとParameters, Syntaxフィールドに表示されます。</p>
+<p>Parametersフィールドには計算条件を、SyntaxフィールドにはGradient構文で示した計算結果を表示します。
+表示内容はそれぞれCopy params, Copy syntaxボタンでクリップボードへコピーできます。</p>
+<p>計算結果にはID, Colorが割り振られ、Solverリスト(3)に表示されます。</p>
+<section id="color">
+<h3>Colorボタン<a class="headerlink" href="#color" title="Link to this heading">¶</a></h3>
+<p>リストで選択した計算結果について、プロットウィンドウへ表示するラインカラーを変更します。
+クリックするとカラーピッカーが表示され、任意のカラーを指定できます。</p>
+</section>
+<section id="id2">
+<h3>Deleteボタン<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>リストで選択した計算結果を削除します。</p>
+</section>
+<section id="mode">
+<h3>Mode<a class="headerlink" href="#mode" title="Link to this heading">¶</a></h3>
+<p>計算Modeは次の通りです。</p>
+<a class="reference internal image-reference" href="_images/heightsolver_mode1-2.png"><img alt="_images/heightsolver_mode1-2.png" src="_images/heightsolver_mode1-2.png" style="width: 399.5px; height: 255.5px;" />
+</a>
+<ul>
+<li><ol class="arabic simple">
+<li><p>α-&gt;β, given VCLα</p></li>
+</ol>
+<ul class="simple">
+<li><p>カーソルαの延長線上に起点、カーソルβの延長線上に終点を持つ勾配軌道を求める</p></li>
+<li><p>入力パラメータ</p>
+<ul>
+<li><p>VCLα: 勾配の縦曲線長</p></li>
+</ul>
+</li>
+<li><p>出力パラメータ</p>
+<ul>
+<li><p>shift from pt. α: カーソルαから勾配開始地点までの距離</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>α-&gt;β, given Rα</p></li>
+</ol>
+<ul class="simple">
+<li><p>カーソルαの延長線上に起点、カーソルβの延長線上に終点を持つ勾配軌道を求める</p></li>
+<li><p>入力パラメータ</p>
+<ul>
+<li><p>VCLα: 勾配の縦曲線半径</p></li>
+</ul>
+</li>
+<li><p>出力パラメータ</p>
+<ul>
+<li><p>shift from pt. α: カーソルαから勾配開始地点までの距離</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<a class="reference internal image-reference" href="_images/heightsolver_mode3-4.png"><img alt="_images/heightsolver_mode3-4.png" src="_images/heightsolver_mode3-4.png" style="width: 617.0px; height: 337.5px;" />
+</a>
+<ul>
+<li><ol class="arabic simple" start="3">
+<li><p>α-&gt;β-&gt;γ, given VCLα,β</p></li>
+</ol>
+<ul class="simple">
+<li><p>カーソルαの延長線上に起点、カーソルβの延長線上に終点を持つ勾配軌道と、カーソルβの延長線上に起点、カーソルγの延長線上に終点を持つ勾配軌道を同時に求める</p></li>
+<li><p>入力パラメータ</p>
+<ul>
+<li><p>VCLα: 1つ目の勾配の縦曲線長</p></li>
+<li><p>VCLβ: 2つ目の勾配の縦曲線長</p></li>
+</ul>
+</li>
+<li><p>出力パラメータ</p>
+<ul>
+<li><p>shift from pt. α: カーソルαから1つ目の勾配開始地点までの距離</p></li>
+<li><p>shift from pt. β: カーソルβから2つ目の勾配開始地点までの距離</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ol class="arabic simple" start="4">
+<li><p>α-&gt;β-&gt;γ, given Rα,β</p></li>
+</ol>
+<ul class="simple">
+<li><p>カーソルαの延長線上に起点、カーソルβの延長線上に終点を持つ勾配軌道、カーソルβの延長線上に起点、カーソルγの延長線上に終点を持つ勾配軌道を同時に求める</p></li>
+<li><p>入力パラメータ</p>
+<ul>
+<li><p>Rα: 1つ目の勾配の縦曲線半径</p></li>
+<li><p>Rβ: 2つ目の勾配の縦曲線半径</p></li>
+</ul>
+</li>
+<li><p>出力パラメータ</p>
+<ul>
+<li><p>shift from pt. α: カーソルαから1つ目の勾配開始地点までの距離</p></li>
+<li><p>shift from pt. β: カーソルβから2つ目の勾配開始地点までの距離</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Measureウィンドウ(高度)</a><ul>
+<li><a class="reference internal" href="#id1">カーソル機能</a><ul>
+<li><a class="reference internal" href="#add">Addボタン</a></li>
+<li><a class="reference internal" href="#grad">Grad.ボタン</a></li>
+<li><a class="reference internal" href="#move">Moveボタン</a></li>
+<li><a class="reference internal" href="#edit">Editボタン</a></li>
+<li><a class="reference internal" href="#delete">Deleteボタン</a></li>
+<li><a class="reference internal" href="#load">Loadボタン</a></li>
+<li><a class="reference internal" href="#save">Saveボタン</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gradient-solver">Gradient Solver</a><ul>
+<li><a class="reference internal" href="#color">Colorボタン</a></li>
+<li><a class="reference internal" href="#id2">Deleteボタン</a></li>
+<li><a class="reference internal" href="#mode">Mode</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="reference_height.html"
+                          title="previous chapter">高度ウィンドウ</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="handlingkp.html"
+                          title="next chapter">Handling kiloposts</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/reference_heightmeasure.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="handlingkp.html" title="Handling kiloposts"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reference_height.html" title="高度ウィンドウ"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" >Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Measureウィンドウ(高度)</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>

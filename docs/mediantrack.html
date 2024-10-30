@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+
+<html lang="jp" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Mediantrack generator &#8212; tsutsuji-trackcomputer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
+    
+    <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CFG file format" href="cfgfileformat.html" />
+    <link rel="prev" title="Handling kiloposts" href="handlingkp.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cfgfileformat.html" title="CFG file format"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="handlingkp.html" title="Handling kiloposts"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" accesskey="U">Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Mediantrack generator</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="mediantrack-generator">
+<h1>Mediantrack generator<a class="headerlink" href="#mediantrack-generator" title="Link to this heading">¶</a></h1>
+<a class="reference internal image-reference" href="_images/mediantrack.png"><img alt="_images/mediantrack.png" src="_images/mediantrack.png" style="width: 345.59999999999997px; height: 101.39999999999999px;" />
+</a>
+<p>メイン機能で読み込んだ2つの軌道に対して、両者の中間点を通る軌道をTrack要素で出力する機能です。</p>
+<section id="id1">
+<h2>入力パラメータ<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<section id="base">
+<h3>Base<a class="headerlink" href="#base" title="Link to this heading">¶</a></h3>
+<p>基準となる軌道を指定します。
+選択できるのは、自軌道として記述した軌道(Curve, Gradient要素で記述)のみです。
+計算結果は、Base軌道を基準とした他軌道として出力されます。</p>
+</section>
+<section id="target">
+<h3>Target<a class="headerlink" href="#target" title="Link to this heading">¶</a></h3>
+<p>中間点を求めたい軌道を指定します。
+自軌道として記述した軌道の他に、track構文・kml/csvファイルから読み込んだ他軌道も選択できます。</p>
+</section>
+<section id="new">
+<h3>New<a class="headerlink" href="#new" title="Link to this heading">¶</a></h3>
+<p>新たに出力する軌道へ与えるtrackkeyを指定します。</p>
+</section>
+<section id="start">
+<h3>Start<a class="headerlink" href="#start" title="Link to this heading">¶</a></h3>
+<p>新たに出力する軌道の <strong>開始</strong> 地点を、Base軌道上の距離程で指定します。</p>
+</section>
+<section id="end">
+<h3>End<a class="headerlink" href="#end" title="Link to this heading">¶</a></h3>
+<p>新たに出力する軌道の <strong>終了</strong> 地点を、Base軌道上の距離程で指定します。</p>
+</section>
+<section id="interval">
+<h3>Interval<a class="headerlink" href="#interval" title="Link to this heading">¶</a></h3>
+<p>Track構文を出力する間隔をBase軌道上の距離程基準で指定します。
+デフォルトでは5mです。</p>
+</section>
+<section id="ratio">
+<h3>Ratio<a class="headerlink" href="#ratio" title="Link to this heading">¶</a></h3>
+<p>次図の様に、Base軌道上の点Aにおいて、Base軌道の法線とTarget軌道の交点を点Bとして、線分AB上で新たに求める軌道が通過する位置を点Pとするとき、点Pによる線分ABの分割比をRatioとして指定します。</p>
+<p>デフォルト（2軌道の中間点を求める場合）では0.5です。
+Ratioに指定する値は、実数であればどの様な値(1.0以上でもマイナス値でも)でも入力できます。</p>
+<a class="reference internal image-reference" href="_images/mediantrack_ratio.png"><img alt="_images/mediantrack_ratio.png" src="_images/mediantrack_ratio.png" style="width: 241.2px; height: 170.4px;" />
+</a>
+</section>
+<section id="output">
+<h3>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h3>
+<p>計算結果を保存するファイル名を指定します。</p>
+</section>
+<section id="do-it">
+<h3>Do It<a class="headerlink" href="#do-it" title="Link to this heading">¶</a></h3>
+<p>上記のパラメータに基づいて計算を実行します。</p>
+</section>
+</section>
+<section id="id2">
+<h2>実行例<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p><a class="reference internal" href="tutorial_first.html"><span class="doc">基本機能</span></a> で作成した up, down軌道を対象に、2軌道の中間点を <cite>u-d0.5</cite> 軌道として求める場合を示します。
+実行イメージは次図の通りです。</p>
+<a class="reference internal image-reference" href="_images/mediantrack_ex.png"><img alt="_images/mediantrack_ex.png" src="_images/mediantrack_ex.png" style="width: 226.79999999999998px; height: 271.2px;" />
+</a>
+<p>あらかじめ、tutorial.cfgが読み込まれていることが前提です。</p>
+<ul class="simple">
+<li><p>入力パラメータ</p>
+<ul>
+<li><p>Base</p>
+<ul>
+<li><p>up</p></li>
+</ul>
+</li>
+<li><p>Target</p>
+<ul>
+<li><p>down</p></li>
+</ul>
+</li>
+<li><p>New</p>
+<ul>
+<li><p>u-d0.5</p></li>
+</ul>
+</li>
+<li><p>Start</p>
+<ul>
+<li><p>0</p></li>
+</ul>
+</li>
+<li><p>End</p>
+<ul>
+<li><p>300</p></li>
+</ul>
+</li>
+<li><p>Interval</p>
+<ul>
+<li><p>25</p></li>
+</ul>
+</li>
+<li><p>Ratio</p>
+<ul>
+<li><p>0.5</p></li>
+</ul>
+</li>
+<li><p>Output</p>
+<ul>
+<li><p>省略</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>出力mapファイル(抜粋):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Track[&#39;u-d0.5&#39;].X</span>
+<span class="mf">0.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">1.900</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">25.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">1.900</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">50.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">1.900</span><span class="p">,</span><span class="mf">677.782</span><span class="p">);</span>
+<span class="mf">75.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">2.201</span><span class="p">,</span><span class="mf">1073.973</span><span class="p">);</span>
+<span class="mf">100.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">3.543</span><span class="p">,</span><span class="o">-</span><span class="mf">711.831</span><span class="p">);</span>
+<span class="mf">125.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">4.761</span><span class="p">,</span><span class="o">-</span><span class="mf">997.680</span><span class="p">);</span>
+<span class="mf">150.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">4.955</span><span class="p">,</span><span class="o">-</span><span class="mf">6201.574</span><span class="p">);</span>
+<span class="mf">175.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">4.945</span><span class="p">,</span><span class="o">-</span><span class="mf">544.100</span><span class="p">);</span>
+<span class="mf">200.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">4.336</span><span class="p">,</span><span class="o">-</span><span class="mf">3321.170</span><span class="p">);</span>
+<span class="mf">225.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">2.884</span><span class="p">,</span><span class="mf">531.707</span><span class="p">);</span>
+<span class="mf">250.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">1.952</span><span class="p">,</span><span class="mf">2384.438</span><span class="p">);</span>
+<span class="mf">275.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">1.900</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+
+<span class="c1"># Track[&#39;u-d0.5&#39;].Y</span>
+<span class="mf">0.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">25.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">50.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">75.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">100.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">125.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">150.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">175.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">200.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">225.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">250.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+<span class="mf">275.000</span><span class="p">;</span>
+<span class="n">Track</span><span class="p">[</span><span class="s1">&#39;u-d0.5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">(</span><span class="mf">0.000</span><span class="p">,</span><span class="mf">0.000</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Mediantrack generator</a><ul>
+<li><a class="reference internal" href="#id1">入力パラメータ</a><ul>
+<li><a class="reference internal" href="#base">Base</a></li>
+<li><a class="reference internal" href="#target">Target</a></li>
+<li><a class="reference internal" href="#new">New</a></li>
+<li><a class="reference internal" href="#start">Start</a></li>
+<li><a class="reference internal" href="#end">End</a></li>
+<li><a class="reference internal" href="#interval">Interval</a></li>
+<li><a class="reference internal" href="#ratio">Ratio</a></li>
+<li><a class="reference internal" href="#output">Output</a></li>
+<li><a class="reference internal" href="#do-it">Do It</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">実行例</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="handlingkp.html"
+                          title="previous chapter">Handling kiloposts</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cfgfileformat.html"
+                          title="next chapter">CFG file format</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/mediantrack.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cfgfileformat.html" title="CFG file format"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="handlingkp.html" title="Handling kiloposts"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">tsutsuji-trackcomputer  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="referenceguide.html" >Reference Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Mediantrack generator</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>

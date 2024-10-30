@@ -4,6 +4,8 @@ Bve trainsim 5/6向けマップファイルの制作支援Pythonスクリプト�
 全ての軌道を自軌道構文で記述し、一つの軌道を基準とした他軌道構文に変換するのが主な機能です。
 まだ開発途上ですが、軌道データ作成に役立つ測量機能も付属しています。
 
+まずは、Tsutsuji TrackComputerで出来ることをまとめた[チュートリアル](https://konawasabi.github.io/tsutsuji-trackcomputer/tutorial.html)をどうぞ。
+
 ## インストール
 
 インストールするには、Python 3をインストールしてからPowershellで次のコマンドを実行してください。

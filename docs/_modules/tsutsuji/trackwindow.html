@@ -1,18 +1,17 @@
 
+<!DOCTYPE html>
 
-<!doctype html>
-
-<html lang="jp">
+<html lang="jp" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tsutsuji.trackwindow &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=658d757c" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/documentation_options.js?v=3ff7d7a7"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -21,7 +20,7 @@
     <script src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -69,12 +68,16 @@
 <span class="kn">import</span> <span class="nn">tkinter.colorchooser</span> <span class="k">as</span> <span class="nn">colorchooser</span>
 <span class="kn">from</span> <span class="nn">ttkwidgets</span> <span class="kn">import</span> <span class="n">CheckboxTreeview</span>
 
-<div class="viewcode-block" id="TrackWindow"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow">[docs]</a><span class="k">class</span> <span class="nc">TrackWindow</span><span class="p">(</span><span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
+<div class="viewcode-block" id="TrackWindow">
+<a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow">[docs]</a>
+<span class="k">class</span> <span class="nc">TrackWindow</span><span class="p">(</span><span class="n">ttk</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mainwindow</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span> <span class="o">=</span> <span class="n">mainwindow</span>
         <span class="c1">#self.parent = master</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="kc">None</span>
-<div class="viewcode-block" id="TrackWindow.create_window"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.create_window">[docs]</a>    <span class="k">def</span> <span class="nf">create_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TrackWindow.create_window">
+<a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.create_window">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1">#super().__init__(self.parent, padding=&#39;3 3 3 3&#39;)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="p">)</span>
@@ -110,7 +113,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">set_treevalue</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sendtopmost</span><span class="p">()</span></div>
-<div class="viewcode-block" id="TrackWindow.click_tracklist"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.click_tracklist">[docs]</a>    <span class="k">def</span> <span class="nf">click_tracklist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TrackWindow.click_tracklist">
+<a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.click_tracklist">[docs]</a>
+    <span class="k">def</span> <span class="nf">click_tracklist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;軌道リストをクリックしたときのイベント処理</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="n">event</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
@@ -209,7 +215,10 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">generated_othertrack</span><span class="p">[</span><span class="n">clicked_track_rematt</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputdata</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">track_tree</span><span class="o">.</span><span class="n">tag_configure</span><span class="p">(</span><span class="n">clicked_track</span><span class="p">,</span><span class="n">foreground</span><span class="o">=</span><span class="n">inputdata</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">drawall</span><span class="p">()</span></div>
-<div class="viewcode-block" id="TrackWindow.set_treevalue"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.set_treevalue">[docs]</a>    <span class="k">def</span> <span class="nf">set_treevalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TrackWindow.set_treevalue">
+<a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.set_treevalue">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_treevalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39; 軌道データをツリーリストに表示する</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># cfgファイルから読み込んだ軌道の表示</span>
@@ -255,36 +264,50 @@
                                        <span class="n">tags</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;@GT_&#39;</span><span class="o">+</span><span class="n">i</span><span class="p">,))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">track_tree</span><span class="o">.</span><span class="n">tag_configure</span><span class="p">(</span><span class="s1">&#39;@GT_&#39;</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="n">foreground</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">generated_othertrack</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">track_tree</span><span class="o">.</span><span class="n">change_state</span><span class="p">(</span><span class="s1">&#39;@GT_&#39;</span><span class="o">+</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;checked&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainwindow</span><span class="o">.</span><span class="n">trackcontrol</span><span class="o">.</span><span class="n">generated_othertrack</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;toshow&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;unchecked&#39;</span><span class="p">)</span></div>
-<div class="viewcode-block" id="TrackWindow.reset_treevalue"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.reset_treevalue">[docs]</a>    <span class="k">def</span> <span class="nf">reset_treevalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TrackWindow.reset_treevalue">
+<a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.reset_treevalue">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset_treevalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39; ツリーリストを再構築する</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="c1"># track windowが表示されている場合にのみ再構築</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_treevalue</span><span class="p">()</span></div>
-<div class="viewcode-block" id="TrackWindow.closewindow"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.closewindow">[docs]</a>    <span class="k">def</span> <span class="nf">closewindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TrackWindow.closewindow">
+<a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.closewindow">[docs]</a>
+    <span class="k">def</span> <span class="nf">closewindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="kc">None</span></div>
-<div class="viewcode-block" id="TrackWindow.sendtopmost"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.sendtopmost">[docs]</a>    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">lift</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_force</span><span class="p">()</span></div></div>
 
-<div class="viewcode-block" id="CheckboxTreeview_tsutsuji"><a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.CheckboxTreeview_tsutsuji">[docs]</a><span class="k">class</span> <span class="nc">CheckboxTreeview_tsutsuji</span><span class="p">(</span><span class="n">CheckboxTreeview</span><span class="p">):</span>
+<div class="viewcode-block" id="TrackWindow.sendtopmost">
+<a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.TrackWindow.sendtopmost">[docs]</a>
+    <span class="k">def</span> <span class="nf">sendtopmost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">lift</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="o">.</span><span class="n">focus_force</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="CheckboxTreeview_tsutsuji">
+<a class="viewcode-back" href="../../tsutsuji.trackwindow.html#tsutsuji.trackwindow.CheckboxTreeview_tsutsuji">[docs]</a>
+<span class="k">class</span> <span class="nc">CheckboxTreeview_tsutsuji</span><span class="p">(</span><span class="n">CheckboxTreeview</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39; 子要素のチェックを全てon/offした場合に親要素のチェックを操作しないように変更</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">_check_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">change_state</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;checked&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_uncheck_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">change_state</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;unchecked&quot;</span><span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
@@ -292,13 +315,13 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -313,8 +336,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, konawasabi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>
