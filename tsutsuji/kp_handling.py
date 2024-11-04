@@ -70,20 +70,27 @@ class GUI():
         # ---
 
         self.modeframe = ttk.Labelframe(self.mainframe, padding='3 3 3 3', text='Mode')
-        self.modeframe.grid(column=0, row=1, sticky = (tk.N, tk.W,  tk.S))
+        self.modeframe.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.S))
+
+        self.modeframe_main = ttk.Frame(self.modeframe, padding='3 3 3 3')
+        self.modeframe_main.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
 
         self.mode_v = tk.StringVar(value='3')
 
-        self.mode3_rb = ttk.Radiobutton(self.modeframe, text='0. echo', value='3', variable=self.mode_v)
-        self.mode0_rb = ttk.Radiobutton(self.modeframe, text='1. evaluate', value='0', variable=self.mode_v)
-        self.mode1_rb = ttk.Radiobutton(self.modeframe, text='2. new variable', value='1', variable=self.mode_v)
-        self.mode2_rb = ttk.Radiobutton(self.modeframe, text='3. conversion by new expression', value='2', variable=self.mode_v)
+        self.mode3_rb = ttk.Radiobutton(self.modeframe_main, text='0. echo', value='3', variable=self.mode_v)
+        self.mode0_rb = ttk.Radiobutton(self.modeframe_main, text='1. evaluate', value='0', variable=self.mode_v)
+        self.mode1_rb = ttk.Radiobutton(self.modeframe_main, text='2. new variable', value='1', variable=self.mode_v)
+        self.mode2_rb = ttk.Radiobutton(self.modeframe_main, text='3. conversion by new expression', value='2', variable=self.mode_v)
 
         self.mode3_rb.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode0_rb.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode1_rb.grid(column=2, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode2_rb.grid(column=3, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
 
+        self.output_origkp_v = tk.BooleanVar(value=True)
+        self.output_origkp_chk = ttk.Checkbutton(self.modeframe, text='Output original kilopost', variable=self.output_origkp_v)
+
+        self.output_origkp_chk.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
         # ---
 
         self.paramframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
@@ -160,7 +167,8 @@ class GUI():
                                           mode=self.mode_v.get(),\
                                           initialize=self.decval_v.get(),\
                                           newExpression=self.newexpr_v.get(),\
-                                          kprange=(startkp,endkp))
+                                          kprange=(startkp,endkp),\
+                                          output_origkp=self.output_origkp_v.get())
 
         self.kphandling.writefile(result, pathlib.Path(self.output_v.get()))
 
@@ -182,7 +190,7 @@ class KilopostHandling():
     def initialize_interpreter(self):
         self.mapinterp = MapInterpreter(None,None,prompt=True)
     
-    def readfile(self,filename, input_root, mode='0', initialize=None, newExpression=None, include_file=None,kprange=(None,None)):
+    def readfile(self,filename, input_root, mode='0', initialize=None, newExpression=None, include_file=None,kprange=(None,None),output_origkp=False):
         '''マップファイルを読み込み、距離程を書き換える
 
         Parameters:
@@ -203,6 +211,8 @@ class KilopostHandling():
           マップファイル内include要素の引数を指定する
         kprange : (float, float)
           処理を行う距離程範囲を指定する。（距離程は変換前の値）
+        output_origkp : bool
+          距離程を書き換えるモード(3以外)で、書き換え前の値を出力する場合はTrue
         -----
 
         result_listのフォーマット
@@ -225,7 +235,9 @@ class KilopostHandling():
         rem_comm = re.split('#.*\n',fbuff)
         comm = re.findall('#.*\n',fbuff)
 
+        # ルートマップファイル(includeで読み込まれたマップでない)で、mode: new var. or conversion by new expr.の場合は、先頭にInitialization文字列を追加する。
         if include_file is None and (mode == '1' or mode == '2'):
+            # mode: conversion by new expr.の場合は、Initialization文字列をパーサで解釈する
             if mode == '2':
                 for elem in initialize.split(';'):
                     elem = re.sub('^\s*','',elem)
@@ -248,12 +260,18 @@ class KilopostHandling():
                             evaluated_kp = self.mapinterp.environment.predef_vars['distance']
                             if mode == '0':
                                 output += pre_elem + '{:f};'.format(evaluated_kp)
+                                if output_origkp:
+                                    output += '# {:s}'.format(elem)
                             elif mode == '1':
                                 output += pre_elem + '{:s};'.format(newExpression.replace('distance','{:f}'.format(evaluated_kp)))
+                                if output_origkp:
+                                    output += '# {:s}'.format(elem)
                             elif mode == '2':
                                 offset_expr_tree = self.mapinterp.parser.parse('{:s};'.format(newExpression))
                                 new_kp = self.mapinterp.transform(offset_expr_tree.children[0])
                                 output += pre_elem + '{:f};'.format(new_kp)
+                                if output_origkp:
+                                    output += '# {:s}'.format(elem)
                             elif mode == '3':
                                 output += pre_elem + elem + ';'
                         elif tree.data == 'include_file':
