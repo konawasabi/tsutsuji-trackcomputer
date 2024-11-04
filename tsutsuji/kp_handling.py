@@ -148,7 +148,7 @@ class GUI():
             
             self.output_v.set(str(pathobj.parent.joinpath('result/')))
     def setoutputpath(self):
-        path = filedialog.asksaveasfilename(initialdir=self.output_v.get())
+        path = filedialog.askdirectory(initialdir=self.output_v.get())
         if path != '':
             self.output_v.set(path)
     def doit(self):
