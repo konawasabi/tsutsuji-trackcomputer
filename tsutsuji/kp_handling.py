@@ -178,8 +178,12 @@ class GUI():
 
         for res_elem in result:
             print(res_elem['filename'])
+            sorted_keys = sorted(res_elem['data_dict'])
             for i in res_elem['data_dict']:
-                print(res_elem['data_dict'][i])
+                print(i)
+            for i in sorted_keys:
+                #print(res_elem['data_dict'][i])
+                print(i)
             print()
 
 @v_args(inline=True)
@@ -273,26 +277,26 @@ class KilopostHandling():
                         if tree.data == 'set_distance':
                             evaluated_kp = self.mapinterp.environment.predef_vars['distance']
                             orig_kp = elem
-                            if mode == '0':
+                            if mode == '0': # 1. eval.
                                 newstatement = pre_elem + '{:f};'.format(evaluated_kp)
                                 new_kp = evaluated_kp
                                 if output_origkp:
                                     newstatement += '# {:s}'.format(elem)
-                            elif mode == '1':
+                            elif mode == '1': # 2. new vari.
                                 newstatement = pre_elem + '{:s};'.format(newExpression.replace('distance','{:f}'.format(evaluated_kp)))
                                 if output_origkp:
                                     newstatement += '# {:s}'.format(elem)
-                            elif mode == '2':
+                            elif mode == '2': # 3. conversion
                                 offset_expr_tree = self.mapinterp.parser.parse('{:s};'.format(newExpression))
                                 new_kp = self.mapinterp.transform(offset_expr_tree.children[0])
                                 newstatement = pre_elem + '{:f};'.format(new_kp)
                                 if output_origkp:
                                     newstatement += '# {:s}'.format(elem)
-                            elif mode == '3':
+                            elif mode == '3': # 0. echo
                                 new_kp = evaluated_kp
                                 newstatement = pre_elem + elem + ';'
                         elif tree.data == 'include_file':
-                            result_list += self.readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
+                            result_list += self.readfile(lhe.joinpath(input_root,re.sub('\'','',tree.children[0].children[0])),\
                                                          input_root,
                                                          mode=mode, \
                                                          initialize=initialize,\
