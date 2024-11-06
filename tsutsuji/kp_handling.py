@@ -176,6 +176,11 @@ class GUI():
 
         self.kphandling.writefile(result, pathlib.Path(self.output_v.get()))
 
+        for res_elem in result:
+            print(res_elem['filename'])
+            for i in res_elem['data_dict']:
+                print(res_elem['data_dict'][i])
+            print()
 
 @v_args(inline=True)
 class MapInterpreter(mapinterpreter.ParseMap):
@@ -251,6 +256,8 @@ class KilopostHandling():
 
         ix_comm = 0
         evaluated_kp = 0.0
+        new_kp = 0.0
+        orig_kp = 0.0
         for item in rem_comm:
             statements = item.split(';')
             for elem in statements:
@@ -265,8 +272,10 @@ class KilopostHandling():
                         
                         if tree.data == 'set_distance':
                             evaluated_kp = self.mapinterp.environment.predef_vars['distance']
+                            orig_kp = elem
                             if mode == '0':
                                 newstatement = pre_elem + '{:f};'.format(evaluated_kp)
+                                new_kp = evaluated_kp
                                 if output_origkp:
                                     newstatement += '# {:s}'.format(elem)
                             elif mode == '1':
@@ -280,6 +289,7 @@ class KilopostHandling():
                                 if output_origkp:
                                     newstatement += '# {:s}'.format(elem)
                             elif mode == '3':
+                                new_kp = evaluated_kp
                                 newstatement = pre_elem + elem + ';'
                         elif tree.data == 'include_file':
                             result_list += self.readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
@@ -296,6 +306,11 @@ class KilopostHandling():
                         newstatement = pre_elem + elem + ';'
                 else:
                     newstatement = pre_elem
+
+                if new_kp not in result_dict.keys():
+                    result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[]}
+
+                result_dict[new_kp]['statements'].append(newstatement)
 
                 output += newstatement
 
