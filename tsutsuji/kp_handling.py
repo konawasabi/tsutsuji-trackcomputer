@@ -247,7 +247,7 @@ class KilopostHandling():
         fbuff = fp.read()
         fp.close()
 
-        output = 'BveTs Map 2.02\n'
+        output = 'BveTs Map 2.02:utf-8\n'
 
         rem_comm = re.split('#.*\n',fbuff)
         comm = re.findall('#.*\n',fbuff)
@@ -305,7 +305,7 @@ class KilopostHandling():
                                                          mode=mode, \
                                                          initialize=initialize,\
                                                          newExpression=newExpression,\
-                                                         include_file=re.sub('\'','',tree.children[0].children[0]),\
+                                                         include_file=re.sub(r'\\','/',re.sub('\'','',tree.children[0].children[0])),\
                                                          kprange=kprange)
                             newstatement = pre_elem + elem + ';'
                         else:
