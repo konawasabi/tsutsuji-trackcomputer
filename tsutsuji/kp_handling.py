@@ -87,10 +87,14 @@ class GUI():
         self.mode1_rb.grid(column=2, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.mode2_rb.grid(column=3, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
 
-        self.output_origkp_v = tk.BooleanVar(value=True)
+        self.output_origkp_v = tk.BooleanVar(value=False)
         self.output_origkp_chk = ttk.Checkbutton(self.modeframe, text='Output original kilopost', variable=self.output_origkp_v)
 
+        self.sortbykp_v = tk.BooleanVar(value=False)
+        self.sortbykp_chk = ttk.Checkbutton(self.modeframe, text='Sort by kilopost', variable=self.sortbykp_v)
+
         self.output_origkp_chk.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.sortbykp_chk.grid(column=0, row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
         # ---
 
         self.paramframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
@@ -223,6 +227,7 @@ class KilopostHandling():
         if include_file is None:
             self.initialize_interpreter()
         result_list = []
+        result_dict = {}
 
         path, rootpath, header_enc = lhe.loadheader(filename, 'BveTs Map ',2)
         fp = open(path,'r',encoding=header_enc)
@@ -245,12 +250,14 @@ class KilopostHandling():
             output += '\n# added by kilopost handling\n{:s}\n'.format(initialize)
 
         ix_comm = 0
+        evaluated_kp = 0.0
         for item in rem_comm:
             statements = item.split(';')
             for elem in statements:
                 pre_elem = re.match('^\s*',elem).group(0)                
                 elem = re.sub('^\s*','',elem)
                 result = self.mapinterp.transform(self.mapinterp.parser.parse(elem+';'))
+                newstatement = ''
                 if len(elem)>0:
                     tree = self.parser.parse(elem+';')
                     if ((kprange[0] is not None and kprange[0] <= self.mapinterp.environment.predef_vars['distance']) or kprange[0] is None) and \
@@ -259,21 +266,21 @@ class KilopostHandling():
                         if tree.data == 'set_distance':
                             evaluated_kp = self.mapinterp.environment.predef_vars['distance']
                             if mode == '0':
-                                output += pre_elem + '{:f};'.format(evaluated_kp)
+                                newstatement = pre_elem + '{:f};'.format(evaluated_kp)
                                 if output_origkp:
-                                    output += '# {:s}'.format(elem)
+                                    newstatement += '# {:s}'.format(elem)
                             elif mode == '1':
-                                output += pre_elem + '{:s};'.format(newExpression.replace('distance','{:f}'.format(evaluated_kp)))
+                                newstatement = pre_elem + '{:s};'.format(newExpression.replace('distance','{:f}'.format(evaluated_kp)))
                                 if output_origkp:
-                                    output += '# {:s}'.format(elem)
+                                    newstatement += '# {:s}'.format(elem)
                             elif mode == '2':
                                 offset_expr_tree = self.mapinterp.parser.parse('{:s};'.format(newExpression))
                                 new_kp = self.mapinterp.transform(offset_expr_tree.children[0])
-                                output += pre_elem + '{:f};'.format(new_kp)
+                                newstatement = pre_elem + '{:f};'.format(new_kp)
                                 if output_origkp:
-                                    output += '# {:s}'.format(elem)
+                                    newstatement += '# {:s}'.format(elem)
                             elif mode == '3':
-                                output += pre_elem + elem + ';'
+                                newstatement = pre_elem + elem + ';'
                         elif tree.data == 'include_file':
                             result_list += self.readfile(input_root.joinpath(re.sub('\'','',tree.children[0].children[0])),\
                                                          input_root,
@@ -282,19 +289,21 @@ class KilopostHandling():
                                                          newExpression=newExpression,\
                                                          include_file=re.sub('\'','',tree.children[0].children[0]),\
                                                          kprange=kprange)
-                            output += pre_elem + elem + ';'
+                            newstatement = pre_elem + elem + ';'
                         else:
-                            output += pre_elem + elem + ';'
+                            newstatement = pre_elem + elem + ';'
                     elif tree.data == 'set_variable':
-                        output += pre_elem + elem + ';'
+                        newstatement = pre_elem + elem + ';'
                 else:
-                    output += pre_elem
+                    newstatement = pre_elem
+
+                output += newstatement
 
             if ix_comm < len(comm):
                 output += comm[ix_comm]
                 ix_comm+=1
 
-        result_list.append({'filename':filename, 'include_file':include_file, 'data':output})
+        result_list.append({'filename':filename, 'include_file':include_file, 'data':output, 'data_dict':result_dict})
         return result_list
     def writefile(self,result, output_root):
         ''' readfileで生成したresult_listをファイルに出力する
