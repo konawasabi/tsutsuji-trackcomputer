@@ -174,8 +174,9 @@ class GUI():
                                           kprange=(startkp,endkp),\
                                           output_origkp=self.output_origkp_v.get())
 
-        self.kphandling.writefile(result, pathlib.Path(self.output_v.get()))
+        self.kphandling.writefile(result, pathlib.Path(self.output_v.get()), sortbykp=self.sortbykp_v.get())
 
+        '''
         for res_elem in result:
             print(res_elem['filename'])
             sorted_keys = sorted(res_elem['data_dict'])
@@ -185,6 +186,7 @@ class GUI():
                 #print(res_elem['data_dict'][i])
                 print(i)
             print()
+        '''
 
 @v_args(inline=True)
 class MapInterpreter(mapinterpreter.ParseMap):
@@ -237,6 +239,7 @@ class KilopostHandling():
             self.initialize_interpreter()
         result_list = []
         result_dict = {}
+        result_header = ''
 
         path, rootpath, header_enc = lhe.loadheader(filename, 'BveTs Map ',2)
         fp = open(path,'r',encoding=header_enc)
@@ -257,6 +260,7 @@ class KilopostHandling():
                     elem = re.sub('^\s*','',elem)
                     result = self.mapinterp.transform(self.mapinterp.parser.parse(elem+';'))
             output += '\n# added by kilopost handling\n{:s}\n'.format(initialize)
+        result_header = output
 
         ix_comm = 0
         evaluated_kp = 0.0
@@ -322,9 +326,9 @@ class KilopostHandling():
                 output += comm[ix_comm]
                 ix_comm+=1
 
-        result_list.append({'filename':filename, 'include_file':include_file, 'data':output, 'data_dict':result_dict})
+        result_list.append({'filename':filename, 'include_file':include_file, 'data':output, 'data_dict':result_dict, 'result_header':result_header})
         return result_list
-    def writefile(self,result, output_root):
+    def writefile(self,result, output_root, sortbykp=False):
         ''' readfileで生成したresult_listをファイルに出力する
 
         Parameters:
@@ -341,7 +345,15 @@ class KilopostHandling():
             else:
                 os.makedirs(output_root.joinpath(pathlib.Path(data['include_file']).parent),exist_ok=True)
                 fp = open(output_root.joinpath(data['include_file']),'w')
-            fp.write(data['data'])
+
+            if sortbykp:
+                output_str = data['result_header']
+                for key in data['data_dict']:
+                    for statement in data['data_dict'][key]['statements']:
+                        output_str += statement
+            else:
+                output_str = data['data']
+            fp.write(output_str)
             fp.close()
 
             if False:
