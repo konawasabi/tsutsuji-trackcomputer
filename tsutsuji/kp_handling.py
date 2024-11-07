@@ -288,6 +288,7 @@ class KilopostHandling():
                                     newstatement += '# {:s}'.format(elem)
                             elif mode == '1': # 2. new vari.
                                 newstatement = pre_elem + '{:s};'.format(newExpression.replace('distance','{:f}'.format(evaluated_kp)))
+                                new_kp = evaluated_kp
                                 if output_origkp:
                                     newstatement += '# {:s}'.format(elem)
                             elif mode == '2': # 3. conversion
