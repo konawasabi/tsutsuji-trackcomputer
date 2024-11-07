@@ -306,7 +306,8 @@ class KilopostHandling():
                                                          initialize=initialize,\
                                                          newExpression=newExpression,\
                                                          include_file=re.sub(r'\\','/',re.sub('\'','',tree.children[0].children[0])),\
-                                                         kprange=kprange)
+                                                         kprange=kprange,\
+                                                         output_origkp=output_origkp)
                             newstatement = pre_elem + elem + ';'
                         else:
                             newstatement = pre_elem + elem + ';'
@@ -318,7 +319,11 @@ class KilopostHandling():
                 if new_kp not in result_dict.keys():
                     result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[]}
 
-                result_dict[new_kp]['statements'].append(newstatement)
+                if 'tree' in locals():
+                    if (tree.data == 'set_distance' and len(result_dict[new_kp]['statements'])==0) or tree.data != 'set_distance':
+                        result_dict[new_kp]['statements'].append(newstatement)
+                else:
+                    result_dict[new_kp]['statements'].append(newstatement)
 
                 output += newstatement
 
