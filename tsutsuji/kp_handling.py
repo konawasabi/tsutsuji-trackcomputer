@@ -188,6 +188,13 @@ class GUI():
                                           kprange=(startkp,endkp),\
                                           output_origkp=self.output_origkp_v.get(),\
                                           search = self.search_str.get() if self.search_en_v.get() else None)
+
+        if False:
+            for key_file in result:
+                print(key_file['filename'])
+                for key_kp in key_file['data_dict']:
+                    print(key_kp)
+                
         
         self.kphandling.writefile(result, pathlib.Path(self.output_v.get()), sortbykp=self.sortbykp_v.get())
 
@@ -371,7 +378,7 @@ class KilopostHandling():
 
             if sortbykp:
                 output_str = data['result_header']
-                for key in data['data_dict']:
+                for key in sorted(data['data_dict']):
                     for statement in data['data_dict'][key]['statements']:
                         output_str += statement
             else:
