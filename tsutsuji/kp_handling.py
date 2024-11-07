@@ -329,6 +329,9 @@ class KilopostHandling():
 
             if ix_comm < len(comm):
                 output += comm[ix_comm]
+                if new_kp not in result_dict.keys():
+                    result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[]}
+                result_dict[new_kp]['statements'].append(comm[ix_comm])
                 ix_comm+=1
 
         result_list.append({'filename':filename, 'include_file':include_file, 'data':output, 'data_dict':result_dict, 'result_header':result_header})
