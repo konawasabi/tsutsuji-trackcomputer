@@ -134,8 +134,22 @@ class GUI():
 
         # ---
 
+        self.searchframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
+        self.searchframe.grid(column=0, row=3, sticky = (tk.N, tk.W,  tk.S))
+
+        self.search_en_v = tk.BooleanVar(value=False)
+        self.search_en_b = ttk.Checkbutton(self.searchframe, text='Search', variable=self.search_en_v, onvalue=True, offvalue=False)
+        
+        self.search_str = tk.StringVar()
+        self.search_entry = ttk.Entry(self.searchframe, textvariable=self.search_str,width=80)
+
+        self.search_en_b.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.search_entry.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+
+        # ---
+
         self.buttonframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.buttonframe.grid(column=0, row=3, sticky = (tk.N, tk.W,  tk.S))
+        self.buttonframe.grid(column=0, row=4, sticky = (tk.N, tk.W,  tk.S))
 
         self.doit_b = ttk.Button(self.buttonframe, text='Do It', command=self.doit)
         self.doit_b.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
@@ -172,21 +186,10 @@ class GUI():
                                           initialize=self.decval_v.get(),\
                                           newExpression=self.newexpr_v.get(),\
                                           kprange=(startkp,endkp),\
-                                          output_origkp=self.output_origkp_v.get())
-
+                                          output_origkp=self.output_origkp_v.get(),\
+                                          search = self.search_str.get() if self.search_en_v.get() else None)
+        
         self.kphandling.writefile(result, pathlib.Path(self.output_v.get()), sortbykp=self.sortbykp_v.get())
-
-        '''
-        for res_elem in result:
-            print(res_elem['filename'])
-            sorted_keys = sorted(res_elem['data_dict'])
-            for i in res_elem['data_dict']:
-                print(i)
-            for i in sorted_keys:
-                #print(res_elem['data_dict'][i])
-                print(i)
-            print()
-        '''
 
 @v_args(inline=True)
 class MapInterpreter(mapinterpreter.ParseMap):
@@ -205,7 +208,7 @@ class KilopostHandling():
     def initialize_interpreter(self):
         self.mapinterp = MapInterpreter(None,None,prompt=True)
     
-    def readfile(self,filename, input_root, mode='0', initialize=None, newExpression=None, include_file=None,kprange=(None,None),output_origkp=False):
+    def readfile(self,filename, input_root, mode='0', initialize=None, newExpression=None, include_file=None,kprange=(None,None),output_origkp=False,search=None):
         '''マップファイルを読み込み、距離程を書き換える
 
         Parameters:
@@ -228,6 +231,8 @@ class KilopostHandling():
           処理を行う距離程範囲を指定する。（距離程は変換前の値）
         output_origkp : bool
           距離程を書き換えるモード(3以外)で、書き換え前の値を出力する場合はTrue
+        search : str
+          特定のマップ要素のみ出力する場合の条件文字列。None の場合は全て出力。
         -----
 
         result_listのフォーマット
@@ -308,7 +313,8 @@ class KilopostHandling():
                                                          newExpression=newExpression,\
                                                          include_file=re.sub(r'\\','/',re.sub('\'','',tree.children[0].children[0])),\
                                                          kprange=kprange,\
-                                                         output_origkp=output_origkp)
+                                                         output_origkp=output_origkp,\
+                                                         search=search)
                             newstatement = pre_elem + elem + ';'
                         else:
                             newstatement = pre_elem + elem + ';'
@@ -321,12 +327,20 @@ class KilopostHandling():
                     result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[]}
 
                 if 'tree' in locals():
-                    if (tree.data == 'set_distance' and len(result_dict[new_kp]['statements'])==0) or tree.data != 'set_distance':
+                    if tree.data == 'set_distance':
+                        if len(result_dict[new_kp]['statements'])==0:
+                            result_dict[new_kp]['statements'].append(newstatement)
+                        output += newstatement
+                    elif tree.data == 'map_element':
+                        if search is None or search.lower() in newstatement.lower():
+                            result_dict[new_kp]['statements'].append(newstatement)
+                            output += newstatement
+                    else:
                         result_dict[new_kp]['statements'].append(newstatement)
+                        output += newstatement
                 else:
                     result_dict[new_kp]['statements'].append(newstatement)
-
-                output += newstatement
+                    output += newstatement
 
             if ix_comm < len(comm):
                 output += comm[ix_comm]
