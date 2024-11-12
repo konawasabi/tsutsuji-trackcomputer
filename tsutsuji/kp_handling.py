@@ -315,9 +315,13 @@ class KilopostHandling():
                         if tree.data == 'set_distance':
                             evaluated_kp = self.mapinterp.environment.predef_vars['distance']
                             orig_kp = elem
+
+                            # 新しいdistance要素を発見したら、これまでに溜め込んだoutput_tmpを吐き出して初期化
                             if search is None or result_dict.count(new_kp)>0:
+                                # search条件指定なし | search条件に合致する要素が1子以上ある場合のみoutputへ追加する
                                 output += output_tmp
                             output_tmp = ''
+                            
                             if mode == '0': # 1. eval.
                                 newstatement = pre_elem + '{:f};'.format(evaluated_kp)
                                 new_kp = evaluated_kp
@@ -373,13 +377,13 @@ class KilopostHandling():
                     result_dict.add_statement(new_kp,newstatement)
                     output_tmp += newstatement
 
-
             if ix_comm < len(comm):
                 output_tmp += comm[ix_comm]
                 result_dict.add_kp(new_kp,orig_kp)
                 result_dict.add_statement(new_kp,comm[ix_comm])
                 ix_comm+=1
 
+        # ファイル末尾ではoutput_tmpの吐き出し処理が行われないため、ここで行う
         if len(output_tmp)>0:
             if search is None or result_dict.count(new_kp)>0:
                 output += output_tmp
