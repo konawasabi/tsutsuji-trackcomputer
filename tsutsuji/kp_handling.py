@@ -206,6 +206,23 @@ class MapInterpreter(mapinterpreter.ParseMap):
         pass
     def include_file(self, path):
         pass
+
+class statement_dict():
+    def __init__(self):
+        self.result_dict = {}
+    def add_kp(self, new_kp, orig_kp):
+        if new_kp not in self.result_dict.keys():
+            self.result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[], 'count':0}
+    def add_statement(self,key, statement):
+        self.result_dict[key]['statements'].append(statement)
+        self.result_dict[key]['count'] +=1
+    def add_distance(self,key, statement):
+        if len(self.result_dict[key]['statements'])==0:
+            self.result_dict[key]['statements'].append(statement)
+    def output_dict(self):
+        return self.result_dict
+    def keys(self):
+        return self.result_dict.keys()
         
 class KilopostHandling():
     def __init__(self):
@@ -250,7 +267,7 @@ class KilopostHandling():
         if include_file is None:
             self.initialize_interpreter()
         result_list = []
-        result_dict = {}
+        result_dict = statement_dict()
         result_header = ''
 
         path, rootpath, header_enc = lhe.loadheader(filename, 'BveTs Map ',2)
@@ -331,32 +348,39 @@ class KilopostHandling():
                     newstatement = pre_elem
 
                 if new_kp not in result_dict.keys():
-                    result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[]}
+                    #result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[], count=0}
+                    result_dict.add_kp(new_kp,orig_kp)
 
                 if 'tree' in locals():
                     if tree.data == 'set_distance':
-                        if len(result_dict[new_kp]['statements'])==0:
-                            result_dict[new_kp]['statements'].append(newstatement)
+                        #if len(result_dict[new_kp]['statements'])==0:
+                        #    result_dict[new_kp]['statements'].append(newstatement)
+                        result_dict.add_distance(new_kp,newstatement)
                         output += newstatement
                     elif tree.data == 'map_element':
                         if search is None or search.lower() in newstatement.lower():
-                            result_dict[new_kp]['statements'].append(newstatement)
+                            #result_dict[new_kp]['statements'].append(newstatement)
+                            result_dict.add_statement(new_kp,newstatement)
                             output += newstatement
                     else:
-                        result_dict[new_kp]['statements'].append(newstatement)
+                        #result_dict[new_kp]['statements'].append(newstatement)
+                        result_dict.add_statement(new_kp,newstatement)
                         output += newstatement
                 else:
-                    result_dict[new_kp]['statements'].append(newstatement)
+                    #result_dict[new_kp]['statements'].append(newstatement)
+                    result_dict.add_statement(new_kp,newstatement)
                     output += newstatement
 
             if ix_comm < len(comm):
                 output += comm[ix_comm]
                 if new_kp not in result_dict.keys():
-                    result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[]}
-                result_dict[new_kp]['statements'].append(comm[ix_comm])
+                    #result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[], count=0}
+                    result_dict.add_kp(new_kp,orig_kp)
+                #result_dict[new_kp]['statements'].append(comm[ix_comm])
+                result_dict.add_statement(new_kp,comm[ix_comm])
                 ix_comm+=1
 
-        result_list.append({'filename':filename, 'include_file':include_file, 'data':output, 'data_dict':result_dict, 'result_header':result_header})
+        result_list.append({'filename':filename, 'include_file':include_file, 'data':output, 'data_dict':result_dict.output_dict(), 'result_header':result_header})
         return result_list
     def writefile(self,result, output_root, sortbykp=False):
         ''' readfileで生成したresult_listをファイルに出力する
@@ -379,8 +403,9 @@ class KilopostHandling():
             if sortbykp:
                 output_str = data['result_header']
                 for key in sorted(data['data_dict']):
-                    for statement in data['data_dict'][key]['statements']:
-                        output_str += statement
+                    if data['data_dict'][key]['count']>0:
+                        for statement in data['data_dict'][key]['statements']:
+                            output_str += statement
             else:
                 output_str = data['data']
             fp.write(output_str)
