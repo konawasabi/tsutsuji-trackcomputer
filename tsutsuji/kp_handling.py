@@ -348,35 +348,26 @@ class KilopostHandling():
                     newstatement = pre_elem
 
                 if new_kp not in result_dict.keys():
-                    #result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[], count=0}
                     result_dict.add_kp(new_kp,orig_kp)
 
                 if 'tree' in locals():
                     if tree.data == 'set_distance':
-                        #if len(result_dict[new_kp]['statements'])==0:
-                        #    result_dict[new_kp]['statements'].append(newstatement)
                         result_dict.add_distance(new_kp,newstatement)
                         output += newstatement
                     elif tree.data == 'map_element':
                         if search is None or search.lower() in newstatement.lower():
-                            #result_dict[new_kp]['statements'].append(newstatement)
                             result_dict.add_statement(new_kp,newstatement)
                             output += newstatement
                     else:
-                        #result_dict[new_kp]['statements'].append(newstatement)
                         result_dict.add_statement(new_kp,newstatement)
                         output += newstatement
                 else:
-                    #result_dict[new_kp]['statements'].append(newstatement)
                     result_dict.add_statement(new_kp,newstatement)
                     output += newstatement
 
             if ix_comm < len(comm):
                 output += comm[ix_comm]
-                if new_kp not in result_dict.keys():
-                    #result_dict[new_kp] = {'new_kp':new_kp, 'orig_kp':orig_kp, 'statements':[], count=0}
-                    result_dict.add_kp(new_kp,orig_kp)
-                #result_dict[new_kp]['statements'].append(comm[ix_comm])
+                result_dict.add_kp(new_kp,orig_kp)
                 result_dict.add_statement(new_kp,comm[ix_comm])
                 ix_comm+=1
 
