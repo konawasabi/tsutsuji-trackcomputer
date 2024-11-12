@@ -367,7 +367,7 @@ class KilopostHandling():
                         result_dict.add_distance(new_kp,newstatement)
                         output_tmp += newstatement
                     elif tree.data == 'map_element':
-                        if search is None or search.lower() in newstatement.lower():
+                        if search is None or re.search(search.lower(),newstatement.lower()) is not None:
                             result_dict.add_statement(new_kp,newstatement)
                             output_tmp += newstatement
                     else:
