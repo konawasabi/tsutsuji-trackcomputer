@@ -223,6 +223,8 @@ class statement_dict():
         return self.result_dict
     def keys(self):
         return self.result_dict.keys()
+    def count(self,key):
+        return self.result_dict[key]['count']
         
 class KilopostHandling():
     def __init__(self):
@@ -263,12 +265,15 @@ class KilopostHandling():
           [{'filename':str, 'data':str}, ...]
 
         '''
-
+        if False:
+            import pdb
+            pdb.set_trace()
         if include_file is None:
             self.initialize_interpreter()
         result_list = []
         result_dict = statement_dict()
         result_header = ''
+        output_tmp = ''
 
         path, rootpath, header_enc = lhe.loadheader(filename, 'BveTs Map ',2)
         fp = open(path,'r',encoding=header_enc)
@@ -310,6 +315,9 @@ class KilopostHandling():
                         if tree.data == 'set_distance':
                             evaluated_kp = self.mapinterp.environment.predef_vars['distance']
                             orig_kp = elem
+                            if search is None or result_dict.count(new_kp)>0:
+                                output += output_tmp
+                            output_tmp = ''
                             if mode == '0': # 1. eval.
                                 newstatement = pre_elem + '{:f};'.format(evaluated_kp)
                                 new_kp = evaluated_kp
@@ -353,23 +361,28 @@ class KilopostHandling():
                 if 'tree' in locals():
                     if tree.data == 'set_distance':
                         result_dict.add_distance(new_kp,newstatement)
-                        output += newstatement
+                        output_tmp += newstatement
                     elif tree.data == 'map_element':
                         if search is None or search.lower() in newstatement.lower():
                             result_dict.add_statement(new_kp,newstatement)
-                            output += newstatement
+                            output_tmp += newstatement
                     else:
                         result_dict.add_statement(new_kp,newstatement)
-                        output += newstatement
+                        output_tmp += newstatement
                 else:
                     result_dict.add_statement(new_kp,newstatement)
-                    output += newstatement
+                    output_tmp += newstatement
+
 
             if ix_comm < len(comm):
-                output += comm[ix_comm]
+                output_tmp += comm[ix_comm]
                 result_dict.add_kp(new_kp,orig_kp)
                 result_dict.add_statement(new_kp,comm[ix_comm])
                 ix_comm+=1
+
+        if len(output_tmp)>0:
+            if search is None or result_dict.count(new_kp)>0:
+                output += output_tmp
 
         result_list.append({'filename':filename, 'include_file':include_file, 'data':output, 'data_dict':result_dict.output_dict(), 'result_header':result_header})
         return result_list
