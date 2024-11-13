@@ -137,13 +137,20 @@ class GUI():
         self.searchframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
         self.searchframe.grid(column=0, row=3, sticky = (tk.N, tk.W,  tk.S))
 
+        self.search_chk_frame = ttk.Frame(self.searchframe, padding='3 3 3 3')
+        self.search_chk_frame.grid(column=0, row=0, sticky = (tk.N, tk.W,  tk.S))
+
         self.search_en_v = tk.BooleanVar(value=False)
-        self.search_en_b = ttk.Checkbutton(self.searchframe, text='Search', variable=self.search_en_v, onvalue=True, offvalue=False)
+        self.search_en_b = ttk.Checkbutton(self.search_chk_frame, text='Search', variable=self.search_en_v, onvalue=True, offvalue=False)
+
+        self.search_regex_v = tk.BooleanVar(value=False)
+        self.search_regex_b = ttk.Checkbutton(self.search_chk_frame, text='Regular expression', variable=self.search_regex_v, onvalue=True, offvalue=False)
         
         self.search_str = tk.StringVar()
         self.search_entry = ttk.Entry(self.searchframe, textvariable=self.search_str,width=80)
 
         self.search_en_b.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.search_regex_b.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.search_entry.grid(column=0, row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
 
         # ---
@@ -187,7 +194,8 @@ class GUI():
                                           newExpression=self.newexpr_v.get(),\
                                           kprange=(startkp,endkp),\
                                           output_origkp=self.output_origkp_v.get(),\
-                                          search = self.search_str.get() if self.search_en_v.get() else None)
+                                          search = self.search_str.get() if self.search_en_v.get() else None,\
+                                          regex = self.search_regex_v.get())
 
         if False:
             for key_file in result:
@@ -234,7 +242,7 @@ class KilopostHandling():
     def initialize_interpreter(self):
         self.mapinterp = MapInterpreter(None,None,prompt=True)
     
-    def readfile(self,filename, input_root, mode='0', initialize=None, newExpression=None, include_file=None,kprange=(None,None),output_origkp=False,search=None):
+    def readfile(self,filename, input_root, mode='0', initialize=None, newExpression=None, include_file=None,kprange=(None,None),output_origkp=False,search=None,regex=False):
         '''マップファイルを読み込み、距離程を書き換える
 
         Parameters:
@@ -259,6 +267,8 @@ class KilopostHandling():
           距離程を書き換えるモード(3以外)で、書き換え前の値を出力する場合はTrue
         search : str
           特定のマップ要素のみ出力する場合の条件文字列。None の場合は全て出力。
+        regex : bool
+          search条件文字列を正規表現として扱う場合はTrue
         -----
 
         result_listのフォーマット
@@ -350,7 +360,8 @@ class KilopostHandling():
                                                          include_file=re.sub(r'\\','/',re.sub('\'','',tree.children[0].children[0])),\
                                                          kprange=kprange,\
                                                          output_origkp=output_origkp,\
-                                                         search=search)
+                                                         search=search,\
+                                                         regex=regex)
                             newstatement = pre_elem + elem + ';'
                         else:
                             newstatement = pre_elem + elem + ';'
@@ -367,7 +378,9 @@ class KilopostHandling():
                         result_dict.add_distance(new_kp,newstatement)
                         output_tmp += newstatement
                     elif tree.data == 'map_element':
-                        if search is None or re.search(search.lower(),newstatement.lower()) is not None:
+                        if search is None\
+                           or (regex and re.search(search.lower(),newstatement.lower()) is not None)\
+                           or (not regex and search.lower() in newstatement.lower()):
                             result_dict.add_statement(new_kp,newstatement)
                             output_tmp += newstatement
                     else:
