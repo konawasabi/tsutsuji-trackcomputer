@@ -67,7 +67,7 @@
 <section id="include">
 <h3>include要素(ディレクティブ)の扱い<a class="headerlink" href="#include" title="Link to this heading">¶</a></h3>
 <p>指定したmapファイルにinclude要素が含まれていた場合、include要素が指定するmapファイルに対しても同様の処理を行い、input側のディレクトリ構成、ファイル名を極力維持して結果を出力します。</p>
-<p>ただし、 <a class="reference internal" href="#ref-handlingkp-kprange"><span class="std std-ref">Kilopost range</span></a> で距離程範囲を設定していた場合で、include要素の直前の距離程がその範囲外にある場合、そのinclude要素が指定するmapファイルは一切処理されませんので注意してください。</p>
+<p>ただし、 <a class="reference internal" href="#ref-handlingkp-kprange"><span class="std std-ref">Output original kilopost</span></a> で距離程範囲を設定していた場合で、include要素の直前の距離程がその範囲外にある場合、そのinclude要素が指定するmapファイルは一切処理されませんので注意してください。</p>
 <section id="id1">
 <h4>例<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
 <section id="id2">
@@ -135,10 +135,10 @@
 <h3>0. echo<a class="headerlink" href="#echo" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>距離程の書き換えは行わず、inputファイルの内容をそのまま出力する</p></li>
-<li><p>後述の <a class="reference internal" href="#ref-handlingkp-kprange"><span class="std std-ref">Kilopost range</span></a> と組み合わせて、特定の距離程範囲にあるマップ要素を抽出する場合に使用できる</p></li>
+<li><p>後述の <a class="reference internal" href="#ref-handlingkp-kprange"><span class="std std-ref">Output original kilopost</span></a> と組み合わせて、特定の距離程範囲にあるマップ要素を抽出する場合に使用できる</p></li>
 </ul>
 <section id="id4">
-<h4>使用例<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h4>
+<h4>実行例<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h4>
 <p>Kilopost range:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">start</span><span class="p">:</span> <span class="mi">700</span>
 <span class="n">end</span><span class="p">:</span> <span class="mi">800</span>
@@ -195,7 +195,7 @@ $bar = 894;
 </section>
 <section id="id5">
 <h4>注意点<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h4>
-<p><a class="reference internal" href="#ref-handlingkp-kprange"><span class="std std-ref">Kilopost range</span></a> の指定によらず、変数への代入要素(上記例での <cite>$foo = 700;</cite>, <cite>$bar = 894;</cite>)は必ず出力されます。
+<p><a class="reference internal" href="#ref-handlingkp-kprange"><span class="std std-ref">Output original kilopost</span></a> の指定によらず、変数への代入要素(上記例での <cite>$foo = 700;</cite>, <cite>$bar = 894;</cite>)は必ず出力されます。
 mapファイルでの変数使用状況によっては、BveTs本体での読み込み時に意図しない結果となる可能性もあるので、距離程に変数を使用しているmapでは出力内容をよく確認することを推奨します。</p>
 </section>
 </section>
@@ -205,7 +205,7 @@ mapファイルでの変数使用状況によっては、BveTs本体での読み
 <li><p>変数、演算子、数学関数で記述された距離程を数値に変換する</p></li>
 </ul>
 <section id="id6">
-<h4>使用例<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h4>
+<h4>実行例<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h4>
 <p>input map:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$foo = 700;
 $foo;
@@ -254,7 +254,7 @@ Curve.End();
 </li>
 </ol>
 <section id="id8">
-<h4>使用例<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h4>
+<h4>実行例<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h4>
 <p>initialization:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$piyo = 200;
 </pre></div>
@@ -318,7 +318,7 @@ inputファイル中で用いているものと同じ変数名(ここでは <cit
 </li>
 </ol>
 <section id="id10">
-<h4>使用例<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h4>
+<h4>実行例<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h4>
 <p>initialization:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$piyo = 200;
 </pre></div>
@@ -364,23 +364,184 @@ inputファイル中で用いているものと同じ変数名(ここでは <cit
 <p>New variable/expressionに入力する数式の末尾には <cite>;</cite> をつけないでください。エラーとなる場合があります。</p>
 </section>
 </section>
+<section id="output-original-kilopost">
+<span id="ref-handlingkp-kprange"></span><h3>Output original kilopost<a class="headerlink" href="#output-original-kilopost" title="Link to this heading">¶</a></h3>
+<p>チェックが入っている場合、距離程を書き換えるmode 1, 2, 3にて、書き換える前の距離程をコメントとして出力します。
+mode 0では何もしません。</p>
+<section id="id12">
+<h4>実行例<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h4>
+<p>mode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. evaluate
+✅Output original kilopost
+</pre></div>
+</div>
+<p>input map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$foo = 700;
+$foo;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+$foo + 22;
+Curve.Begin(-200,-0.07);
+</pre></div>
+</div>
+<p>output map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$foo = 700;
+700.000000;# $foo;
+Curve.BeginTransition();
+Curve.SetCenter(-1.067/2);
+722.000000;# $foo + 22;
+Curve.Begin(-200,-0.07);
+</pre></div>
+</div>
+</section>
+</section>
+<section id="sort-by-kilopost">
+<h3>Sort by kilopost<a class="headerlink" href="#sort-by-kilopost" title="Link to this heading">¶</a></h3>
+<p>チェックが入っている場合、読み込んだマップ要素を距離程昇順にソートして出力します。
+この機能は全てのmodeに対して有効です。</p>
+<section id="id13">
+<h4>実行例<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h4>
+<p>mode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>0. echo
+✅Sort by kilopost
+</pre></div>
+</div>
+<p>input map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$fuga = 500.000000;
+
+$fuga + 0.00;
+Track[&#39;up&#39;].X.Interpolate(-7.00,0.00);
+$fuga + 50.00;
+Track[&#39;up&#39;].X.Interpolate(-7.00,-382.66);
+
+$fuga + 0.00;
+Track[&#39;up&#39;].Y.Interpolate(0.00,0.00);
+$fuga + 50.00;
+Track[&#39;up&#39;].Y.Interpolate(0.00,0.00);
+
+$fuga + 50.00;
+Track[&#39;up&#39;].Cant.Interpolate(0.000);
+
+$fuga + 0.00;
+Track[&#39;up&#39;].Cant.SetFunction(1);
+
+$fuga + 0.00;
+Track[&#39;up&#39;].Cant.SetGauge(1.067);
+</pre></div>
+</div>
+<p>output map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$fuga = 500.000000;
+
+$fuga + 0.00;
+Track[&#39;up&#39;].X.Interpolate(-7.00,0.00);
+Track[&#39;up&#39;].Y.Interpolate(0.00,0.00);
+Track[&#39;up&#39;].Cant.SetFunction(1);
+
+Track[&#39;up&#39;].Cant.SetGauge(1.067);
+
+
+$fuga + 50.00;
+Track[&#39;up&#39;].X.Interpolate(-7.00,-382.66);
+
+Track[&#39;up&#39;].Y.Interpolate(0.00,0.00);
+
+Track[&#39;up&#39;].Cant.Interpolate(0.000);
+
+Track[&#39;up&#39;].Cant.SetCenter(-0.533);
+</pre></div>
+</div>
+</section>
+<section id="id14">
+<h4>注意点<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h4>
+<p>mode 2では書き換え前の距離程値に従ってソートを行い、mode 3では書き換え後の値によってソートを行います。
+入力マップファイルとNew variable/expressionの内容によっては予想と異なるソート結果を得る可能性があります。</p>
+</section>
+</section>
 </section>
 <section id="kilopost-range">
-<span id="ref-handlingkp-kprange"></span><h2>Kilopost range<a class="headerlink" href="#kilopost-range" title="Link to this heading">¶</a></h2>
+<h2>Kilopost range<a class="headerlink" href="#kilopost-range" title="Link to this heading">¶</a></h2>
 <p>変換処理を行い、ファイルへ書き出す距離程の下限、上限を設定します。
 ここでの距離程は、変換前の値（inputで指定したmapファイルの値）を指します。
 全てのモードでKilopost rangeの指定は有効です。</p>
 <section id="start">
 <h3>start<a class="headerlink" href="#start" title="Link to this heading">¶</a></h3>
-<p>チェックボックスにチェックを入れると、 <cite>距離程 &gt;= startの値</cite> の要素についてのみoutputファイルへ出力します。
+<p>チェックを入れると、 <cite>距離程 &gt;= startの値</cite> の要素についてのみoutputファイルへ出力します。
 これより手前にある要素はoutputファイルへ出力されません。 <strong>(変数への代入要素を除く)</strong></p>
 <p>チェックボックスが空の場合、距離程の下限は設定されません。</p>
 </section>
 <section id="end">
 <h3>end<a class="headerlink" href="#end" title="Link to this heading">¶</a></h3>
-<p>チェックボックスにチェックを入れると、 <cite>距離程 &lt;= endの値</cite> の要素についてのみoutputファイルへ出力します。
+<p>チェックを入れると、 <cite>距離程 &lt;= endの値</cite> の要素についてのみoutputファイルへ出力します。
 これより後ろにある要素はoutputファイルへ出力されません。 <strong>(変数への代入要素を除く)</strong></p>
 <p>チェックボックスが空の場合、距離程の上限は設定されません。</p>
+</section>
+</section>
+<section id="search">
+<h2>Search<a class="headerlink" href="#search" title="Link to this heading">¶</a></h2>
+<p>チェックを入れると、Searchフィールドの文字列が含まれるマップ要素のみを抽出してファイルを書き出します。</p>
+<p>Regular expressionにチェックが入っている場合は、Searchフィールドの文字列を <a class="reference external" href="https://docs.python.org/ja/3/library/re.html#regular-expression-syntax">正規表現</a> と解釈して、条件に合致するマップ要素を抽出します。</p>
+<p>この機能は上記全てのmode, オプションに対して有効です。</p>
+<section id="id15">
+<h3>注意点<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>コメント要素、変数への代入要素、include要素はSearch文字列の内容によらず必ず出力されます。</p></li>
+<li><p>Regular expressionをチェックしていない場合、Search文字列での大文字、小文字の区別は無視されます。</p></li>
+<li><p>Sort by kilopostをチェックしていない場合、入力マップファイルの内容によっては距離程要素のみが出力される場合があります。</p></li>
+</ol>
+<section id="id16">
+<h4>3.の例<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h4>
+<p>mode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>0. echo
+🟩Sort by kilopost
+✅Search, 🟩Regular expression
+</pre></div>
+</div>
+<p>search:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Track</span><span class="p">[</span><span class="s1">&#39;up&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Y</span>
+</pre></div>
+</div>
+<p>input map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$fuga = 500.000000;
+
+$fuga + 0.00;
+Track[&#39;up&#39;].X.Interpolate(-7.00,0.00);
+$fuga + 50.00;
+Track[&#39;up&#39;].X.Interpolate(-7.00,-382.66);
+
+$fuga + 0.00;
+Track[&#39;up&#39;].Y.Interpolate(0.00,0.00);
+$fuga + 50.00;
+Track[&#39;up&#39;].Y.Interpolate(0.00,0.00);
+
+$fuga + 50.00;
+Track[&#39;up&#39;].Cant.Interpolate(0.000);
+
+$fuga + 0.00;
+Track[&#39;up&#39;].Cant.SetFunction(1);
+
+$fuga + 0.00;
+Track[&#39;up&#39;].Cant.SetGauge(1.067);
+</pre></div>
+</div>
+<p>output map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$fuga = 500.000000;
+
+$fuga + 0.00;
+$fuga + 50.00;
+
+$fuga + 0.00;
+Track[&#39;up&#39;].Y.Interpolate(0.00,0.00);
+$fuga + 50.00;
+Track[&#39;up&#39;].Y.Interpolate(0.00,0.00);
+
+$fuga + 50.00;
+
+$fuga + 0.00;
+
+$fuga + 0.00;
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 <section id="do-it">
@@ -414,23 +575,32 @@ inputファイル中で用いているものと同じ変数名(ここでは <cit
 </li>
 <li><a class="reference internal" href="#mode">Mode</a><ul>
 <li><a class="reference internal" href="#echo">0. echo</a><ul>
-<li><a class="reference internal" href="#id4">使用例</a></li>
+<li><a class="reference internal" href="#id4">実行例</a></li>
 <li><a class="reference internal" href="#id5">注意点</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#evaluate">1. evaluate</a><ul>
-<li><a class="reference internal" href="#id6">使用例</a></li>
+<li><a class="reference internal" href="#id6">実行例</a></li>
 <li><a class="reference internal" href="#id7">注意点</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#new-variable">2. new variable</a><ul>
-<li><a class="reference internal" href="#id8">使用例</a></li>
+<li><a class="reference internal" href="#id8">実行例</a></li>
 <li><a class="reference internal" href="#id9">注意点</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#conversion-by-new-example">3. conversion by new example</a><ul>
-<li><a class="reference internal" href="#id10">使用例</a></li>
+<li><a class="reference internal" href="#id10">実行例</a></li>
 <li><a class="reference internal" href="#id11">注意点</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#output-original-kilopost">Output original kilopost</a><ul>
+<li><a class="reference internal" href="#id12">実行例</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sort-by-kilopost">Sort by kilopost</a><ul>
+<li><a class="reference internal" href="#id13">実行例</a></li>
+<li><a class="reference internal" href="#id14">注意点</a></li>
 </ul>
 </li>
 </ul>
@@ -438,6 +608,13 @@ inputファイル中で用いているものと同じ変数名(ここでは <cit
 <li><a class="reference internal" href="#kilopost-range">Kilopost range</a><ul>
 <li><a class="reference internal" href="#start">start</a></li>
 <li><a class="reference internal" href="#end">end</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#search">Search</a><ul>
+<li><a class="reference internal" href="#id15">注意点</a><ul>
+<li><a class="reference internal" href="#id16">3.の例</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#do-it">Do It</a></li>

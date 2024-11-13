@@ -4,7 +4,24 @@
 
 - プロット画面
   - 任意角度への回転
-  
+
+## [1.8.1] - 2024-11-13
+
+- Python本体の最低バージョンを3.9以上に変更
+- Handling kilopost
+  - Outputボタンでディレクトリ指定ダイアログを表示する様に修正
+  - マップファイルに記述されたディレクトリ記号がOSのものと一致していない場合にinclude処理がエラーとなる問題の修正
+    - バックスラッシュで記述されたファイルパスは内部的にスラッシュへ置き換える
+  - 書き換え前の距離程要素の出力に対応
+	- "Output original kilopost" チェックボックスで指定
+  - 出力の距離程によるソートに対応
+    - "Sort by kilopost" チェックボックスで設定
+  - 特定のマップ要素のみの出力に対応
+    - "Search" チェックボックで有効化
+	- "Search" フィールドに入力した文字列と一致するマップ要素のみファイルへ出力する
+	- 正規表現での検索条件指定も可能
+	  
+
 ## [1.8.0] - 2024-10-30
 
 - 新機能
@@ -232,6 +249,7 @@
 
 - 1st release
 
+[1.8.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.0...ver1.8.1
 [1.8.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.5...ver1.8.0
 [1.7.5]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4.1...ver1.7.5
 [1.7.4.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4...ver1.7.4.1
