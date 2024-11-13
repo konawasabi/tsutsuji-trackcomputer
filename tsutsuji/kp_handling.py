@@ -379,7 +379,7 @@ class KilopostHandling():
                         output_tmp += newstatement
                     elif tree.data == 'map_element':
                         if search is None\
-                           or (regex and re.search(search.lower(),newstatement.lower()) is not None)\
+                           or (regex and re.search(search,newstatement) is not None)\
                            or (not regex and search.lower() in newstatement.lower()):
                             result_dict.add_statement(new_kp,newstatement)
                             output_tmp += newstatement
