@@ -517,7 +517,7 @@ class TileMapControl():
                 return
         
         self.img = None
-        result = Image.new('RGB', (256*x_num, 256*y_num), (0,0,0))
+        result = Image.new('RGBA', (256*x_num, 256*y_num), (0,0,0))
 
         counts = 0
         for i in range(0,x_num):
