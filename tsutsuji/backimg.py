@@ -29,6 +29,7 @@ import requests
 
 from kobushi import dialog_multifields
 from . import math
+from ._version import __version__
 
 import configparser
 
@@ -525,13 +526,15 @@ class TileMapControl():
 
                 try:
                     if url_toget not in self.img_cache.keys():
-                        self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget, timeout=(10.0,10.0)).content))
+                        self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget,\
+                                                                                       headers={'user-agent':'tsutsuji-trackcomputer/{:s} python-requests/{:s}'.format(__version__, requests.__version__)},\
+                                                                                                timeout=(10.0,10.0)).content))
                         message = ''
                     else:
                         message = 'cached'
                     result.paste(self.img_cache[url_toget], (256*i, 256*j))
                 except Exception as e:
-                    message = 'ERROR' #e
+                    message = 'ERROR {:s}'.format(str(e)) #e
 
                 print('{:d}/{:d}'.format(counts+1,x_num*y_num),url_toget,message)
                 counts +=1
