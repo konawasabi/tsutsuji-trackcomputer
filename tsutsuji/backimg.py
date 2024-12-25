@@ -528,7 +528,7 @@ class TileMapControl():
                     if url_toget not in self.img_cache.keys():
                         self.img_cache[url_toget] = Image.open(io.BytesIO(requests.get(url_toget,\
                                                                                        headers={'user-agent':'tsutsuji-trackcomputer/{:s} python-requests/{:s}'.format(__version__, requests.__version__)},\
-                                                                                                timeout=(10.0,10.0)).content))
+                                                                                                timeout=(10.0,10.0)).content)).resize((256, 256))
                         message = ''
                     else:
                         message = 'cached'
