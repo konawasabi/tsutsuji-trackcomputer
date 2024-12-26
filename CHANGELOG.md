@@ -4,6 +4,16 @@
 
 - プロット画面
   - 任意角度への回転
+  
+## [1.8.2] - 2024-12-26
+
+- Maptile
+  - 画像取得時にサーバーへ送信するuser-agentを下記フォーマットに変更
+	- `tsutsuji-trackcomputer/{version} python-requests/{version}`
+	- unique HTTP user-agentを求めるサーバー(例: [OpenRailwayMap](http://www.openrailwaymap.org/) )への対応
+  - 256x256以外のタイル画像サイズに対応
+	- 取得したタイルは全て256x256にリサイズ
+  - https://github.com/konawasabi/tsutsuji-trackcomputer/issues/2#issue-2757893247 への対応
 
 ## [1.8.1] - 2024-11-13
 
@@ -249,6 +259,7 @@
 
 - 1st release
 
+[1.8.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.1...ver1.8.2
 [1.8.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.0...ver1.8.1
 [1.8.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.5...ver1.8.0
 [1.7.5]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.4.1...ver1.7.5
