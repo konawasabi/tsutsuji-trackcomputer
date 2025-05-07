@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2024 konawasabi
+#    Copyright 2021-2025 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -217,6 +217,9 @@ class mainwindow(ttk.Frame):
             self.statmap1_btn = ttk.Button(self.button_frame, text="statmap1", command = self.getmaptile)
             self.statmap1_btn.grid(column=0, row=7, sticky=(tk.N, tk.W, tk.E))
             '''
+            
+            self.debug_btn = ttk.Button(self.button_frame, text="debug", command = self.startpdb)
+            self.debug_btn.grid(column=0, row=7, sticky=(tk.N, tk.W, tk.E))
 
         self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
         self.getrelrad_btn.grid(column=0, row=10, sticky=(tk.E, tk.W, tk.S))
@@ -383,7 +386,7 @@ class mainwindow(ttk.Frame):
     def aboutwindow(self, event=None):
         msg  = 'Tsutsuji trackcomputer\n'
         msg += 'Version '+__version__+'\n\n'
-        msg += 'Copyright © 2024 konawasabi\n'
+        msg += 'Copyright © 2025 konawasabi\n'
         msg += 'Released under the Apache License, Version 2.0 .\n'
         msg += 'https://www.apache.org/licenses/LICENSE-2.0'
         tk.messagebox.showinfo(message=msg)
@@ -412,6 +415,11 @@ class mainwindow(ttk.Frame):
         plotsize = self.fig_plane.get_size_inches()
         self.staticmapctrl.getimg(self.viewp_scale_v.get(),plotsize[1]/plotsize[0])
         self.drawall()
+    def startpdb(self, event=None):
+        import pdb
+        pdb.set_trace()
+        return None
+    
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
