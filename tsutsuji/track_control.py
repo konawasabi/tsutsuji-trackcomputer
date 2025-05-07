@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2024 konawasabi
+#    Copyright 2021-2025 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import interpolate
 import re
+from pyqtree import Index as Qtindex
 
 from kobushi import mapinterpreter
 from kobushi import trackgenerator
@@ -109,6 +110,7 @@ class TrackControl():
                 self.track[i]['cplist_symbol'] = self.take_cp_by_types(self.track[i]['data'].own_track.data)
                 self.track[i]['toshow'] = True
                 self.track[i]['output_mapfile'] = None
+                self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'])
 
                 # 従属する他軌道座標データを生成
                 self.track[i]['data'].owntrack_pos = self.track[i]['result']
@@ -153,6 +155,7 @@ class TrackControl():
                                          data[6],\
                                          data[7]])
                     otdata['result'] = np.array(result_theta)
+                    otdata['qtindex'] = self.generate_quadtree(otdata['result'])
 
         self.pointsequence_track.load_files(self.conf)
         self.limit_curvatureradius = self.conf.general['limit_curvatureradius']
@@ -912,3 +915,8 @@ class TrackControl():
             output_file += output_map['gauge']+'\n'
 
         return output_file
+    def generate_quadtree(self,data):
+        qtree = Qtindex(bbox=[min(data[:,1]),min(data[:,2]),max(data[:,1]),max(data[:,2])])
+        for i in range(len(data)):
+            qtree.insert(i,(data[i][1],data[i][2]))
+        return qtree
