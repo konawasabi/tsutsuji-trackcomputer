@@ -110,7 +110,7 @@ class TrackControl():
                 self.track[i]['cplist_symbol'] = self.take_cp_by_types(self.track[i]['data'].own_track.data)
                 self.track[i]['toshow'] = True
                 self.track[i]['output_mapfile'] = None
-                self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'])
+                #self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'])
 
                 # 従属する他軌道座標データを生成
                 self.track[i]['data'].owntrack_pos = self.track[i]['result']
@@ -155,7 +155,7 @@ class TrackControl():
                                          data[6],\
                                          data[7]])
                     otdata['result'] = np.array(result_theta)
-                    otdata['qtindex'] = self.generate_quadtree(otdata['result'])
+                    #otdata['qtindex'] = self.generate_quadtree(otdata['result'])
 
         self.pointsequence_track.load_files(self.conf)
         self.limit_curvatureradius = self.conf.general['limit_curvatureradius']
@@ -607,6 +607,13 @@ class TrackControl():
         if False:
             import pdb
             pdb.set_trace()
+
+        # 全ての軌道データについてquadtreeを生成
+        for i in self.conf.track_keys:
+            self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'])
+            for otkey in self.track[i]['data'].othertrack.data.keys():
+                otdata = self.track[i]['othertrack'][otkey]
+                otdata['qtindex'] = self.generate_quadtree(otdata['result'])
 
         self.relativepoint_all(check_U=self.conf.general['check_u']) # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データについて自軌道基準の相対曲率半径を算出
