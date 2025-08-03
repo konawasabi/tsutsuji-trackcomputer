@@ -280,30 +280,33 @@ class TrackControl():
                                 tgt[:,8][min_ix]])
                 
             return result
-        def take_relpos_qtree(src,tgt,qtree):
+        def take_relpos_qtree(src,tgt,qtree,border_sq=100):
             def interpolate(aroundzero,ix,typ,base='x_tr'):
                 return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
             len_tr = len(tgt)
             result = []
             tgt_xy_orig = np.vstack((tgt[:,1],tgt[:,2]))
+            ix_tgt_xy_orig = np.array([ i for i in range(0,len_tr) ])
             # 自軌道に対する相対座標の算出
             for pos in src:
                 # 自軌道注目点を中心とした100m四方の範囲内にある注目軌道点を選別
-                qintersect = qtree.intersect((pos[1]-50,pos[2]-50,pos[1]+50,pos[2]+50))
+                qintersect = qtree.intersect((pos[1]-border_sq,pos[2]-border_sq,pos[1]+border_sq,pos[2]+border_sq))
                 if len(qintersect)==0:
                     continue
-                minix = min(qintersect)-1 if min(qintersect)-1>0 else 0
-                maxix = max(qintersect)+1 if max(qintersect)+1<tgt_xy_orig.shape[1] else tgt_xy_orig.shape[1]
-                tgt_xy = tgt_xy_orig[:, minix:maxix]
+                q_minix = min(qintersect)-10 if min(qintersect)-10>0 else 0
+                q_maxix = max(qintersect)+10 if max(qintersect)+10<tgt_xy_orig.shape[1] else tgt_xy_orig.shape[1]
+                tgt_xy = tgt_xy_orig[:, q_minix:q_maxix]
+                ix_tgt_xy = ix_tgt_xy_orig[q_minix:q_maxix]
                 
                 tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
                 
-                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0]))) # 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
-                min_ix_val = min_ix[0][0]
+                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0])))# 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = ix_tgt_xy[min_ix][0]
 
-                if min_ix_val > 0 and min_ix_val < len_tr-1: # y'軸との最近接点が軌道区間内にある場合
-                    aroundzero = {'x_tr':tgt_xy_trans[0][min_ix_val-1:min_ix_val+2],\
-                                  'y_tr':tgt_xy_trans[1][min_ix_val-1:min_ix_val+2],\
+                if min_ix_val > 0 and min_ix_val < len_tr-1 \
+                   and min_ix[0][0] < tgt_xy_trans.shape[1] -1 : # y'軸との最近接点が軌道区間内にある場合
+                    aroundzero = {'x_tr':tgt_xy_trans[0][min_ix[0][0]-1:min_ix[0][0]+2],\
+                                  'y_tr':tgt_xy_trans[1][min_ix[0][0]-1:min_ix[0][0]+2],\
                                   'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
                                   'x_ab':tgt[:,1][min_ix_val-1:min_ix_val+2],\
                                   'y_ab':tgt[:,2][min_ix_val-1:min_ix_val+2],\
@@ -335,12 +338,12 @@ class TrackControl():
                     result.append([pos[0],\
                                    tgt_xy_trans[0][min_ix][0],\
                                    tgt_xy_trans[1][min_ix][0],\
-                                   tgt[:,3][min_ix][0] - pos[3],\
-                                   tgt[:,0][min_ix][0],\
-                                   tgt[:,1][min_ix][0],\
-                                   tgt[:,2][min_ix][0],\
-                                   tgt[:,3][min_ix][0],\
-                                   tgt[:,8][min_ix][0]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
+                                   tgt[:,3][min_ix_val] - pos[3],\
+                                   tgt[:,0][min_ix_val],\
+                                   tgt[:,1][min_ix_val],\
+                                   tgt[:,2][min_ix_val],\
+                                   tgt[:,3][min_ix_val],\
+                                   tgt[:,8][min_ix_val]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
             return result
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         src = self.track[owntrack]['result']
@@ -673,10 +676,10 @@ class TrackControl():
         # 全ての軌道データについてquadtreeを生成
         if not self.conf.general['check_u']:
             for i in self.conf.track_keys:
-                self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'],self.conf.general['unit_length'])
+                self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'])#,self.conf.general['unit_length'])
                 for otkey in self.track[i]['data'].othertrack.data.keys():
                     otdata = self.track[i]['othertrack'][otkey]
-                    otdata['qtindex'] = self.generate_quadtree(otdata['result'],self.conf.general['unit_length'])
+                    otdata['qtindex'] = self.generate_quadtree(otdata['result'])#,self.conf.general['unit_length'])
 
         self.relativepoint_all(check_U=self.conf.general['check_u']) # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データについて自軌道基準の相対曲率半径を算出
@@ -986,6 +989,9 @@ class TrackControl():
 
         return output_file
     def generate_quadtree(self,data,step=10.0,unit=1.0):
+        if False:
+            import pdb
+            pdb.set_trace()
         qtree = Qtindex(bbox=[min(data[:,1]),min(data[:,2]),max(data[:,1]),max(data[:,2])])
         for i in range(0,len(data),int(step/unit)):
             qtree.insert(i,(data[i][1],data[i][2]))
