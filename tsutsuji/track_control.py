@@ -293,8 +293,9 @@ class TrackControl():
                 qintersect = qtree.intersect((pos[1]-border_sq,pos[2]-border_sq,pos[1]+border_sq,pos[2]+border_sq))
                 if len(qintersect)==0:
                     continue
-                q_minix = min(qintersect)-10 if min(qintersect)-10>0 else 0
-                q_maxix = max(qintersect)+10 if max(qintersect)+10<tgt_xy_orig.shape[1] else tgt_xy_orig.shape[1]
+                margin = 0
+                q_minix = min(qintersect)-margin if min(qintersect)-margin>0 else 0
+                q_maxix = max(qintersect)+margin if max(qintersect)+margin<tgt_xy_orig.shape[1] else tgt_xy_orig.shape[1]
                 tgt_xy = tgt_xy_orig[:, q_minix:q_maxix]
                 ix_tgt_xy = ix_tgt_xy_orig[q_minix:q_maxix]
                 
@@ -304,7 +305,7 @@ class TrackControl():
                 min_ix_val = ix_tgt_xy[min_ix][0]
 
                 if min_ix_val > 0 and min_ix_val < len_tr-1 \
-                   and min_ix[0][0] < tgt_xy_trans.shape[1] -1 : # y'軸との最近接点が軌道区間内にある場合
+                   and min_ix[0][0]+2 < tgt_xy_trans.shape[1]: # y'軸との交点が注目区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix[0][0]-1:min_ix[0][0]+2],\
                                   'y_tr':tgt_xy_trans[1][min_ix[0][0]-1:min_ix[0][0]+2],\
                                   'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
@@ -334,16 +335,6 @@ class TrackControl():
                                        interpolate(aroundzero,1,'y_ab'),\
                                        interpolate(aroundzero,1,'z_ab'),\
                                        interpolate(aroundzero,1,'cant')])
-                else:
-                    result.append([pos[0],\
-                                   tgt_xy_trans[0][min_ix][0],\
-                                   tgt_xy_trans[1][min_ix][0],\
-                                   tgt[:,3][min_ix_val] - pos[3],\
-                                   tgt[:,0][min_ix_val],\
-                                   tgt[:,1][min_ix_val],\
-                                   tgt[:,2][min_ix_val],\
-                                   tgt[:,3][min_ix_val],\
-                                   tgt[:,8][min_ix_val]]) # y'軸との交点での自軌道距離程、x'成分(0になるべき)、y'成分(相対距離)を出力
             return result
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         src = self.track[owntrack]['result']
@@ -669,7 +660,7 @@ class TrackControl():
         ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
         '''
         self.exclude_tracks = []
-        if False:
+        if True:
             import pdb
             pdb.set_trace()
 
