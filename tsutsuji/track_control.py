@@ -280,7 +280,7 @@ class TrackControl():
                                 tgt[:,8][min_ix]])
                 
             return result
-        def take_relpos_qtree(src,tgt,qtree,border_sq=100):
+        def take_relpos_qtree(src,tgt,qtree,border_sq=50):
             def interpolate(aroundzero,ix,typ,base='x_tr'):
                 return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
             len_tr = len(tgt)
@@ -293,7 +293,7 @@ class TrackControl():
                 qintersect = qtree.intersect((pos[1]-border_sq,pos[2]-border_sq,pos[1]+border_sq,pos[2]+border_sq))
                 if len(qintersect)==0:
                     continue
-                margin = 0
+                margin = 10
                 q_minix = min(qintersect)-margin if min(qintersect)-margin>0 else 0
                 q_maxix = max(qintersect)+margin if max(qintersect)+margin<tgt_xy_orig.shape[1] else tgt_xy_orig.shape[1]
                 tgt_xy = tgt_xy_orig[:, q_minix:q_maxix]
@@ -441,19 +441,20 @@ class TrackControl():
                 ix+=1
 
             # 最終制御点の出力
-            #yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
-            yval = math.interpolate_with_dist(self.rel_track[tr],2,cp_dist[ix])
-            #zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
-            zval = math.interpolate_with_dist(self.rel_track[tr],3,cp_dist[ix])
-            curvature_section   = np.inf
-            curvature_section_z = np.inf
-            self.rel_track_radius_cp[tr].append([cp_dist[ix],\
-                                     curvature_section,\
-                                     1/curvature_section if np.abs(1/curvature_section) < self.limit_curvatureradius else 0,\
-                                     yval,\
-                                     curvature_section_z,\
-                                     1/curvature_section_z if np.abs(1/curvature_section_z) < self.limit_curvatureradius else 0,\
-                                     zval])
+            if True:
+                #yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
+                yval = math.interpolate_with_dist(self.rel_track[tr],2,cp_dist[ix])
+                #zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
+                zval = math.interpolate_with_dist(self.rel_track[tr],3,cp_dist[ix])
+                curvature_section   = np.inf
+                curvature_section_z = np.inf
+                self.rel_track_radius_cp[tr].append([cp_dist[ix],\
+                                         curvature_section,\
+                                         1/curvature_section if np.abs(1/curvature_section) < self.limit_curvatureradius else 0,\
+                                         yval,\
+                                         curvature_section_z,\
+                                         1/curvature_section_z if np.abs(1/curvature_section_z) < self.limit_curvatureradius else 0,\
+                                         zval])
             self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
     def plot2d(self, ax):
         self._plot2d_base(ax, (1,2))
