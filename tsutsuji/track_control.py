@@ -280,7 +280,7 @@ class TrackControl():
                                 tgt[:,8][min_ix]])
                 
             return result
-        def take_relpos_qtree(src,tgt,qtree,border_sq=50):
+        def take_relpos_qtree(src,tgt,qtree,border_sq=100):
             def interpolate(aroundzero,ix,typ,base='x_tr'):
                 return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
             len_tr = len(tgt)
@@ -441,7 +441,7 @@ class TrackControl():
                 ix+=1
 
             # 最終制御点の出力
-            if True:
+            if False:
                 #yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
                 yval = math.interpolate_with_dist(self.rel_track[tr],2,cp_dist[ix])
                 #zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
@@ -916,26 +916,26 @@ class TrackControl():
             cp_dist[key], pos_cp[key] = self.takecp(tr,elem=key,supplemental=False)
             relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
 
-        if len(relativecp['cant'])>0:
+        if self.count_trackelement(tr,key) >0:#len(relativecp['cant'])>0:
             for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
                 output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
                 output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(output_trackkey,data[1])
 
 
         key = 'interpolate_func'
-        if len(relativecp[key])>0:
+        if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
             for index in range(len(relativecp[key])):
                 output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
                 output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(output_trackkey,int(pos_cp[key][index][7]))
 
         key = 'center'
-        if len(relativecp[key])>0:
+        if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
             for index in range(len(relativecp[key])):
                 output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
                 output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][9])
 
         key = 'gauge'
-        if len(relativecp[key])>0:
+        if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
             for index in range(len(relativecp[key])):
                 output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
                 output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][10])
@@ -988,3 +988,9 @@ class TrackControl():
         for i in range(0,len(data),int(step/unit)):
             qtree.insert(i,(data[i][1],data[i][2]))
         return qtree
+    def count_trackelement(self, trackkey, elem):
+        result = 0
+        for data in self.track[trackkey]['data'].own_track.data:
+            if data['key'] == elem:
+                result+=1
+        return result
