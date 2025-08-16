@@ -335,6 +335,18 @@ class TrackControl():
                                        interpolate(aroundzero,1,'y_ab'),\
                                        interpolate(aroundzero,1,'z_ab'),\
                                        interpolate(aroundzero,1,'cant')])
+                elif min_ix_val == 0:
+                    if np.abs(tgt_xy_trans[0][min_ix[0][0]])<1e-1:
+                        result.append([pos[0],\
+                                       tgt_xy_trans[0][min_ix[0][0]],\
+                                       tgt_xy_trans[1][min_ix[0][0]],\
+                                       tgt[:,3][min_ix_val] - pos[3],\
+                                       tgt[:,0][min_ix_val],\
+                                       tgt[:,1][min_ix_val],\
+                                       tgt[:,2][min_ix_val],\
+                                       tgt[:,3][min_ix_val],\
+                                       tgt[:,9][min_ix_val]])
+                    
             return result
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         src = self.track[owntrack]['result']
@@ -402,7 +414,7 @@ class TrackControl():
                                                   1/curvature_z if np.abs(1/curvature_z) < self.limit_curvatureradius else 0])
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
-    def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None):
+    def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None,final_error=10):
         '''self.relativepoint_all()及びself.relativeradius()の結果(self.rel_track, self.rel_track_radius)について、cp_distで指定した距離程ごとに相対半径の平均値、相対座標の内挿値を出力する。
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
@@ -441,7 +453,7 @@ class TrackControl():
                 ix+=1
 
             # 最終制御点の出力
-            if False:
+            if min(np.abs(self.rel_track[tr][:,0]-cp_dist[ix]))<final_error:#True:
                 #yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
                 yval = math.interpolate_with_dist(self.rel_track[tr],2,cp_dist[ix])
                 #zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
@@ -896,6 +908,8 @@ class TrackControl():
         if output_trackkey is None:
             output_trackkey = tr
         output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
+
+        dist_range = (min(self.rel_track_radius_cp[tr][:,0]),max(self.rel_track_radius_cp[tr][:,0]))
             
         for data in self.rel_track_radius_cp[tr]:
             if '@' not in tr or '@OT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
@@ -918,27 +932,31 @@ class TrackControl():
 
         if self.count_trackelement(tr,key) >0:#len(relativecp['cant'])>0:
             for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
-                output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
-                output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(output_trackkey,data[1])
+                if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
+                    output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                    output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(output_trackkey,data[1])
 
 
         key = 'interpolate_func'
         if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
             for index in range(len(relativecp[key])):
-                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
-                output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(output_trackkey,int(pos_cp[key][index][7]))
+                if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
+                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                    output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(output_trackkey,int(pos_cp[key][index][7]))
 
         key = 'center'
         if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
             for index in range(len(relativecp[key])):
-                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
-                output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][9])
+                if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
+                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                    output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][9])
 
         key = 'gauge'
         if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
             for index in range(len(relativecp[key])):
-                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
-                output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][10])
+                if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
+                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                    output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][10])
                 
         return output_map
     def generate_mapstrings(self,output_map,tr,kp_val,output_trackkey=None):
