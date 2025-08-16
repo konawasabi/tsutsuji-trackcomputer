@@ -947,34 +947,34 @@ class TrackControl():
             relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
             relativecp[key] = relativecp[key][np.argsort(relativecp[key][:,3])]
 
-        if self.count_trackelement(tr,key) >0:#len(relativecp['cant'])>0:
-            for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
-                if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
-                    output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
-                    output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(output_trackkey,data[1])
+        #if self.count_trackelement(tr,key) >0:#len(relativecp['cant'])>0:
+        for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
+            if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
+                output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
+                output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(output_trackkey,data[1])
 
 
         key = 'interpolate_func'
-        if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
-            for index in range(len(relativecp[key])):
-                if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
-                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
-                    output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(output_trackkey,int(pos_cp[key][index][7]))
+        #if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
+        for index in range(len(relativecp[key])):
+            if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
+                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(output_trackkey,int(pos_cp[key][index][7]))
 
         key = 'center'
-        if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
-            for index in range(len(relativecp[key])):
-                if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
-                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
-                    output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][9])
+        #if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
+        for index in range(len(relativecp[key])):
+            if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
+                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][9])
 
         key = 'gauge'
-        if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
-            for index in range(len(relativecp[key])):
-                if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
-                    output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
-                    output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][10])
-                
+        #if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
+        for index in range(len(relativecp[key])):
+            if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
+                output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
+                output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][10])
+
         return output_map
     def generate_mapstrings(self,output_map,tr,kp_val,output_trackkey=None):
         if output_trackkey is None:
