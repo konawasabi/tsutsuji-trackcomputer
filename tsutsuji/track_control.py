@@ -742,13 +742,13 @@ class TrackControl():
                            owntrack_root)
         kp_offset.writefile(owntrack_kpoffs,\
                             self.conf.general['output_path'].joinpath('owntrack'))
-    def convert_cant_with_relativecp(self, tr, cp_dist):
+    def convert_cant_with_relativecp(self, tr, cp_dist,ix=8):
         ''' trで指定した軌道について、対応する距離程でのカントを求める 
         '''
         result = []
         for cp in cp_dist:
             #result.append([cp, self.interpolate_with_dist(8,tr,cp)])
-            result.append([cp, math.interpolate_with_dist(self.rel_track[tr],8,cp)])
+            result.append([cp, math.interpolate_with_dist(self.rel_track[tr],ix,cp)])
         
         return result
     def take_cp_by_types(self, source, types=None):
@@ -940,21 +940,21 @@ class TrackControl():
         key = 'interpolate_func'
         if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
             for index in range(len(relativecp[key])):
-                if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
+                if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
                     output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
                     output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(output_trackkey,int(pos_cp[key][index][7]))
 
         key = 'center'
         if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
             for index in range(len(relativecp[key])):
-                if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
+                if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
                     output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
                     output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][9])
 
         key = 'gauge'
         if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
             for index in range(len(relativecp[key])):
-                if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
+                if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
                     output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
                     output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][10])
                 
