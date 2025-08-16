@@ -289,11 +289,11 @@ class TrackControl():
             ix_tgt_xy_orig = np.array([ i for i in range(0,len_tr) ])
             # 自軌道に対する相対座標の算出
             for pos in src:
-                # 自軌道注目点を中心とした100m四方の範囲内にある注目軌道点を選別
+                # 自軌道注目点を中心とした2*border_sq m四方の範囲内にある注目軌道点を選別
                 qintersect = qtree.intersect((pos[1]-border_sq,pos[2]-border_sq,pos[1]+border_sq,pos[2]+border_sq))
                 if len(qintersect)==0:
                     continue
-                margin = 10
+                margin = int(10/self.conf.general['unit_length'])
                 q_minix = min(qintersect)-margin if min(qintersect)-margin>0 else 0
                 q_maxix = max(qintersect)+margin if max(qintersect)+margin<tgt_xy_orig.shape[1] else tgt_xy_orig.shape[1]
                 tgt_xy = tgt_xy_orig[:, q_minix:q_maxix]
@@ -689,7 +689,7 @@ class TrackControl():
         ''' self.conf.owntrackを基準とした他軌道構文データを生成, 出力する
         '''
         self.exclude_tracks = []
-        if True:
+        if False:
             import pdb
             pdb.set_trace()
 
