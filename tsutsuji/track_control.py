@@ -161,7 +161,7 @@ class TrackControl():
         self.limit_curvatureradius = self.conf.general['limit_curvatureradius']
         self.limit_differentialerror = self.conf.general['limit_differentialerror']
             
-    def relativepoint_single(self,to_calc,owntrack=None,parent_track=None,check_U=True):
+    def relativepoint_single(self,to_calc,owntrack=None,parent_track=None,check_U=True,search_mode=2,search_rect=50):
         '''owntrackを基準とした相対座標への変換
 
         Args:
@@ -352,27 +352,43 @@ class TrackControl():
         src = self.track[owntrack]['result']
         if parent_track is not None:
             tgt = self.track[parent_track]['othertrack'][to_calc]['result']
-            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_qtree(src,tgt,self.track[parent_track]['othertrack'][to_calc]['qtindex'])
+            if search_mode == 0:
+                result = take_relpos_std(src,tgt)
+            elif search_mode == 1:
+                result = take_relpos_std_vec(src,tgt)
+            else:
+                result = take_relpos_qtree(src,tgt,self.track[parent_track]['othertrack'][to_calc]['qtindex'],border_sq=search_rect)
         elif '@' not in to_calc:
             tgt = self.track[to_calc]['result']
-            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_qtree(src,tgt,self.track[to_calc]['qtindex'])
+            if search_mode == 0:
+                result = take_relpos_std(src,tgt)
+            elif search_mode == 1:
+                result = take_relpos_std_vec(src,tgt)
+            else:
+                result = take_relpos_qtree(src,tgt,self.track[to_calc]['qtindex'],border_sq=search_rect)
         else:
             tgt = self.pointsequence_track.track[to_calc]['result']
-            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
+            if search_mode == 0:
+                result = take_relpos_std(src,tgt)
+            elif search_mode == 1:
+                result = take_relpos_std_vec(src,tgt)
+            else:
+                result = take_relpos_qtree(src,tgt,self.track[to_calc]['qtindex'],border_sq=search_rect)
+                
         return(np.array(result))
-    def relativepoint_all(self,owntrack=None,check_U=True):
+    def relativepoint_all(self,owntrack=None,check_U=True,search_mode=2,search_rect=50):
         '''読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。
 
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != owntrack]
         for tr in calc_track:
-            self.rel_track[tr]=self.relativepoint_single(tr,owntrack,check_U=check_U)
+            self.rel_track[tr]=self.relativepoint_single(tr,owntrack,check_U=check_U,search_mode=search_mode,search_rect=search_rect)
 
         calc_track = [i for i in self.conf.track_keys if i != owntrack]
         for tr in calc_track:
             for ottr in self.track[tr]['othertrack'].keys():
-                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr,check_U=check_U)
+                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr,check_U=check_U,search_mode=search_mode,search_rect=search_rect)
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         if to_calc is None:
@@ -678,14 +694,14 @@ class TrackControl():
             pdb.set_trace()
 
         # 全ての軌道データについてquadtreeを生成
-        if not self.conf.general['check_u']:
+        if self.conf.general['search_mode'] == 2:
             for i in self.conf.track_keys:
                 self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'])#,self.conf.general['unit_length'])
                 for otkey in self.track[i]['data'].othertrack.data.keys():
                     otdata = self.track[i]['othertrack'][otkey]
                     otdata['qtindex'] = self.generate_quadtree(otdata['result'])#,self.conf.general['unit_length'])
 
-        self.relativepoint_all(check_U=self.conf.general['check_u']) # 全ての軌道データを自軌道基準の座標に変換
+        self.relativepoint_all(check_U=self.conf.general['check_u'],search_mode=self.conf.general['search_mode'],search_rect=self.conf.general['search_rect']) # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データについて自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
 
