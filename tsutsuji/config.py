@@ -46,7 +46,7 @@ class Config():
                         'output_path':'./result',\
                         'backimg':None,\
                         'backimg_height':None,\
-                        'check_u':False,\
+                        'check_u':True,\
                         'output_digit':3,\
                         'limit_curvatureradius':1e4,\
                         'limit_differentialerror':1e-3,\
@@ -59,7 +59,7 @@ class Config():
                     self.general[k] = float(self.cp['@TSUTSUJI_GENERAL'][k])
                 elif k in ['output_digit','search_mode']:
                     self.general[k] = int(self.cp['@TSUTSUJI_GENERAL'][k])
-                elif k in ['check_u']:
+                elif k in []: #['check_u']: check_uは廃止
                     self.general[k] = True if self.cp['@TSUTSUJI_GENERAL'][k] == 'True' else False
                 else:
                     self.general[k] = self.cp['@TSUTSUJI_GENERAL'][k]
