@@ -1023,9 +1023,3 @@ class TrackControl():
         for i in range(0,len(data),int(step/unit)):
             qtree.insert(i,(data[i][1],data[i][2]))
         return qtree
-    def count_trackelement(self, trackkey, elem):
-        result = 0
-        for data in self.track[trackkey]['data'].own_track.data:
-            if data['key'] == elem:
-                result+=1
-        return result
