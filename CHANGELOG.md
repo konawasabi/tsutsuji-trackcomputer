@@ -4,7 +4,20 @@
 
 - プロット画面
   - 任意角度への回転
-  
+
+## [1.9.0] - 2025-08-17
+
+- 相対座標計算時間の短縮を目的とした、領域四分木による計算モードの導入
+  - 計算モードはsearch_modeで指定
+	0. ver1.8.2以前のcheck_u = Falseに相当
+	1. ver1.8.2以前のcheck_u = Trueに相当(ver1.8.2以前のデフォルトモード)
+	2. 領域四分木による計算モード(本バージョンからのデフォルト)
+- @TSUTSUJI_GENERAL/offset_variableで指定した変数名が読み込んだ軌道データで使用されている場合に警告を表示
+- 他軌道データ出力時の距離程オフセット処理をHandling Kilopostsのものと共通化
+- Generate実行時の処理時間表示オプションを追加
+   - 起動時引数に -t を付加して有効化
+
+
 ## [1.8.2] - 2024-12-26
 
 - Maptile
@@ -259,6 +272,7 @@
 
 - 1st release
 
+[1.9.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.2...ver1.9.0
 [1.8.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.1...ver1.8.2
 [1.8.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.0...ver1.8.1
 [1.8.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.7.5...ver1.8.0

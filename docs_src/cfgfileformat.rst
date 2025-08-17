@@ -64,15 +64,50 @@ output_digit
 
   * デフォルトでは 3
 
-check_u
+check_u (無効)
 =========
-* type: bool
-* 自軌道法線に対して対象軌道が2回交差するかどうか（下図参照）を判別するルーチンを実行する場合はTrue
 
-  * デフォルトでは True
+**Version 1.9.0で廃止となりました。今後は** :ref:`search_mode <cfgformat_gene_search_mode>` **を使用してください。**
+
+.. note::
+
+   Version 1.8.2以前向けの記述を残します。
+   
+   * type: bool
+   * 自軌道法線に対して対象軌道が2回交差するかどうか（下図参照）を判別するルーチンを実行する場合はTrue
+
+     * デフォルトでは True
 
 
-.. image:: ./files/cfgformat_checkU.png
+   .. image:: ./files/cfgformat_checkU.png
+
+.. _cfgformat_gene_search_mode:
+
+search_mode
+============
+* type: int
+* 自軌道に対する相対座標計算モードを設定する
+
+  * 次のいずれかを設定する
+    
+    0. v1.8.2までの `check_u = False` 相当
+    1. v1.8.2までの `check_u = True` 相当
+    2. 領域四分木による計算（ :ref:`次項目 <cfgformat_gene_search_rect>` を参照）
+
+  * デフォルトでは2
+
+.. _cfgformat_gene_search_rect:
+
+search_rect
+============
+* type: float
+* `search_mode` = 2において、自軌道法線と対象軌道の交点を探索する範囲（下図参照）を指定する
+
+  * 自軌道基準点に対して± `search_rect` [m]の範囲に含まれる軌道のみが計算対象となる
+  * デフォルトでは100 [m]
+
+.. image:: ./files/quadtree_rect.png
+
 
 limit_curvatureradius
 ======================
@@ -80,9 +115,8 @@ limit_curvatureradius
 * 出力する相対半径の上限値を設定する
 
   * 計算結果の絶対値がこの値を超えた場合、相対半径は0として出力される
-  * デフォルトでは 1e4  
-
-
+  * デフォルトでは 1e4
+    
 ************
 [*trackkey*]
 ************
@@ -243,6 +277,24 @@ mapelement_enable_gauge
 * type: bool
 * 他軌道構文として出力する際、 `Track[key].Cant.SetGauge` 要素を出力するかどうか設定する
 * デフォルトではTrue
+
+search_mode
+============
+* type: int
+* 自軌道に対する相対座標計算モードを設定する
+
+  * デフォルトでは [@TSUTSUJI_GENERAL]の :ref:`search_mode <cfgformat_gene_search_mode>` と同一の値
+  * 軌道毎に計算モードを特定したい場合に設定する
+
+
+
+search_rect
+============
+* type: float
+* `search_mode` = 2において、自軌道法線と対象軌道の交点を探索する範囲を指定する
+
+  * デフォルトでは [@TSUTSUJI_GENERAL]の :ref:`search_rect <cfgformat_gene_search_rect>` と同一の値
+  * 軌道毎に計算モードを特定したい場合に設定する
 
 
 .. _ref_cfg_maptile:

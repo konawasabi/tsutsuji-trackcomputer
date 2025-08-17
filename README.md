@@ -31,6 +31,7 @@ pip install --upgrade tsutsuji-trackcomputer kobushi-trackviewer
 - [lark](https://lark-parser.readthedocs.io/en/latest/)
 - [ttkwidgets](https://ttkwidgets.readthedocs.io/en/latest/)
 - [requests](https://requests-docs-ja.readthedocs.io/en/latest/)
+- [Pyqtree](https://github.com/karimbahgat/Pyqtree)
 
 ## 起動
 

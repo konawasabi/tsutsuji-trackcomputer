@@ -62,6 +62,8 @@ Measureウィンドウを開きます。
 .. image:: ./files/measure2.png
 	   :scale: 60%
 
+.. _ref_main_generate:
+
 Generateボタン
 --------------
 
