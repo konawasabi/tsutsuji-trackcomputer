@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2024 konawasabi
+#    Copyright 2021-2025 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import interpolate
 import re
+from pyqtree import Index as Qtindex
 
 from kobushi import mapinterpreter
 from kobushi import trackgenerator
@@ -31,6 +32,7 @@ from . import config
 from . import math
 from . import kml2track
 from . import kp_offset
+from . import kp_handling
 
 class TrackControl():
     def __init__(self):
@@ -45,6 +47,7 @@ class TrackControl():
         self.exclude_tracks = []
         self.limit_curvatureradius = 1e4
         self.limit_differentialerror = 1e-2
+        self.kphandling = kp_handling.KilopostHandling()
     def loadcfg(self,path):
         '''cfgファイルの読み込み
         '''
@@ -109,6 +112,7 @@ class TrackControl():
                 self.track[i]['cplist_symbol'] = self.take_cp_by_types(self.track[i]['data'].own_track.data)
                 self.track[i]['toshow'] = True
                 self.track[i]['output_mapfile'] = None
+                #self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'])
 
                 # 従属する他軌道座標データを生成
                 self.track[i]['data'].owntrack_pos = self.track[i]['result']
@@ -153,12 +157,17 @@ class TrackControl():
                                          data[6],\
                                          data[7]])
                     otdata['result'] = np.array(result_theta)
+                    #otdata['qtindex'] = self.generate_quadtree(otdata['result'])
 
         self.pointsequence_track.load_files(self.conf)
         self.limit_curvatureradius = self.conf.general['limit_curvatureradius']
         self.limit_differentialerror = self.conf.general['limit_differentialerror']
+
+        # offset_variableで指定した変数名がowntrackとなるマップですでに使用されている場合警告
+        if self.conf.general['offset_variable'] in self.track[self.conf.general['owntrack']]['interp'].environment.variable.keys():
+            raise Exception('offset_variable: {:s} already exist on Track: {:s}'.format(self.conf.general['offset_variable'],self.conf.general['owntrack']))
             
-    def relativepoint_single(self,to_calc,owntrack=None,parent_track=None,check_U=True):
+    def relativepoint_single(self,to_calc,owntrack=None,parent_track=None,check_U=True,search_mode=2,search_rect=50):
         '''owntrackを基準とした相対座標への変換
 
         Args:
@@ -277,31 +286,115 @@ class TrackControl():
                                 tgt[:,8][min_ix]])
                 
             return result
+        def take_relpos_qtree(src,tgt,qtree,border_sq=100):
+            def interpolate(aroundzero,ix,typ,base='x_tr'):
+                return (aroundzero[typ][ix+1]-aroundzero[typ][ix])/(aroundzero[base][ix+1]-aroundzero[base][ix])*(-aroundzero[base][ix])+aroundzero[typ][ix]
+            len_tr = len(tgt)
+            result = []
+            tgt_xy_orig = np.vstack((tgt[:,1],tgt[:,2]))
+            ix_tgt_xy_orig = np.array([ i for i in range(0,len_tr) ])
+            # 自軌道に対する相対座標の算出
+            for pos in src:
+                # 自軌道注目点を中心とした2*border_sq m四方の範囲内にある注目軌道点を選別
+                qintersect = qtree.intersect((pos[1]-border_sq,pos[2]-border_sq,pos[1]+border_sq,pos[2]+border_sq))
+                if len(qintersect)==0:
+                    continue
+                margin = int(10/self.conf.general['unit_length'])
+                q_minix = min(qintersect)-margin if min(qintersect)-margin>0 else 0
+                q_maxix = max(qintersect)+margin if max(qintersect)+margin<tgt_xy_orig.shape[1] else tgt_xy_orig.shape[1]
+                tgt_xy = tgt_xy_orig[:, q_minix:q_maxix]
+                ix_tgt_xy = ix_tgt_xy_orig[q_minix:q_maxix]
+                
+                tgt_xy_trans = np.dot(math.rotate(-pos[4]),(tgt_xy - np.vstack((pos[1],pos[2])) ) ) # 自軌道注目点を原点として座標変換
+                
+                min_ix = np.where(np.abs(tgt_xy_trans[0])==min(np.abs(tgt_xy_trans[0])))# 変換後の座標でx'成分絶対値が最小となる点(=y'軸との交点)のインデックスを求める
+                min_ix_val = ix_tgt_xy[min_ix][0]
+
+                if min_ix_val > 0 and min_ix_val < len_tr-1 \
+                   and min_ix[0][0]+2 < tgt_xy_trans.shape[1]: # y'軸との交点が注目区間内にある場合
+                    aroundzero = {'x_tr':tgt_xy_trans[0][min_ix[0][0]-1:min_ix[0][0]+2],\
+                                  'y_tr':tgt_xy_trans[1][min_ix[0][0]-1:min_ix[0][0]+2],\
+                                  'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
+                                  'x_ab':tgt[:,1][min_ix_val-1:min_ix_val+2],\
+                                  'y_ab':tgt[:,2][min_ix_val-1:min_ix_val+2],\
+                                  'z_ab':tgt[:,3][min_ix_val-1:min_ix_val+2],\
+                                  'cant':tgt[:,8][min_ix_val-1:min_ix_val+2]}
+                    # aroundzero : [変換後x座標成分, 変換後y座標成分, 対応する軌道の距離程, 絶対座標x成分, 絶対座標y成分]
+                    signx = np.sign(aroundzero['x_tr'])
+                    if signx[0] != signx[1]:
+                        result.append([pos[0],\
+                                       0,\
+                                       interpolate(aroundzero,0,'y_tr'),\
+                                       interpolate(aroundzero,0,'z_ab') - pos[3],\
+                                       interpolate(aroundzero,0,'kp'),\
+                                       interpolate(aroundzero,0,'x_ab'),\
+                                       interpolate(aroundzero,0,'y_ab'),\
+                                       interpolate(aroundzero,0,'z_ab'),\
+                                       interpolate(aroundzero,0,'cant')])
+                    elif signx[1] != signx[2]:
+                        result.append([pos[0],\
+                                       0,\
+                                       interpolate(aroundzero,1,'y_tr'),\
+                                       interpolate(aroundzero,1,'z_ab') - pos[3],\
+                                       interpolate(aroundzero,1,'kp'),\
+                                       interpolate(aroundzero,1,'x_ab'),\
+                                       interpolate(aroundzero,1,'y_ab'),\
+                                       interpolate(aroundzero,1,'z_ab'),\
+                                       interpolate(aroundzero,1,'cant')])
+                elif min_ix_val == 0:
+                    if np.abs(tgt_xy_trans[0][min_ix[0][0]])<1e-1:
+                        result.append([pos[0],\
+                                       tgt_xy_trans[0][min_ix[0][0]],\
+                                       tgt_xy_trans[1][min_ix[0][0]],\
+                                       tgt[:,3][min_ix_val] - pos[3],\
+                                       tgt[:,0][min_ix_val],\
+                                       tgt[:,1][min_ix_val],\
+                                       tgt[:,2][min_ix_val],\
+                                       tgt[:,3][min_ix_val],\
+                                       tgt[:,9][min_ix_val]])
+                    
+            return result
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         src = self.track[owntrack]['result']
         if parent_track is not None:
             tgt = self.track[parent_track]['othertrack'][to_calc]['result']
-            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
+            if search_mode == 0:
+                result = take_relpos_std(src,tgt)
+            elif search_mode == 1:
+                result = take_relpos_std_vec(src,tgt)
+            else:
+                result = take_relpos_qtree(src,tgt,self.track[parent_track]['othertrack'][to_calc]['qtindex'],border_sq=search_rect)
         elif '@' not in to_calc:
             tgt = self.track[to_calc]['result']
-            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
+            if search_mode == 0:
+                result = take_relpos_std(src,tgt)
+            elif search_mode == 1:
+                result = take_relpos_std_vec(src,tgt)
+            else:
+                result = take_relpos_qtree(src,tgt,self.track[to_calc]['qtindex'],border_sq=search_rect)
         else:
             tgt = self.pointsequence_track.track[to_calc]['result']
-            result = take_relpos_std_vec(src,tgt) if check_U else take_relpos_std(src,tgt)
+            if search_mode == 0:
+                result = take_relpos_std(src,tgt)
+            elif search_mode == 1:
+                result = take_relpos_std_vec(src,tgt)
+            else:
+                result = take_relpos_qtree(src,tgt,self.track[to_calc]['qtindex'],border_sq=search_rect)
+                
         return(np.array(result))
-    def relativepoint_all(self,owntrack=None,check_U=True):
+    def relativepoint_all(self,owntrack=None,check_U=True,search_mode=2,search_rect=50):
         '''読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。
 
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != owntrack]
         for tr in calc_track:
-            self.rel_track[tr]=self.relativepoint_single(tr,owntrack,check_U=check_U)
+            self.rel_track[tr]=self.relativepoint_single(tr,owntrack,check_U=check_U,search_mode=search_mode,search_rect=search_rect)
 
         calc_track = [i for i in self.conf.track_keys if i != owntrack]
         for tr in calc_track:
             for ottr in self.track[tr]['othertrack'].keys():
-                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr,check_U=check_U)
+                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr,check_U=check_U,search_mode=search_mode,search_rect=search_rect)
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         if to_calc is None:
@@ -343,7 +436,7 @@ class TrackControl():
                                                   1/curvature_z if np.abs(1/curvature_z) < self.limit_curvatureradius else 0])
                 
             self.rel_track_radius[tr]=np.array(self.rel_track_radius[tr])
-    def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None):
+    def relativeradius_cp(self,to_calc=None,owntrack=None,cp_dist=None,final_error=10):
         '''self.relativepoint_all()及びself.relativeradius()の結果(self.rel_track, self.rel_track_radius)について、cp_distで指定した距離程ごとに相対半径の平均値、相対座標の内挿値を出力する。
         '''
         owntrack = self.conf.owntrack if owntrack == None else owntrack
@@ -382,19 +475,20 @@ class TrackControl():
                 ix+=1
 
             # 最終制御点の出力
-            #yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
-            yval = math.interpolate_with_dist(self.rel_track[tr],2,cp_dist[ix])
-            #zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
-            zval = math.interpolate_with_dist(self.rel_track[tr],3,cp_dist[ix])
-            curvature_section   = np.inf
-            curvature_section_z = np.inf
-            self.rel_track_radius_cp[tr].append([cp_dist[ix],\
-                                     curvature_section,\
-                                     1/curvature_section if np.abs(1/curvature_section) < self.limit_curvatureradius else 0,\
-                                     yval,\
-                                     curvature_section_z,\
-                                     1/curvature_section_z if np.abs(1/curvature_section_z) < self.limit_curvatureradius else 0,\
-                                     zval])
+            if min(np.abs(self.rel_track[tr][:,0]-cp_dist[ix]))<final_error:#True:
+                #yval = self.interpolate_with_dist(2,tr,cp_dist[ix])
+                yval = math.interpolate_with_dist(self.rel_track[tr],2,cp_dist[ix])
+                #zval = self.interpolate_with_dist(3,tr,cp_dist[ix])
+                zval = math.interpolate_with_dist(self.rel_track[tr],3,cp_dist[ix])
+                curvature_section   = np.inf
+                curvature_section_z = np.inf
+                self.rel_track_radius_cp[tr].append([cp_dist[ix],\
+                                         curvature_section,\
+                                         1/curvature_section if np.abs(1/curvature_section) < self.limit_curvatureradius else 0,\
+                                         yval,\
+                                         curvature_section_z,\
+                                         1/curvature_section_z if np.abs(1/curvature_section_z) < self.limit_curvatureradius else 0,\
+                                         zval])
             self.rel_track_radius_cp[tr] = np.array(self.rel_track_radius_cp[tr])
     def plot2d(self, ax):
         self._plot2d_base(ax, (1,2))
@@ -605,7 +699,15 @@ class TrackControl():
             import pdb
             pdb.set_trace()
 
-        self.relativepoint_all(check_U=self.conf.general['check_u']) # 全ての軌道データを自軌道基準の座標に変換
+        # 全ての軌道データについてquadtreeを生成
+        if self.conf.general['search_mode'] == 2:
+            for i in self.conf.track_keys:
+                self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'])#,self.conf.general['unit_length'])
+                for otkey in self.track[i]['data'].othertrack.data.keys():
+                    otdata = self.track[i]['othertrack'][otkey]
+                    otdata['qtindex'] = self.generate_quadtree(otdata['result'])#,self.conf.general['unit_length'])
+
+        self.relativepoint_all(check_U=self.conf.general['check_u'],search_mode=self.conf.general['search_mode'],search_rect=self.conf.general['search_rect']) # 全ての軌道データを自軌道基準の座標に変換
         self.relativeradius() # 全ての軌道データについて自軌道基準の相対曲率半径を算出
         cp_ownt,_  = self.takecp(self.conf.owntrack) # 自軌道の制御点距離程を抽出
 
@@ -633,8 +735,8 @@ class TrackControl():
             else:
                 kp_val = ''
                 
-            output_map = self.generate_tracksyntax(tr,kp_val,digit_str)
-            output_file = self.generate_mapstrings(output_map,tr,kp_val)
+            output_map = self.generate_tracksyntax(tr,'',digit_str)
+            output_file = self.generate_mapstrings(output_map,tr,'')
 
             if '@' not in tr:
                 self.track[tr]['output_mapfile'] = output_file
@@ -650,25 +752,31 @@ class TrackControl():
             f = open(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))),'w')
             f.write(output_file)
             f.close()
+            if self.conf.general['offset_variable'] is not None:
+                kph_result = self.kphandling.readfile(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))),\
+                                                      self.conf.general['output_path'],\
+                                                      mode='1',\
+                                                      initialize='${:s} = {:f};'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance']),\
+                                                      newExpression='${:s} + distance'.format(self.conf.general['offset_variable']))
+                self.kphandling.writefile(kph_result,self.conf.general['output_path'])
             print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))
 
         # 自軌道データの距離程をoffsetして出力
         owntrack_kpoffs = []
         owntrack_input, owntrack_root = kp_offset.procpath(self.conf.track_data[self.conf.owntrack]['file'])
-        kp_offset.readfile(owntrack_input,\
-                           '$'+self.conf.general['offset_variable'],\
-                           self.conf.general['origin_distance'],\
-                           owntrack_kpoffs,\
-                           owntrack_root)
-        kp_offset.writefile(owntrack_kpoffs,\
-                            self.conf.general['output_path'].joinpath('owntrack'))
-    def convert_cant_with_relativecp(self, tr, cp_dist):
+        kph_result = self.kphandling.readfile(owntrack_input,\
+                                              owntrack_root,\
+                                              mode='1',\
+                                              initialize='${:s} = {:f};'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance']),\
+                                              newExpression='${:s} + distance'.format(self.conf.general['offset_variable']))
+        self.kphandling.writefile(kph_result,self.conf.general['output_path'].joinpath('owntrack'))
+    def convert_cant_with_relativecp(self, tr, cp_dist,ix=8):
         ''' trで指定した軌道について、対応する距離程でのカントを求める 
         '''
         result = []
         for cp in cp_dist:
             #result.append([cp, self.interpolate_with_dist(8,tr,cp)])
-            result.append([cp, math.interpolate_with_dist(self.rel_track[tr],8,cp)])
+            result.append([cp, math.interpolate_with_dist(self.rel_track[tr],ix,cp)])
         
         return result
     def take_cp_by_types(self, source, types=None):
@@ -828,6 +936,8 @@ class TrackControl():
         if output_trackkey is None:
             output_trackkey = tr
         output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
+
+        dist_range = (min(self.rel_track_radius_cp[tr][:,0]),max(self.rel_track_radius_cp[tr][:,0]))
             
         for data in self.rel_track_radius_cp[tr]:
             if '@' not in tr or '@OT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
@@ -847,31 +957,37 @@ class TrackControl():
         for key in ['cant','interpolate_func','center','gauge']:
             cp_dist[key], pos_cp[key] = self.takecp(tr,elem=key,supplemental=False)
             relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
+            if len(relativecp[key])>0:
+                relativecp[key] = relativecp[key][np.argsort(relativecp[key][:,3])]
 
-        if len(relativecp['cant'])>0:
-            for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
+        #if self.count_trackelement(tr,key) >0:#len(relativecp['cant'])>0:
+        for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
+            if data[0] >= dist_range[0] and data[0] <= dist_range[1]:# or True:
                 output_map['cant'] += ('{:s}'+digit_str+';\n').format(kp_val,data[0])
                 output_map['cant'] += ('Track[\'{:s}\'].Cant.Interpolate('+digit_str+');\n').format(output_trackkey,data[1])
 
 
         key = 'interpolate_func'
-        if len(relativecp[key])>0:
-            for index in range(len(relativecp[key])):
+        #if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
+        for index in range(len(relativecp[key])):
+            if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
                 output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
                 output_map[key] += ('Track[\'{:s}\'].Cant.SetFunction({:d});\n').format(output_trackkey,int(pos_cp[key][index][7]))
 
         key = 'center'
-        if len(relativecp[key])>0:
-            for index in range(len(relativecp[key])):
+        #if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
+        for index in range(len(relativecp[key])):
+            if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
                 output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
                 output_map[key] += ('Track[\'{:s}\'].Cant.SetCenter('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][9])
 
         key = 'gauge'
-        if len(relativecp[key])>0:
-            for index in range(len(relativecp[key])):
+        #if self.count_trackelement(tr,key) >0:#len(relativecp[key])>0:
+        for index in range(len(relativecp[key])):
+            if relativecp[key][index][3] >= dist_range[0] and relativecp[key][index][3] <= dist_range[1]:# or True:
                 output_map[key] += ('{:s}'+digit_str+';\n').format(kp_val,relativecp[key][index][3])
                 output_map[key] += ('Track[\'{:s}\'].Cant.SetGauge('+digit_str+');\n').format(output_trackkey,pos_cp[key][index][10])
-                
+
         return output_map
     def generate_mapstrings(self,output_map,tr,kp_val,output_trackkey=None):
         if output_trackkey is None:
@@ -912,3 +1028,11 @@ class TrackControl():
             output_file += output_map['gauge']+'\n'
 
         return output_file
+    def generate_quadtree(self,data,step=10.0,unit=1.0):
+        if False:
+            import pdb
+            pdb.set_trace()
+        qtree = Qtindex(bbox=[min(data[:,1]),min(data[:,2]),max(data[:,1]),max(data[:,2])])
+        for i in range(0,len(data),int(step/unit)):
+            qtree.insert(i,(data[i][1],data[i][2]))
+        return qtree

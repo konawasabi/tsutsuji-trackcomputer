@@ -1,5 +1,5 @@
 #
-#    Copyright 2021-2024 konawasabi
+#    Copyright 2021-2025 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -70,13 +70,14 @@ class Catcher: # tkinter内で起きた例外をキャッチする
                 tk.messagebox.showinfo(message=e)
 
 class mainwindow(ttk.Frame):
-    def __init__(self, master):
+    def __init__(self, master,args=None):
         self.parent = master
         super().__init__(master, padding='3 3 3 3')
         self.master.title('Tsutsuji trackcomputer ver. {:s}'.format(__version__))
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.master.columnconfigure(0, weight=1)
         self.master.rowconfigure(0, weight=1)
+        self.args = args
 
         master.protocol('WM_DELETE_WINDOW', self.ask_quit)
         
@@ -217,6 +218,9 @@ class mainwindow(ttk.Frame):
             self.statmap1_btn = ttk.Button(self.button_frame, text="statmap1", command = self.getmaptile)
             self.statmap1_btn.grid(column=0, row=7, sticky=(tk.N, tk.W, tk.E))
             '''
+            
+            self.debug_btn = ttk.Button(self.button_frame, text="debug", command = self.startpdb)
+            self.debug_btn.grid(column=0, row=7, sticky=(tk.N, tk.W, tk.E))
 
         self.getrelrad_btn = ttk.Button(self.button_frame, text="Generate", command = self.generate_output)
         self.getrelrad_btn.grid(column=0, row=10, sticky=(tk.E, tk.W, tk.S))
@@ -374,16 +378,16 @@ class mainwindow(ttk.Frame):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
     def generate_output(self, event=None):
-        if not __debug__:
+        if self.args.proctime:
             start = time.time()
         self.trackcontrol.generate_mapdata()
-        if not __debug__:
+        if self.args.proctime:
             print(time.time()-start)
         self.get_othertrack()
     def aboutwindow(self, event=None):
         msg  = 'Tsutsuji trackcomputer\n'
         msg += 'Version '+__version__+'\n\n'
-        msg += 'Copyright © 2024 konawasabi\n'
+        msg += 'Copyright © 2025 konawasabi\n'
         msg += 'Released under the Apache License, Version 2.0 .\n'
         msg += 'https://www.apache.org/licenses/LICENSE-2.0'
         tk.messagebox.showinfo(message=msg)
@@ -412,6 +416,11 @@ class mainwindow(ttk.Frame):
         plotsize = self.fig_plane.get_size_inches()
         self.staticmapctrl.getimg(self.viewp_scale_v.get(),plotsize[1]/plotsize[0])
         self.drawall()
+    def startpdb(self, event=None):
+        import pdb
+        pdb.set_trace()
+        return None
+    
 def main():
     if not __debug__:
         # エラーが発生した場合、デバッガを起動 https://gist.github.com/podhmo/5964702e7471ccaba969105468291efa
@@ -433,6 +442,7 @@ def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('filepath', metavar='F', type=str, help='input cfg file', nargs='?')
     argparser.add_argument('-n', '--nogui', help='no gui mode', action='store_true')
+    argparser.add_argument('-t', '--proctime', help='measuring processing time on \'generate\'', action='store_true')
     args = argparser.parse_args()
 
     if args.nogui:
@@ -451,7 +461,7 @@ def main():
     else:
         tk.CallWrapper = Catcher
         root = tk.Tk()
-        app = mainwindow(master=root)
+        app = mainwindow(master=root,args=args)
         #if len(sys.argv)>1:
         #    app.opencfg(in_dir=sys.argv[1])
         if args.filepath is not None:

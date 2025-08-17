@@ -49,14 +49,17 @@ class Config():
                         'check_u':True,\
                         'output_digit':3,\
                         'limit_curvatureradius':1e4,\
-                        'limit_differentialerror':1e-3}
+                        'limit_differentialerror':1e-3,\
+                        'search_mode':2,\
+                        'search_rect':100.0}
+        # search_mode 0: これまでのcheck_u=False, 1: これまでのcheck_u=True, 2: quadtree
         if '@TSUTSUJI_GENERAL' in sections:
             for k in self.cp.options('@TSUTSUJI_GENERAL'):
-                if k in ['origin_distance', 'unit_length', 'limit_curvatureradius', 'limit_differentialerror']:
+                if k in ['origin_distance', 'unit_length', 'limit_curvatureradius', 'limit_differentialerror', 'search_rect']:
                     self.general[k] = float(self.cp['@TSUTSUJI_GENERAL'][k])
-                elif k in ['output_digit']:
+                elif k in ['output_digit','search_mode']:
                     self.general[k] = int(self.cp['@TSUTSUJI_GENERAL'][k])
-                elif k in ['check_u']:
+                elif k in []: #['check_u']: check_uは廃止
                     self.general[k] = True if self.cp['@TSUTSUJI_GENERAL'][k] == 'True' else False
                 else:
                     self.general[k] = self.cp['@TSUTSUJI_GENERAL'][k]
@@ -118,12 +121,16 @@ class Config():
                               'supplemental_cp':[],\
                               'color':linecolor_default[color_ix%10],\
                               'calc_relrad':False,\
-                              'mapelement_enable':{'x':True,'y':True,'cant':True,'interpolate_func':True,'center':True,'gauge':True}}
+                              'mapelement_enable':{'x':True,'y':True,'cant':True,'interpolate_func':True,'center':True,'gauge':True},\
+                              'search_mode':self.general['search_mode'],\
+                              'search_rect':self.general['search_rect']}
             for k in self.cp.options(tk):
                 if k.lower() == 'file':
                     track_data[tk][k] = self.path_parent.joinpath(pathlib.Path(self.cp[tk][k]))
-                elif k.lower() in ['x','y','z','angle','endpoint','origin_kilopost']:
+                elif k.lower() in ['x','y','z','angle','endpoint','origin_kilopost','search_rect']:
                     track_data[tk][k] = float(self.cp[tk][k])
+                elif k.lower() in ['search_mode']:
+                    track_data[tk][k] = int(self.cp[tk][k])
                 elif k.lower() in ['isowntrack','absolute_coordinate','calc_relrad']:
                     track_data[tk][k] = True if self.cp[tk][k].lower() == 'true' else False
                 elif k.lower() in ['supplemental_cp']:
