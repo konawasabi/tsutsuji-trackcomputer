@@ -162,6 +162,10 @@ class TrackControl():
         self.pointsequence_track.load_files(self.conf)
         self.limit_curvatureradius = self.conf.general['limit_curvatureradius']
         self.limit_differentialerror = self.conf.general['limit_differentialerror']
+
+        # offset_variableで指定した変数名がowntrackとなるマップですでに使用されている場合警告
+        if self.conf.general['offset_variable'] in self.track[self.conf.general['owntrack']]['interp'].environment.variable.keys():
+            raise Exception('offset_variable: {:s} already exist on Track: {:s}'.format(self.conf.general['offset_variable'],self.conf.general['owntrack']))
             
     def relativepoint_single(self,to_calc,owntrack=None,parent_track=None,check_U=True,search_mode=2,search_rect=50):
         '''owntrackを基準とした相対座標への変換
