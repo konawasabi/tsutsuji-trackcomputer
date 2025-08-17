@@ -32,6 +32,7 @@ from . import config
 from . import math
 from . import kml2track
 from . import kp_offset
+from . import kp_handling
 
 class TrackControl():
     def __init__(self):
@@ -46,6 +47,7 @@ class TrackControl():
         self.exclude_tracks = []
         self.limit_curvatureradius = 1e4
         self.limit_differentialerror = 1e-2
+        self.kphandling = kp_handling.KilopostHandling()
     def loadcfg(self,path):
         '''cfgファイルの読み込み
         '''
@@ -729,8 +731,8 @@ class TrackControl():
             else:
                 kp_val = ''
                 
-            output_map = self.generate_tracksyntax(tr,kp_val,digit_str)
-            output_file = self.generate_mapstrings(output_map,tr,kp_val)
+            output_map = self.generate_tracksyntax(tr,'',digit_str)
+            output_file = self.generate_mapstrings(output_map,tr,'')
 
             if '@' not in tr:
                 self.track[tr]['output_mapfile'] = output_file
@@ -746,18 +748,24 @@ class TrackControl():
             f = open(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))),'w')
             f.write(output_file)
             f.close()
+            if self.conf.general['offset_variable'] is not None:
+                kph_result = self.kphandling.readfile(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))),\
+                                                      self.conf.general['output_path'],\
+                                                      mode='1',\
+                                                      initialize='${:s} = {:f};'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance']),\
+                                                      newExpression='${:s} + distance'.format(self.conf.general['offset_variable']))
+                self.kphandling.writefile(kph_result,self.conf.general['output_path'])
             print(self.conf.general['output_path'].joinpath(pathlib.Path('{:s}_converted.txt'.format(tr))))
 
         # 自軌道データの距離程をoffsetして出力
         owntrack_kpoffs = []
         owntrack_input, owntrack_root = kp_offset.procpath(self.conf.track_data[self.conf.owntrack]['file'])
-        kp_offset.readfile(owntrack_input,\
-                           '$'+self.conf.general['offset_variable'],\
-                           self.conf.general['origin_distance'],\
-                           owntrack_kpoffs,\
-                           owntrack_root)
-        kp_offset.writefile(owntrack_kpoffs,\
-                            self.conf.general['output_path'].joinpath('owntrack'))
+        kph_result = self.kphandling.readfile(owntrack_input,\
+                                              owntrack_root,\
+                                              mode='1',\
+                                              initialize='${:s} = {:f};'.format(self.conf.general['offset_variable'],self.conf.general['origin_distance']),\
+                                              newExpression='${:s} + distance'.format(self.conf.general['offset_variable']))
+        self.kphandling.writefile(kph_result,self.conf.general['output_path'].joinpath('owntrack'))
     def convert_cant_with_relativecp(self, tr, cp_dist,ix=8):
         ''' trで指定した軌道について、対応する距離程でのカントを求める 
         '''
