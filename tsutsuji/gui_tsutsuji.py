@@ -70,13 +70,14 @@ class Catcher: # tkinter内で起きた例外をキャッチする
                 tk.messagebox.showinfo(message=e)
 
 class mainwindow(ttk.Frame):
-    def __init__(self, master):
+    def __init__(self, master,args=None):
         self.parent = master
         super().__init__(master, padding='3 3 3 3')
         self.master.title('Tsutsuji trackcomputer ver. {:s}'.format(__version__))
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.master.columnconfigure(0, weight=1)
         self.master.rowconfigure(0, weight=1)
+        self.args = args
 
         master.protocol('WM_DELETE_WINDOW', self.ask_quit)
         
@@ -377,10 +378,10 @@ class mainwindow(ttk.Frame):
         self.trackcontrol.plot_controlpoints(self.ax_plane)
         self.fig_canvas.draw()
     def generate_output(self, event=None):
-        if not __debug__:
+        if self.args.proctime:
             start = time.time()
         self.trackcontrol.generate_mapdata()
-        if not __debug__:
+        if self.args.proctime:
             print(time.time()-start)
         self.get_othertrack()
     def aboutwindow(self, event=None):
@@ -441,6 +442,7 @@ def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('filepath', metavar='F', type=str, help='input cfg file', nargs='?')
     argparser.add_argument('-n', '--nogui', help='no gui mode', action='store_true')
+    argparser.add_argument('-t', '--proctime', help='measuring processing time on \'generate\'', action='store_true')
     args = argparser.parse_args()
 
     if args.nogui:
@@ -459,7 +461,7 @@ def main():
     else:
         tk.CallWrapper = Catcher
         root = tk.Tk()
-        app = mainwindow(master=root)
+        app = mainwindow(master=root,args=args)
         #if len(sys.argv)>1:
         #    app.opencfg(in_dir=sys.argv[1])
         if args.filepath is not None:
