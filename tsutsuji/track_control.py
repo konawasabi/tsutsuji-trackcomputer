@@ -953,7 +953,8 @@ class TrackControl():
         for key in ['cant','interpolate_func','center','gauge']:
             cp_dist[key], pos_cp[key] = self.takecp(tr,elem=key,supplemental=False)
             relativecp[key] =  self.convert_relativecp(tr,pos_cp[key])
-            relativecp[key] = relativecp[key][np.argsort(relativecp[key][:,3])]
+            if len(relativecp[key])>0:
+                relativecp[key] = relativecp[key][np.argsort(relativecp[key][:,3])]
 
         #if self.count_trackelement(tr,key) >0:#len(relativecp['cant'])>0:
         for data in self.convert_cant_with_relativecp(tr,relativecp['cant'][:,3]):
