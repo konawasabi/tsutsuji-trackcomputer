@@ -51,7 +51,7 @@ class Config():
                         'limit_curvatureradius':1e4,\
                         'limit_differentialerror':1e-3,\
                         'search_mode':2,\
-                        'search_rect':50.0}
+                        'search_rect':100.0}
         # search_mode 0: これまでのcheck_u=False, 1: これまでのcheck_u=True, 2: quadtree
         if '@TSUTSUJI_GENERAL' in sections:
             for k in self.cp.options('@TSUTSUJI_GENERAL'):
@@ -69,9 +69,6 @@ class Config():
                 self.general['backimg'] = self.path_parent.joinpath(pathlib.Path(self.general['backimg']))
             if self.general['backimg_height'] is not None:
                 self.general['backimg_height'] = self.path_parent.joinpath(pathlib.Path(self.general['backimg_height']))
-                
-            if self.general['check_u'] is True:
-                self.general['search_mode'] = 1
                 
         self.track_data = self.get_trackdata(self.track_keys)
         for tk in self.track_keys:
