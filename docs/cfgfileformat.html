@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>CFG file format &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
-    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=5283bb3d" />
     
     <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -143,7 +143,11 @@
 </ul>
 </section>
 <section id="check-u">
-<h3>check_u<a class="headerlink" href="#check-u" title="Link to this heading">¶</a></h3>
+<h3>check_u (無効)<a class="headerlink" href="#check-u" title="Link to this heading">¶</a></h3>
+<p><strong>Version 1.9.0で廃止となりました。今後は</strong> <a class="reference internal" href="#cfgformat-gene-search-mode"><span class="std std-ref">search_mode</span></a> <strong>を使用してください。</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Version 1.8.2以前向けの記述を残します。</p>
 <ul class="simple">
 <li><p>type: bool</p></li>
 <li><p>自軌道法線に対して対象軌道が2回交差するかどうか（下図参照）を判別するルーチンを実行する場合はTrue</p>
@@ -153,6 +157,38 @@
 </li>
 </ul>
 <img alt="_images/cfgformat_checkU.png" src="_images/cfgformat_checkU.png" />
+</div>
+</section>
+<section id="search-mode">
+<span id="cfgformat-gene-search-mode"></span><h3>search_mode<a class="headerlink" href="#search-mode" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: int</p></li>
+<li><p>自軌道に対する相対座標計算モードを設定する</p>
+<ul>
+<li><p>次のいずれかを設定する</p>
+<ol class="arabic simple" start="0">
+<li><p>v1.8.2までの <cite>check_u = False</cite> 相当</p></li>
+<li><p>v1.8.2までの <cite>check_u = True</cite> 相当</p></li>
+<li><p>領域四分木による計算（ <a class="reference internal" href="#cfgformat-gene-search-rect"><span class="std std-ref">次項目</span></a> を参照）</p></li>
+</ol>
+</li>
+<li><p>デフォルトでは2</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="search-rect">
+<span id="cfgformat-gene-search-rect"></span><h3>search_rect<a class="headerlink" href="#search-rect" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p><cite>search_mode</cite> = 2において、自軌道法線と対象軌道の交点を探索する範囲（下図参照）を指定する</p>
+<ul>
+<li><p>自軌道基準点に対して± <cite>search_rect</cite> [m]の範囲に含まれる軌道のみが計算対象となる</p></li>
+<li><p>デフォルトでは100 [m]</p></li>
+</ul>
+</li>
+</ul>
+<img alt="_images/quadtree_rect.png" src="_images/quadtree_rect.png" />
 </section>
 <section id="limit-curvatureradius">
 <h3>limit_curvatureradius<a class="headerlink" href="#limit-curvatureradius" title="Link to this heading">¶</a></h3>
@@ -380,6 +416,30 @@
 <li><p>デフォルトではTrue</p></li>
 </ul>
 </section>
+<section id="id1">
+<h3>search_mode<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: int</p></li>
+<li><p>自軌道に対する相対座標計算モードを設定する</p>
+<ul>
+<li><p>デフォルトでは [&#64;TSUTSUJI_GENERAL]の <a class="reference internal" href="#cfgformat-gene-search-mode"><span class="std std-ref">search_mode</span></a> と同一の値</p></li>
+<li><p>軌道毎に計算モードを特定したい場合に設定する</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id2">
+<h3>search_rect<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>type: float</p></li>
+<li><p><cite>search_mode</cite> = 2において、自軌道法線と対象軌道の交点を探索する範囲を指定する</p>
+<ul>
+<li><p>デフォルトでは [&#64;TSUTSUJI_GENERAL]の <a class="reference internal" href="#cfgformat-gene-search-rect"><span class="std std-ref">search_rect</span></a> と同一の値</p></li>
+<li><p>軌道毎に計算モードを特定したい場合に設定する</p></li>
+</ul>
+</li>
+</ul>
+</section>
 </section>
 <section id="maptile">
 <span id="ref-cfg-maptile"></span><h2>[&#64;MAPTILE]<a class="headerlink" href="#maptile" title="Link to this heading">¶</a></h2>
@@ -505,7 +565,9 @@
 <li><a class="reference internal" href="#backimg">backimg</a></li>
 <li><a class="reference internal" href="#backimg-height">backimg_height</a></li>
 <li><a class="reference internal" href="#output-digit">output_digit</a></li>
-<li><a class="reference internal" href="#check-u">check_u</a></li>
+<li><a class="reference internal" href="#check-u">check_u (無効)</a></li>
+<li><a class="reference internal" href="#search-mode">search_mode</a></li>
+<li><a class="reference internal" href="#search-rect">search_rect</a></li>
 <li><a class="reference internal" href="#limit-curvatureradius">limit_curvatureradius</a></li>
 </ul>
 </li>
@@ -529,6 +591,8 @@
 <li><a class="reference internal" href="#mapelement-enable-interpolate-func">mapelement_enable_interpolate_func</a></li>
 <li><a class="reference internal" href="#mapelement-enable-center">mapelement_enable_center</a></li>
 <li><a class="reference internal" href="#mapelement-enable-gauge">mapelement_enable_gauge</a></li>
+<li><a class="reference internal" href="#id1">search_mode</a></li>
+<li><a class="reference internal" href="#id2">search_rect</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#maptile">[&#64;MAPTILE]</a><ul>
@@ -601,7 +665,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

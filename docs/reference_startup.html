@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>起動方法 &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
-    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=5283bb3d" />
     
     <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -62,6 +62,11 @@
 <p>非対話モードでは、指定したcfgファイルの内容に基づいて他軌道データを生成し、そのまま終了します。（Generateを実行した場合と同じ結果が得られる）
 このときGUIは起動しません。</p>
 </section>
+<section id="id3">
+<h2>計算時間表示モード<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p><cite>-t</cite> オプションをつけて実行すると、<a class="reference internal" href="reference_main.html#ref-main-generate"><span class="std std-ref">Generate</span></a> 実行時に処理に要した時間を秒単位でターミナルへ表示します。</p>
+<p><cite>python -m tsutsuji -t hoge.cfg</cite></p>
+</section>
 </section>
 
 
@@ -76,6 +81,7 @@
     <ul>
 <li><a class="reference internal" href="#">起動方法</a><ul>
 <li><a class="reference internal" href="#id2">非対話モード</a></li>
+<li><a class="reference internal" href="#id3">計算時間表示モード</a></li>
 </ul>
 </li>
 </ul>
@@ -134,7 +140,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

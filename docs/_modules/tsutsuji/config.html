@@ -6,11 +6,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tsutsuji.config &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=658d757c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=5283bb3d" />
     
     <script src="../../_static/documentation_options.js?v=3ff7d7a7"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -60,13 +60,13 @@
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="kn">import</span> <span class="nn">configparser</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
 
 <div class="viewcode-block" id="Config">
 <a class="viewcode-back" href="../../tsutsuji.config.html#tsutsuji.config.Config">[docs]</a>
-<span class="k">class</span> <span class="nc">Config</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cp</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -94,14 +94,17 @@
                         <span class="s1">&#39;check_u&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>\
                         <span class="s1">&#39;output_digit&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>\
                         <span class="s1">&#39;limit_curvatureradius&#39;</span><span class="p">:</span><span class="mf">1e4</span><span class="p">,</span>\
-                        <span class="s1">&#39;limit_differentialerror&#39;</span><span class="p">:</span><span class="mf">1e-3</span><span class="p">}</span>
+                        <span class="s1">&#39;limit_differentialerror&#39;</span><span class="p">:</span><span class="mf">1e-3</span><span class="p">,</span>\
+                        <span class="s1">&#39;search_mode&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>\
+                        <span class="s1">&#39;search_rect&#39;</span><span class="p">:</span><span class="mf">100.0</span><span class="p">}</span>
+        <span class="c1"># search_mode 0: これまでのcheck_u=False, 1: これまでのcheck_u=True, 2: quadtree</span>
         <span class="k">if</span> <span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;origin_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;unit_length&#39;</span><span class="p">,</span> <span class="s1">&#39;limit_curvatureradius&#39;</span><span class="p">,</span> <span class="s1">&#39;limit_differentialerror&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;origin_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;unit_length&#39;</span><span class="p">,</span> <span class="s1">&#39;limit_curvatureradius&#39;</span><span class="p">,</span> <span class="s1">&#39;limit_differentialerror&#39;</span><span class="p">,</span> <span class="s1">&#39;search_rect&#39;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
-                <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;output_digit&#39;</span><span class="p">]:</span>
+                <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;output_digit&#39;</span><span class="p">,</span><span class="s1">&#39;search_mode&#39;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
-                <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;check_u&#39;</span><span class="p">]:</span>
+                <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[]:</span> <span class="c1">#[&#39;check_u&#39;]: check_uは廃止</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span> <span class="k">else</span> <span class="kc">False</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;@TSUTSUJI_GENERAL&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
@@ -146,7 +149,7 @@
             
 <div class="viewcode-block" id="Config.get_trackdata">
 <a class="viewcode-back" href="../../tsutsuji.config.html#tsutsuji.config.Config.get_trackdata">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_trackdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_trackdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
         <span class="n">track_data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">linecolor_default</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#1f77b4&#39;</span><span class="p">,</span><span class="s1">&#39;#ff7f0e&#39;</span><span class="p">,</span><span class="s1">&#39;#2ca02c&#39;</span><span class="p">,</span><span class="s1">&#39;#d62728&#39;</span><span class="p">,</span><span class="s1">&#39;#9467bd&#39;</span><span class="p">,</span><span class="s1">&#39;#8c564b&#39;</span><span class="p">,</span><span class="s1">&#39;#e377c2&#39;</span><span class="p">,</span><span class="s1">&#39;#7f7f7f&#39;</span><span class="p">,</span><span class="s1">&#39;#bcbd22&#39;</span><span class="p">,</span><span class="s1">&#39;#17becf&#39;</span><span class="p">]</span>
         <span class="n">color_ix</span> <span class="o">=</span> <span class="mi">0</span>
@@ -165,12 +168,16 @@
                               <span class="s1">&#39;supplemental_cp&#39;</span><span class="p">:[],</span>\
                               <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="n">linecolor_default</span><span class="p">[</span><span class="n">color_ix</span><span class="o">%</span><span class="mi">10</span><span class="p">],</span>\
                               <span class="s1">&#39;calc_relrad&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>\
-                              <span class="s1">&#39;mapelement_enable&#39;</span><span class="p">:{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;cant&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;interpolate_func&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;center&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;gauge&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}}</span>
+                              <span class="s1">&#39;mapelement_enable&#39;</span><span class="p">:{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;cant&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;interpolate_func&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;center&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;gauge&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">},</span>\
+                              <span class="s1">&#39;search_mode&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;search_mode&#39;</span><span class="p">],</span>\
+                              <span class="s1">&#39;search_rect&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">general</span><span class="p">[</span><span class="s1">&#39;search_rect&#39;</span><span class="p">]}</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">tk</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span>
                     <span class="n">track_data</span><span class="p">[</span><span class="n">tk</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="n">tk</span><span class="p">][</span><span class="n">k</span><span class="p">]))</span>
-                <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;z&#39;</span><span class="p">,</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span><span class="s1">&#39;endpoint&#39;</span><span class="p">,</span><span class="s1">&#39;origin_kilopost&#39;</span><span class="p">]:</span>
+                <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;z&#39;</span><span class="p">,</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span><span class="s1">&#39;endpoint&#39;</span><span class="p">,</span><span class="s1">&#39;origin_kilopost&#39;</span><span class="p">,</span><span class="s1">&#39;search_rect&#39;</span><span class="p">]:</span>
                     <span class="n">track_data</span><span class="p">[</span><span class="n">tk</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="n">tk</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;search_mode&#39;</span><span class="p">]:</span>
+                    <span class="n">track_data</span><span class="p">[</span><span class="n">tk</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="n">tk</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
                 <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;isowntrack&#39;</span><span class="p">,</span><span class="s1">&#39;absolute_coordinate&#39;</span><span class="p">,</span><span class="s1">&#39;calc_relrad&#39;</span><span class="p">]:</span>
                     <span class="n">track_data</span><span class="p">[</span><span class="n">tk</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span><span class="p">[</span><span class="n">tk</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span> <span class="k">else</span> <span class="kc">False</span>
                 <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;supplemental_cp&#39;</span><span class="p">]:</span>
@@ -225,7 +232,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

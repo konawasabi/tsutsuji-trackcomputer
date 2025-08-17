@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>tsutsuji.track_control module &#8212; tsutsuji-trackcomputer  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
-    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=658d757c" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=5283bb3d" />
     
     <script src="_static/documentation_options.js?v=3ff7d7a7"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -44,11 +44,11 @@
 <span id="tsutsuji-track-control-module"></span><h1>tsutsuji.track_control module<a class="headerlink" href="#module-tsutsuji.track_control" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsutsuji.track_control.</span></span><span class="sig-name descname"><span class="pre">TrackControl</span></span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsutsuji.track_control.</span></span><span class="sig-name descname"><span class="pre">TrackControl</span></span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl.convert_cant_with_relativecp">
-<span class="sig-name descname"><span class="pre">convert_cant_with_relativecp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_dist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.convert_cant_with_relativecp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.convert_cant_with_relativecp" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">convert_cant_with_relativecp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.convert_cant_with_relativecp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.convert_cant_with_relativecp" title="Link to this definition">¶</a></dt>
 <dd><p>trで指定した軌道について、対応する距離程でのカントを求める</p>
 </dd></dl>
 
@@ -113,6 +113,11 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl.generate_quadtree">
+<span class="sig-name descname"><span class="pre">generate_quadtree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.generate_quadtree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.generate_quadtree" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl.generate_tracksyntax">
 <span class="sig-name descname"><span class="pre">generate_tracksyntax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kp_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digit_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_trackkey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.generate_tracksyntax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.generate_tracksyntax" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -166,13 +171,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl.relativepoint_all">
-<span class="sig-name descname"><span class="pre">relativepoint_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.relativepoint_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.relativepoint_all" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">relativepoint_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_rect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.relativepoint_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.relativepoint_all" title="Link to this definition">¶</a></dt>
 <dd><p>読み込んだ全ての軌道についてowntrackを基準とした相対座標への変換。</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl.relativepoint_single">
-<span class="sig-name descname"><span class="pre">relativepoint_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_calc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_track</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.relativepoint_single"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.relativepoint_single" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">relativepoint_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_calc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_track</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_rect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.relativepoint_single"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.relativepoint_single" title="Link to this definition">¶</a></dt>
 <dd><p>owntrackを基準とした相対座標への変換</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -198,7 +203,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="tsutsuji.track_control.TrackControl.relativeradius_cp">
-<span class="sig-name descname"><span class="pre">relativeradius_cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_calc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.relativeradius_cp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.relativeradius_cp" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">relativeradius_cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_calc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owntrack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsutsuji/track_control.html#TrackControl.relativeradius_cp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsutsuji.track_control.TrackControl.relativeradius_cp" title="Link to this definition">¶</a></dt>
 <dd><p>self.relativepoint_all()及びself.relativeradius()の結果(self.rel_track, self.rel_track_radius)について、cp_distで指定した距離程ごとに相対半径の平均値、相対座標の内挿値を出力する。</p>
 </dd></dl>
 
@@ -257,6 +262,7 @@
 <li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.generate_mapstrings"><code class="docutils literal notranslate"><span class="pre">TrackControl.generate_mapstrings()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.generate_mediantrack"><code class="docutils literal notranslate"><span class="pre">TrackControl.generate_mediantrack()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.generate_otdata"><code class="docutils literal notranslate"><span class="pre">TrackControl.generate_otdata()</span></code></a></li>
+<li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.generate_quadtree"><code class="docutils literal notranslate"><span class="pre">TrackControl.generate_quadtree()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.generate_tracksyntax"><code class="docutils literal notranslate"><span class="pre">TrackControl.generate_tracksyntax()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.get_trackkeys"><code class="docutils literal notranslate"><span class="pre">TrackControl.get_trackkeys()</span></code></a></li>
 <li><a class="reference internal" href="#tsutsuji.track_control.TrackControl.loadcfg"><code class="docutils literal notranslate"><span class="pre">TrackControl.loadcfg()</span></code></a></li>
@@ -316,7 +322,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, konawasabi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>
