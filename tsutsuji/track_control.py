@@ -912,11 +912,18 @@ class TrackControl():
                 mapdata = mapdata[m.span()[1]:]
         
         return result
-    def generate_mediantrack(self,basetrack,targettrack,newtrackkey,divratio,start,end,interval):
+    def generate_mediantrack(self,basetrack,targettrack,newtrackkey,divratio,start,end,interval,targettrack2=None):
         self.rel_track[targettrack] = self.relativepoint_single(targettrack,owntrack=basetrack)
 
-        self.rel_track[targettrack][:,2] *= divratio
-        self.rel_track[targettrack][:,3] *= divratio
+        if targettrack2 is None:
+            self.rel_track[targettrack][:,2] *= divratio
+            self.rel_track[targettrack][:,3] *= divratio
+        else:
+            self.rel_track[targettrack2] = self.relativepoint_single(targettrack2,owntrack=basetrack)
+            self.rel_track[targettrack][:,2] = (self.rel_track[targettrack][:,2]+self.rel_track[targettrack2][:,2]) * divratio
+            self.rel_track[targettrack][:,3] = (self.rel_track[targettrack][:,3]+self.rel_track[targettrack2][:,3]) * divratio
+
+        
         
         self.relativeradius(to_calc=targettrack,owntrack=basetrack)
         self.relativeradius_cp(to_calc=targettrack,\

@@ -145,13 +145,23 @@ class GUI():
         self.tgt_tr_e['values'] = trackkeylist
         self.tgt2_tr_e['values'] = trackkeylist
     def doit(self):
+        if self.tgt_tr_v.get() == self.base_tr_v.get():
+            target1 = self.tgt2_tr_v.get()
+            target2 = None
+        elif self.tgt2_tr_v.get() == self.base_tr_v.get():
+            target1 = self.tgt_tr_v.get()
+            target2 = None
+        else:
+            target1 = self.tgt_tr_v.get()
+            target2 = self.tgt2_tr_v.get()
         result_elem,result_map = self.trackcontrol.generate_mediantrack(self.base_tr_v.get(),\
-                                                                        self.tgt_tr_v.get(),\
+                                                                        target1,\
                                                                         self.new_tr_v.get(),\
                                                                         self.ratio_v.get(),\
                                                                         self.kp_start_v.get(),\
                                                                         self.kp_end_v.get(),\
-                                                                        self.kp_interval_v.get())
+                                                                        self.kp_interval_v.get(),\
+                                                                        targettrack2=target2)
 
         with open(self.output_v.get(), 'w') as fp:
             fp.write(result_map)
