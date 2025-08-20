@@ -925,7 +925,13 @@ class TrackControl():
             self.rel_track[targettrack][:,2] *= divratio
             self.rel_track[targettrack][:,3] *= divratio
         else:
-            self.rel_track[targettrack2] = self.relativepoint_single(targettrack2,owntrack=basetrack)
+            if '@OT' in targettrack2:
+                parenttrack2 = re.search('(?<=@OT_).+(?=@)',targettrack2).group(0)
+                targettrack2_key = targettrack2.split('@_')[-1]
+            else:
+                parenttrack2 = None
+                targettrack2_key = targettrack2
+            self.rel_track[targettrack2] = self.relativepoint_single(targettrack2_key,owntrack=basetrack,parent_track=parenttrack2,search_mode=1)
             self.rel_track[targettrack][:,2] = (self.rel_track[targettrack][:,2]+self.rel_track[targettrack2][:,2]) * divratio
             self.rel_track[targettrack][:,3] = (self.rel_track[targettrack][:,3]+self.rel_track[targettrack2][:,3]) * divratio
 
