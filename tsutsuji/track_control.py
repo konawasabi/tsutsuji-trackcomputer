@@ -913,7 +913,13 @@ class TrackControl():
         
         return result
     def generate_mediantrack(self,basetrack,targettrack,newtrackkey,divratio,start,end,interval,targettrack2=None):
-        self.rel_track[targettrack] = self.relativepoint_single(targettrack,owntrack=basetrack)
+        if '@OT' in targettrack:
+            parenttrack = re.search('(?<=@OT_).+(?=@)',targettrack).group(0)
+            targettrack_key = targettrack.split('@_')[-1]
+        else:
+            parenttrack = None
+            targettrack_key = targettrack
+        self.rel_track[targettrack] = self.relativepoint_single(targettrack_key,owntrack=basetrack,parent_track=parenttrack,search_mode=1)
 
         if targettrack2 is None:
             self.rel_track[targettrack][:,2] *= divratio
