@@ -5,6 +5,12 @@
 - プロット画面
   - 任意角度への回転
 
+## [1.9.1] - 2025-08-21
+
+- Mediantrack Generator
+  - TargetにTrack構文で記述した軌道を指定した場合正しく動作しない問題を修正
+  - Track構文で記述した軌道どうしの中点のように、任意の２軌道をtargetとして指定できるよう処理を見直し
+
 ## [1.9.0] - 2025-08-17
 
 - 相対座標計算時間の短縮を目的とした、領域四分木による計算モードの導入
@@ -272,6 +278,7 @@
 
 - 1st release
 
+[1.9.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.9.0...ver1.9.1
 [1.9.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.2...ver1.9.0
 [1.8.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.1...ver1.8.2
 [1.8.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.0...ver1.8.1
