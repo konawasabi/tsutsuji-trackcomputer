@@ -3,7 +3,7 @@ Mediantrack generator
 =============
 
 .. image:: ./files/mediantrack.png
-	   :scale: 60%
+	   :scale: 75%
 
 メイン機能で読み込んだ2つの軌道に対して、両者の中間点を通る軌道をTrack要素で出力する機能です。
 
@@ -19,10 +19,10 @@ Base
 選択できるのは、自軌道として記述した軌道(Curve, Gradient要素で記述)のみです。
 計算結果は、Base軌道を基準とした他軌道として出力されます。
 
-Target
+Target1, Target2
 -------
 
-中間点を求めたい軌道を指定します。
+中間点を求めたい軌道のペアを指定します。
 自軌道として記述した軌道の他に、track構文・kml/csvファイルから読み込んだ他軌道も選択できます。
 
 New
@@ -49,13 +49,13 @@ Track構文を出力する間隔をBase軌道上の距離程基準で指定し�
 Ratio
 ------
 
-次図の様に、Base軌道上の点Aにおいて、Base軌道の法線とTarget軌道の交点を点Bとして、線分AB上で新たに求める軌道が通過する位置を点Pとするとき、点Pによる線分ABの分割比をRatioとして指定します。
+次図の様に、Base軌道上の点Aにおいて、Base軌道の法線とTarget1, 2軌道の交点をそれぞれ点B, Cとして、線分BC上で新たに求める軌道が通過する位置を点Pとするとき、点Pによる線分BCの分割比をRatioとして指定します。
 
 デフォルト（2軌道の中間点を求める場合）では0.5です。
 Ratioに指定する値は、実数であればどの様な値(1.0以上でもマイナス値でも)でも入力できます。
 
 .. image:: ./files/mediantrack_ratio.png
-	   :scale: 60%
+	   :scale: 75%
 
 Output
 -------
@@ -85,7 +85,11 @@ Do It
 
     * up
 
-  * Target
+  * Target1
+
+    * up
+    
+  * Target2
 
     * down
 

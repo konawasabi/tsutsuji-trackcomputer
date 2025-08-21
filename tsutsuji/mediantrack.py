@@ -1,5 +1,5 @@
 #
-#    Copyright 2024 konawasabi
+#    Copyright 2024-2025 konawasabi
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -61,20 +61,25 @@ class GUI():
 
         self.base_tr_v = tk.StringVar()
         self.tgt_tr_v = tk.StringVar()
+        self.tgt2_tr_v = tk.StringVar()
         self.new_tr_v = tk.StringVar()
         self.base_tr_e = ttk.Combobox(self.paramsframe, textvariable = self.base_tr_v)
         self.tgt_tr_e = ttk.Combobox(self.paramsframe, textvariable = self.tgt_tr_v)
+        self.tgt2_tr_e = ttk.Combobox(self.paramsframe, textvariable = self.tgt2_tr_v)
         self.new_tr_e = ttk.Entry(self.paramsframe, textvariable = self.new_tr_v)
         self.base_tr_l = ttk.Label(self.paramsframe, text='Base')
-        self.tgt_tr_l = ttk.Label(self.paramsframe, text='Target')
+        self.tgt_tr_l = ttk.Label(self.paramsframe, text='Target 1')
+        self.tgt2_tr_l = ttk.Label(self.paramsframe, text='Target 2')
         self.new_tr_l = ttk.Label(self.paramsframe, text='New')
 
         self.base_tr_l.grid(column=0, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.base_tr_e.grid(column=1, row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.tgt_tr_l.grid(column=2,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
         self.tgt_tr_e.grid(column=3,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.new_tr_l.grid(column=4,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.new_tr_e.grid(column=5,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.tgt2_tr_l.grid(column=4,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.tgt2_tr_e.grid(column=5,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.new_tr_l.grid(column=0,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.new_tr_e.grid(column=1,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
 
         self.kp_start_v = tk.DoubleVar(value=0)
         self.kp_start_e = ttk.Entry(self.paramsframe, textvariable=self.kp_start_v)
@@ -89,26 +94,26 @@ class GUI():
         self.kp_interval_l = ttk.Label(self.paramsframe, text='Interval')
         
         
-        self.kp_start_l.grid(column=0,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.kp_start_e.grid(column=1,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.kp_start_l.grid(column=0,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.kp_start_e.grid(column=1,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
 
-        self.kp_end_l.grid(column=2,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.kp_end_e.grid(column=3,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.kp_end_l.grid(column=2,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.kp_end_e.grid(column=3,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
 
-        self.kp_interval_l.grid(column=4,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.kp_interval_e.grid(column=5,  row=1, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.kp_interval_l.grid(column=4,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.kp_interval_e.grid(column=5,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
 
         self.ratio_v = tk.DoubleVar(value=0.5)
         self.ratio_e = ttk.Entry(self.paramsframe, textvariable=self.ratio_v)
         self.ratio_l = ttk.Label(self.paramsframe, text='Ratio')
         
-        self.ratio_l.grid(column=0,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
-        self.ratio_e.grid(column=1,  row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.ratio_l.grid(column=0,  row=3, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.ratio_e.grid(column=1,  row=3, sticky = (tk.N, tk.W, tk.E, tk.S))
 
         # ---
         
         self.ctrlframe = ttk.Frame(self.mainframe, padding='3 3 3 3')
-        self.ctrlframe.grid(column=0, row=2, sticky = (tk.N, tk.W, tk.E, tk.S))
+        self.ctrlframe.grid(column=0, row=4, sticky = (tk.N, tk.W, tk.E, tk.S))
         
         self.doit_b = ttk.Button(self.ctrlframe, text='Do It', command=self.doit)
         self.doit_b.grid(column=0,  row=0, sticky = (tk.N, tk.W, tk.E, tk.S))
@@ -138,14 +143,25 @@ class GUI():
 
         self.base_tr_e['values'] = tuple(self.trackcontrol.track.keys())
         self.tgt_tr_e['values'] = trackkeylist
+        self.tgt2_tr_e['values'] = trackkeylist
     def doit(self):
+        if self.tgt_tr_v.get() == self.base_tr_v.get():
+            target1 = self.tgt2_tr_v.get()
+            target2 = None
+        elif self.tgt2_tr_v.get() == self.base_tr_v.get():
+            target1 = self.tgt_tr_v.get()
+            target2 = None
+        else:
+            target1 = self.tgt_tr_v.get()
+            target2 = self.tgt2_tr_v.get()
         result_elem,result_map = self.trackcontrol.generate_mediantrack(self.base_tr_v.get(),\
-                                                                        self.tgt_tr_v.get(),\
+                                                                        target1,\
                                                                         self.new_tr_v.get(),\
                                                                         self.ratio_v.get(),\
                                                                         self.kp_start_v.get(),\
                                                                         self.kp_end_v.get(),\
-                                                                        self.kp_interval_v.get())
+                                                                        self.kp_interval_v.get(),\
+                                                                        targettrack2=target2)
 
         with open(self.output_v.get(), 'w') as fp:
             fp.write(result_map)

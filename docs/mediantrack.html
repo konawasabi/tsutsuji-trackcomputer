@@ -51,7 +51,7 @@
             
   <section id="mediantrack-generator">
 <h1>Mediantrack generator<a class="headerlink" href="#mediantrack-generator" title="Link to this heading">¶</a></h1>
-<a class="reference internal image-reference" href="_images/mediantrack.png"><img alt="_images/mediantrack.png" src="_images/mediantrack.png" style="width: 345.59999999999997px; height: 101.39999999999999px;" />
+<a class="reference internal image-reference" href="_images/mediantrack.png"><img alt="_images/mediantrack.png" src="_images/mediantrack.png" style="width: 432.0px; height: 142.5px;" />
 </a>
 <p>メイン機能で読み込んだ2つの軌道に対して、両者の中間点を通る軌道をTrack要素で出力する機能です。</p>
 <section id="id1">
@@ -62,9 +62,9 @@
 選択できるのは、自軌道として記述した軌道(Curve, Gradient要素で記述)のみです。
 計算結果は、Base軌道を基準とした他軌道として出力されます。</p>
 </section>
-<section id="target">
-<h3>Target<a class="headerlink" href="#target" title="Link to this heading">¶</a></h3>
-<p>中間点を求めたい軌道を指定します。
+<section id="target1-target2">
+<h3>Target1, Target2<a class="headerlink" href="#target1-target2" title="Link to this heading">¶</a></h3>
+<p>中間点を求めたい軌道のペアを指定します。
 自軌道として記述した軌道の他に、track構文・kml/csvファイルから読み込んだ他軌道も選択できます。</p>
 </section>
 <section id="new">
@@ -86,10 +86,10 @@
 </section>
 <section id="ratio">
 <h3>Ratio<a class="headerlink" href="#ratio" title="Link to this heading">¶</a></h3>
-<p>次図の様に、Base軌道上の点Aにおいて、Base軌道の法線とTarget軌道の交点を点Bとして、線分AB上で新たに求める軌道が通過する位置を点Pとするとき、点Pによる線分ABの分割比をRatioとして指定します。</p>
+<p>次図の様に、Base軌道上の点Aにおいて、Base軌道の法線とTarget1, 2軌道の交点をそれぞれ点B, Cとして、線分BC上で新たに求める軌道が通過する位置を点Pとするとき、点Pによる線分BCの分割比をRatioとして指定します。</p>
 <p>デフォルト（2軌道の中間点を求める場合）では0.5です。
 Ratioに指定する値は、実数であればどの様な値(1.0以上でもマイナス値でも)でも入力できます。</p>
-<a class="reference internal image-reference" href="_images/mediantrack_ratio.png"><img alt="_images/mediantrack_ratio.png" src="_images/mediantrack_ratio.png" style="width: 241.2px; height: 170.4px;" />
+<a class="reference internal image-reference" href="_images/mediantrack_ratio.png"><img alt="_images/mediantrack_ratio.png" src="_images/mediantrack_ratio.png" style="width: 230.25px; height: 180.0px;" />
 </a>
 </section>
 <section id="output">
@@ -116,7 +116,12 @@ Ratioに指定する値は、実数であればどの様な値(1.0以上でも�
 <li><p>up</p></li>
 </ul>
 </li>
-<li><p>Target</p>
+<li><p>Target1</p>
+<ul>
+<li><p>up</p></li>
+</ul>
+</li>
+<li><p>Target2</p>
 <ul>
 <li><p>down</p></li>
 </ul>
@@ -224,7 +229,7 @@ Ratioに指定する値は、実数であればどの様な値(1.0以上でも�
 <li><a class="reference internal" href="#">Mediantrack generator</a><ul>
 <li><a class="reference internal" href="#id1">入力パラメータ</a><ul>
 <li><a class="reference internal" href="#base">Base</a></li>
-<li><a class="reference internal" href="#target">Target</a></li>
+<li><a class="reference internal" href="#target1-target2">Target1, Target2</a></li>
 <li><a class="reference internal" href="#new">New</a></li>
 <li><a class="reference internal" href="#start">Start</a></li>
 <li><a class="reference internal" href="#end">End</a></li>
