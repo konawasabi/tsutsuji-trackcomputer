@@ -404,6 +404,9 @@ class TrackControl():
         for tr in calc_track:
             self.rel_track_radius[tr] = []
 
+            if len(self.rel_track[tr])==0:
+                continue
+            
             # 注目軌道相対座標を線形補間する
             x_interp = np.linspace(min(self.rel_track[tr][:,0]),max(self.rel_track[tr][:,0]),int((max(self.rel_track[tr][:,0])-min(self.rel_track[tr][:,0]))/1.0)+1)
             f_xy = interpolate.interp1d(self.rel_track[tr][:,0],self.rel_track[tr][:,2])
@@ -450,6 +453,10 @@ class TrackControl():
         for tr in calc_track:
             self.rel_track_radius_cp[tr] = []
             #pos_cp = self.track[key]['result'][np.isin(self.track[key]['result'][:,0],cp_dist)]
+
+            if len(self.rel_track_radius[tr])==0:
+                continue
+            
             ix=0
             while ix < len(cp_dist)-1:
                 pos_cp = self.rel_track_radius[tr][(self.rel_track_radius[tr][:,0]>=cp_dist[ix]) & (self.rel_track_radius[tr][:,0]<cp_dist[ix+1])]
@@ -956,7 +963,11 @@ class TrackControl():
             output_trackkey = tr
         output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
 
+        if len(self.rel_track_radius_cp[tr])==0:
+            return output_map
+
         dist_range = (min(self.rel_track_radius_cp[tr][:,0]),max(self.rel_track_radius_cp[tr][:,0]))
+
             
         for data in self.rel_track_radius_cp[tr]:
             if '@' not in tr or '@OT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):
