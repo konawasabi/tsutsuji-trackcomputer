@@ -341,7 +341,7 @@ class TrackControl():
                                        interpolate(aroundzero,1,'y_ab'),\
                                        interpolate(aroundzero,1,'z_ab'),\
                                        interpolate(aroundzero,1,'cant')])
-                elif min_ix_val == 0:
+                else:#if min_ix_val == 0:
                     if np.abs(tgt_xy_trans[0][min_ix[0][0]])<1e-1:
                         result.append([pos[0],\
                                        tgt_xy_trans[0][min_ix[0][0]],\
