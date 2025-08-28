@@ -311,7 +311,7 @@ class TrackControl():
                 min_ix_val = ix_tgt_xy[min_ix][0]
 
                 if min_ix_val > 0 and min_ix_val < len_tr-1 \
-                   and min_ix[0][0]+2 < tgt_xy_trans.shape[1]: # y'軸との交点が注目区間内にある場合
+                   and min_ix[0][0]+2 < tgt_xy_trans.shape[1] and min_ix[0][0]-1 >=0: # y'軸との交点が注目区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix[0][0]-1:min_ix[0][0]+2],\
                                   'y_tr':tgt_xy_trans[1][min_ix[0][0]-1:min_ix[0][0]+2],\
                                   'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
