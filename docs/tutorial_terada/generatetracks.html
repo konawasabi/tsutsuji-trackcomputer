@@ -54,7 +54,7 @@
 <h1><span class="section-number">6. </span>他軌道構文の出力<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
 <p>メインウィンドウ右下の <strong>Generate</strong> ボタンをクリックすると、tateyama_up軌道を自軌道として各軌道を他軌道構文(Track)に変換する。</p>
 <p>他軌道への変換結果はmain.cfgと同じディレクトリのresult以下に保存され、同時にプロットウィンドウに黒線で表示される。</p>
-<a class="reference internal image-reference" href="../_images/gen1.png"><img alt="../_images/gen1.png" src="../_images/gen1.png" style="width: 444.5px; height: 344.0px;" />
+<a class="reference internal image-reference" href="../_images/gen1.png"><img alt="../_images/gen1.png" src="../_images/gen1.png" style="width: 449.0px; height: 355.0px;" />
 </a>
 <ul class="simple">
 <li><p>出力ファイル一覧</p>
@@ -78,19 +78,68 @@
 </ul>
 </li>
 </ul>
+<section id="search-mode">
+<h2><span class="section-number">6.1. </span>search_modeの設定<a class="headerlink" href="#search-mode" title="Link to this heading">¶</a></h2>
+<p>変換結果を見ると、honsen_up, honsen_down軌道がおおよそx &gt; 100 mの領域で出力されていないことがわかる。
+これは、ver. 1.9.0以降では、次図のように自軌道(ここではtateyama_up)を中心とした一定の範囲にある軌道のみを他軌道構文への変化対象とする <a class="reference internal" href="../cfgfileformat.html#cfgformat-gene-search-mode"><span class="std std-ref">search_mode=2</span></a> がデフォルトで有効となっていることによる。
+変換対象を探索する範囲は、自軌道基準点から±search_rect [m] (デフォルトでは±100 m)となる。</p>
+<a class="reference internal image-reference" href="../_images/search_rect_terada.png"><img alt="../_images/search_rect_terada.png" src="../_images/search_rect_terada.png" style="width: 496.40000000000003px; height: 390.0px;" />
+</a>
+<p>より広い範囲のhonsen_up, honsen_down軌道を変換対象とするために、search_rectにより大きな値(ここでは250m)を指定して変換対象となる範囲を広げてみる。
+main.cfgを下記のように変更して、データリロードののちGenerateを実行すると、下図のように分岐器の先まで変換された結果が得られる。</p>
+<a class="reference internal image-reference" href="../_images/gen_mode2_woscp.png"><img alt="../_images/gen_mode2_woscp.png" src="../_images/gen_mode2_woscp.png" style="width: 452.5px; height: 351.5px;" />
+</a>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id2" title="Link to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[@TSUTSUJI_GENERAL]
+owntrack = tateyama_up
+unit_length = 1
+origin_distance = 0
+offset_variable = hoge
+<span class="hll">search_mode = 2
+</span><span class="hll">search_rect = 250
+</span>...
+</pre></div>
+</div>
+</div>
+<p>また、search_mode=1としてver. 1.8.2以前の計算モードを有効とすることで、自軌道からの距離によらず全ての計算対象とすることもできる。
+この場合のmain.cfgは下記のようになり、データリロードの後Generateを実行すると、下図のように軌道終端まで変換された結果が得られる。</p>
+<p>ただし、search_mode=1では自軌道からの距離にかかわらず全ての軌道を対象として変換処理を行うため、大規模なマップでは処理に長時間を要する可能性がある。
+特別の事情がないかぎりはsearch_mode=2を基本として、search_rectの値を調整することをおすすめする。</p>
+<a class="reference internal image-reference" href="../_images/gen_mode1_woscp.png"><img alt="../_images/gen_mode1_woscp.png" src="../_images/gen_mode1_woscp.png" style="width: 451.0px; height: 351.0px;" />
+</a>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id3" title="Link to this code">¶</a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[@TSUTSUJI_GENERAL]
+owntrack = tateyama_up
+unit_length = 1
+origin_distance = 0
+offset_variable = hoge
+<span class="hll">search_mode = 1
+</span>...
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>search_mode, search_rect は[&#64;TSUTSUJI_GENERAL]セクションの他、各軌道セクションに記述することもできます。
+これを用いて、自軌道から大きく離れたところに位置する軌道に対してのみ特定のsearch_modeやsearch_rectを適用して、必要以上に処理時間を延ばさないような工夫ができます。</p>
+</div>
+</section>
 <section id="supplemental-cp">
-<h2><span class="section-number">6.1. </span>supplemental_cpの設定<a class="headerlink" href="#supplemental-cp" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">6.2. </span>supplemental_cpの設定<a class="headerlink" href="#supplemental-cp" title="Link to this heading">¶</a></h2>
 <p>変換結果を見ると、honsen_up, honsen_down軌道について一部入力データからの乖離が大きい部分がある。</p>
 <p>tsutsujiでは、入力軌道データの自軌道要素(Curve, Gradient)が存在する距離程の座標を抽出して他軌道構文に変換している。
 このため、距離の長い曲線区間では距離程どうしの間隔が開くことがある。
 また、変換しようとしている軌道と自軌道のなす角が開いている場合、相対半径によるTrack要素間の補間がうまく働かない場合が多い。</p>
 <p>このような場合は、main.cfgファイルの該当する軌道セクションにsupplemental_cpを追加する。
 supplemental_cpがセットされると、自軌道要素が存在する距離程に加えて、supplemental_cpで指定した距離程に対する座標を基に他軌道構文への変換を行う。</p>
-<p>main.cfgを下記のように変更して、データリロードののちGenerateを実行すると、下図のように最終的な変換結果が得られる。</p>
-<a class="reference internal image-reference" href="../_images/gen2.png"><img alt="../_images/gen2.png" src="../_images/gen2.png" style="width: 450.5px; height: 346.5px;" />
+<p>main.cfgを下記のように変更して、データリロードののちGenerateを実行すると、下図のように最終的な変換結果が得られる。
+なお、この図ではsupplemental_cpを設定した座標にx印、Curve要素を設定した座標にo印を表示している。</p>
+<a class="reference internal image-reference" href="../_images/gen_mode2_scp.png"><img alt="../_images/gen_mode2_scp.png" src="../_images/gen_mode2_scp.png" style="width: 451.0px; height: 351.0px;" />
 </a>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id2" title="Link to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">main.cfg</span><a class="headerlink" href="#id4" title="Link to this code">¶</a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 [honsen_down]
 file = honsen_down.txt
@@ -137,7 +186,8 @@ endpoint = 300
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">6. 他軌道構文の出力</a><ul>
-<li><a class="reference internal" href="#supplemental-cp">6.1. supplemental_cpの設定</a></li>
+<li><a class="reference internal" href="#search-mode">6.1. search_modeの設定</a></li>
+<li><a class="reference internal" href="#supplemental-cp">6.2. supplemental_cpの設定</a></li>
 </ul>
 </li>
 </ul>

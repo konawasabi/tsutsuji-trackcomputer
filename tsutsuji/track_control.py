@@ -311,7 +311,7 @@ class TrackControl():
                 min_ix_val = ix_tgt_xy[min_ix][0]
 
                 if min_ix_val > 0 and min_ix_val < len_tr-1 \
-                   and min_ix[0][0]+2 < tgt_xy_trans.shape[1]: # y'軸との交点が注目区間内にある場合
+                   and min_ix[0][0]+2 < tgt_xy_trans.shape[1] and min_ix[0][0]-1 >=0: # y'軸との交点が注目区間内にある場合
                     aroundzero = {'x_tr':tgt_xy_trans[0][min_ix[0][0]-1:min_ix[0][0]+2],\
                                   'y_tr':tgt_xy_trans[1][min_ix[0][0]-1:min_ix[0][0]+2],\
                                   'kp':  tgt[:,0][min_ix_val-1:min_ix_val+2],\
@@ -341,7 +341,7 @@ class TrackControl():
                                        interpolate(aroundzero,1,'y_ab'),\
                                        interpolate(aroundzero,1,'z_ab'),\
                                        interpolate(aroundzero,1,'cant')])
-                elif min_ix_val == 0:
+                else:#if min_ix_val == 0:
                     if np.abs(tgt_xy_trans[0][min_ix[0][0]])<1e-1:
                         result.append([pos[0],\
                                        tgt_xy_trans[0][min_ix[0][0]],\
@@ -376,10 +376,12 @@ class TrackControl():
             tgt = self.pointsequence_track.track[to_calc]['result']
             if search_mode == 0:
                 result = take_relpos_std(src,tgt)
-            elif search_mode == 1:
+            else:#if search_mode == 1:
                 result = take_relpos_std_vec(src,tgt)
+            '''
             else:
                 result = take_relpos_qtree(src,tgt,self.track[to_calc]['qtindex'],border_sq=search_rect)
+            '''
                 
         return(np.array(result))
     def relativepoint_all(self,owntrack=None,check_U=True,search_mode=2,search_rect=50):
@@ -389,12 +391,24 @@ class TrackControl():
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         calc_track = [i for i in self.conf.track_keys + self.conf.kml_keys + self.conf.csv_keys if i != owntrack]
         for tr in calc_track:
-            self.rel_track[tr]=self.relativepoint_single(tr,owntrack,check_U=check_U,search_mode=search_mode,search_rect=search_rect)
+            if '@' not in tr:
+                search_mode_tmp = self.conf.track_data[tr]['search_mode']
+                search_rect_tmp = self.conf.track_data[tr]['search_rect']
+            else:
+                search_mode_tmp = self.conf.general['search_mode']
+                search_rect_tmp = self.conf.general['search_rect']
+            self.rel_track[tr]=self.relativepoint_single(tr,owntrack,check_U=check_U,search_mode=search_mode_tmp,search_rect=search_rect_tmp)
 
         calc_track = [i for i in self.conf.track_keys if i != owntrack]
         for tr in calc_track:
+            if '@' not in tr:
+                search_mode_tmp = self.conf.track_data[tr]['search_mode']
+                search_rect_tmp = self.conf.track_data[tr]['search_rect']
+            else:
+                search_mode_tmp = self.conf.general['search_mode']
+                search_rect_tmp = self.conf.general['search_rect']
             for ottr in self.track[tr]['othertrack'].keys():
-                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr,check_U=check_U,search_mode=search_mode,search_rect=search_rect)
+                self.rel_track['@OT_{:s}@_{:s}'.format(tr,ottr)] = self.relativepoint_single(ottr,owntrack,parent_track=tr,check_U=check_U,search_mode=search_mode_tmp,search_rect=search_rect_tmp)
     def relativeradius(self,to_calc=None,owntrack=None):
         owntrack = self.conf.owntrack if owntrack == None else owntrack
         if to_calc is None:
@@ -404,6 +418,9 @@ class TrackControl():
         for tr in calc_track:
             self.rel_track_radius[tr] = []
 
+            if len(self.rel_track[tr])==0:
+                continue
+            
             # 注目軌道相対座標を線形補間する
             x_interp = np.linspace(min(self.rel_track[tr][:,0]),max(self.rel_track[tr][:,0]),int((max(self.rel_track[tr][:,0])-min(self.rel_track[tr][:,0]))/1.0)+1)
             f_xy = interpolate.interp1d(self.rel_track[tr][:,0],self.rel_track[tr][:,2])
@@ -450,6 +467,10 @@ class TrackControl():
         for tr in calc_track:
             self.rel_track_radius_cp[tr] = []
             #pos_cp = self.track[key]['result'][np.isin(self.track[key]['result'][:,0],cp_dist)]
+
+            if len(self.rel_track_radius[tr])==0:
+                continue
+            
             ix=0
             while ix < len(cp_dist)-1:
                 pos_cp = self.rel_track_radius[tr][(self.rel_track_radius[tr][:,0]>=cp_dist[ix]) & (self.rel_track_radius[tr][:,0]<cp_dist[ix+1])]
@@ -700,7 +721,7 @@ class TrackControl():
             pdb.set_trace()
 
         # 全ての軌道データについてquadtreeを生成
-        if self.conf.general['search_mode'] == 2:
+        if self.conf.general['search_mode'] == 2 or True:
             for i in self.conf.track_keys:
                 self.track[i]['qtindex'] = self.generate_quadtree(self.track[i]['result'])#,self.conf.general['unit_length'])
                 for otkey in self.track[i]['data'].othertrack.data.keys():
@@ -956,7 +977,11 @@ class TrackControl():
             output_trackkey = tr
         output_map = {'x':'', 'y':'', 'cant':'', 'center':'', 'interpolate_func':'', 'gauge':''}
 
+        if len(self.rel_track_radius_cp[tr])==0:
+            return output_map
+
         dist_range = (min(self.rel_track_radius_cp[tr][:,0]),max(self.rel_track_radius_cp[tr][:,0]))
+
             
         for data in self.rel_track_radius_cp[tr]:
             if '@' not in tr or '@OT' in tr or (('@KML' in tr or '@CSV' in tr) and self.pointsequence_track.track[tr]['conf']['calc_relrad']):

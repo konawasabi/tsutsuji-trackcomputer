@@ -4,6 +4,18 @@
 
 - プロット画面
   - 任意角度への回転
+  
+## [1.9.3] - 2025-09-10
+
+- track毎に設定したsearch_mode, search_rectが反映されない問題を修正
+- kml/csvファイルから読み込んだ点列データに対してgenerateがエラーとなる問題を修正
+
+## [1.9.2] - 2025-08-29
+
+- 領域四分木による計算モード（search_mode = 2）
+  - 探索範囲内に一度も対象軌道が現れなかった場合に"too many indices ..."エラーが発生する問題を修正
+  - 一定条件で"index 0 is out of bounds for axis 0 with size 0"エラーが発生する問題を修正
+     - 領域四分木の探索範囲に対象軌道が含まれるが、抽出された範囲で自軌道法線と対象軌道の交点が存在しなかった場合
 
 ## [1.9.1] - 2025-08-21
 
@@ -279,6 +291,8 @@
 
 - 1st release
 
+[1.9.3]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.9.2...ver1.9.3
+[1.9.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.9.1...ver1.9.2
 [1.9.1]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.9.0...ver1.9.1
 [1.9.0]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.2...ver1.9.0
 [1.8.2]: https://github.com/konawasabi/tsutsuji-trackcomputer/compare/ver1.8.1...ver1.8.2
